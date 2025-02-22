@@ -7,8 +7,6 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import net.p1nero.ss.animation.VatanseverStormAnimation;
-import net.p1nero.ss.entity.vatansever.VatanseverEntity;
 import net.p1nero.ss.entity.vatansever_storm.VatanseverStormEntity;
 import net.p1nero.ss.entity.vatansever_storm.VatanseverStormEntityPatch;
 import net.p1nero.ss.gameassets.animations.VatanseverStormAnimations;
@@ -47,6 +45,9 @@ public class VatanseverWeaponInnateSkill extends ComboBasicAttack {
             if(current > 0){
                 if(current == 66){
                     pos = new Vec3(serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ());
+                }
+                if(current % 10 == 0){
+                    createStorm(serverPlayer, VatanseverStormAnimations.VATANSEVER_STORM_RAIN);
                 }
                 manager.setDataSync(STORM_TIMER, current - 1, serverPlayer);
                 createStorm(serverPlayer, VatanseverStormAnimations.VATANSEVER_STORM_1);

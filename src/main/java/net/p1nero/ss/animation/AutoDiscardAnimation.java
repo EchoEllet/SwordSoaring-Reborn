@@ -13,18 +13,18 @@ import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 /**
  * 借碰撞箱
  */
-public class VatanseverStormAnimation extends AttackAnimation {
-    public VatanseverStormAnimation(float convertTime, float antic, float preDelay, float contact, float recovery, @Nullable Collider collider, Joint colliderJoint, String path, Armature armature) {
+public class AutoDiscardAnimation extends AttackAnimation {
+    public AutoDiscardAnimation(float convertTime, float antic, float preDelay, float contact, float recovery, @Nullable Collider collider, Joint colliderJoint, String path, Armature armature) {
         super(convertTime, antic, preDelay, contact, recovery, collider, colliderJoint, path, armature);
         this.addProperty(AnimationProperty.ActionAnimationProperty.MOVE_VERTICAL, true);
     }
 
-    public VatanseverStormAnimation(float convertTime, float antic, float preDelay, float contact, float recovery, InteractionHand hand, @Nullable Collider collider, Joint colliderJoint, String path, Armature armature) {
+    public AutoDiscardAnimation(float convertTime, float antic, float preDelay, float contact, float recovery, InteractionHand hand, @Nullable Collider collider, Joint colliderJoint, String path, Armature armature) {
         super(convertTime, antic, preDelay, contact, recovery, hand, collider, colliderJoint, path, armature);
         this.addProperty(AnimationProperty.ActionAnimationProperty.MOVE_VERTICAL, true);
     }
 
-    public VatanseverStormAnimation(float convertTime, String path, Armature armature, Phase... phases) {
+    public AutoDiscardAnimation(float convertTime, String path, Armature armature, Phase... phases) {
         super(convertTime, path, armature, phases);
         this.addProperty(AnimationProperty.ActionAnimationProperty.MOVE_VERTICAL, true);
     }
