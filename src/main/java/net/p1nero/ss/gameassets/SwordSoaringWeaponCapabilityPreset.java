@@ -1,0 +1,49 @@
+package net.p1nero.ss.gameassets;
+
+import net.minecraft.world.item.Item;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.p1nero.ss.SwordSoaring;
+import net.p1nero.ss.gameassets.animations.VatanseverAnimations;
+import yesman.epicfight.api.animation.LivingMotions;
+import yesman.epicfight.api.forgeevent.WeaponCapabilityPresetRegistryEvent;
+import yesman.epicfight.gameasset.Animations;
+import yesman.epicfight.gameasset.EpicFightSounds;
+import yesman.epicfight.particle.EpicFightParticles;
+import yesman.epicfight.world.capabilities.item.CapabilityItem;
+import yesman.epicfight.world.capabilities.item.WeaponCapability;
+
+import java.util.function.Function;
+
+@Mod.EventBusSubscriber(modid = SwordSoaring.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
+public class SwordSoaringWeaponCapabilityPreset {
+    public static final Function<Item, CapabilityItem.Builder> VATANSEVER = (item) ->
+            (CapabilityItem.Builder) WeaponCapability.builder().category(SwordSoaringCategories.ARTIFACT_SPIRIT)
+                    .styleProvider((livingEntityPatch) -> CapabilityItem.Styles.TWO_HAND)
+                    .collider(SwordSoaringColliders.VATANSEVER)
+                    .hitSound(EpicFightSounds.BLADE_HIT)
+                    .hitParticle(EpicFightParticles.HIT_BLADE.get())
+                    .canBePlacedOffhand(false)
+                    .comboCancel((style) -> false)
+                    .innateSkill(CapabilityItem.Styles.TWO_HAND, (itemStack) -> SwordSoaringSkills.VATANSEVER_INNATE)
+                    .passiveSkill(SwordSoaringSkills.VATANSEVER_PASSIVE)
+                    .newStyleCombo(CapabilityItem.Styles.TWO_HAND,
+                            Animations.BIPED_STEP_BACKWARD)
+                    .livingMotionModifier(CapabilityItem.Styles.TWO_HAND,
+                            LivingMotions.IDLE,
+                            VatanseverAnimations.PLAYER_IDLE)
+                    .livingMotionModifier(CapabilityItem.Styles.TWO_HAND,
+                            LivingMotions.WALK,
+                            VatanseverAnimations.VATANSEVER_WALK)
+                    .livingMotionModifier(CapabilityItem.Styles.TWO_HAND,
+                            LivingMotions.CHASE,
+                            VatanseverAnimations.VATANSEVER_RUN)
+                    .livingMotionModifier(CapabilityItem.Styles.TWO_HAND,
+                            LivingMotions.RUN,
+                            VatanseverAnimations.VATANSEVER_RUN);
+    @SubscribeEvent
+    public static void register(WeaponCapabilityPresetRegistryEvent event) {
+        event.getTypeEntry().put("vatansever", VATANSEVER);
+    }
+
+}
