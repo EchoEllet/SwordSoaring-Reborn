@@ -1,6 +1,5 @@
 package net.p1nero.ss.gameassets;
 
-import com.p1nero.invincible.api.events.TimeStampedEvent;
 import com.p1nero.invincible.skill.ComboBasicAttack;
 import com.p1nero.invincible.skill.api.ComboNode;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -14,9 +13,6 @@ import yesman.epicfight.api.data.reloader.SkillManager;
 import yesman.epicfight.api.forgeevent.SkillBuildEvent;
 import yesman.epicfight.skill.Skill;
 import yesman.epicfight.skill.SkillCategories;
-import yesman.epicfight.skill.SkillDataManager;
-import yesman.epicfight.skill.SkillSlots;
-import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 
 import java.util.function.Function;
 
@@ -38,7 +34,7 @@ public class SwordSoaringSkills {
         ComboNode aaaaa = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_AUTO5);
         ComboNode storm = ComboNode.createNode(()->VatanseverAnimations.PLAYER_STORM_START);
         root.key1(a);
-        root.key2(storm);
+        root.keyWeaponInnate(storm);
         a.key1(aa);
         aa.key1(aaa);
         aaa.key1(aaaa);

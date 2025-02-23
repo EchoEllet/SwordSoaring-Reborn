@@ -1,5 +1,6 @@
 package net.p1nero.ss.entity;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AgeableMob;
@@ -11,6 +12,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import yesman.epicfight.world.entity.ai.attribute.EpicFightAttributes;
@@ -24,6 +26,7 @@ public abstract class AbstractArtifactSpiritEntity extends TamableAnimal {
     @Override
     public void tick() {
         super.tick();
+        fallDistance = 0;
         LivingEntity owner = getOwner();
         if (owner != null) {
             moveToOwner(owner);
@@ -36,7 +39,6 @@ public abstract class AbstractArtifactSpiritEntity extends TamableAnimal {
     }
 
     protected void moveToOwner(LivingEntity owner){
-        getLookControl().setLookAt(owner);
         setYRot(owner.yBodyRot);
         setYBodyRot(owner.yBodyRot);
         setYHeadRot(owner.yBodyRot);
@@ -66,5 +68,19 @@ public abstract class AbstractArtifactSpiritEntity extends TamableAnimal {
     @Override
     public AgeableMob getBreedOffspring(@NotNull ServerLevel serverLevel, @NotNull AgeableMob ageableMob) {
         return null;
+    }
+
+    @Override
+    protected void playStepSound(@NotNull BlockPos pPos, @NotNull BlockState pState) {
+    }
+
+    @Override
+    public boolean causeFallDamage(float pFallDistance, float pMultiplier, @NotNull DamageSource pSource) {
+        return false;
+    }
+
+    @Override
+    public boolean canSpawnSprintParticle() {
+        return false;
     }
 }

@@ -19,7 +19,7 @@ public class VatanseverStormEntity extends AbstractArtifactSpiritEntity {
     public VatanseverStormEntity(Level level, Player owner, Vec3 pos) {
         super(SwordSoaringEntities.VATANSEVER_STORM.get(), level);
         tame(owner);
-        setPos(pos.add((getRandom().nextFloat() * 2 - 1) * 0.1, -2, (getRandom().nextFloat() * 2 - 1) * 0.1));
+        setPos(pos);
         moveToOwner(owner);
         setNoAi(true);
         setNoGravity(true);

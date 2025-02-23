@@ -34,7 +34,7 @@ public abstract class ColliderMixin {
     @Shadow public abstract void drawInternal(PoseStack poseStack, MultiBufferSource multiBufferSource, OpenMatrix4f openMatrix4f, boolean b);
 
     @Inject(method = "updateAndSelectCollideEntity", at = @At("HEAD"), cancellable = true)
-    private void lianren$updateAndSelectCollideEntity(LivingEntityPatch<?> entityPatch, AttackAnimation attackAnimation, float prevElapsedTime, float elapsedTime, Joint joint, float attackSpeed, CallbackInfoReturnable<List<Entity>> cir){
+    private void sword_soaring$updateAndSelectCollideEntity(LivingEntityPatch<?> entityPatch, AttackAnimation attackAnimation, float prevElapsedTime, float elapsedTime, Joint joint, float attackSpeed, CallbackInfoReturnable<List<Entity>> cir){
         Armature armature = entityPatch.getArmature();
         if(armature instanceof LongArmature longArmature){
             long pathIndex = longArmature.searchPathIndexLong(joint.getName());
@@ -59,7 +59,7 @@ public abstract class ColliderMixin {
 
     @Inject(method = "draw", at = @At("HEAD"))
     @OnlyIn(Dist.CLIENT)
-    private void lianren$draw(PoseStack matrixStackIn, MultiBufferSource buffer, LivingEntityPatch<?> entitypatch, AttackAnimation animation, Joint joint, float prevElapsedTime, float elapsedTime, float partialTicks, float attackSpeed, CallbackInfo ci){
+    private void sword_soaring$draw(PoseStack matrixStackIn, MultiBufferSource buffer, LivingEntityPatch<?> entitypatch, AttackAnimation animation, Joint joint, float prevElapsedTime, float elapsedTime, float partialTicks, float attackSpeed, CallbackInfo ci){
         Armature armature = entitypatch.getArmature();
         if(armature instanceof LongArmature longArmature){
             long pathIndex = longArmature.searchPathIndexLong(joint.getName());

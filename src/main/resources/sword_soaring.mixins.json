@@ -7,8 +7,11 @@
   ],
   "mixins": [
     "ColliderMixin",
+    "EntityMixin",
     "JsonModelLoaderMixin",
-    "MultiOBBColliderMixin"
+    "LivingEntityMixin",
+    "MultiOBBColliderMixin",
+    "PlayerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

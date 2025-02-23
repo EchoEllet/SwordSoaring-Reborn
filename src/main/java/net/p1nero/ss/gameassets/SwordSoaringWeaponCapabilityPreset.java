@@ -27,20 +27,19 @@ public class SwordSoaringWeaponCapabilityPreset {
                     .comboCancel((style) -> false)
                     .innateSkill(CapabilityItem.Styles.TWO_HAND, (itemStack) -> SwordSoaringSkills.VATANSEVER_INNATE)
                     .passiveSkill(SwordSoaringSkills.VATANSEVER_PASSIVE)
-                    .newStyleCombo(CapabilityItem.Styles.TWO_HAND,
-                            Animations.BIPED_STEP_BACKWARD)
-                    .livingMotionModifier(CapabilityItem.Styles.TWO_HAND,
-                            LivingMotions.IDLE,
-                            VatanseverAnimations.PLAYER_IDLE)
-                    .livingMotionModifier(CapabilityItem.Styles.TWO_HAND,
-                            LivingMotions.WALK,
-                            VatanseverAnimations.VATANSEVER_WALK)
-                    .livingMotionModifier(CapabilityItem.Styles.TWO_HAND,
-                            LivingMotions.CHASE,
-                            VatanseverAnimations.VATANSEVER_RUN)
-                    .livingMotionModifier(CapabilityItem.Styles.TWO_HAND,
-                            LivingMotions.RUN,
-                            VatanseverAnimations.VATANSEVER_RUN);
+                    .newStyleCombo(CapabilityItem.Styles.TWO_HAND, Animations.BIPED_STEP_BACKWARD)
+                    .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.IDLE, VatanseverAnimations.VATANSEVER_IDLE)
+                    .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.WALK, VatanseverAnimations.VATANSEVER_WALK)
+                    .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.CHASE, VatanseverAnimations.VATANSEVER_RUN)
+                    .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.RUN, VatanseverAnimations.VATANSEVER_RUN)
+                    .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.JUMP, VatanseverAnimations.VATANSEVER_RUN)
+                    .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.FALL, VatanseverAnimations.VATANSEVER_FALL)
+                    .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.FLOAT, VatanseverAnimations.VATANSEVER_FLOAT)
+                    .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.FLY, VatanseverAnimations.VATANSEVER_FLY)
+                    .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.DEATH, VatanseverAnimations.VATANSEVER_DEATH)
+                    .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.SWIM, VatanseverAnimations.VATANSEVER_SWIM)
+                    .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.KNEEL, VatanseverAnimations.VATANSEVER_SNEAK)
+                    .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.SNEAK, VatanseverAnimations.VATANSEVER_SNEAK);
     @SubscribeEvent
     public static void register(WeaponCapabilityPresetRegistryEvent event) {
         event.getTypeEntry().put("vatansever", VATANSEVER);

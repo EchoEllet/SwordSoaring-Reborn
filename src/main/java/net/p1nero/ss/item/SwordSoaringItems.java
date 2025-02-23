@@ -12,11 +12,6 @@ import yesman.epicfight.world.item.WeaponItem;
 
 public class SwordSoaringItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, SwordSoaring.MOD_ID);
-    public static final RegistryObject<Item> VATANSEVER = ITEMS.register("vatansever", () -> new WeaponItem(Tiers.NETHERITE, 1, 0, (new Item.Properties()).rarity(Rarity.EPIC)) {
-        @Override
-        public boolean isCorrectToolForDrops(BlockState blockIn) {
-            return super.isCorrectToolForDrops(blockIn);
-        }
-    });
+    public static final RegistryObject<Item> VATANSEVER = ITEMS.register("vatansever", () -> new VatanseverItem(Tiers.NETHERITE, 1, 0, (new Item.Properties()).rarity(Rarity.EPIC)));
 
 }

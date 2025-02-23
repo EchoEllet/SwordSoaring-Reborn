@@ -2,8 +2,11 @@ package net.p1nero.ss.gameassets.animations;
 
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 import net.p1nero.ss.animation.LinkArtifactSpiritAnimation;
 import net.p1nero.ss.entity.vatansever.VatanseverArmature;
+import net.p1nero.ss.entity.vatansever.VatanseverEntityPatch;
 import net.p1nero.ss.gameassets.SwordSoaringArmatures;
 import net.p1nero.ss.gameassets.SwordSoaringColliders;
 import net.p1nero.ss.skill.weapon_innate.VatanseverWeaponInnateSkill;
@@ -12,6 +15,7 @@ import yesman.epicfight.api.animation.property.AnimationEvent;
 import yesman.epicfight.api.animation.property.AnimationProperty;
 import yesman.epicfight.api.animation.types.ActionAnimation;
 import yesman.epicfight.api.animation.types.AttackAnimation;
+import yesman.epicfight.api.animation.types.SelectiveAnimation;
 import yesman.epicfight.api.animation.types.StaticAnimation;
 import yesman.epicfight.api.collider.Collider;
 import yesman.epicfight.api.utils.math.ValueModifier;
@@ -25,18 +29,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VatanseverAnimations {
-    public static StaticAnimation PLAYER_IDLE;
-    public static StaticAnimation PLAYER_WALK;
-    public static StaticAnimation PLAYER_RUN;
     public static StaticAnimation PLAYER_AUTO1;
     public static StaticAnimation PLAYER_AUTO2;
     public static StaticAnimation PLAYER_AUTO3;
     public static StaticAnimation PLAYER_AUTO4;
     public static StaticAnimation PLAYER_AUTO5;
     public static StaticAnimation PLAYER_STORM_START;
+
     public static StaticAnimation VATANSEVER_IDLE;
     public static StaticAnimation VATANSEVER_WALK;
+    public static StaticAnimation VATANSEVER_WALK_F;
+    public static StaticAnimation VATANSEVER_WALK_F_STOP;
+    public static StaticAnimation VATANSEVER_WALK_B;
+    public static StaticAnimation VATANSEVER_WALK_B_STOP;
     public static StaticAnimation VATANSEVER_RUN;
+    public static StaticAnimation VATANSEVER_RUN_STOP;
+    public static StaticAnimation VATANSEVER_DEATH;
+    public static StaticAnimation VATANSEVER_FALL;
+    public static StaticAnimation VATANSEVER_FLOAT;
+    public static StaticAnimation VATANSEVER_FLY;
+    public static StaticAnimation VATANSEVER_FLY_STOP;
+    public static StaticAnimation VATANSEVER_SNEAK;
+    public static StaticAnimation VATANSEVER_SNEAK_STOP;
+    public static StaticAnimation VATANSEVER_SWIM;
     public static StaticAnimation VATANSEVER_AUTO1;
     public static StaticAnimation VATANSEVER_AUTO2;
     public static StaticAnimation VATANSEVER_AUTO3;
@@ -56,9 +71,30 @@ public class VatanseverAnimations {
         all.addAll(left);
         all.addAll(right);
 
-        VATANSEVER_IDLE = new StaticAnimation(true, "biped/vatansever/vatansever_idle", vatanseverArmature);
-        VATANSEVER_WALK = new StaticAnimation(true, "biped/vatansever/vatansever_walk", vatanseverArmature);
-        VATANSEVER_RUN = new StaticAnimation(true, "biped/vatansever/vatansever_run", vatanseverArmature);
+        VATANSEVER_IDLE = new StaticAnimation(true, "biped/vatansever/living/vatansever_idle", vatanseverArmature);
+        VATANSEVER_WALK_F = new StaticAnimation(true, "biped/vatansever/living/vatansever_walk", vatanseverArmature);
+        VATANSEVER_WALK_F_STOP = new StaticAnimation(true, "biped/vatansever/living/vatansever_walk_stop", vatanseverArmature);
+        VATANSEVER_WALK_B = new StaticAnimation(true, "biped/vatansever/living/vatansever_walk_b", vatanseverArmature);
+        VATANSEVER_WALK_B_STOP = new StaticAnimation(true, "biped/vatansever/living/vatansever_walk_b_stop", vatanseverArmature);
+        VATANSEVER_WALK = new SelectiveAnimation((entityPatch) -> {
+            if(entityPatch instanceof VatanseverEntityPatch vatanseverEntityPatch && vatanseverEntityPatch.getOwnerPatch() != null){
+                Vec3 view = vatanseverEntityPatch.getOwnerPatch().getOriginal().getViewVector(1.0F);
+                Vec3 move = vatanseverEntityPatch.getOwnerPatch().getOriginal().getDeltaMovement();
+                double dot = view.dot(move);
+                return dot < 0.0 ? 1 : 0;
+            }
+            return 0;
+        }, VATANSEVER_WALK_F, VATANSEVER_WALK_B);
+        VATANSEVER_RUN = new StaticAnimation(true, "biped/vatansever/living/vatansever_run", vatanseverArmature);
+        VATANSEVER_RUN_STOP = new StaticAnimation(true, "biped/vatansever/living/vatansever_run_stop", vatanseverArmature);
+        VATANSEVER_SWIM = new StaticAnimation(true, "biped/vatansever/living/vatansever_swim", vatanseverArmature);
+        VATANSEVER_FALL = new StaticAnimation(true, "biped/vatansever/living/vatansever_fall", vatanseverArmature);
+        VATANSEVER_DEATH = new StaticAnimation(true, "biped/vatansever/living/vatansever_death", vatanseverArmature);
+        VATANSEVER_FLOAT = new StaticAnimation(true, "biped/vatansever/living/vatansever_float", vatanseverArmature);
+        VATANSEVER_FLY = new StaticAnimation(true, "biped/vatansever/living/vatansever_fly", vatanseverArmature);
+        VATANSEVER_FLY_STOP = new StaticAnimation(true, "biped/vatansever/living/vatansever_fly_stop", vatanseverArmature);
+        VATANSEVER_SNEAK = new StaticAnimation(true, "biped/vatansever/living/vatansever_sneak", vatanseverArmature);
+        VATANSEVER_SNEAK_STOP = new StaticAnimation(true, "biped/vatansever/living/vatansever_sneak_stop", vatanseverArmature);
         VATANSEVER_AUTO1 = new AttackAnimation(0.15F, "biped/vatansever/vatansever_auto1", vatanseverArmature,
                 new AttackAnimation.Phase(0.05F, 0.1F, 0.4F, 0.4F, 0.85F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, right)
                         .addProperty(AnimationProperty.AttackPhaseProperty.DAMAGE_MODIFIER, ValueModifier.multiplier(10.0F))
@@ -82,9 +118,6 @@ public class VatanseverAnimations {
         VATANSEVER_STORM_START = new ActionAnimation(0.15F, "biped/vatansever/skill/vatansever_storm_start", vatanseverArmature);
 
         HumanoidArmature biped = Armatures.BIPED;
-        PLAYER_IDLE = new StaticAnimation(true, "biped/vatansever/vatansever_idle", biped);
-        PLAYER_WALK = new StaticAnimation(true, "biped/vatansever/vatansever_walk", biped);
-        PLAYER_RUN = new StaticAnimation(true, "biped/vatansever/vatansever_run", biped);
         PLAYER_AUTO1 = new LinkArtifactSpiritAnimation(0.15F, "biped/vatansever/vatansever_auto1", biped, VATANSEVER_AUTO1);
         PLAYER_AUTO2 = new LinkArtifactSpiritAnimation(0.15F, "biped/vatansever/vatansever_auto2", biped, VATANSEVER_AUTO2);
         PLAYER_AUTO3 = new LinkArtifactSpiritAnimation(0.15F, "biped/vatansever/vatansever_auto3", biped, VATANSEVER_AUTO3);

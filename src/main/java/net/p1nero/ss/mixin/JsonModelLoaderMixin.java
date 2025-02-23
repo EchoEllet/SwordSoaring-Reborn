@@ -38,7 +38,7 @@ public abstract class JsonModelLoaderMixin {
     }
 
     @Inject(method = "loadStaticAnimation", at = @At("HEAD"), cancellable = true)
-    private void lianren$inject(StaticAnimation animation, CallbackInfo ci) {
+    private void sword_soaring$inject(StaticAnimation animation, CallbackInfo ci) {
         if (this.rootJson == null) {
             throw new IllegalStateException("[ModelParsingError]Can't find animation path: " + animation);
         }

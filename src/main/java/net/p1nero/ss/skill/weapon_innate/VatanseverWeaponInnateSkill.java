@@ -45,15 +45,9 @@ public class VatanseverWeaponInnateSkill extends ComboBasicAttack {
             if(current > 0){
                 if(current == 66){
                     pos = new Vec3(serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ());
-                }
-                if(current % 10 == 0){
-                    createStorm(serverPlayer, VatanseverStormAnimations.VATANSEVER_STORM_RAIN);
+                    createStorm(serverPlayer, VatanseverStormAnimations.VATANSEVER_STORM);
                 }
                 manager.setDataSync(STORM_TIMER, current - 1, serverPlayer);
-                createStorm(serverPlayer, VatanseverStormAnimations.VATANSEVER_STORM_1);
-                createStorm(serverPlayer, VatanseverStormAnimations.VATANSEVER_STORM_2);
-                createStorm(serverPlayer, VatanseverStormAnimations.VATANSEVER_STORM_3);
-                createStorm(serverPlayer, VatanseverStormAnimations.VATANSEVER_STORM_4);
             }
         }
     }

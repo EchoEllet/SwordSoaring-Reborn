@@ -3,10 +3,12 @@ package net.p1nero.ss.entity;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 import yesman.epicfight.api.animation.LivingMotions;
 import yesman.epicfight.api.animation.types.StaticAnimation;
+import yesman.epicfight.client.world.capabilites.entitypatch.player.LocalPlayerPatch;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.Faction;
 import yesman.epicfight.world.capabilities.entitypatch.MobPatch;
@@ -79,4 +81,12 @@ public abstract class AbstractArtifactSpiritPatch <T extends AbstractArtifactSpi
         }
         return getOwnerPatch().getWeaponHitSound(hand);
     }
+
+
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public boolean flashTargetIndicator(LocalPlayerPatch playerPatch) {
+        return false;
+    }
+
 }

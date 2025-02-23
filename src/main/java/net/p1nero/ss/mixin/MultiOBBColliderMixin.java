@@ -36,7 +36,7 @@ public abstract class MultiOBBColliderMixin extends MultiCollider<OBBCollider> {
      */
     @Inject(method = "draw", at = @At("HEAD"))
     @OnlyIn(Dist.CLIENT)
-    private void lianren$draw(PoseStack matrixStackIn, MultiBufferSource buffer, LivingEntityPatch<?> entitypatch, AttackAnimation animation, Joint joint, float prevElapsedTime, float elapsedTime, float partialTicks, float attackSpeed, CallbackInfo ci){
+    private void sword_soaring$draw(PoseStack matrixStackIn, MultiBufferSource buffer, LivingEntityPatch<?> entitypatch, AttackAnimation animation, Joint joint, float prevElapsedTime, float elapsedTime, float partialTicks, float attackSpeed, CallbackInfo ci){
         int numberOf = Math.max(Math.round((this.numberOfColliders + animation.getProperty(AnimationProperty.AttackAnimationProperty.EXTRA_COLLIDERS).orElse(0)) * attackSpeed), this.numberOfColliders);
         float partialScale = 1.0F / (numberOf - 1);
         float interpolation = 0.0F;

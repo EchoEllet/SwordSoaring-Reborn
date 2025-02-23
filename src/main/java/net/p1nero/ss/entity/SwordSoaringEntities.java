@@ -17,7 +17,7 @@ public class SwordSoaringEntities {
     public static final RegistryObject<EntityType<SwordEntity>> SWORD = register("sword",
             EntityType.Builder.of(SwordEntity::new, MobCategory.CREATURE));
     public static final RegistryObject<EntityType<VatanseverEntity>> VATANSEVER = register("vatansever",
-            EntityType.Builder.<VatanseverEntity>of(VatanseverEntity::new, MobCategory.MISC).sized(0, 0).clientTrackingRange(4).updateInterval(20).noSummon().noSave());
+            EntityType.Builder.<VatanseverEntity>of(VatanseverEntity::new, MobCategory.MISC).sized(0, 0).clientTrackingRange(20).updateInterval(1).noSummon().noSave());
     public static final RegistryObject<EntityType<VatanseverStormEntity>> VATANSEVER_STORM = register("vatansever_storm",
             EntityType.Builder.<VatanseverStormEntity>of(VatanseverStormEntity::new, MobCategory.MISC).sized(0, 0).clientTrackingRange(20).updateInterval(1).noSave());
     private static <T extends Entity> RegistryObject<EntityType<T>> register(String name, EntityType.Builder<T> entityTypeBuilder) {
