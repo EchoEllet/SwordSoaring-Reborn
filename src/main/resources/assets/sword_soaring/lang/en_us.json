@@ -11,6 +11,12 @@
   "skill.sword_soaring.sword_soaring_expert.tooltip": "小有所成",
   "skill.sword_soaring.sword_soaring_master": "Sword Soaring: Master",
   "skill.sword_soaring.sword_soaring_master.tooltip": "六根清净",
+  "skill.sword_soaring.sword_soaring_elytra_apprentice": "Sword Soaring: Apprentice-Elytra",
+  "skill.sword_soaring.sword_soaring_elytra_apprentice.tooltip": "初窥门径-Elytra",
+  "skill.sword_soaring.sword_soaring_elytra_expert": "Sword Soaring: Expert-Elytra",
+  "skill.sword_soaring.sword_soaring_elytra_expert.tooltip": "小有所成-Elytra",
+  "skill.sword_soaring.sword_soaring_elytra_master": "Sword Soaring: Master-Elytra",
+  "skill.sword_soaring.sword_soaring_elytra_master.tooltip": "六根清净-Elytra",
 
   "key.sword_soaring.common": "Epic Fight: Sword Soaring",
   "key.sword_soaring.take_off": "Take off",

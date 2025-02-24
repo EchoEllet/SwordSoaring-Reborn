@@ -12,7 +12,8 @@
     "JsonModelLoaderMixin",
     "LivingEntityMixin",
     "MultiOBBColliderMixin",
-    "PlayerMixin"
+    "PlayerMixin",
+    "WeaponCapabilityMixin"
   ],
   "injectors": {
     "defaultRequire": 1

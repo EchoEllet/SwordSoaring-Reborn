@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.resources.sounds.ElytraOnPlayerSoundInstance;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -19,12 +20,14 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.p1nero.ss.SwordSoaring;
 import net.p1nero.ss.client.keymapping.SwordSoaringKeyMappings;
+import net.p1nero.ss.client.sound.SwordFlyingSoundInstance;
 import net.p1nero.ss.gameassets.SwordSoaringSkillCategories;
 import net.p1nero.ss.gameassets.SwordSoaringSkillSlots;
 import net.p1nero.ss.item.SwordSoaringItems;
 import org.jetbrains.annotations.Nullable;
 import yesman.epicfight.client.ClientEngine;
 import yesman.epicfight.client.gui.BattleModeGui;
+import yesman.epicfight.client.world.capabilites.entitypatch.player.LocalPlayerPatch;
 import yesman.epicfight.skill.*;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
@@ -41,9 +44,9 @@ public class SwordSoaringSkill extends Skill {
     protected double speed;
     protected final StaticAnimationProvider init, flying, acceleration;
     protected final Supplier<Skill> priorSkill;
-    private static final SkillDataManager.SkillDataKey<Integer> COOL_DOWN_TIMER = SkillDataManager.SkillDataKey.createDataKey(SkillDataManager.ValueType.INTEGER);
-    private static final SkillDataManager.SkillDataKey<Boolean> FLYING = SkillDataManager.SkillDataKey.createDataKey(SkillDataManager.ValueType.BOOLEAN);
-    private static final SkillDataManager.SkillDataKey<Boolean> ACCELERATING = SkillDataManager.SkillDataKey.createDataKey(SkillDataManager.ValueType.BOOLEAN);
+    public static final SkillDataManager.SkillDataKey<Integer> COOL_DOWN_TIMER = SkillDataManager.SkillDataKey.createDataKey(SkillDataManager.ValueType.INTEGER);
+    public static final SkillDataManager.SkillDataKey<Boolean> FLYING = SkillDataManager.SkillDataKey.createDataKey(SkillDataManager.ValueType.BOOLEAN);
+    public static final SkillDataManager.SkillDataKey<Boolean> ACCELERATING = SkillDataManager.SkillDataKey.createDataKey(SkillDataManager.ValueType.BOOLEAN);
 
     public static Builder createSwordSoaringSkill() {
         return new Builder().setCreativeTab(SwordSoaringItems.SWORD_SOARING_ITEM_TAB).setCategory(SwordSoaringSkillCategories.SWORD_SOARING).setResource(Resource.NONE);
@@ -85,9 +88,12 @@ public class SwordSoaringSkill extends Skill {
         dataManager.setDataSync(FLYING, true, executer.getOriginal());
     }
 
-    /**
-     * 注册监听器
-     */
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public void executeOnClient(LocalPlayerPatch executer, FriendlyByteBuf args) {
+        Minecraft.getInstance().getSoundManager().play(new SwordFlyingSoundInstance(executer.getOriginal()));
+    }
+
     @Override
     public void onInitiate(SkillContainer container) {
         super.onInitiate(container);
@@ -159,6 +165,14 @@ public class SwordSoaringSkill extends Skill {
     @Override
     public void updateContainer(SkillContainer container) {
         super.updateContainer(container);
+        int currentCooldown = container.getDataManager().getDataValue(COOL_DOWN_TIMER);
+        if (!container.getExecuter().isLogicalClient() && currentCooldown > 0) {
+            container.getDataManager().setDataSync(COOL_DOWN_TIMER, currentCooldown - 1, ((ServerPlayer) container.getExecuter().getOriginal()));
+        }
+        flyingTick(container);
+    }
+
+    public void flyingTick(SkillContainer container){
         if (container.getExecuter().isLogicalClient()) {
             if (container.getDataManager().getDataValue(FLYING) && container.getExecuter().hasStamina(consumption + 0.1F) && SwordSoaring.isValidSword(container.getExecuter().getOriginal().getMainHandItem())) {
                 LocalPlayer localPlayer = ((LocalPlayer) container.getExecuter().getOriginal());
@@ -194,13 +208,8 @@ public class SwordSoaringSkill extends Skill {
                         localPlayer.setDeltaMovement(normalSpeed.x, normalSpeed.y, normalSpeed.z);
                     }
                 }
-                localPlayer.hasImpulse = true;
             }
         } else {
-            int currentCooldown = container.getDataManager().getDataValue(COOL_DOWN_TIMER);
-            if (currentCooldown > 0) {
-                container.getDataManager().setDataSync(COOL_DOWN_TIMER, currentCooldown - 1, ((ServerPlayer) container.getExecuter().getOriginal()));
-            }
             if (container.getDataManager().getDataValue(FLYING)) {
                 container.getExecuter().resetActionTick();
                 if (container.getDataManager().getDataValue(ACCELERATING)) {

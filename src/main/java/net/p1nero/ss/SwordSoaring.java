@@ -17,7 +17,6 @@ import net.p1nero.ss.entity.SwordSoaringEntities;
 import net.p1nero.ss.gameassets.SwordSoaringCategories;
 import net.p1nero.ss.gameassets.SwordSoaringSkillCategories;
 import net.p1nero.ss.gameassets.SwordSoaringSkillSlots;
-import net.p1nero.ss.gameassets.SwordSoaringSkills;
 import net.p1nero.ss.item.SwordSoaringItems;
 import net.p1nero.ss.network.PacketHandler;
 import net.p1nero.ss.skill.sword_soaring.SwordSoaringSkill;

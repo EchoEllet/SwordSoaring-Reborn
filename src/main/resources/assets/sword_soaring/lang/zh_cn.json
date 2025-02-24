@@ -11,6 +11,12 @@
   "skill.sword_soaring.sword_soaring_expert.tooltip": "小有所成",
   "skill.sword_soaring.sword_soaring_master": "御剑飞行：大师",
   "skill.sword_soaring.sword_soaring_master.tooltip": "六根清净",
+  "skill.sword_soaring.sword_soaring_elytra_apprentice": "御剑飞行：学徒-鞘翅",
+  "skill.sword_soaring.sword_soaring_elytra_apprentice.tooltip": "初窥门径-鞘翅",
+  "skill.sword_soaring.sword_soaring_elytra_expert": "御剑飞行：高手-鞘翅",
+  "skill.sword_soaring.sword_soaring_elytra_expert.tooltip": "小有所成-鞘翅",
+  "skill.sword_soaring.sword_soaring_elytra_master": "御剑飞行：大师-鞘翅",
+  "skill.sword_soaring.sword_soaring_elytra_master.tooltip": "六根清净-鞘翅",
 
   "key.sword_soaring.common": "史诗战斗：御剑飞行",
   "key.sword_soaring.take_off": "开始飞行",

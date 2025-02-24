@@ -4,6 +4,7 @@ import yesman.epicfight.skill.SkillCategory;
 import yesman.epicfight.skill.SkillSlot;
 
 public enum SwordSoaringSkillSlots implements SkillSlot {
+    SWORD_CONTROLLER(SwordSoaringSkillCategories.SWORD_CONTROLLER),
     SWORD_SOARING(SwordSoaringSkillCategories.SWORD_SOARING);
     final SkillCategory category;
     final int id;

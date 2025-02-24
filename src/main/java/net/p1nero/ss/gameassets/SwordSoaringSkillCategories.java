@@ -4,6 +4,7 @@ import yesman.epicfight.skill.SkillCategory;
 
 public enum SwordSoaringSkillCategories implements SkillCategory
 {
+    SWORD_CONTROLLER(true, true, true),
     SWORD_SOARING(true, true, true);
 
     final boolean save;
