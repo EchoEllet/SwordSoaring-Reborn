@@ -10,6 +10,7 @@ import net.p1nero.ss.entity.vatansever.VatanseverEntityPatch;
 import net.p1nero.ss.gameassets.SwordSoaringArmatures;
 import net.p1nero.ss.gameassets.SwordSoaringColliders;
 import net.p1nero.ss.skill.weapon_innate.VatanseverWeaponInnateSkill;
+import net.p1nero.ss.util.vfx.VatanseverVFX;
 import yesman.epicfight.api.animation.Joint;
 import yesman.epicfight.api.animation.property.AnimationEvent;
 import yesman.epicfight.api.animation.property.AnimationProperty;
@@ -68,7 +69,13 @@ public class VatanseverAnimations {
         all.addAll(left);
         all.addAll(right);
 
-        VATANSEVER_IDLE = new StaticAnimation(true, "biped/vatansever/living/vatansever_idle", vatanseverArmature);
+        VATANSEVER_IDLE = new StaticAnimation(true, "biped/vatansever/living/vatansever_idle", vatanseverArmature)
+                .addEvents(AnimationEvent. TimePeriodEvent.create(
+                        0,3,
+                        (entitypatch, self, params) -> {
+                            VatanseverVFX.flyVFX(entitypatch);
+                        },
+                        AnimationEvent.Side.CLIENT));
         VATANSEVER_WALK_F = new StaticAnimation(true, "biped/vatansever/living/vatansever_walk", vatanseverArmature);
         VATANSEVER_WALK_F_STOP = new StaticAnimation(true, "biped/vatansever/living/vatansever_walk_stop", vatanseverArmature);
         VATANSEVER_WALK_B = new StaticAnimation(true, "biped/vatansever/living/vatansever_walk_b", vatanseverArmature);
