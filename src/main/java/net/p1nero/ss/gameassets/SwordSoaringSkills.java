@@ -27,7 +27,7 @@ public class SwordSoaringSkills {
         SWORD_SOARING = build(event, SwordSoaringSkill::new, Skill.createBuilder().setCategory(SwordSoaringSkillCategories.SWORD_SOARING).setResource(Skill.Resource.NONE), "sword_soaring");
 
         ComboNode root = ComboNode.create();
-        ComboNode a = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_STORM_START);
+        ComboNode a = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_AUTO1);
         ComboNode aa = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_AUTO2);
         ComboNode aaa = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_AUTO3);
         ComboNode aaaa = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_AUTO4);
@@ -38,8 +38,6 @@ public class SwordSoaringSkills {
         a.key1(aa);
         aa.key1(aaa);
         aaa.key1(aaaa);
-        aaaa.key1(aaaaa);
-        aaaaa.key1(aaa);
         VATANSEVER_INNATE = build(event, VatanseverWeaponInnateSkill::new, ComboBasicAttack.createComboBasicAttack().setCombo(root), "vatansever_innate");
         VATANSEVER_PASSIVE = build(event, VatanseverPassive::new, Skill.createBuilder().setCategory(SkillCategories.WEAPON_PASSIVE).setResource(Skill.Resource.NONE), "vatansever_passive");
     }
