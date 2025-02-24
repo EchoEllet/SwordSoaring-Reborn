@@ -14,11 +14,11 @@ public class VatanseverStormAnimations {
     protected static void buildVatanseverStormAnim() {
         VatanseverStormArmature stormArmature = SwordSoaringArmatures.vatanseverStormArmature;
         VATANSEVER_STORM_IDLE = new StaticAnimation(true, "vatansever_storm/vatansever_storm_idle", stormArmature);
-        VATANSEVER_STORM = new ActionAnimation(0.15F, "vatansever_storm/vatansever_storm", stormArmature)
+        VATANSEVER_STORM = new ActionAnimation(0.0001F, "vatansever_storm/vatansever_storm", stormArmature)
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.create(((livingEntityPatch, staticAnimation, objects) -> {
                     livingEntityPatch.reserveAnimation(VATANSEVER_STORM);
                 }), AnimationEvent.Side.SERVER))
-                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 0.1F));
+                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 0.9F));
         }
 
 }

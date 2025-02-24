@@ -27,7 +27,7 @@ public class SwordSoaringSkills {
         SWORD_SOARING = build(event, SwordSoaringSkill::new, Skill.createBuilder().setCategory(SwordSoaringSkillCategories.SWORD_SOARING).setResource(Skill.Resource.NONE), "sword_soaring");
 
         ComboNode root = ComboNode.create();
-        ComboNode a = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_AUTO1);
+        ComboNode a = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_STORM_START);
         ComboNode aa = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_AUTO2);
         ComboNode aaa = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_AUTO3);
         ComboNode aaaa = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_AUTO4);
