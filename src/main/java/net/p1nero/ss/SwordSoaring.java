@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -19,6 +20,7 @@ import net.p1nero.ss.gameassets.SwordSoaringSkillSlots;
 import net.p1nero.ss.gameassets.SwordSoaringSkills;
 import net.p1nero.ss.item.SwordSoaringItems;
 import net.p1nero.ss.network.PacketHandler;
+import net.p1nero.ss.skill.sword_soaring.SwordSoaringSkill;
 import org.slf4j.Logger;
 import yesman.epicfight.skill.SkillCategories;
 import yesman.epicfight.skill.SkillSlot;
@@ -40,6 +42,7 @@ public class SwordSoaring {
         SwordSoaringItems.ITEMS.register(bus);
         SwordSoaringEntities.ENTITIES.register(bus);
         SwordSoaringEnchantments.ENCHANTMENTS.register(bus);
+        MinecraftForge.EVENT_BUS.addListener(SwordSoaringSkill::onLivingEquipmentChange);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
 
@@ -59,7 +62,6 @@ public class SwordSoaring {
             Config.notSwordItems = Config.ITEMS_CAN_NOT_FLY.get().stream()
                     .map(itemName -> ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemName)))
                     .collect(Collectors.toSet());
-            Config.swordItems.removeAll(Config.notSwordItems);
         }
         if (Config.notSwordItems.contains(sword.getItem())) {
             return false;

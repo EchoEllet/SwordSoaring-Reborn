@@ -1,8 +1,18 @@
 {
+  "itemGroup.sword_soaring.items": "Sword Soaring Items",
   "item.sword_soaring.vatansever": "Vatansever",
-  "skill.sword_soaring.sword_soaring": "御剑飞行",
-  "skill.sword_soaring.sword_soaring.tooltip": "",
-  "key.sword_soaring.common": "史诗战斗：御剑飞行",
-  "key.sword_soaring.take_off": "开始飞行",
-  "skill.sword_soaring.vatansever.tooltip": ""
+  "skill.sword_soaring.vatansever.tooltip": "",
+
+  "epicfight.skill_slot.sword_soaring": "Sword Soaring",
+  "skill.epicfight.sword_soaring.category": "Sword Soaring",
+  "skill.sword_soaring.sword_soaring_apprentice": "Sword Soaring: Apprentice",
+  "skill.sword_soaring.sword_soaring_apprentice.tooltip": "初窥门径",
+  "skill.sword_soaring.sword_soaring_expert": "Sword Soaring: Expert",
+  "skill.sword_soaring.sword_soaring_expert.tooltip": "小有所成",
+  "skill.sword_soaring.sword_soaring_master": "Sword Soaring: Master",
+  "skill.sword_soaring.sword_soaring_master.tooltip": "六根清净",
+
+  "key.sword_soaring.common": "Epic Fight: Sword Soaring",
+  "key.sword_soaring.take_off": "Take off",
+  "key.sword_soaring.acceleration": "Accelerate"
 }

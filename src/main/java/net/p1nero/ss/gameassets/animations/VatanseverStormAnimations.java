@@ -11,7 +11,7 @@ public class VatanseverStormAnimations {
 
     public static StaticAnimation VATANSEVER_STORM_IDLE;
     public static StaticAnimation VATANSEVER_STORM;
-    protected static void buildVatanseverStormAnim() {
+    public static void buildVatanseverStormAnim() {
         VatanseverStormArmature stormArmature = SwordSoaringArmatures.vatanseverStormArmature;
         VATANSEVER_STORM_IDLE = new StaticAnimation(true, "vatansever_storm/vatansever_storm_idle", stormArmature);
         VATANSEVER_STORM = new ActionAnimation(0.0001F, "vatansever_storm/vatansever_storm", stormArmature)

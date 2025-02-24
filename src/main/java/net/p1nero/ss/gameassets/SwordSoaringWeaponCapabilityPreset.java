@@ -5,6 +5,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.p1nero.ss.SwordSoaring;
 import net.p1nero.ss.gameassets.animations.VatanseverAnimations;
+import net.p1nero.ss.gameassets.skills.VatanseverSkills;
 import yesman.epicfight.api.animation.LivingMotions;
 import yesman.epicfight.api.forgeevent.WeaponCapabilityPresetRegistryEvent;
 import yesman.epicfight.gameasset.Animations;
@@ -25,8 +26,8 @@ public class SwordSoaringWeaponCapabilityPreset {
                     .hitParticle(EpicFightParticles.HIT_BLADE.get())
                     .canBePlacedOffhand(false)
                     .comboCancel((style) -> false)
-                    .innateSkill(CapabilityItem.Styles.TWO_HAND, (itemStack) -> SwordSoaringSkills.VATANSEVER_INNATE)
-                    .passiveSkill(SwordSoaringSkills.VATANSEVER_PASSIVE)
+                    .innateSkill(CapabilityItem.Styles.TWO_HAND, (itemStack) -> VatanseverSkills.VATANSEVER_INNATE)
+                    .passiveSkill(VatanseverSkills.VATANSEVER_PASSIVE)
                     .newStyleCombo(CapabilityItem.Styles.TWO_HAND, Animations.BIPED_STEP_BACKWARD)
                     .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.IDLE, VatanseverAnimations.VATANSEVER_IDLE)
                     .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.WALK, VatanseverAnimations.VATANSEVER_WALK)

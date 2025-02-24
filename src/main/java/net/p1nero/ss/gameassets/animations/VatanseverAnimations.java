@@ -57,7 +57,7 @@ public class VatanseverAnimations {
     public static StaticAnimation VATANSEVER_AUTO5;
     public static StaticAnimation VATANSEVER_STORM_START;
 
-    protected static void buildVatanseverAnim() {
+    public static void buildVatanseverAnim() {
         VatanseverArmature vatanseverArmature = SwordSoaringArmatures.vatanseverArmature;
         List<Pair<Joint, Collider>> left = List.of(Pair.of(vatanseverArmature.L1, SwordSoaringColliders.VATANSEVER),
                 Pair.of(vatanseverArmature.L2, SwordSoaringColliders.VATANSEVER),

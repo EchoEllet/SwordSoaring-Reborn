@@ -1,8 +1,18 @@
 {
-  "item.sword_soaring.vatansever": "Vatansever",
-  "skill.sword_soaring.sword_soaring": "御剑飞行",
-  "skill.sword_soaring.sword_soaring.tooltip": "",
+  "itemGroup.sword_soaring.items": "御剑飞行物品",
+  "item.sword_soaring.vatansever": "卫国者",
+  "skill.sword_soaring.vatansever.tooltip": "",
+
+  "epicfight.skill_slot.sword_soaring": "飞行术",
+  "skill.epicfight.sword_soaring.category": "飞行术",
+  "skill.sword_soaring.sword_soaring_apprentice": "御剑飞行：学徒",
+  "skill.sword_soaring.sword_soaring_apprentice.tooltip": "初窥门径",
+  "skill.sword_soaring.sword_soaring_expert": "御剑飞行：高手",
+  "skill.sword_soaring.sword_soaring_expert.tooltip": "小有所成",
+  "skill.sword_soaring.sword_soaring_master": "御剑飞行：大师",
+  "skill.sword_soaring.sword_soaring_master.tooltip": "六根清净",
+
   "key.sword_soaring.common": "史诗战斗：御剑飞行",
   "key.sword_soaring.take_off": "开始飞行",
-  "skill.sword_soaring.vatansever.tooltip": ""
+  "key.sword_soaring.acceleration": "加速"
 }
