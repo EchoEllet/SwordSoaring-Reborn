@@ -13,10 +13,7 @@ import net.p1nero.ss.skill.weapon_innate.VatanseverWeaponInnateSkill;
 import yesman.epicfight.api.animation.Joint;
 import yesman.epicfight.api.animation.property.AnimationEvent;
 import yesman.epicfight.api.animation.property.AnimationProperty;
-import yesman.epicfight.api.animation.types.ActionAnimation;
-import yesman.epicfight.api.animation.types.AttackAnimation;
-import yesman.epicfight.api.animation.types.SelectiveAnimation;
-import yesman.epicfight.api.animation.types.StaticAnimation;
+import yesman.epicfight.api.animation.types.*;
 import yesman.epicfight.api.collider.Collider;
 import yesman.epicfight.api.utils.math.ValueModifier;
 import yesman.epicfight.gameasset.Armatures;
@@ -95,19 +92,19 @@ public class VatanseverAnimations {
         VATANSEVER_FLY_STOP = new StaticAnimation(true, "biped/vatansever/living/vatansever_fly_stop", vatanseverArmature);
         VATANSEVER_SNEAK = new StaticAnimation(true, "biped/vatansever/living/vatansever_sneak", vatanseverArmature);
         VATANSEVER_SNEAK_STOP = new StaticAnimation(true, "biped/vatansever/living/vatansever_sneak_stop", vatanseverArmature);
-        VATANSEVER_AUTO1 = new AttackAnimation(0.15F, "biped/vatansever/vatansever_auto1", vatanseverArmature,
-                new AttackAnimation.Phase(0.05F, 0.1F, 0.4F, 0.4F, 0.85F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, right)
+        VATANSEVER_AUTO1 = new BasicAttackAnimation(0.05F, "biped/vatansever/vatansever_auto1", vatanseverArmature,
+                new AttackAnimation.Phase(0.05F, 0.1F, 0.4F, 0.4F, 1.1F, 1.1F, false, InteractionHand.MAIN_HAND, right)
                         .addProperty(AnimationProperty.AttackPhaseProperty.DAMAGE_MODIFIER, ValueModifier.multiplier(10.0F))
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F)));
-        VATANSEVER_AUTO2 = new AttackAnimation(0.15F, "biped/vatansever/vatansever_auto2", vatanseverArmature,
-                new AttackAnimation.Phase(0.05F, 0.2F, 0.3F, 0.5F, 0.68F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, right)
+        VATANSEVER_AUTO2 = new BasicAttackAnimation(0.15F, "biped/vatansever/vatansever_auto2", vatanseverArmature,
+                new AttackAnimation.Phase(0.05F, 0.2F, 0.3F, 0.5F, 1.9F, 1.9F, false, InteractionHand.MAIN_HAND, right)
                         .addProperty(AnimationProperty.AttackPhaseProperty.DAMAGE_MODIFIER, ValueModifier.multiplier(10.0F))
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F)));
-        VATANSEVER_AUTO3 = new AttackAnimation(0.15F, "biped/vatansever/vatansever_auto3", vatanseverArmature,
-                new AttackAnimation.Phase(0.05F, 0.2F, 0.3F, 0.5F, 0.68F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, left)
+        VATANSEVER_AUTO3 = new BasicAttackAnimation(0.15F, "biped/vatansever/vatansever_auto3", vatanseverArmature,
+                new AttackAnimation.Phase(0.05F, 0.2F, 0.3F, 0.5F, 2.25F, 2.25F, false, InteractionHand.MAIN_HAND, left)
                         .addProperty(AnimationProperty.AttackPhaseProperty.DAMAGE_MODIFIER, ValueModifier.multiplier(10.0F))
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F)));
-        VATANSEVER_AUTO4 = new AttackAnimation(0.15F, "biped/vatansever/vatansever_auto4", vatanseverArmature,
+        VATANSEVER_AUTO4 = new BasicAttackAnimation(0.15F, "biped/vatansever/vatansever_auto4", vatanseverArmature,
                 new AttackAnimation.Phase(0.05F, 0.2F, 0.3F, 0.5F, 0.79F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, all)
                         .addProperty(AnimationProperty.AttackPhaseProperty.DAMAGE_MODIFIER, ValueModifier.multiplier(10.0F))
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F)));
@@ -118,10 +115,10 @@ public class VatanseverAnimations {
         VATANSEVER_STORM_START = new ActionAnimation(0.15F, "biped/vatansever/skill/vatansever_storm_start", vatanseverArmature);
 
         HumanoidArmature biped = Armatures.BIPED;
-        PLAYER_AUTO1 = new LinkArtifactSpiritAnimation(0.15F, "biped/vatansever/vatansever_auto1", biped, VATANSEVER_AUTO1);
-        PLAYER_AUTO2 = new LinkArtifactSpiritAnimation(0.15F, "biped/vatansever/vatansever_auto2", biped, VATANSEVER_AUTO2);
-        PLAYER_AUTO3 = new LinkArtifactSpiritAnimation(0.15F, "biped/vatansever/vatansever_auto3", biped, VATANSEVER_AUTO3);
-        PLAYER_AUTO4 = new LinkArtifactSpiritAnimation(0.15F, "biped/vatansever/vatansever_auto4", biped, VATANSEVER_AUTO4);
+        PLAYER_AUTO1 = new LinkArtifactSpiritAnimation(0.15F,1.1F, "biped/vatansever/vatansever_auto1_owner", biped, VATANSEVER_AUTO1);
+        PLAYER_AUTO2 = new LinkArtifactSpiritAnimation(0.15F, 1.9F,"biped/vatansever/vatansever_auto2_owner", biped, VATANSEVER_AUTO2);
+        PLAYER_AUTO3 = new LinkArtifactSpiritAnimation(0.15F, 2.25F,"biped/vatansever/vatansever_auto3_owner", biped, VATANSEVER_AUTO3);
+        PLAYER_AUTO4 = new LinkArtifactSpiritAnimation(0.15F,4F, "biped/vatansever/vatansever_auto4_owner", biped, VATANSEVER_AUTO4);
         PLAYER_AUTO5 = new LinkArtifactSpiritAnimation(0.15F, "biped/vatansever/vatansever_auto5", biped, VATANSEVER_AUTO5);
         PLAYER_STORM_START = new LinkArtifactSpiritAnimation(0.15F, "biped/vatansever/skill/vatansever_storm_start", biped, VATANSEVER_STORM_START)
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.create(((livingEntityPatch, staticAnimation, objects) -> {
