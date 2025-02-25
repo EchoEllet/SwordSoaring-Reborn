@@ -20,7 +20,7 @@ import yesman.epicfight.api.client.forgeevent.PatchedRenderersEvent;
 public class ClientModEvents {
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
-        EntityRenderers.register(SwordSoaringEntities.SWORD.get(), SwordEntityRenderer::new);
+        EntityRenderers.register(SwordSoaringEntities.SCREEN_SWORD.get(), SwordEntityRenderer::new);
         EntityRenderers.register(SwordSoaringEntities.VATANSEVER.get(), VatanseverRenderer::new);
         EntityRenderers.register(SwordSoaringEntities.VATANSEVER_STORM.get(), VatanseverStormRenderer::new);
     }

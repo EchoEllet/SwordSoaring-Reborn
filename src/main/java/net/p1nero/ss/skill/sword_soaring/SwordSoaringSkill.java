@@ -77,6 +77,9 @@ public class SwordSoaringSkill extends Skill {
 
     @Override
     public boolean canExecute(PlayerPatch<?> executer) {
+        if(executer.getOriginal().getMainHandItem().is(SwordSoaringItems.VATANSEVER.get()) || executer.getOriginal().isUnderWater()){
+            return false;
+        }
         SkillDataManager dataManager = executer.getSkill(SwordSoaringSkillSlots.SWORD_SOARING).getDataManager();
         return !dataManager.getDataValue(FLYING) && dataManager.getDataValue(COOL_DOWN_TIMER) <= 0 && SwordSoaring.isValidSword(executer.getOriginal().getMainHandItem()) && executer.hasStamina(consumption + 0.1F);
     }

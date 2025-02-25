@@ -89,12 +89,7 @@ public class VatanseverAnimations {
         VATANSEVER_DEATH = new StaticAnimation(true, "biped/vatansever/living/vatansever_death", vatanseverArmature);
         VATANSEVER_FLOAT = new StaticAnimation(true, "biped/vatansever/living/vatansever_float", vatanseverArmature);
         VATANSEVER_FLY = new StaticAnimation(true, "biped/vatansever/living/vatansever_fly", vatanseverArmature)
-                .addEvents(AnimationEvent. TimePeriodEvent.create(
-                        0,3,
-                        (entitypatch, self, params) -> {
-                            VatanseverVFX.flyVFX(entitypatch);
-                        },
-                        AnimationEvent.Side.CLIENT));
+                .addEvents(AnimationEvent. TimePeriodEvent.create(0,3, (entityPatch, self, params) -> VatanseverVFX.flyVFX(entityPatch), AnimationEvent.Side.CLIENT));
         VATANSEVER_FLY_STOP = new StaticAnimation(true, "biped/vatansever/living/vatansever_fly_stop", vatanseverArmature);
         VATANSEVER_SNEAK = new StaticAnimation(true, "biped/vatansever/living/vatansever_sneak", vatanseverArmature);
         VATANSEVER_SNEAK_STOP = new StaticAnimation(true, "biped/vatansever/living/vatansever_sneak_stop", vatanseverArmature);

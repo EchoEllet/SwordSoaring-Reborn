@@ -15,10 +15,6 @@ public class Config
 {
     private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
     public static final ForgeConfigSpec.BooleanValue ENABLE_LOOT_TABLE;
-    public static final ForgeConfigSpec.DoubleValue SWORD_SOARING_COOLDOWN;
-    public static final ForgeConfigSpec.DoubleValue INERTIA_TICK_BEFORE;
-    public static final ForgeConfigSpec.DoubleValue STAMINA_CONSUME_PER_TICK;
-    public static final ForgeConfigSpec.DoubleValue FLY_DELAY_TICK;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> ITEMS_CAN_FLY;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> ITEMS_CAN_NOT_FLY;
 
@@ -27,20 +23,13 @@ public class Config
     static {
         ENABLE_LOOT_TABLE = createBool("if true, you can get all skill books via fishing, end city, ancient city and strong hold library. or you have to add loot table yourself(for mod pack author)","enable_loot_table", true);
 
-        BUILDER.push("Skill Cooldown");
-        SWORD_SOARING_COOLDOWN = createDouble("the cooldown ticks of Rain Screen skill", "sword_soaring_cooldown", 0);
-        BUILDER.pop();
-
         BUILDER.push("Sword Soaring");
-        INERTIA_TICK_BEFORE = createDouble("the inertia end.(delay time) only work when enable_inertia is true. Shouldn't larger than 100!!!","inertia_tick_before", 10);
-        STAMINA_CONSUME_PER_TICK = createDouble("the stamina consumed per end when flying" ,"stamina_consume_per_tick", 0.05);
-        FLY_DELAY_TICK = createDouble("ticks of end taking off","fly_delay_tick", 10);
         ITEMS_CAN_FLY = BUILDER
                 .comment("A list of items considered as sword.")
-                .defineListAllowEmpty(List.of("items can fly"), () -> List.of("minecraft:iron_ingot"), Config::validateItemName);
+                .defineListAllowEmpty(List.of("items can fly"), List::of, Config::validateItemName);
         ITEMS_CAN_NOT_FLY = BUILDER
                 .comment("A list of items not considered as sword.")
-                .defineListAllowEmpty(List.of("items can't fly"), () -> List.of("minecraft:iron_ingot"), Config::validateItemName);
+                .defineListAllowEmpty(List.of("items can't fly"), () -> List.of("sword_soaring:vatansever"), Config::validateItemName);
         BUILDER.pop();
 
         SPEC = BUILDER.build();

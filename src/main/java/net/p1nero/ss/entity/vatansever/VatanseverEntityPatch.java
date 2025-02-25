@@ -1,10 +1,13 @@
 package net.p1nero.ss.entity.vatansever;
 
 import net.minecraft.world.entity.Entity;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.p1nero.ss.entity.AbstractArtifactSpiritPatch;
 import net.p1nero.ss.gameassets.animations.VatanseverAnimations;
 import yesman.epicfight.api.animation.LivingMotions;
 import yesman.epicfight.api.client.animation.ClientAnimator;
+import yesman.epicfight.api.utils.math.OpenMatrix4f;
 
 public class VatanseverEntityPatch extends AbstractArtifactSpiritPatch<VatanseverEntity> {
 
@@ -25,12 +28,30 @@ public class VatanseverEntityPatch extends AbstractArtifactSpiritPatch<Vatanseve
         animator.setCurrentMotionsAsDefault();
     }
 
+    public boolean isOwnerFallFlying(){
+        if(getOwnerPatch() != null){
+            return getOwnerPatch().getOriginal().isFallFlying();
+        }
+        return false;
+    }
+
     /**
      * 自己人也杀
      */
     @Override
     public boolean isTeammate(Entity entityIn) {
         return false;
+    }
+
+    /**
+     * 同步旋转（byd卡顿也同步上了）
+     */
+    @Override
+    public OpenMatrix4f getModelMatrix(float partialTicks) {
+        if(getOwnerPatch() != null && isOwnerFallFlying() && isLogicalClient()){
+            return getOwnerPatch().getModelMatrix(partialTicks);
+        }
+        return super.getModelMatrix(partialTicks);
     }
 
 }
