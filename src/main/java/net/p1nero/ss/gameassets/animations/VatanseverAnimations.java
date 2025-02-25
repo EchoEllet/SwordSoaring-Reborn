@@ -2,7 +2,6 @@ package net.p1nero.ss.gameassets.animations;
 
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import net.p1nero.ss.animation.LinkArtifactSpiritAnimation;
 import net.p1nero.ss.entity.vatansever.VatanseverArmature;
@@ -69,13 +68,7 @@ public class VatanseverAnimations {
         all.addAll(left);
         all.addAll(right);
 
-        VATANSEVER_IDLE = new StaticAnimation(true, "biped/vatansever/living/vatansever_idle", vatanseverArmature)
-                .addEvents(AnimationEvent. TimePeriodEvent.create(
-                        0,3,
-                        (entitypatch, self, params) -> {
-                            VatanseverVFX.flyVFX(entitypatch);
-                        },
-                        AnimationEvent.Side.CLIENT));
+        VATANSEVER_IDLE = new StaticAnimation(true, "biped/vatansever/living/vatansever_idle", vatanseverArmature);
         VATANSEVER_WALK_F = new StaticAnimation(true, "biped/vatansever/living/vatansever_walk", vatanseverArmature);
         VATANSEVER_WALK_F_STOP = new StaticAnimation(true, "biped/vatansever/living/vatansever_walk_stop", vatanseverArmature);
         VATANSEVER_WALK_B = new StaticAnimation(true, "biped/vatansever/living/vatansever_walk_b", vatanseverArmature);
@@ -95,12 +88,18 @@ public class VatanseverAnimations {
         VATANSEVER_FALL = new StaticAnimation(true, "biped/vatansever/living/vatansever_fall", vatanseverArmature);
         VATANSEVER_DEATH = new StaticAnimation(true, "biped/vatansever/living/vatansever_death", vatanseverArmature);
         VATANSEVER_FLOAT = new StaticAnimation(true, "biped/vatansever/living/vatansever_float", vatanseverArmature);
-        VATANSEVER_FLY = new StaticAnimation(true, "biped/vatansever/living/vatansever_fly", vatanseverArmature);
+        VATANSEVER_FLY = new StaticAnimation(true, "biped/vatansever/living/vatansever_fly", vatanseverArmature)
+                .addEvents(AnimationEvent. TimePeriodEvent.create(
+                        0,3,
+                        (entitypatch, self, params) -> {
+                            VatanseverVFX.flyVFX(entitypatch);
+                        },
+                        AnimationEvent.Side.CLIENT));
         VATANSEVER_FLY_STOP = new StaticAnimation(true, "biped/vatansever/living/vatansever_fly_stop", vatanseverArmature);
         VATANSEVER_SNEAK = new StaticAnimation(true, "biped/vatansever/living/vatansever_sneak", vatanseverArmature);
         VATANSEVER_SNEAK_STOP = new StaticAnimation(true, "biped/vatansever/living/vatansever_sneak_stop", vatanseverArmature);
         VATANSEVER_AUTO1 = new BasicAttackAnimation(0.05F, "biped/vatansever/vatansever_auto1", vatanseverArmature,
-                new AttackAnimation.Phase(0.05F, 0.1F, 0.4F, 0.4F, 1.1F, 1.1F, false, InteractionHand.MAIN_HAND, right)
+                new AttackAnimation.Phase(0.05F, 0.1F, 0.1F, 0.1F, 1.1F, 1.1F, false, InteractionHand.MAIN_HAND, right)
                         .addProperty(AnimationProperty.AttackPhaseProperty.DAMAGE_MODIFIER, ValueModifier.multiplier(10.0F))
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F)));
         VATANSEVER_AUTO2 = new BasicAttackAnimation(0.15F, "biped/vatansever/vatansever_auto2", vatanseverArmature,
