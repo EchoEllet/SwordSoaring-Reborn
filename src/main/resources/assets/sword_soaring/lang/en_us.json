@@ -5,20 +5,22 @@
 
   "epicfight.skill_slot.sword_soaring": "Sword Soaring",
   "skill.epicfight.sword_soaring.category": "Sword Soaring",
-  "skill.sword_soaring.sword_soaring_apprentice": "Sword Soaring: Apprentice",
+  "skill.sword_soaring.sword_soaring_apprentice": "Sword Soaring: Lv1",
   "skill.sword_soaring.sword_soaring_apprentice.tooltip": "初窥门径",
-  "skill.sword_soaring.sword_soaring_expert": "Sword Soaring: Expert",
+  "skill.sword_soaring.sword_soaring_expert": "Sword Soaring: Lv2",
   "skill.sword_soaring.sword_soaring_expert.tooltip": "小有所成",
-  "skill.sword_soaring.sword_soaring_master": "Sword Soaring: Master",
-  "skill.sword_soaring.sword_soaring_master.tooltip": "六根清净",
-  "skill.sword_soaring.sword_soaring_elytra_apprentice": "Sword Soaring: Apprentice-Elytra",
+  "skill.sword_soaring.sword_soaring_master": "Soaring: Master",
+  "skill.sword_soaring.sword_soaring_master.tooltip": "六根清净\n\n If you have learnt this skill, when flying in apprentice and expert style, flying will not consume stamina and enter cooldown.",
+  "skill.sword_soaring.sword_soaring_elytra_apprentice": "Soaring-Elytra1",
   "skill.sword_soaring.sword_soaring_elytra_apprentice.tooltip": "初窥门径-Elytra",
-  "skill.sword_soaring.sword_soaring_elytra_expert": "Sword Soaring: Expert-Elytra",
+  "skill.sword_soaring.sword_soaring_elytra_expert": "Soaring-Elytra2",
   "skill.sword_soaring.sword_soaring_elytra_expert.tooltip": "小有所成-Elytra",
-  "skill.sword_soaring.sword_soaring_elytra_master": "Sword Soaring: Master-Elytra",
-  "skill.sword_soaring.sword_soaring_elytra_master.tooltip": "六根清净-Elytra",
+  "skill.sword_soaring.sword_soaring_elytra_master": "Elytra-Master",
+  "skill.sword_soaring.sword_soaring_elytra_master.tooltip": "六根清净-Elytra\n\n If you have learnt this skill, when flying in apprentice and expert style, flying will not consume stamina and enter cooldown.",
 
   "key.sword_soaring.common": "Epic Fight: Sword Soaring",
   "key.sword_soaring.take_off": "Take off",
-  "key.sword_soaring.acceleration": "Accelerate"
+  "key.sword_soaring.acceleration": "Accelerate",
+  "key.sword_soaring.switch_mode": "Switch Mode",
+  "tips.sword_soaring.style_change": "Current Flying Mode: "
 }

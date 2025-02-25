@@ -23,6 +23,7 @@ import net.p1nero.ss.client.keymapping.SwordSoaringKeyMappings;
 import net.p1nero.ss.client.sound.SwordFlyingSoundInstance;
 import net.p1nero.ss.gameassets.SwordSoaringSkillCategories;
 import net.p1nero.ss.gameassets.SwordSoaringSkillSlots;
+import net.p1nero.ss.gameassets.skills.FlyingSkills;
 import net.p1nero.ss.item.SwordSoaringItems;
 import org.jetbrains.annotations.Nullable;
 import yesman.epicfight.client.ClientEngine;
@@ -32,8 +33,10 @@ import yesman.epicfight.skill.*;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
+import yesman.epicfight.world.capabilities.skill.CapabilitySkill;
 import yesman.epicfight.world.entity.eventlistener.PlayerEventListener;
 
+import java.util.Collection;
 import java.util.UUID;
 import java.util.function.Supplier;
 
@@ -138,10 +141,17 @@ public class SwordSoaringSkill extends Skill {
                 basicAttackEvent.setCanceled(true);
             }
         });
+
+        //成为大师后，初级和高级飞行将不消耗耐力
+        Collection<?> capabilitySkill = container.getExecuter().getSkillCapability().getLearnedSkills(SwordSoaringSkillCategories.SWORD_SOARING);
+        if(capabilitySkill.contains(FlyingSkills.SWORD_SOARING_MASTER) || capabilitySkill.contains(FlyingSkills.SWORD_SOARING_ELYTRA_MASTER)){
+            cooldown = 0;
+            consumption = 0;
+        }
     }
 
     public static void onLivingEquipmentChange(LivingEquipmentChangeEvent event){
-        if(event.getEntityLiving() instanceof ServerPlayer serverPlayer){
+        if(event.getEntityLiving() instanceof ServerPlayer serverPlayer && serverPlayer.isAlive()){
             ServerPlayerPatch serverPlayerPatch = EpicFightCapabilities.getEntityPatch(serverPlayer, ServerPlayerPatch.class);
             SkillContainer container = serverPlayerPatch.getSkill(SwordSoaringSkillSlots.SWORD_SOARING);
             if(container.getSkill() instanceof SwordSoaringSkill skill && event.getSlot() == EquipmentSlot.MAINHAND){

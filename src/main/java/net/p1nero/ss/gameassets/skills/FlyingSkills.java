@@ -24,9 +24,9 @@ public class FlyingSkills {
                 .setFlyingAnimations(() -> FlyAnimations.MASTER_INIT, () -> FlyAnimations.MASTER_FLYING, () -> FlyAnimations.MASTER_ACCELERATION), "sword_soaring_master");
         SWORD_SOARING_ELYTRA_APPRENTICE = SwordSoaringSkills.build(event, SwordSoaringSkillElytra::new, SwordSoaringSkill.createSwordSoaringSkill().setPriorSkill(() -> SWORD_SOARING_APPRENTICE)
                 .setFlyingAnimations(() -> FlyAnimations.APPRENTICE_INIT, () -> FlyAnimations.APPRENTICE_FLYING, () -> FlyAnimations.APPRENTICE_ACCELERATION), "sword_soaring_elytra_apprentice");
-        SWORD_SOARING_ELYTRA_EXPERT = SwordSoaringSkills.build(event, SwordSoaringSkillElytra::new, SwordSoaringSkill.createSwordSoaringSkill().setPriorSkill(() -> SWORD_SOARING_EXPERT)
+        SWORD_SOARING_ELYTRA_EXPERT = SwordSoaringSkills.build(event, SwordSoaringSkillElytra::new, SwordSoaringSkill.createSwordSoaringSkill().setPriorSkill(() -> SWORD_SOARING_ELYTRA_APPRENTICE)
                 .setFlyingAnimations(() -> FlyAnimations.EXPERT_INIT, () -> FlyAnimations.EXPERT_FLYING, () -> FlyAnimations.EXPERT_ACCELERATION), "sword_soaring_elytra_expert");
-        SWORD_SOARING_ELYTRA_MASTER = SwordSoaringSkills.build(event, SwordSoaringSkillElytra::new, SwordSoaringSkill.createSwordSoaringSkill().setPriorSkill(() -> SWORD_SOARING_MASTER)
+        SWORD_SOARING_ELYTRA_MASTER = SwordSoaringSkills.build(event, SwordSoaringSkillElytra::new, SwordSoaringSkill.createSwordSoaringSkill().setPriorSkill(() -> SWORD_SOARING_ELYTRA_EXPERT)
                 .setFlyingAnimations(() -> FlyAnimations.MASTER_INIT, () -> FlyAnimations.MASTER_FLYING, () -> FlyAnimations.MASTER_ACCELERATION), "sword_soaring_elytra_master");
 
     }
