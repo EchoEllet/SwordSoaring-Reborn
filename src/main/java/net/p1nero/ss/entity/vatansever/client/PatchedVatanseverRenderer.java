@@ -2,7 +2,7 @@ package net.p1nero.ss.entity.vatansever.client;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.p1nero.ss.entity.client.EmptyEntityModel;
+import net.p1nero.ss.entity.client.model.EmptyEntityModel;
 import net.p1nero.ss.entity.vatansever.VatanseverEntity;
 import net.p1nero.ss.entity.vatansever.VatanseverEntityPatch;
 import net.p1nero.ss.gameassets.SwordSoaringMeshes;

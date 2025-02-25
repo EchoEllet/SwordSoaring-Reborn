@@ -32,6 +32,9 @@ public abstract class AbstractArtifactSpiritEntity extends TamableAnimal {
         LivingEntity owner = getOwner();
         if (owner != null) {
             moveToOwner(owner);
+            if(getOriginalItem() == null){
+                return;
+            }
             if (!owner.getMainHandItem().is(getOriginalItem()) && shouldRemoveWhenOwnerLost()) {
                 discard();
             }
@@ -51,6 +54,10 @@ public abstract class AbstractArtifactSpiritEntity extends TamableAnimal {
         return true;
     }
 
+    /**
+     * null 表示什么物品都可以
+     */
+    @Nullable
     protected abstract Item getOriginalItem();
 
     public static AttributeSupplier getDefaultAttribute() {

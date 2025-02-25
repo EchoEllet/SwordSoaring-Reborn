@@ -6,6 +6,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.p1nero.ss.SwordSoaring;
 import net.p1nero.ss.entity.AbstractArtifactSpiritEntity;
 import net.p1nero.ss.entity.SwordSoaringEntities;
+import net.p1nero.ss.entity.screen_sword.ScreenSwordPatch;
 import net.p1nero.ss.entity.vatansever.VatanseverEntityPatch;
 import net.p1nero.ss.entity.vatansever_storm.VatanseverStormEntityPatch;
 import net.p1nero.ss.gameassets.SwordSoaringArmatures;
@@ -18,20 +19,16 @@ public class ModEvents{
 
     @SubscribeEvent
     public static void entityAttributeEvent(EntityAttributeCreationEvent event) {
+        event.put(SwordSoaringEntities.SCREEN_SWORD.get(), AbstractArtifactSpiritEntity.getDefaultAttribute());
         event.put(SwordSoaringEntities.VATANSEVER.get(), AbstractArtifactSpiritEntity.getDefaultAttribute());
         event.put(SwordSoaringEntities.VATANSEVER_STORM.get(), AbstractArtifactSpiritEntity.getDefaultAttribute());
     }
 
     @SubscribeEvent
     public static void setPatch(EntityPatchRegistryEvent event) {
+        event.getTypeEntry().put(SwordSoaringEntities.SCREEN_SWORD.get(), (entity) -> ScreenSwordPatch::new);
         event.getTypeEntry().put(SwordSoaringEntities.VATANSEVER.get(), (entity) -> VatanseverEntityPatch::new);
         event.getTypeEntry().put(SwordSoaringEntities.VATANSEVER_STORM.get(), (entity) -> VatanseverStormEntityPatch::new);
-    }
-
-    @SubscribeEvent
-    public static void setArmature(ModelBuildEvent.ArmatureBuild event) {
-        Armatures.registerEntityTypeArmature(SwordSoaringEntities.VATANSEVER.get(), SwordSoaringArmatures.vatanseverArmature);
-        Armatures.registerEntityTypeArmature(SwordSoaringEntities.VATANSEVER_STORM.get(), SwordSoaringArmatures.vatanseverStormArmature);
     }
 
 }

@@ -31,7 +31,9 @@ public class ForgeEvents {
         float dropChanceModifier = dropChance / (float) (antiDropChance + dropChance);
 
         String[] skills = new String[]{
-                "sword_soaring:sword_soaring"
+                "sword_soaring:sword_soaring_apprentice",
+                "sword_soaring:sword_soaring_expert",
+                "sword_soaring:sword_soaring_master"
         };
 
         if (event.getName().equals(BuiltInLootTables.END_CITY_TREASURE)) {
