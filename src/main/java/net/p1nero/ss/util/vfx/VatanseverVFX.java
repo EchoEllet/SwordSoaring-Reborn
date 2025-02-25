@@ -108,7 +108,7 @@ public class VatanseverVFX {
                     relativeVelocity.z
             );
         }
-        for (int i = 0; i < 30; i++) {
+        for (int i = 0; i < 1; i++) {
             world.addParticle(
                     ParticleTypes.END_ROD,
                     transformMatrix.m30 + (float) vatanseverEntity.getX(),
@@ -119,4 +119,5 @@ public class VatanseverVFX {
                     relativeVelocity.z
             );
         }
-    }}
+    }
+}

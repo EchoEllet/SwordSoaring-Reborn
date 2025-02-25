@@ -98,25 +98,20 @@ public class VatanseverAnimations {
         VATANSEVER_FLY_STOP = new StaticAnimation(true, "biped/vatansever/living/vatansever_fly_stop", vatanseverArmature);
         VATANSEVER_SNEAK = new StaticAnimation(true, "biped/vatansever/living/vatansever_sneak", vatanseverArmature);
         VATANSEVER_SNEAK_STOP = new StaticAnimation(true, "biped/vatansever/living/vatansever_sneak_stop", vatanseverArmature);
-        VATANSEVER_AUTO1 = new BasicAttackAnimation(0.05F, "biped/vatansever/vatansever_auto1", vatanseverArmature,
-                new AttackAnimation.Phase(0.05F, 0.1F, 0.1F, 0.1F, 1.1F, 1.1F, false, InteractionHand.MAIN_HAND, right)
-                        .addProperty(AnimationProperty.AttackPhaseProperty.DAMAGE_MODIFIER, ValueModifier.multiplier(10.0F))
+        VATANSEVER_AUTO1 = new AttackAnimation(0.01F, "biped/vatansever/vatansever_auto1", vatanseverArmature,
+                new AttackAnimation.Phase(0.0F, 0.7F, 0.7F, 1.1F, 1.1F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, right)
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F)));
-        VATANSEVER_AUTO2 = new BasicAttackAnimation(0.15F, "biped/vatansever/vatansever_auto2", vatanseverArmature,
-                new AttackAnimation.Phase(0.05F, 0.2F, 0.3F, 0.5F, 1.9F, 1.9F, false, InteractionHand.MAIN_HAND, right)
-                        .addProperty(AnimationProperty.AttackPhaseProperty.DAMAGE_MODIFIER, ValueModifier.multiplier(10.0F))
+        VATANSEVER_AUTO2 = new AttackAnimation(0.01F, "biped/vatansever/vatansever_auto2", vatanseverArmature,
+                new AttackAnimation.Phase(0.0F, 0.7F, 0.7F, 1.9F, 1.9F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, left)
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F)));
-        VATANSEVER_AUTO3 = new BasicAttackAnimation(0.15F, "biped/vatansever/vatansever_auto3", vatanseverArmature,
-                new AttackAnimation.Phase(0.05F, 0.2F, 0.3F, 0.5F, 2.25F, 2.25F, false, InteractionHand.MAIN_HAND, left)
-                        .addProperty(AnimationProperty.AttackPhaseProperty.DAMAGE_MODIFIER, ValueModifier.multiplier(10.0F))
+        VATANSEVER_AUTO3 = new AttackAnimation(0.01F, "biped/vatansever/vatansever_auto3", vatanseverArmature,
+                new AttackAnimation.Phase(0.0F, 0.9F, 0.9F, 1.2F, 1.2F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, right)
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F)));
-        VATANSEVER_AUTO4 = new BasicAttackAnimation(0.15F, "biped/vatansever/vatansever_auto4", vatanseverArmature,
-                new AttackAnimation.Phase(0.05F, 0.2F, 0.3F, 0.5F, 0.79F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, all)
-                        .addProperty(AnimationProperty.AttackPhaseProperty.DAMAGE_MODIFIER, ValueModifier.multiplier(10.0F))
+        VATANSEVER_AUTO4 = new AttackAnimation(0.01F, "biped/vatansever/vatansever_auto4", vatanseverArmature,
+                new AttackAnimation.Phase(0.0F, 0.5F, 0.5F, 0.79F, 0.79F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, all)
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F)));
         VATANSEVER_AUTO5 = new AttackAnimation(0.15F, "biped/vatansever/vatansever_auto5", vatanseverArmature,
                 new AttackAnimation.Phase(0.05F, 0.2F, 0.2F, 0.5F, 0.6F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, right)
-                        .addProperty(AnimationProperty.AttackPhaseProperty.DAMAGE_MODIFIER, ValueModifier.multiplier(10.0F))
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F)));
         VATANSEVER_STORM_START = new ActionAnimation(0.15F, "biped/vatansever/skill/vatansever_storm_start", vatanseverArmature);
 
