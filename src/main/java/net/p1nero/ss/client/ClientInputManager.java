@@ -64,6 +64,9 @@ public class ClientInputManager {
             if(localPlayerPatch != null){
                 SkillContainer skillContainer = localPlayerPatch.getSkill(SwordSoaringSkillSlots.SWORD_SOARING);
                 List<Skill> learnedSkills = localPlayerPatch.getSkillCapability().getLearnedSkills(SwordSoaringSkillCategories.SWORD_SOARING).stream().toList();
+                if(learnedSkills.isEmpty()){
+                    return;
+                }
                 int index = learnedSkills.indexOf(skillContainer.getSkill());
                 int next = (index + 1) % learnedSkills.size();
                 Skill nextSkill = learnedSkills.get(next);

@@ -1,8 +1,18 @@
 package net.p1nero.ss.util;
 
 import com.mojang.math.Quaternion;
+import net.minecraft.world.phys.Vec3;
+import yesman.epicfight.api.utils.math.Vec3f;
 
 public class MathUtil {
+    public static Quaternion rotateTo(Vec3 from, Vec3 to){
+        return rotateTo(Vec3f.fromDoubleVector(from), Vec3f.fromDoubleVector(to));
+    }
+
+    public static Quaternion rotateTo(Vec3f from, Vec3f to){
+        return rotateTo(from.x, from.y, from.z, to.x, to.y, to.z);
+    }
+
     public static Quaternion rotateTo(float fromDirX, float fromDirY, float fromDirZ, float toDirX, float toDirY, float toDirZ) {
         Quaternion self = new Quaternion(0, 0, 0, 1);
         return rotateTo(fromDirX, fromDirY, fromDirZ, toDirX, toDirY, toDirZ, self, self);

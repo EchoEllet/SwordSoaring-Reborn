@@ -9,10 +9,10 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.data.models.model.TextureMapping;
 import net.minecraft.resources.ResourceLocation;
-import net.p1nero.ss.entity.sword.SwordEntity;
+import net.p1nero.ss.entity.sword.AbstractSwordEntity;
 import org.jetbrains.annotations.NotNull;
 
-public class SwordEntityRenderer extends EntityRenderer<SwordEntity> {
+public class SwordEntityRenderer extends EntityRenderer<AbstractSwordEntity> {
 
     public SwordEntityRenderer(EntityRendererProvider.Context context) {
         super(context);
@@ -23,7 +23,7 @@ public class SwordEntityRenderer extends EntityRenderer<SwordEntity> {
      * 原理是拦截渲染实体的一些参数，然后用于渲染物品。
      */
     @Override
-    public void render(SwordEntity sword, float p_114486_, float p_114487_, PoseStack poseStack, @NotNull MultiBufferSource multiBufferSource, int light) {
+    public void render(AbstractSwordEntity sword, float p_114486_, float p_114487_, PoseStack poseStack, @NotNull MultiBufferSource multiBufferSource, int light) {
         poseStack.pushPose();
         sword.setPose(poseStack);
         BakedModel model = Minecraft.getInstance().getItemRenderer().getItemModelShaper().getItemModel(sword.getItemStack());
@@ -35,7 +35,7 @@ public class SwordEntityRenderer extends EntityRenderer<SwordEntity> {
      * 好像没什么用但是Renderer不能没有
      */
     @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull SwordEntity swordEntity) {
+    public @NotNull ResourceLocation getTextureLocation(@NotNull AbstractSwordEntity swordEntity) {
         return TextureMapping.getItemTexture(swordEntity.getItemStack().getItem());
     }
 }
