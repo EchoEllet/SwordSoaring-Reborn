@@ -23,7 +23,7 @@ public class VatanseverSkills {
         ComboNode aaaaa = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_AUTO5);
         ComboNode storm = ComboNode.createNode(()->VatanseverAnimations.PLAYER_STORM_START);
         root.key1(a);
-        root.keyWeaponInnate(storm);
+        root.key3(storm);
         a.key1(aa);
         aa.key1(aaa);
         aaa.key1(aaaa);

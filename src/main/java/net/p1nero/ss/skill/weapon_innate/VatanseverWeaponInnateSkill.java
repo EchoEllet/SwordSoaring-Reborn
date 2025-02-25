@@ -37,25 +37,7 @@ public class VatanseverWeaponInnateSkill extends ComboBasicAttack {
     @Override
     public void updateContainer(SkillContainer container) {
         super.updateContainer(container);
-        SkillDataManager manager = container.getDataManager();
-        if(!container.getExecuter().isLogicalClient()){
-            ServerPlayerPatch serverPlayerPatch = ((ServerPlayerPatch) container.getExecuter());
-            ServerPlayer serverPlayer =serverPlayerPatch.getOriginal();
-            int current = manager.getDataValue(STORM_TIMER);
-            if(current > 0){
-                if(current == 66){
-                    pos = new Vec3(serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ());
-                    createStorm(serverPlayer, VatanseverStormAnimations.VATANSEVER_STORM);
-                }
-                manager.setDataSync(STORM_TIMER, current - 1, serverPlayer);
-            }
-        }
-    }
 
-    public void createStorm(ServerPlayer serverPlayer, StaticAnimation staticAnimation){
-        VatanseverStormEntity stormEntity = new VatanseverStormEntity(serverPlayer.level, serverPlayer, pos);
-        serverPlayer.level.addFreshEntity(stormEntity);
-        EpicFightCapabilities.getEntityPatch(stormEntity, VatanseverStormEntityPatch.class).playAnimationSynchronized(staticAnimation, 0.15F);
     }
 
     @Override
