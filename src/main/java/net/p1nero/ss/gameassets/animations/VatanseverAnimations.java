@@ -67,6 +67,7 @@ public class VatanseverAnimations {
     public static StaticAnimation VATANSEVER_FALL;
     public static StaticAnimation VATANSEVER_FLOAT;
     public static StaticAnimation VATANSEVER_FLY;
+    public static StaticAnimation VATANSEVER_BEGIN;
     public static StaticAnimation VATANSEVER_FLY_STOP;
     public static StaticAnimation VATANSEVER_SNEAK;
     public static StaticAnimation VATANSEVER_SNEAK_STOP;
@@ -119,9 +120,9 @@ public class VatanseverAnimations {
                 new AttackAnimation.Phase(0.0F, 0.7F, 0.7F, 1.1F, 1.1F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, right)
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F)));
         VATANSEVER_AUTO2 = new AttackAnimation(0.01F, "biped/vatansever/vatansever_auto2", vatanseverArmature,
-                new AttackAnimation.Phase(0.0F, 0.7F, 0.7F, 1.0F, 1.2F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, left)
+                new AttackAnimation.Phase(0.0F, 0.7F, 0.7F, 1.0F, 1.60F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, left)
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F)),
-                new AttackAnimation.Phase(1.2F, 1.7F, 1.2F, 1.9F, 1.9F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, left)
+                new AttackAnimation.Phase(1.63F, 1.7F, 1.2F, 1.9F, 1.9F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, left)
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F)));
         VATANSEVER_AUTO3 = new AttackAnimation(0.01F, "biped/vatansever/vatansever_auto3", vatanseverArmature,
                 new AttackAnimation.Phase(0.0F, 0.9F, 0.9F, 1.2F, 1.2F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, right)
@@ -142,10 +143,28 @@ public class VatanseverAnimations {
                 .newTimePair(1.0F, Float.MAX_VALUE)
                 .addStateRemoveOld(EntityState.TURNING_LOCKED, true)
                 .newTimePair(0.0F, Float.MAX_VALUE)
-                .addStateRemoveOld(EntityState.MOVEMENT_LOCKED, true);
+                .addStateRemoveOld(EntityState.MOVEMENT_LOCKED, true)
+                .addEvents(AnimationEvent.TimeStampedEvent.create(1.56F, ((livingEntityPatch, staticAnimation, objects) -> {
+                            groundSplit(livingEntityPatch, 3, 0, 0, 0, 99999, 1.1F, 200);
+                        }), AnimationEvent.Side.BOTH),
+                        AnimationEvent.TimeStampedEvent.create(1.65F, ((livingEntityPatch, staticAnimation, objects) -> {
+                            groundSplit(livingEntityPatch, 3.8, 0, 0, 0, 99999, 1.1F, 200);
+                        }), AnimationEvent.Side.BOTH),
+                        AnimationEvent.TimeStampedEvent.create(1.74F, ((livingEntityPatch, staticAnimation, objects) -> {
+                            groundSplit(livingEntityPatch, 5, 0, 0, 0, 99999, 1.1F, 200);
+                        }), AnimationEvent.Side.BOTH));
         PLAYER_AUTO3 = new LinkArtifactSpiritAnimation(0.15F, 2.25F, "biped/vatansever/vatansever_auto3_owner", biped, VATANSEVER_AUTO3)
                 .newTimePair(0.0F, 3.0F)
-                .addStateRemoveOld(EntityState.TURNING_LOCKED, true);
+                .addStateRemoveOld(EntityState.TURNING_LOCKED, true)
+                .addEvents(AnimationEvent.TimeStampedEvent.create(1F, ((livingEntityPatch, staticAnimation, objects) -> {
+                            groundSplit(livingEntityPatch, 3, 0, 0, 0, 99999, 1.1F, 200);
+                        }), AnimationEvent.Side.BOTH),
+                        AnimationEvent.TimeStampedEvent.create(1.09F, ((livingEntityPatch, staticAnimation, objects) -> {
+                            groundSplit(livingEntityPatch, 3.8, 0, 0, 0, 99999, 1.1F, 200);
+                        }), AnimationEvent.Side.BOTH),
+                        AnimationEvent.TimeStampedEvent.create(1.18F, ((livingEntityPatch, staticAnimation, objects) -> {
+                            groundSplit(livingEntityPatch, 5, 0, 0, 0, 99999, 1.1F, 200);
+                        }), AnimationEvent.Side.BOTH));
         PLAYER_AUTO4 = new LinkArtifactSpiritAnimation(0.15F, 4F, "biped/vatansever/vatansever_auto4_owner", biped, VATANSEVER_AUTO4)
                 .newTimePair(1.0F, Float.MAX_VALUE)
                 .addStateRemoveOld(EntityState.TURNING_LOCKED, true)
@@ -156,8 +175,10 @@ public class VatanseverAnimations {
         PLAYER_STORM_START = new LinkArtifactSpiritAnimation(0.15F, "biped/vatansever/skill/vatansever_storm_start", biped, VATANSEVER_STORM_START)
                 .addEvents(AnimationEvent.TimeStampedEvent.create(0.5F, ((livingEntityPatch, staticAnimation, objects) -> {
                     groundSplit(livingEntityPatch, 0, 0, 0, 0, 0, 3, 2000);
-                    createStorm(livingEntityPatch, 0, 5, 0, VatanseverStormAnimations.VATANSEVER_STORM_UP);
-                    createStorm(livingEntityPatch, 0, 5, 0, VatanseverStormAnimations.VATANSEVER_STORM_MIDDLE);
+                    createStorm(livingEntityPatch, 0, 18, 0, VatanseverStormAnimations.VATANSEVER_STORM_UP);
+                    createStorm(livingEntityPatch, 0, 20, 0, VatanseverStormAnimations.VATANSEVER_STORM_MIDDLE);
+                    createStorm(livingEntityPatch, 0, 20, 0, VatanseverStormAnimations.VATANSEVER_STORM_MIDDLE_2);
+                    createStorm(livingEntityPatch, 0, 22, 0, VatanseverStormAnimations.VATANSEVER_STORM_DOWN);
                 }), AnimationEvent.Side.BOTH));
     }
 
@@ -178,9 +199,10 @@ public class VatanseverAnimations {
         Vec3 pos = entity.position();
         Vec3 dir = entity.getViewVector(1).normalize().scale(viewOffset);
         Vec3 target = pos.add(dir.x + xOffset, -1 + yOffset, dir.z + zOffset);
+        Vec3 damagetarget = pos.add(dir.x + xOffset,yOffset, dir.z + zOffset);
         if(entity.level instanceof ServerLevel level){
             LevelUtil.circleSlamFracture(entity, level, target, radius);
-            dealAreaDamage(level, target, entity, damage, radius);
+            dealAreaDamage(level,damagetarget, entity, damage, radius);
         } else {
             createRandomSmokeLine(entity.level, target, particleCount);
         }
@@ -301,6 +323,7 @@ public class VatanseverAnimations {
         //线程安全迭代
         for (LivingEntity entity : new ArrayList<>(entities)) {
             if (entity.invulnerableTime >= 0 && source != null) {
+                entity.invulnerableTime = 0;
                 entity.hurt(DamageSource.indirectMagic(source, source), damage);
                 entity.invulnerableTime = 0;
             }
