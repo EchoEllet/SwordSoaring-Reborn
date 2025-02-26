@@ -46,6 +46,8 @@ public class VatanseverAnimations {
     public static StaticAnimation PLAYER_AUTO3_B;
     public static StaticAnimation PLAYER_AUTO4;
     public static StaticAnimation PLAYER_AUTO4_B;
+    public static StaticAnimation PLAYER_INIT;
+    public static StaticAnimation PLAYER_FLY_BEGIN;
     public static StaticAnimation PLAYER_STORM_START;
 
     public static StaticAnimation VATANSEVER_IDLE;
@@ -70,6 +72,8 @@ public class VatanseverAnimations {
     public static StaticAnimation VATANSEVER_AUTO3_B;
     public static StaticAnimation VATANSEVER_AUTO4;
     public static StaticAnimation VATANSEVER_AUTO4_B;
+    public static StaticAnimation VATANSEVER_INIT;
+    public static StaticAnimation VATANSEVER_FLY_BEGIN;
     public static StaticAnimation VATANSEVER_STORM_START;
 
     public static void buildVatanseverAnim() {
@@ -130,6 +134,9 @@ public class VatanseverAnimations {
                 new AttackAnimation.Phase(0.0F, 1.33F, 1.33F, 1.43F, 4.0F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, all)
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F)));
         VATANSEVER_STORM_START = new ActionAnimation(0.15F, "biped/vatansever/skill/vatansever_storm_start", vatanseverArmature);
+        VATANSEVER_INIT = new ActionAnimation(0.15F, "biped/vatansever/vatansever_init", vatanseverArmature);
+        VATANSEVER_FLY_BEGIN = new ActionAnimation(0.15F, "biped/vatansever/vatansever_fly_begin", vatanseverArmature)
+                .addProperty(AnimationProperty.ActionAnimationProperty.MOVE_VERTICAL, true);
 
         HumanoidArmature biped = Armatures.BIPED;
         PLAYER_AUTO1 = new LinkArtifactSpiritAnimation(0.15F, 1.1F, "biped/vatansever/vatansever_auto1_owner", biped, VATANSEVER_AUTO1)
@@ -173,6 +180,17 @@ public class VatanseverAnimations {
         PLAYER_AUTO4_B = new LinkArtifactSpiritAnimation(0.15F, 4F, "biped/vatansever/vatansever_auto4_b_owner", biped, VATANSEVER_AUTO4_B)
                 .newTimePair(1.0F, Float.MAX_VALUE)
                 .addStateRemoveOld(EntityState.TURNING_LOCKED, true);
+        PLAYER_INIT = new LinkArtifactSpiritAnimation(0.15F, "biped/vatansever/vatansever_init", biped, VATANSEVER_INIT)
+                .newTimePair(0.0F, Float.MAX_VALUE)
+                .addStateRemoveOld(EntityState.TURNING_LOCKED, false)
+                .addStateRemoveOld(EntityState.MOVEMENT_LOCKED, false);
+        PLAYER_FLY_BEGIN = new ActionAnimation(0.15F, "biped/vatansever/vatansever_fly_begin", biped)
+                .addProperty(AnimationProperty.ActionAnimationProperty.MOVE_VERTICAL, true)
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> {
+                    if(livingEntityPatch.getOriginal() instanceof ServerPlayer serverPlayer){
+                        serverPlayer.startFallFlying();
+                    }
+                }, AnimationEvent.Side.SERVER));
         PLAYER_STORM_START = new LinkArtifactSpiritAnimation(0.15F, "biped/vatansever/skill/vatansever_storm_start", biped, VATANSEVER_STORM_START)
                 .addEvents(AnimationEvent.TimeStampedEvent.create(0.5F, ((livingEntityPatch, staticAnimation, objects) -> {
                     groundSplit(livingEntityPatch, 0, 0, 0, 0, 0, 3, 2000);

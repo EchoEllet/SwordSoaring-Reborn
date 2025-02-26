@@ -6,6 +6,7 @@ import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
 import net.p1nero.ss.SwordSoaring;
 import net.p1nero.ss.network.packet.BasePacket;
+import net.p1nero.ss.network.packet.server.RequestEntityPlayAnimationPacket;
 
 import java.util.function.Function;
 
@@ -19,7 +20,7 @@ public class PacketHandler {
     private static int index;
 
     public static synchronized void register() {
-
+        register(RequestEntityPlayAnimationPacket.class, RequestEntityPlayAnimationPacket::decode);
     }
 
     private static <MSG extends BasePacket> void register(final Class<MSG> packet, Function<FriendlyByteBuf, MSG> decoder) {

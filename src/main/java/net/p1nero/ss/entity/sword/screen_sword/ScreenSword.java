@@ -11,12 +11,22 @@ import net.p1nero.ss.entity.sword.AbstractSwordEntity;
 
 public class ScreenSword extends AbstractSwordEntity {
 
+    private int maxTickCount = - 1;
     public ScreenSword(EntityType<? extends AbstractArtifactSpiritEntity> entityType, Level level) {
         super(entityType, level);
     }
 
-    public ScreenSword(Player owner){
+    public ScreenSword(Player owner, int maxTickCount){
         super(SwordSoaringEntities.SCREEN_SWORD.get(), owner.getMainHandItem().copy(), owner);
+        this.maxTickCount = maxTickCount;
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if(!level.isClientSide && tickCount == maxTickCount){
+            this.discard();
+        }
     }
 
     @Override

@@ -4,11 +4,13 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.p1nero.ss.entity.vatansever.VatanseverEntity;
 import net.p1nero.ss.entity.vatansever.VatanseverEntityPatch;
+import net.p1nero.ss.gameassets.animations.VatanseverAnimations;
 import yesman.epicfight.api.utils.AttackResult;
 import yesman.epicfight.api.utils.LevelUtil;
 import yesman.epicfight.skill.Skill;
 import yesman.epicfight.skill.SkillContainer;
 import yesman.epicfight.skill.SkillDataManager;
+import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.entity.eventlistener.PlayerEventListener;
 
 import java.util.UUID;
@@ -29,6 +31,7 @@ public class VatanseverPassive extends ArtifactSpiritPassiveSkill{
         if(!container.getExecuter().isLogicalClient() && container.getDataManager().getDataValue(ARTIFACT_SPIRIT_ENTITY_ID) == 0){
             VatanseverEntity vatanseverEntity = new VatanseverEntity(container.getExecuter().getOriginal().level, container.getExecuter().getOriginal());
             container.getExecuter().getOriginal().level.addFreshEntity(vatanseverEntity);
+            container.getExecuter().playAnimationSynchronized(VatanseverAnimations.VATANSEVER_INIT, 0.15F);
             container.getDataManager().setDataSync(ARTIFACT_SPIRIT_ENTITY_ID, vatanseverEntity.getId(), ((ServerPlayer) container.getExecuter().getOriginal()));
         }
         container.getExecuter().getEventListener().addEventListener(PlayerEventListener.EventType.SET_TARGET_EVENT, EVENT_UUID, setTargetEvent -> {

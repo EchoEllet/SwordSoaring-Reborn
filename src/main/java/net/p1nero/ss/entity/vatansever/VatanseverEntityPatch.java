@@ -1,8 +1,6 @@
 package net.p1nero.ss.entity.vatansever;
 
-import net.minecraft.world.entity.Entity;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.p1nero.ss.entity.AbstractArtifactSpiritPatch;
 import net.p1nero.ss.gameassets.animations.VatanseverAnimations;
 import yesman.epicfight.api.animation.LivingMotions;
@@ -10,6 +8,17 @@ import yesman.epicfight.api.client.animation.ClientAnimator;
 import yesman.epicfight.api.utils.math.OpenMatrix4f;
 
 public class VatanseverEntityPatch extends AbstractArtifactSpiritPatch<VatanseverEntity> {
+
+    /**
+     * 刚加入时服务端调用playSync客户端会来不及播，不知为何WitherClone可以我不行。只能手动修
+     */
+    @Override
+    public void onJoinWorld(VatanseverEntity entityIn, EntityJoinWorldEvent event) {
+        super.onJoinWorld(entityIn, event);
+        if(this.isLogicalClient()){
+            this.getClientAnimator().playAnimation(VatanseverAnimations.VATANSEVER_INIT, 0.0F);
+        }
+    }
 
     @Override
     public void initAnimator(ClientAnimator animator) {
@@ -32,14 +41,6 @@ public class VatanseverEntityPatch extends AbstractArtifactSpiritPatch<Vatanseve
         if(getOwnerPatch() != null){
             return getOwnerPatch().getOriginal().isFallFlying();
         }
-        return false;
-    }
-
-    /**
-     * 自己人也杀
-     */
-    @Override
-    public boolean isTeammate(Entity entityIn) {
         return false;
     }
 

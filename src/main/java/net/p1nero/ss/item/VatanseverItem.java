@@ -10,8 +10,11 @@ import net.minecraft.world.item.Tier;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
+import net.p1nero.ss.gameassets.animations.VatanseverAnimations;
 import org.jetbrains.annotations.NotNull;
 import yesman.epicfight.gameasset.EpicFightSounds;
+import yesman.epicfight.world.capabilities.EpicFightCapabilities;
+import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 import yesman.epicfight.world.item.WeaponItem;
 
 public class VatanseverItem extends WeaponItem {
@@ -22,13 +25,17 @@ public class VatanseverItem extends WeaponItem {
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level pLevel, @NotNull Player pPlayer, @NotNull InteractionHand pUsedHand) {
         if (!pLevel.isClientSide) {
-            if (!pPlayer.onGround && !pPlayer.isFallFlying() && !pPlayer.isInWater() && !pPlayer.hasEffect(MobEffects.LEVITATION)) {
-                pLevel.playSound(null, pPlayer.getX(), pPlayer.getY(), pPlayer.getZ(), EpicFightSounds.ENTITY_MOVE, pPlayer.getSoundSource(), 1.0F, 1.0F);
-                pPlayer.startFallFlying();
+            if (pPlayer.onGround && !pPlayer.isFallFlying() && !pPlayer.isInWater() && !pPlayer.hasEffect(MobEffects.LEVITATION)) {
+                ServerPlayerPatch serverPlayerPatch = EpicFightCapabilities.getEntityPatch(pPlayer, ServerPlayerPatch.class);
+                if(serverPlayerPatch.isBattleMode() && !serverPlayerPatch.getEntityState().inaction()){
+                    serverPlayerPatch.playAnimationSynchronized(VatanseverAnimations.PLAYER_FLY_BEGIN, 0.15F);
+                    pLevel.playSound(null, pPlayer.getX(), pPlayer.getY(), pPlayer.getZ(), EpicFightSounds.ENTITY_MOVE, pPlayer.getSoundSource(), 1.0F, 1.0F);
+
+                }
             }
-        } else {
+        } else if(!pPlayer.onGround && pPlayer.isFallFlying()){
             Vec3 view = pPlayer.getViewVector(1.0F);
-            pPlayer.push(view.x, pPlayer.onGround ? Math.abs(view.y) : view.y, view.z);
+            pPlayer.push(view.x, view.y, view.z);
         }
         return InteractionResultHolder.fail(pPlayer.getItemInHand(pUsedHand));
     }

@@ -101,6 +101,13 @@ public abstract class AbstractArtifactSpiritPatch<T extends AbstractArtifactSpir
         return getOwnerPatch().getWeaponHitSound(hand);
     }
 
+    /**
+     * 自己人也杀
+     */
+    @Override
+    public boolean isTeammate(Entity entityIn) {
+        return false;
+    }
 
     @Override
     @OnlyIn(Dist.CLIENT)

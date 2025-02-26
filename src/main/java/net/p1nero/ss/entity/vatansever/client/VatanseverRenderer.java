@@ -15,9 +15,12 @@ public class VatanseverRenderer extends MobRenderer<VatanseverEntity, EmptyEntit
         super(context, new EmptyEntityModel<>(), 1);
     }
 
+    /**
+     * 延缓5tick，遮羞一下
+     */
     @Override
-    public boolean shouldRender(@NotNull VatanseverEntity p_115468_, @NotNull Frustum p_115469_, double p_115470_, double p_115471_, double p_115472_) {
-        return true;
+    public boolean shouldRender(@NotNull VatanseverEntity pLivingEntity, @NotNull Frustum pCamera, double pCamX, double pCamY, double pCamZ) {
+        return pLivingEntity.tickCount > 5;
     }
 
     @Override
