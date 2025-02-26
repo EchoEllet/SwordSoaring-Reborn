@@ -4,7 +4,7 @@ import com.mojang.math.Quaternion;
 import net.minecraft.world.phys.Vec3;
 import yesman.epicfight.api.utils.math.Vec3f;
 
-public class MathUtil {
+public class MathUtils {
     public static Quaternion rotateTo(Vec3 from, Vec3 to){
         return rotateTo(Vec3f.fromDoubleVector(from), Vec3f.fromDoubleVector(to));
     }

@@ -1,12 +1,14 @@
 package net.p1nero.ss.entity.screen_sword;
 
 import com.google.common.collect.ImmutableList;
+import net.p1nero.ss.entity.IReplaceableArmature;
 import yesman.epicfight.api.animation.Joint;
 import yesman.epicfight.api.model.Armature;
 
+import java.util.List;
 import java.util.Map;
 
-public class ScreenSwordArmature extends Armature {
+public class ScreenSwordArmature extends Armature implements IReplaceableArmature {
     public final Joint W1, W2, W3, W4, W5, W6;
     public final ImmutableList<Joint> joints;
     public ScreenSwordArmature(int jointNumber, Joint rootJoint, Map<String, Joint> jointMap) {
@@ -20,4 +22,8 @@ public class ScreenSwordArmature extends Armature {
         joints = ImmutableList.of(W1, W2, W3, W4, W5, W6);
     }
 
+    @Override
+    public List<Joint> getJoints() {
+        return joints;
+    }
 }

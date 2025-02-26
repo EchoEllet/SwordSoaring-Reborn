@@ -17,7 +17,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.p1nero.ss.entity.SwordSoaringEntities;
-import net.p1nero.ss.util.MathUtil;
+import net.p1nero.ss.util.MathUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -54,7 +54,7 @@ public abstract class AbstractSwordEntity extends TamableAnimal implements ISwor
     @Override
     @OnlyIn(Dist.CLIENT)
     public void setPose(PoseStack poseStack){
-        poseStack.mulPose(MathUtil.rotateTo(new Vec3(0, 1, 0), getDeltaMovement()));
+        poseStack.mulPose(MathUtils.rotateTo(new Vec3(0, 1, 0), getDeltaMovement()));
     }
 
     @Nullable

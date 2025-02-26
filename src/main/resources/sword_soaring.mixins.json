@@ -12,6 +12,7 @@
     "JsonModelLoaderMixin",
     "LivingEntityMixin",
     "MultiOBBColliderMixin",
+    "OpenMatrix4fMixin",
     "PlayerMixin",
     "WeaponCapabilityMixin"
   ],
