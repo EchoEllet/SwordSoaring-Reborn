@@ -43,7 +43,9 @@ public class VatanseverAnimations {
     public static StaticAnimation PLAYER_AUTO1;
     public static StaticAnimation PLAYER_AUTO2;
     public static StaticAnimation PLAYER_AUTO3;
+    public static StaticAnimation PLAYER_AUTO3_B;
     public static StaticAnimation PLAYER_AUTO4;
+    public static StaticAnimation PLAYER_AUTO4_B;
     public static StaticAnimation PLAYER_STORM_START;
 
     public static StaticAnimation VATANSEVER_IDLE;
@@ -65,7 +67,9 @@ public class VatanseverAnimations {
     public static StaticAnimation VATANSEVER_AUTO1;
     public static StaticAnimation VATANSEVER_AUTO2;
     public static StaticAnimation VATANSEVER_AUTO3;
+    public static StaticAnimation VATANSEVER_AUTO3_B;
     public static StaticAnimation VATANSEVER_AUTO4;
+    public static StaticAnimation VATANSEVER_AUTO4_B;
     public static StaticAnimation VATANSEVER_STORM_START;
 
     public static void buildVatanseverAnim() {
@@ -116,7 +120,13 @@ public class VatanseverAnimations {
         VATANSEVER_AUTO3 = new AttackAnimation(0.01F, "biped/vatansever/vatansever_auto3", vatanseverArmature,
                 new AttackAnimation.Phase(0.0F, 0.9F, 0.9F, 1.2F, 1.2F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, right)
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F)));
+        VATANSEVER_AUTO3_B = new AttackAnimation(0.01F, "biped/vatansever/vatansever_auto3_b", vatanseverArmature,
+                new AttackAnimation.Phase(0.0F, 0.9F, 0.9F, 1.2F, 1.2F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, right)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F)));
         VATANSEVER_AUTO4 = new AttackAnimation(0.01F, "biped/vatansever/vatansever_auto4", vatanseverArmature,
+                new AttackAnimation.Phase(0.0F, 1.33F, 1.33F, 1.43F, 4.0F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, all)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F)));
+        VATANSEVER_AUTO4_B = new AttackAnimation(0.01F, "biped/vatansever/vatansever_auto4_b", vatanseverArmature,
                 new AttackAnimation.Phase(0.0F, 1.33F, 1.33F, 1.43F, 4.0F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, all)
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F)));
         VATANSEVER_STORM_START = new ActionAnimation(0.15F, "biped/vatansever/skill/vatansever_storm_start", vatanseverArmature);
@@ -151,12 +161,18 @@ public class VatanseverAnimations {
                         AnimationEvent.TimeStampedEvent.create(1.18F, ((livingEntityPatch, staticAnimation, objects) -> {
                             groundSplit(livingEntityPatch, 5, 0, 0, 0, 99999, 1.1F, 200);
                         }), AnimationEvent.Side.BOTH));
+        PLAYER_AUTO3_B = new LinkArtifactSpiritAnimation(0.15F, 2.25F, "biped/vatansever/vatansever_auto3_b_owner", biped, VATANSEVER_AUTO3_B)
+                .newTimePair(0.0F, 3.0F)
+                .addStateRemoveOld(EntityState.TURNING_LOCKED, true);
         PLAYER_AUTO4 = new LinkArtifactSpiritAnimation(0.15F, 4F, "biped/vatansever/vatansever_auto4_owner", biped, VATANSEVER_AUTO4)
                 .newTimePair(1.0F, Float.MAX_VALUE)
                 .addStateRemoveOld(EntityState.TURNING_LOCKED, true)
                 .addEvents(AnimationEvent.TimeStampedEvent.create(1.38F, ((livingEntityPatch, staticAnimation, objects) -> {
                     groundSplit(livingEntityPatch, 4.2, 0, 0, 0, 99999, 5, 2000);
                 }), AnimationEvent.Side.BOTH));
+        PLAYER_AUTO4_B = new LinkArtifactSpiritAnimation(0.15F, 4F, "biped/vatansever/vatansever_auto4_b_owner", biped, VATANSEVER_AUTO4_B)
+                .newTimePair(1.0F, Float.MAX_VALUE)
+                .addStateRemoveOld(EntityState.TURNING_LOCKED, true);
         PLAYER_STORM_START = new LinkArtifactSpiritAnimation(0.15F, "biped/vatansever/skill/vatansever_storm_start", biped, VATANSEVER_STORM_START)
                 .addEvents(AnimationEvent.TimeStampedEvent.create(0.5F, ((livingEntityPatch, staticAnimation, objects) -> {
                     groundSplit(livingEntityPatch, 0, 0, 0, 0, 0, 3, 2000);
