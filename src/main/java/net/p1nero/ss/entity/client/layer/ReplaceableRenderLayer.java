@@ -6,7 +6,6 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.p1nero.ss.entity.client.model.EmptyEntityModel;
-import net.p1nero.ss.entity.screen_sword.ScreenSword;
 import org.jetbrains.annotations.NotNull;
 
 public class ReplaceableRenderLayer<T extends LivingEntity> extends RenderLayer<T, EmptyEntityModel<T>> {

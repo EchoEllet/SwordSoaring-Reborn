@@ -4,6 +4,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.p1nero.ss.SwordSoaring;
 import net.p1nero.ss.gameassets.skills.FlyingSkills;
+import net.p1nero.ss.gameassets.skills.SwordControllerSkills;
 import net.p1nero.ss.gameassets.skills.VatanseverSkills;
 import yesman.epicfight.api.data.reloader.SkillManager;
 import yesman.epicfight.api.forgeevent.SkillBuildEvent;
@@ -16,6 +17,7 @@ public class SwordSoaringSkills {
 
     @SubscribeEvent
     public static void buildSkills(SkillBuildEvent event){
+        SwordControllerSkills.buildSwordControllerSkills(event);
         FlyingSkills.buildSwordSoaringSkills(event);
         VatanseverSkills.buildVatanseverSkills(event);
     }

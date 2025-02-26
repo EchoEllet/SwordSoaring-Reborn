@@ -19,9 +19,7 @@ import yesman.epicfight.network.client.CPChangeSkill;
 import yesman.epicfight.skill.Skill;
 import yesman.epicfight.skill.SkillContainer;
 import yesman.epicfight.skill.SkillSlot;
-import yesman.epicfight.world.capabilities.skill.CapabilitySkill;
 
-import java.util.Collection;
 import java.util.List;
 
 @Mod.EventBusSubscriber(modid = SwordSoaring.MOD_ID, value = {Dist.CLIENT})
@@ -37,6 +35,9 @@ public class ClientInputManager {
             if(event.getButton() == SwordSoaringKeyMappings.SWITCH_MODE.getKey().getValue()){
                 switchModeKeyPressed(event.getAction());
             }
+            if(event.getButton() == SwordSoaringKeyMappings.SWORD_SKILL.getKey().getValue()){
+                swordSkillKeyPressed(event.getAction());
+            }
         }
     }
 
@@ -49,12 +50,21 @@ public class ClientInputManager {
             if(event.getKey() == SwordSoaringKeyMappings.SWITCH_MODE.getKey().getValue()){
                 switchModeKeyPressed(event.getAction());
             }
+            if(event.getKey() == SwordSoaringKeyMappings.SWORD_SKILL.getKey().getValue()){
+                swordSkillKeyPressed(event.getAction());
+            }
         }
     }
 
     public static void takeOffKeyPressed(int action){
         if(action == 1){
             sendSkillPacket(SwordSoaringSkillSlots.SWORD_SOARING, SwordSoaringKeyMappings.TAKE_OFF);
+        }
+    }
+
+    public static void swordSkillKeyPressed(int action){
+        if(action == 1){
+            sendSkillPacket(SwordSoaringSkillSlots.SWORD_CONTROLLER, SwordSoaringKeyMappings.SWORD_SKILL);
         }
     }
 

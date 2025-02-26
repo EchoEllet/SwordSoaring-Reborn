@@ -1,9 +1,7 @@
 package net.p1nero.ss.gameassets.animations;
 
-import net.p1nero.ss.entity.screen_sword.ScreenSwordArmature;
-import net.p1nero.ss.entity.vatansever_storm.VatanseverStormArmature;
+import net.p1nero.ss.entity.sword.screen_sword.ScreenSwordArmature;
 import net.p1nero.ss.gameassets.SwordSoaringArmatures;
-import yesman.epicfight.api.animation.property.AnimationProperty;
 import yesman.epicfight.api.animation.types.StaticAnimation;
 
 public class ScreenSwordAnimations {

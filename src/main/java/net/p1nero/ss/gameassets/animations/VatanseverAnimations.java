@@ -1,10 +1,7 @@
 package net.p1nero.ss.gameassets.animations;
 
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -15,8 +12,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.util.thread.EffectiveSide;
 import net.p1nero.ss.animation.LinkArtifactSpiritAnimation;
 import net.p1nero.ss.entity.vatansever.VatanseverArmature;
 import net.p1nero.ss.entity.vatansever.VatanseverEntity;
@@ -25,7 +20,6 @@ import net.p1nero.ss.entity.vatansever_storm.VatanseverStormEntity;
 import net.p1nero.ss.entity.vatansever_storm.VatanseverStormEntityPatch;
 import net.p1nero.ss.gameassets.SwordSoaringArmatures;
 import net.p1nero.ss.gameassets.SwordSoaringColliders;
-import net.p1nero.ss.skill.weapon_innate.VatanseverWeaponInnateSkill;
 import yesman.epicfight.api.animation.Joint;
 import yesman.epicfight.api.animation.property.AnimationEvent;
 import yesman.epicfight.api.animation.property.AnimationProperty;
@@ -37,8 +31,6 @@ import yesman.epicfight.api.utils.math.ValueModifier;
 import yesman.epicfight.api.utils.math.Vec3f;
 import yesman.epicfight.gameasset.Armatures;
 import yesman.epicfight.model.armature.HumanoidArmature;
-import yesman.epicfight.skill.SkillDataManager;
-import yesman.epicfight.skill.SkillSlots;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
@@ -52,7 +44,6 @@ public class VatanseverAnimations {
     public static StaticAnimation PLAYER_AUTO2;
     public static StaticAnimation PLAYER_AUTO3;
     public static StaticAnimation PLAYER_AUTO4;
-    public static StaticAnimation PLAYER_AUTO5;
     public static StaticAnimation PLAYER_STORM_START;
 
     public static StaticAnimation VATANSEVER_IDLE;
@@ -67,7 +58,6 @@ public class VatanseverAnimations {
     public static StaticAnimation VATANSEVER_FALL;
     public static StaticAnimation VATANSEVER_FLOAT;
     public static StaticAnimation VATANSEVER_FLY;
-    public static StaticAnimation VATANSEVER_BEGIN;
     public static StaticAnimation VATANSEVER_FLY_STOP;
     public static StaticAnimation VATANSEVER_SNEAK;
     public static StaticAnimation VATANSEVER_SNEAK_STOP;
@@ -76,7 +66,6 @@ public class VatanseverAnimations {
     public static StaticAnimation VATANSEVER_AUTO2;
     public static StaticAnimation VATANSEVER_AUTO3;
     public static StaticAnimation VATANSEVER_AUTO4;
-    public static StaticAnimation VATANSEVER_AUTO5;
     public static StaticAnimation VATANSEVER_STORM_START;
 
     public static void buildVatanseverAnim() {
@@ -130,9 +119,6 @@ public class VatanseverAnimations {
         VATANSEVER_AUTO4 = new AttackAnimation(0.01F, "biped/vatansever/vatansever_auto4", vatanseverArmature,
                 new AttackAnimation.Phase(0.0F, 1.33F, 1.33F, 1.43F, 4.0F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, all)
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F)));
-        VATANSEVER_AUTO5 = new AttackAnimation(0.15F, "biped/vatansever/vatansever_auto5", vatanseverArmature,
-                new AttackAnimation.Phase(0.05F, 0.2F, 0.2F, 0.5F, 0.6F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, right)
-                        .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F)));
         VATANSEVER_STORM_START = new ActionAnimation(0.15F, "biped/vatansever/skill/vatansever_storm_start", vatanseverArmature);
 
         HumanoidArmature biped = Armatures.BIPED;
@@ -171,7 +157,6 @@ public class VatanseverAnimations {
                 .addEvents(AnimationEvent.TimeStampedEvent.create(1.38F, ((livingEntityPatch, staticAnimation, objects) -> {
                     groundSplit(livingEntityPatch, 4.2, 0, 0, 0, 99999, 5, 2000);
                 }), AnimationEvent.Side.BOTH));
-        PLAYER_AUTO5 = new LinkArtifactSpiritAnimation(0.15F, "biped/vatansever/vatansever_auto5", biped, VATANSEVER_AUTO5);
         PLAYER_STORM_START = new LinkArtifactSpiritAnimation(0.15F, "biped/vatansever/skill/vatansever_storm_start", biped, VATANSEVER_STORM_START)
                 .addEvents(AnimationEvent.TimeStampedEvent.create(0.5F, ((livingEntityPatch, staticAnimation, objects) -> {
                     groundSplit(livingEntityPatch, 0, 0, 0, 0, 0, 3, 2000);

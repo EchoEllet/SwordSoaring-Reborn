@@ -1,9 +1,10 @@
-package net.p1nero.ss.entity.screen_sword;
+package net.p1nero.ss.entity.sword.screen_sword;
 
 import com.google.common.collect.ImmutableList;
 import net.p1nero.ss.entity.IReplaceableArmature;
 import yesman.epicfight.api.animation.Joint;
 import yesman.epicfight.api.model.Armature;
+import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 
 import java.util.List;
 import java.util.Map;
@@ -23,7 +24,7 @@ public class ScreenSwordArmature extends Armature implements IReplaceableArmatur
     }
 
     @Override
-    public List<Joint> getJoints() {
+    public List<Joint> getJoints(LivingEntityPatch<?> livingEntityPatch) {
         return joints;
     }
 }

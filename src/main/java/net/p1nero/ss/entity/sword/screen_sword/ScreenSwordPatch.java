@@ -1,4 +1,4 @@
-package net.p1nero.ss.entity.screen_sword;
+package net.p1nero.ss.entity.sword.screen_sword;
 
 import net.p1nero.ss.entity.AbstractArtifactSpiritPatch;
 import net.p1nero.ss.gameassets.animations.ScreenSwordAnimations;

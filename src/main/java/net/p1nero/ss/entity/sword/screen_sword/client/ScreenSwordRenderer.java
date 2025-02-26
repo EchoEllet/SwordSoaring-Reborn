@@ -1,4 +1,4 @@
-package net.p1nero.ss.entity.screen_sword.client;
+package net.p1nero.ss.entity.sword.screen_sword.client;
 
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -6,7 +6,7 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.p1nero.ss.entity.client.layer.ReplaceableRenderLayer;
 import net.p1nero.ss.entity.client.model.EmptyEntityModel;
-import net.p1nero.ss.entity.screen_sword.ScreenSword;
+import net.p1nero.ss.entity.sword.screen_sword.ScreenSword;
 import net.p1nero.ss.entity.vatansever.client.VatanseverRenderer;
 import org.jetbrains.annotations.NotNull;
 

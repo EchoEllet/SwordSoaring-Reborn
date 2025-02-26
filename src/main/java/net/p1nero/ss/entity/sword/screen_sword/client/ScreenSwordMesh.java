@@ -1,4 +1,4 @@
-package net.p1nero.ss.entity.screen_sword.client;
+package net.p1nero.ss.entity.sword.screen_sword.client;
 
 import yesman.epicfight.api.client.model.AnimatedMesh;
 import yesman.epicfight.api.client.model.ModelPart;

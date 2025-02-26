@@ -4,7 +4,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.p1nero.ss.SwordSoaring;
 import net.p1nero.ss.entity.SwordSoaringEntities;
-import net.p1nero.ss.entity.screen_sword.ScreenSwordArmature;
+import net.p1nero.ss.entity.sword.screen_sword.ScreenSwordArmature;
 import net.p1nero.ss.entity.vatansever.VatanseverArmature;
 import net.p1nero.ss.entity.vatansever_storm.VatanseverStormArmature;
 import yesman.epicfight.api.forgeevent.ModelBuildEvent;

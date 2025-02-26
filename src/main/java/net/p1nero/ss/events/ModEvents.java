@@ -6,13 +6,10 @@ import net.minecraftforge.fml.common.Mod;
 import net.p1nero.ss.SwordSoaring;
 import net.p1nero.ss.entity.AbstractArtifactSpiritEntity;
 import net.p1nero.ss.entity.SwordSoaringEntities;
-import net.p1nero.ss.entity.screen_sword.ScreenSwordPatch;
+import net.p1nero.ss.entity.sword.screen_sword.ScreenSwordPatch;
 import net.p1nero.ss.entity.vatansever.VatanseverEntityPatch;
 import net.p1nero.ss.entity.vatansever_storm.VatanseverStormEntityPatch;
-import net.p1nero.ss.gameassets.SwordSoaringArmatures;
 import yesman.epicfight.api.forgeevent.EntityPatchRegistryEvent;
-import yesman.epicfight.api.forgeevent.ModelBuildEvent;
-import yesman.epicfight.gameasset.Armatures;
 
 @Mod.EventBusSubscriber(modid = SwordSoaring.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModEvents{

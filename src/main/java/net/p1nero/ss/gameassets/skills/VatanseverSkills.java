@@ -1,7 +1,10 @@
 package net.p1nero.ss.gameassets.skills;
 
+import com.p1nero.invincible.api.events.TimeStampedEvent;
 import com.p1nero.invincible.skill.ComboBasicAttack;
 import com.p1nero.invincible.skill.api.ComboNode;
+import net.minecraft.world.entity.player.Player;
+import net.p1nero.ss.entity.sword.screen_sword.ScreenSword;
 import net.p1nero.ss.gameassets.SwordSoaringSkills;
 import net.p1nero.ss.gameassets.animations.VatanseverAnimations;
 import net.p1nero.ss.skill.weapon_innate.VatanseverWeaponInnateSkill;
@@ -20,13 +23,12 @@ public class VatanseverSkills {
         ComboNode aa = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_AUTO2);
         ComboNode aaa = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_AUTO3);
         ComboNode aaaa = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_AUTO4);
-        ComboNode aaaaa = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_AUTO5);
         ComboNode storm = ComboNode.createNode(()->VatanseverAnimations.PLAYER_STORM_START);
         root.key1(a);
-        root.key3(storm);
         a.key1(aa);
         aa.key1(aaa);
         aaa.key1(aaaa);
+        root.key3(storm);
         VATANSEVER_INNATE = SwordSoaringSkills.build(event, VatanseverWeaponInnateSkill::new, ComboBasicAttack.createComboBasicAttack().setCombo(root), "vatansever_innate");
         VATANSEVER_PASSIVE = SwordSoaringSkills.build(event, VatanseverPassive::new, Skill.createBuilder().setCategory(SkillCategories.WEAPON_PASSIVE).setResource(Skill.Resource.NONE), "vatansever_passive");
     }
