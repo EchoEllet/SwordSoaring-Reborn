@@ -15,10 +15,10 @@ public class SwordControllerSkills {
 
     public static void buildSwordControllerSkills(SkillBuildEvent event) {
         KILL_AURA_1 = SwordSoaringSkills.build(event, KillAuraSkill::new, KillAuraSkill.createKillAuraBuilder().setCreativeTab(SwordSoaringItems.SWORD_SOARING_ITEM_TAB)
-                .setScreenSwordAnim(() -> ScreenSwordAnimations.KILL_AURA_1), "kill_aura_1");
+                .setScreenSwordAnim(() -> ScreenSwordAnimations.KILL_AURA_1).setSummonAnim(()->ScreenSwordAnimations.KILL_AURA_1_PLAYER_SUMMON), "kill_aura_1");
         KILL_AURA_2 = SwordSoaringSkills.build(event, KillAuraSkill::new, KillAuraSkill.createKillAuraBuilder().setCreativeTab(SwordSoaringItems.SWORD_SOARING_ITEM_TAB)
-                .setScreenSwordAnim(() -> ScreenSwordAnimations.KILL_AURA_2), "kill_aura_2");
+                .setScreenSwordAnim(() -> ScreenSwordAnimations.KILL_AURA_2).setSummonAnim(()->ScreenSwordAnimations.KILL_AURA_2_PLAYER_SUMMON), "kill_aura_2");
         SCREEN_SWORD = SwordSoaringSkills.build(event, ScreenSwordSkill::new, ScreenSwordSkill.createKillAuraBuilder().setCreativeTab(SwordSoaringItems.SWORD_SOARING_ITEM_TAB)
-                .setScreenSwordAnim(() -> ScreenSwordAnimations.SCREEN_SWORD), "screen_sword");
+                .setScreenSwordAnim(() -> ScreenSwordAnimations.SCREEN_SWORD).setSummonAnim(()->ScreenSwordAnimations.SCREEN_SWORD_PLAYER_SUMMON), "screen_sword");
     }
 }

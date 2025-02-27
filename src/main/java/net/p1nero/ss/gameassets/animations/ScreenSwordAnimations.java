@@ -15,7 +15,9 @@ import yesman.epicfight.model.armature.HumanoidArmature;
 public class ScreenSwordAnimations {
     public static StaticAnimation SCREEN_SWORD_IDLE;
     public static StaticAnimation KILL_AURA_1;
+    public static StaticAnimation KILL_AURA_1_PLAYER_SUMMON;
     public static StaticAnimation KILL_AURA_2;
+    public static StaticAnimation KILL_AURA_2_PLAYER_SUMMON;
     public static StaticAnimation SCREEN_SWORD;
     public static StaticAnimation SCREEN_SWORD_PLAYER_SUMMON;
 
@@ -48,6 +50,8 @@ public class ScreenSwordAnimations {
                 .addEvents(RESET_ANIM);
 
         HumanoidArmature biped = Armatures.BIPED;
+        KILL_AURA_1_PLAYER_SUMMON = new ActionAnimation(0.15F, "screen_sword/kill_aura_1_summon", biped);
+        KILL_AURA_2_PLAYER_SUMMON = new ActionAnimation(0.15F, "screen_sword/kill_aura_2_summon", biped);
         SCREEN_SWORD_PLAYER_SUMMON = new ActionAnimation(0.15F, "screen_sword/screen_sword_start_player", biped);
     }
 }

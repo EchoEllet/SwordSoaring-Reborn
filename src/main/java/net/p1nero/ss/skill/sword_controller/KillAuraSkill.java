@@ -117,10 +117,8 @@ public class KillAuraSkill extends Skill {
     }
 
     public static class Builder extends Skill.Builder<KillAuraSkill> {
-        protected StaticAnimationProvider anim = () -> ScreenSwordAnimations.SCREEN_SWORD_IDLE;
-        protected StaticAnimationProvider summonAnim = () -> ScreenSwordAnimations.SCREEN_SWORD_PLAYER_SUMMON;
-        protected int maxLifeTime = 200;
-
+        protected StaticAnimationProvider anim;
+        protected StaticAnimationProvider summonAnim;
         public Builder() {
         }
 

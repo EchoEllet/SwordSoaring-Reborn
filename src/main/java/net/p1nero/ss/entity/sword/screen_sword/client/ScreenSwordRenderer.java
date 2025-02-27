@@ -17,8 +17,8 @@ public class ScreenSwordRenderer extends MobRenderer<ScreenSwordEntity, EmptyEnt
     }
 
     @Override
-    public boolean shouldRender(@NotNull ScreenSwordEntity p_115468_, @NotNull Frustum p_115469_, double p_115470_, double p_115471_, double p_115472_) {
-        return true;
+    public boolean shouldRender(@NotNull ScreenSwordEntity pLivingEntity, @NotNull Frustum pCamera, double pCamX, double pCamY, double pCamZ) {
+        return pLivingEntity.tickCount > 5;
     }
 
     @Override

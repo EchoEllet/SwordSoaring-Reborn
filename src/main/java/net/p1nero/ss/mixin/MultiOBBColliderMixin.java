@@ -6,6 +6,7 @@ import com.mojang.math.Vector3f;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.p1nero.ss.entity.IReplaceableArmature;
 import net.p1nero.ss.entity.LongArmature;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -34,15 +35,20 @@ public abstract class MultiOBBColliderMixin extends MultiCollider<OBBCollider> {
     /**
      * 重写draw的都得改
      */
-    @Inject(method = "draw", at = @At("HEAD"))
+    @Inject(method = "draw", at = @At("HEAD"), cancellable = true)
     @OnlyIn(Dist.CLIENT)
     private void sword_soaring$draw(PoseStack matrixStackIn, MultiBufferSource buffer, LivingEntityPatch<?> entitypatch, AttackAnimation animation, Joint joint, float prevElapsedTime, float elapsedTime, float partialTicks, float attackSpeed, CallbackInfo ci){
         int numberOf = Math.max(Math.round((this.numberOfColliders + animation.getProperty(AnimationProperty.AttackAnimationProperty.EXTRA_COLLIDERS).orElse(0)) * attackSpeed), this.numberOfColliders);
         float partialScale = 1.0F / (numberOf - 1);
         float interpolation = 0.0F;
         Armature armature = entitypatch.getArmature();
-        if(armature instanceof LongArmature longArmature){
-            long pathIndex = longArmature.searchPathIndexLong(joint.getName());
+        if(armature instanceof LongArmature || armature instanceof IReplaceableArmature){
+            long pathIndex;
+            if(armature instanceof LongArmature longArmature){
+                pathIndex = longArmature.searchPathIndexLong(joint.getName());
+            } else {
+                pathIndex = armature.searchPathIndex(joint.getName());
+            }
             EntityState state = animation.getState(entitypatch, elapsedTime);
             EntityState prevState = animation.getState(entitypatch, prevElapsedTime);
             boolean red = prevState.attacking() || state.attacking() || (prevState.getLevel() < 2 && state.getLevel() > 2);
@@ -56,7 +62,7 @@ public abstract class MultiOBBColliderMixin extends MultiCollider<OBBCollider> {
             }
 
             for (OBBCollider obbCollider : colliders) {
-                OpenMatrix4f mat = null;
+                OpenMatrix4f mat;
                 armature.initializeTransform();
 
                 float pt1 = prevElapsedTime + (elapsedTime - prevElapsedTime) * partialTicks;
@@ -75,7 +81,16 @@ public abstract class MultiOBBColliderMixin extends MultiCollider<OBBCollider> {
                     animation.modifyPose(animation, rootPose, entitypatch, elapsedTime, 1.0F);
                     mat = rootPose.getOrDefaultTransform("Root").getAnimationBindedMatrix(entitypatch.getArmature().rootJoint, new OpenMatrix4f()).removeTranslation();
                 } else {
-                    mat = longArmature.getBindedTransformByJointIndex(entitypatch.getArmature().getPose(interpolation), pathIndex);
+                    if(armature instanceof LongArmature longArmature){
+                        mat = longArmature.getBindedTransformByJointIndex(entitypatch.getArmature().getPose(interpolation), pathIndex);
+                    } else {
+                         mat = armature.getBindedTransformByJointIndex(entitypatch.getArmature().getPose(interpolation), (int) pathIndex);
+                    }
+                }
+
+                //校正
+                if(armature instanceof IReplaceableArmature){
+                    mat.rotateDeg(90, Vec3f.X_AXIS);
                 }
 
                 obbCollider.drawInternal(matrixStackIn, buffer, mat, red);
@@ -85,5 +100,6 @@ public abstract class MultiOBBColliderMixin extends MultiCollider<OBBCollider> {
 
             }
         }
+        ci.cancel();
     }
 }

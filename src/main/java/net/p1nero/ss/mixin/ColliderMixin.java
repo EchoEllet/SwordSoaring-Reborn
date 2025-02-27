@@ -1,10 +1,13 @@
 package net.p1nero.ss.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.p1nero.ss.entity.IReplaceableArmature;
 import net.p1nero.ss.entity.LongArmature;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -20,6 +23,7 @@ import yesman.epicfight.api.animation.types.EntityState;
 import yesman.epicfight.api.collider.Collider;
 import yesman.epicfight.api.model.Armature;
 import yesman.epicfight.api.utils.math.OpenMatrix4f;
+import yesman.epicfight.api.utils.math.Vec3f;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 
 import java.util.List;
@@ -36,8 +40,8 @@ public abstract class ColliderMixin {
     @Inject(method = "updateAndSelectCollideEntity", at = @At("HEAD"), cancellable = true)
     private void sword_soaring$updateAndSelectCollideEntity(LivingEntityPatch<?> entityPatch, AttackAnimation attackAnimation, float prevElapsedTime, float elapsedTime, Joint joint, float attackSpeed, CallbackInfoReturnable<List<Entity>> cir){
         Armature armature = entityPatch.getArmature();
-        if(armature instanceof LongArmature longArmature){
-            long pathIndex = longArmature.searchPathIndexLong(joint.getName());
+        if(armature instanceof LongArmature || armature instanceof IReplaceableArmature){
+            long pathIndex = armature instanceof LongArmature longArmature ? longArmature.searchPathIndexLong(joint.getName()) : armature.searchPathIndex(joint.getName());
 
             OpenMatrix4f transformMatrix;
 
@@ -47,33 +51,49 @@ public abstract class ColliderMixin {
                 attackAnimation.modifyPose(attackAnimation, rootPose, entityPatch, elapsedTime, 1.0F);
                 transformMatrix = rootPose.getOrDefaultTransform("Root").getAnimationBindedMatrix(entityPatch.getArmature().rootJoint, new OpenMatrix4f()).removeTranslation();
             } else {
-                transformMatrix = longArmature.getBindedTransformByJointIndex(attackAnimation.getPoseByTime(entityPatch, elapsedTime, 1.0F), pathIndex);
+                transformMatrix = armature instanceof LongArmature longArmature ? longArmature.getBindedTransformByJointIndex(attackAnimation.getPoseByTime(entityPatch, elapsedTime, 1.0F), pathIndex)
+                    : armature.getBindedTransformByJointIndex(attackAnimation.getPoseByTime(entityPatch, elapsedTime, 1.0F), (int) pathIndex);
             }
 
             OpenMatrix4f toWorldCoord = OpenMatrix4f.createTranslation(-(float)entityPatch.getOriginal().getX(), (float)entityPatch.getOriginal().getY(), -(float)entityPatch.getOriginal().getZ());
             transformMatrix.mulFront(toWorldCoord.mulBack(entityPatch.getModelMatrix(1.0F)));
+
+            //校正旋转
+            if(armature instanceof IReplaceableArmature){
+                transformMatrix.rotateDeg(90, Vec3f.X_AXIS);
+            }
+
             this.transform(transformMatrix);
+
             cir.setReturnValue(this.getCollideEntities(entityPatch.getOriginal()));
         }
+
     }
 
     @Inject(method = "draw", at = @At("HEAD"))
     @OnlyIn(Dist.CLIENT)
-    private void sword_soaring$draw(PoseStack matrixStackIn, MultiBufferSource buffer, LivingEntityPatch<?> entitypatch, AttackAnimation animation, Joint joint, float prevElapsedTime, float elapsedTime, float partialTicks, float attackSpeed, CallbackInfo ci){
-        Armature armature = entitypatch.getArmature();
-        if(armature instanceof LongArmature longArmature){
-            long pathIndex = longArmature.searchPathIndexLong(joint.getName());
-            EntityState state = animation.getState(entitypatch, elapsedTime);
-            EntityState prevState = animation.getState(entitypatch, prevElapsedTime);
+    private void sword_soaring$draw(PoseStack matrixStackIn, MultiBufferSource buffer, LivingEntityPatch<?> entityPatch, AttackAnimation animation, Joint joint, float prevElapsedTime, float elapsedTime, float partialTicks, float attackSpeed, CallbackInfo ci){
+        Armature armature = entityPatch.getArmature();
+
+        if(armature instanceof LongArmature || armature instanceof IReplaceableArmature){
+            long pathIndex = armature instanceof LongArmature longArmature ? longArmature.searchPathIndexLong(joint.getName()) : armature.searchPathIndex(joint.getName());
+            EntityState state = animation.getState(entityPatch, elapsedTime);
+            EntityState prevState = animation.getState(entityPatch, prevElapsedTime);
             boolean flag3 = prevState.attacking() || state.attacking() || (prevState.getLevel() < 2 && state.getLevel() > 2);
             OpenMatrix4f mat;
             if (pathIndex == -1) {
                 Pose rootPose = new Pose();
                 rootPose.putJointData("Root", JointTransform.empty());
-                animation.modifyPose(animation, rootPose, entitypatch, elapsedTime, 1.0F);
-                mat = rootPose.getOrDefaultTransform("Root").getAnimationBindedMatrix(entitypatch.getArmature().rootJoint, new OpenMatrix4f()).removeTranslation();
+                animation.modifyPose(animation, rootPose, entityPatch, elapsedTime, 1.0F);
+                mat = rootPose.getOrDefaultTransform("Root").getAnimationBindedMatrix(entityPatch.getArmature().rootJoint, new OpenMatrix4f()).removeTranslation();
             } else {
-                mat = longArmature.getBindedTransformByJointIndex(animation.getPoseByTime(entitypatch, elapsedTime, 0.0F), pathIndex);
+                mat = armature instanceof LongArmature longArmature ? longArmature.getBindedTransformByJointIndex(animation.getPoseByTime(entityPatch, elapsedTime, 0.0F), pathIndex)
+                        : armature.getBindedTransformByJointIndex(animation.getPoseByTime(entityPatch, elapsedTime, 0.0F), (int) pathIndex);
+            }
+
+            //校正旋转
+            if(armature instanceof IReplaceableArmature){
+                mat.rotateDeg(90, Vec3f.X_AXIS);
             }
             this.drawInternal(matrixStackIn, buffer, mat, flag3);
         }

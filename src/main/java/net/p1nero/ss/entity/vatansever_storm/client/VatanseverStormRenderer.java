@@ -16,7 +16,7 @@ public class VatanseverStormRenderer extends MobRenderer<VatanseverStormEntity, 
     }
 
     @Override
-    public boolean shouldRender(@NotNull VatanseverStormEntity p_115468_, @NotNull Frustum p_115469_, double p_115470_, double p_115471_, double p_115472_) {
+    public boolean shouldRender(@NotNull VatanseverStormEntity pLivingEntity, @NotNull Frustum pCamera, double pCamX, double pCamY, double pCamZ) {
         return true;
     }
 
