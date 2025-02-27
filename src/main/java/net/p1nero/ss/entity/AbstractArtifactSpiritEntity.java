@@ -102,7 +102,7 @@ public abstract class AbstractArtifactSpiritEntity extends PathfinderMob impleme
             if(getOriginalItem() == null){
                 return;
             }
-            if (!owner.getMainHandItem().is(getOriginalItem()) && shouldRemoveWhenOwnerLost()) {
+            if (!level.isClientSide && !owner.getMainHandItem().is(getOriginalItem()) && shouldRemoveWhenOwnerLost()) {
                 discard();
             }
         } else if(!level.isClientSide && shouldRemoveWhenOwnerLost()){

@@ -22,7 +22,7 @@ import net.p1nero.ss.SwordSoaring;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Mod.EventBusSubscriber(modid = SwordSoaring.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(modid = SwordSoaring.MOD_ID)
 public class SSCapabilityProvider implements ICapabilityProvider, INBTSerializable<CompoundTag> {
 
     public static Capability<SSPlayer> SS_PLAYER = CapabilityManager.get(new CapabilityToken<>() {});
@@ -60,35 +60,30 @@ public class SSCapabilityProvider implements ICapabilityProvider, INBTSerializab
         createSSPlayer().loadNBTData(tag);
     }
 
-    @Mod.EventBusSubscriber(modid = SwordSoaring.MOD_ID)
-    public static class Registration {
-        @SubscribeEvent
-        public static void attachEntityCapabilities(AttachCapabilitiesEvent<Entity> event) {
-            if (event.getObject() instanceof Player) {
-               if(!event.getObject().getCapability(SSCapabilityProvider.SS_PLAYER).isPresent()){
-                   event.addCapability(new ResourceLocation(SwordSoaring.MOD_ID, "ss_player"), new SSCapabilityProvider());
-               }
+    @SubscribeEvent
+    public static void attachEntityCapabilities(AttachCapabilitiesEvent<Entity> event) {
+        if (event.getObject() instanceof Player player) {
+            if(!player.getCapability(SSCapabilityProvider.SS_PLAYER).isPresent()){
+                event.addCapability(new ResourceLocation(SwordSoaring.MOD_ID, "ss_player"), new SSCapabilityProvider());
             }
         }
-
-        @SubscribeEvent
-        public static void onPlayerCloned(PlayerEvent.Clone event) {
-            event.getOriginal().reviveCaps();
-            if(event.isWasDeath()) {
-                event.getOriginal().getCapability(SSCapabilityProvider.SS_PLAYER).ifPresent(oldStore -> {
-                    event.getOriginal().getCapability(SSCapabilityProvider.SS_PLAYER).ifPresent(newStore -> {
-                        newStore.copyFrom(oldStore);
-                    });
-                });
-            }
-        }
-
-        @SubscribeEvent
-        public static void onRegisterCapabilities(RegisterCapabilitiesEvent event) {
-            event.register(SSPlayer.class);
-        }
-
     }
 
+    @SubscribeEvent
+    public static void onPlayerCloned(PlayerEvent.Clone event) {
+        event.getOriginal().reviveCaps();
+        if(event.isWasDeath()) {
+            event.getOriginal().getCapability(SSCapabilityProvider.SS_PLAYER).ifPresent(oldStore -> {
+                event.getOriginal().getCapability(SSCapabilityProvider.SS_PLAYER).ifPresent(newStore -> {
+                    newStore.copyFrom(oldStore);
+                });
+            });
+        }
+    }
+
+    @SubscribeEvent
+    public static void onRegisterCapabilities(RegisterCapabilitiesEvent event) {
+        event.register(SSPlayer.class);
+    }
 
 }

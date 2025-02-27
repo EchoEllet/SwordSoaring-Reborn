@@ -91,6 +91,7 @@ public abstract class MultiOBBColliderMixin extends MultiCollider<OBBCollider> {
                 //校正
                 if(armature instanceof IReplaceableArmature){
                     mat.rotateDeg(90, Vec3f.X_AXIS);
+                    mat.rotateDeg(90, Vec3f.Z_AXIS);
                 }
 
                 obbCollider.drawInternal(matrixStackIn, buffer, mat, red);
@@ -99,7 +100,7 @@ public abstract class MultiOBBColliderMixin extends MultiCollider<OBBCollider> {
                 interpolation += partialScale;
 
             }
+            ci.cancel();
         }
-        ci.cancel();
     }
 }

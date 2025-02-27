@@ -1,6 +1,6 @@
 package net.p1nero.ss.gameassets.animations;
 
-import net.p1nero.ss.animation.MultiHitBoxAttackAnimation;
+import net.p1nero.ss.animation.ArtifactSpiritMultiPhaseAttackAnimation;
 import net.p1nero.ss.entity.sword.screen_sword.ScreenSwordArmature;
 import net.p1nero.ss.gameassets.SwordSoaringArmatures;
 import yesman.epicfight.api.animation.property.AnimationEvent;
@@ -28,20 +28,20 @@ public class ScreenSwordAnimations {
     public static void buildScreenSwordAnim() {
         ScreenSwordArmature screenSwordArmature = SwordSoaringArmatures.screenSwordArmature;
         AttackAnimation.Phase[] phases = new AttackAnimation.Phase[]{
-                new MultiHitBoxAttackAnimation.KillAuraAttackPhase(0.01F, 0.01F, 0.5F, 0.5F, Float.MAX_VALUE, screenSwordArmature.W1, null),
-                new MultiHitBoxAttackAnimation.KillAuraAttackPhase(0.01F, 0.01F, 0.5F, 0.5F, Float.MAX_VALUE, screenSwordArmature.W2, null),
-                new MultiHitBoxAttackAnimation.KillAuraAttackPhase(0.01F, 0.01F, 0.5F, 0.5F, Float.MAX_VALUE, screenSwordArmature.W3, null),
-                new MultiHitBoxAttackAnimation.KillAuraAttackPhase(0.01F, 0.01F, 0.5F, 0.5F, Float.MAX_VALUE, screenSwordArmature.W4, null),
-                new MultiHitBoxAttackAnimation.KillAuraAttackPhase(0.01F, 0.01F, 0.5F, 0.5F, Float.MAX_VALUE, screenSwordArmature.W5, null),
-                new MultiHitBoxAttackAnimation.KillAuraAttackPhase(0.01F, 0.01F, 0.5F, 0.5F, Float.MAX_VALUE, screenSwordArmature.W6, null)};
+                new ArtifactSpiritMultiPhaseAttackAnimation.KillAuraAttackPhase(0.01F, 0.01F, 0.5F, 0.5F, Float.MAX_VALUE, screenSwordArmature.W1, null),
+                new ArtifactSpiritMultiPhaseAttackAnimation.KillAuraAttackPhase(0.01F, 0.01F, 0.5F, 0.5F, Float.MAX_VALUE, screenSwordArmature.W2, null),
+                new ArtifactSpiritMultiPhaseAttackAnimation.KillAuraAttackPhase(0.01F, 0.01F, 0.5F, 0.5F, Float.MAX_VALUE, screenSwordArmature.W3, null),
+                new ArtifactSpiritMultiPhaseAttackAnimation.KillAuraAttackPhase(0.01F, 0.01F, 0.5F, 0.5F, Float.MAX_VALUE, screenSwordArmature.W4, null),
+                new ArtifactSpiritMultiPhaseAttackAnimation.KillAuraAttackPhase(0.01F, 0.01F, 0.5F, 0.5F, Float.MAX_VALUE, screenSwordArmature.W5, null),
+                new ArtifactSpiritMultiPhaseAttackAnimation.KillAuraAttackPhase(0.01F, 0.01F, 0.5F, 0.5F, Float.MAX_VALUE, screenSwordArmature.W6, null)};
 
         SCREEN_SWORD_IDLE = new StaticAnimation(true, "screen_sword/screen_sword_idle", screenSwordArmature)
                 .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 2.0F));
-        KILL_AURA_1 = new MultiHitBoxAttackAnimation(0.001F, "screen_sword/kill_aura_1", screenSwordArmature, phases)
+        KILL_AURA_1 = new ArtifactSpiritMultiPhaseAttackAnimation(0.001F, "screen_sword/kill_aura_1", screenSwordArmature, phases)
                 .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10))
                 .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 0.2F))
                 .addEvents(RESET_ANIM);
-        KILL_AURA_2 = new MultiHitBoxAttackAnimation(0.001F, "screen_sword/kill_aura_2", screenSwordArmature, phases)
+        KILL_AURA_2 = new ArtifactSpiritMultiPhaseAttackAnimation(0.001F, "screen_sword/kill_aura_2", screenSwordArmature, phases)
                 .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10))
                 .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 0.2F))
                 .addEvents(RESET_ANIM);

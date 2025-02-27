@@ -61,6 +61,7 @@ public abstract class ColliderMixin {
             //校正旋转
             if(armature instanceof IReplaceableArmature){
                 transformMatrix.rotateDeg(90, Vec3f.X_AXIS);
+                transformMatrix.rotateDeg(90, Vec3f.Z_AXIS);
             }
 
             this.transform(transformMatrix);
@@ -94,6 +95,7 @@ public abstract class ColliderMixin {
             //校正旋转
             if(armature instanceof IReplaceableArmature){
                 mat.rotateDeg(90, Vec3f.X_AXIS);
+                mat.rotateDeg(90, Vec3f.Z_AXIS);
             }
             this.drawInternal(matrixStackIn, buffer, mat, flag3);
         }
