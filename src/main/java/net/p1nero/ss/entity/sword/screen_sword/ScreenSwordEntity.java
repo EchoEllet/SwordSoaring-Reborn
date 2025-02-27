@@ -9,14 +9,13 @@ import net.p1nero.ss.entity.AbstractArtifactSpiritEntity;
 import net.p1nero.ss.entity.SwordSoaringEntities;
 import net.p1nero.ss.entity.sword.AbstractSwordEntity;
 
-public class ScreenSword extends AbstractSwordEntity {
-
-    private int maxTickCount = - 1;
-    public ScreenSword(EntityType<? extends AbstractArtifactSpiritEntity> entityType, Level level) {
+public class ScreenSwordEntity extends AbstractSwordEntity {
+    private int maxTickCount = -1;
+    public ScreenSwordEntity(EntityType<? extends AbstractArtifactSpiritEntity> entityType, Level level) {
         super(entityType, level);
     }
 
-    public ScreenSword(Player owner, int maxTickCount){
+    public ScreenSwordEntity(Player owner, int maxTickCount){
         super(SwordSoaringEntities.SCREEN_SWORD.get(), owner.getMainHandItem().copy(), owner);
         this.maxTickCount = maxTickCount;
     }
@@ -40,11 +39,6 @@ public class ScreenSword extends AbstractSwordEntity {
     @Override
     protected Item getOriginalItem() {
         return null;
-    }
-
-    @Override
-    protected boolean shouldRemoveWhenOwnerLost() {
-        return false;
     }
 
 }

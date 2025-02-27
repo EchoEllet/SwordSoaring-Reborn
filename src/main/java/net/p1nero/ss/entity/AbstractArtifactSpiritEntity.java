@@ -1,16 +1,21 @@
 package net.p1nero.ss.entity;
 
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.players.OldUsersConverter;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.AgeableMob;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -19,10 +24,76 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import yesman.epicfight.world.entity.ai.attribute.EpicFightAttributes;
 
-public abstract class AbstractArtifactSpiritEntity extends TamableAnimal {
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
+
+public abstract class AbstractArtifactSpiritEntity extends PathfinderMob implements OwnableEntity {
+    protected static final EntityDataAccessor<Optional<UUID>> DATA_OWNERUUID_ID = SynchedEntityData.defineId(AbstractArtifactSpiritEntity.class, EntityDataSerializers.OPTIONAL_UUID);
 
     public AbstractArtifactSpiritEntity(EntityType<? extends AbstractArtifactSpiritEntity> entityType, Level level) {
         super(entityType, level);
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(DATA_OWNERUUID_ID, Optional.empty());
+    }
+
+    public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
+        if (this.getOwnerUUID() != null) {
+            pCompound.putUUID("Owner", this.getOwnerUUID());
+        }
+    }
+
+    public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
+        UUID uuid;
+        if (pCompound.hasUUID("Owner")) {
+            uuid = pCompound.getUUID("Owner");
+        } else {
+            String s = pCompound.getString("Owner");
+            uuid = OldUsersConverter.convertMobOwnerIfNecessary(Objects.requireNonNull(this.getServer()), s);
+        }
+
+        if (uuid != null) {
+            this.setOwnerUUID(uuid);
+        }
+    }
+
+    @Nullable
+    public UUID getOwnerUUID() {
+        return this.entityData.get(DATA_OWNERUUID_ID).orElse(null);
+    }
+
+    public void setOwnerUUID(@Nullable UUID pUuid) {
+        this.entityData.set(DATA_OWNERUUID_ID, Optional.ofNullable(pUuid));
+    }
+
+    public void tame(LivingEntity livingEntity) {
+        this.setOwnerUUID(livingEntity.getUUID());
+    }
+
+    @Nullable
+    public LivingEntity getOwner() {
+        try {
+            UUID uuid = this.getOwnerUUID();
+            if(uuid != null){
+                Player player = this.level.getPlayerByUUID(uuid);
+                if(player == null){
+                    if(this.level instanceof ServerLevel serverLevel){
+                        return (LivingEntity) serverLevel.getEntity(uuid);
+                    }
+                } else {
+                    return player;
+                }
+            }
+            return null;
+        } catch (IllegalArgumentException | ClassCastException exception) {
+            return null;
+        }
     }
 
     @Override
@@ -30,7 +101,7 @@ public abstract class AbstractArtifactSpiritEntity extends TamableAnimal {
         super.tick();
         fallDistance = 0;
         LivingEntity owner = getOwner();
-        if (owner != null) {
+        if (owner != null && owner.isAlive()) {
             moveToOwner(owner);
             if(getOriginalItem() == null){
                 return;
@@ -71,12 +142,6 @@ public abstract class AbstractArtifactSpiritEntity extends TamableAnimal {
     @Override
     public boolean hurt(@NotNull DamageSource source, float p_21017_) {
         return false;
-    }
-
-    @Nullable
-    @Override
-    public AgeableMob getBreedOffspring(@NotNull ServerLevel serverLevel, @NotNull AgeableMob ageableMob) {
-        return null;
     }
 
     @Override

@@ -10,7 +10,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.p1nero.ss.entity.client.layer.PatchedReplaceableLayer;
 import net.p1nero.ss.entity.client.layer.ReplaceableRenderLayer;
-import net.p1nero.ss.entity.sword.screen_sword.ScreenSword;
+import net.p1nero.ss.entity.sword.screen_sword.ScreenSwordEntity;
 import net.p1nero.ss.gameassets.SwordSoaringMeshes;
 import yesman.epicfight.api.animation.AnimationPlayer;
 import yesman.epicfight.api.client.animation.Layer;
@@ -21,7 +21,7 @@ import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 import java.util.Objects;
 
 @OnlyIn(Dist.CLIENT)
-public class PatchedScreenSwordRenderer<E extends ScreenSword, T extends LivingEntityPatch<E>, M extends EntityModel<E>> extends PatchedLivingEntityRenderer<E, T, M, ScreenSwordMesh> {
+public class PatchedScreenSwordRenderer<E extends ScreenSwordEntity, T extends LivingEntityPatch<E>, M extends EntityModel<E>> extends PatchedLivingEntityRenderer<E, T, M, ScreenSwordMesh> {
 
     /**
      * 有主人就渲染主人主手物品，无主人就渲染真身

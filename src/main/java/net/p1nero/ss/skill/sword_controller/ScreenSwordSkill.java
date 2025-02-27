@@ -1,118 +1,88 @@
 package net.p1nero.ss.skill.sword_controller;
 
-import com.p1nero.invincible.api.animation.StaticAnimationProvider;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.p1nero.ss.SwordSoaring;
-import net.p1nero.ss.entity.sword.screen_sword.ScreenSword;
-import net.p1nero.ss.entity.sword.screen_sword.ScreenSwordPatch;
-import net.p1nero.ss.gameassets.SwordSoaringSkillCategories;
-import net.p1nero.ss.gameassets.animations.ScreenSwordAnimations;
-import yesman.epicfight.skill.*;
-import yesman.epicfight.world.capabilities.EpicFightCapabilities;
-import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
+import net.minecraft.world.entity.Entity;
+import net.p1nero.ss.entity.sword.screen_sword.ScreenSwordEntity;
+import yesman.epicfight.api.utils.AttackResult;
+import yesman.epicfight.gameasset.EpicFightSounds;
+import yesman.epicfight.skill.SkillContainer;
+import yesman.epicfight.skill.SkillDataManager;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
+import yesman.epicfight.world.damagesource.EpicFightDamageSource;
+import yesman.epicfight.world.damagesource.StunType;
+import yesman.epicfight.world.entity.eventlistener.PlayerEventListener;
 
-public class ScreenSwordSkill extends Skill {
-    protected int lifeTime;
-    protected StaticAnimationProvider anim;
-    protected StaticAnimationProvider summonAnim;
-    public static final SkillDataManager.SkillDataKey<Integer> DELAY_TIMER = SkillDataManager.SkillDataKey.createDataKey(SkillDataManager.ValueType.INTEGER);
+import java.util.UUID;
+
+public class ScreenSwordSkill extends KillAuraSkill {
+
+    private static final UUID EVENT_UUID = UUID.fromString("051a9bb2-7541-11ee-b962-0242ac191981");
+    public static final SkillDataManager.SkillDataKey<Integer> PROTECT_COUNT = SkillDataManager.SkillDataKey.createDataKey(SkillDataManager.ValueType.INTEGER);
+    private int maxProtectCount;
+    private float healCount;
 
     public ScreenSwordSkill(Builder builder) {
         super(builder);
-        this.anim = builder.anim;
-        this.summonAnim = builder.summonAnim;
-        this.lifeTime = builder.maxLifeTime;
     }
 
-    public StaticAnimationProvider getAnim() {
-        return anim;
-    }
-
-    public static Builder createScreenSwordBuilder() {
-        return new Builder().setCategory(SwordSoaringSkillCategories.SWORD_CONTROLLER).setResource(Resource.NONE);
+    @Override
+    public void setParams(CompoundTag parameters) {
+        super.setParams(parameters);
+        maxProtectCount = parameters.getInt("protect_count");
+        healCount = parameters.getFloat("heal_count");
     }
 
     @Override
     public void onInitiate(SkillContainer container) {
         super.onInitiate(container);
-        container.getDataManager().registerData(DELAY_TIMER);
+        container.getDataManager().registerData(PROTECT_COUNT);
+        container.getExecuter().getEventListener().addEventListener(PlayerEventListener.EventType.HURT_EVENT_PRE, EVENT_UUID, hurtEvent -> {
+            if(hurtEvent.getPlayerPatch().getOriginal().level.getEntity(container.getDataManager().getDataValue(SWORD_ENTITY_ID)) instanceof ScreenSwordEntity){
+                int protectCountLeft = container.getDataManager().getDataValue(PROTECT_COUNT);
+                if(protectCountLeft <= 0) {
+                    return;
+                }
+                container.getDataManager().setData(PROTECT_COUNT, protectCountLeft - 1);
+                if((protectCountLeft - 1) % 6 == 0){
+                    hurtEvent.getPlayerPatch().playSound(EpicFightSounds.NEUTRALIZE_MOBS, 0.0F, 0.0F);
+                    hurtEvent.getPlayerPatch().getOriginal().heal(healCount);
+                } else {
+                    hurtEvent.getPlayerPatch().playSound(EpicFightSounds.CLASH, 0.0F, 0.0F);
+                }
+                //免疫硬直
+                if(hurtEvent.getDamageSource() instanceof EpicFightDamageSource epicFightDamageSource){
+                    epicFightDamageSource.setImpact(0);
+                    epicFightDamageSource.setStunType(StunType.NONE);
+                }
+                //免疫投掷物
+                if(hurtEvent.getDamageSource().isProjectile()){
+                    hurtEvent.setAmount(0);
+                    hurtEvent.setResult(AttackResult.ResultType.MISSED);
+                    hurtEvent.setParried(true);
+                    hurtEvent.setCanceled(true);
+                } else {
+                    //反伤
+                    Entity entity = hurtEvent.getDamageSource().getEntity();
+                    if(entity != null){
+                        hurtEvent.getDamageSource().getEntity().hurt(hurtEvent.getDamageSource(), hurtEvent.getAmount() * 0.25F);
+                    }
+                }
+            } else {
+                container.getDataManager().setData(PROTECT_COUNT, 0);
+            }
+        });
     }
 
     @Override
-    public boolean canExecute(PlayerPatch<?> executer) {
-        return SwordSoaring.isValidSword(executer.getValidItemInHand(InteractionHand.MAIN_HAND));
+    public void onRemoved(SkillContainer container) {
+        super.onRemoved(container);
+        container.getExecuter().getEventListener().removeListener(PlayerEventListener.EventType.HURT_EVENT_PRE, EVENT_UUID);
     }
 
     @Override
     public void executeOnServer(ServerPlayerPatch executer, FriendlyByteBuf args) {
         super.executeOnServer(executer, args);
-        executer.playAnimationSynchronized(summonAnim.get(), 0.15F);
-        executer.getSkill(this).getDataManager().setDataSync(DELAY_TIMER, 20, executer.getOriginal());
+        executer.getSkill(this).getDataManager().setDataSync(PROTECT_COUNT, maxProtectCount, executer.getOriginal());
     }
-
-    /**
-     * 延迟生剑， 动画播放在{@link ScreenSwordPatch#clientTick(LivingEvent.LivingUpdateEvent)}
-     */
-    @Override
-    public void updateContainer(SkillContainer container) {
-        super.updateContainer(container);
-        int delayTime = container.getDataManager().getDataValue(DELAY_TIMER);
-        if(delayTime > 0){
-            container.getDataManager().setData(DELAY_TIMER, delayTime - 1);
-        }
-        if(!container.getExecuter().isLogicalClient() && delayTime == 1){
-            ScreenSword screenSword = new ScreenSword(container.getExecuter().getOriginal(), lifeTime);
-            container.getExecuter().getOriginal().level.addFreshEntity(screenSword);
-        }
-    }
-
-    public static class Builder extends Skill.Builder<ScreenSwordSkill> {
-        protected StaticAnimationProvider anim = () -> ScreenSwordAnimations.SCREEN_SWORD_IDLE;
-        protected StaticAnimationProvider summonAnim = () -> ScreenSwordAnimations.SCREEN_SWORD_PLAYER_SUMMON;
-        protected int maxLifeTime = 200;
-
-        public Builder() {
-        }
-
-        public Builder setCategory(SkillCategory category) {
-            this.category = category;
-            return this;
-        }
-
-        public Builder setActivateType(ActivateType activateType) {
-            this.activateType = activateType;
-            return this;
-        }
-
-        public Builder setResource(Resource resource) {
-            this.resource = resource;
-            return this;
-        }
-
-        public Builder setCreativeTab(CreativeModeTab tab) {
-            this.tab = tab;
-            return this;
-        }
-
-        public Builder setScreenSwordAnim(StaticAnimationProvider anim) {
-            this.anim = anim;
-            return this;
-        }
-
-        public Builder setSummonAnim(StaticAnimationProvider summonAnim) {
-            this.summonAnim = summonAnim;
-            return this;
-        }
-
-        public Builder setLifeTime(int maxLifeTime) {
-            this.maxLifeTime = maxLifeTime;
-            return this;
-        }
-
-    }
-
 }

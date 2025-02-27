@@ -9,6 +9,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.p1nero.ss.entity.AbstractArtifactSpiritEntity;
+import org.jetbrains.annotations.NotNull;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 
 public abstract class AbstractSwordEntity extends AbstractArtifactSpiritEntity implements IPatchedItemSupplier {
@@ -30,12 +31,12 @@ public abstract class AbstractSwordEntity extends AbstractArtifactSpiritEntity i
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
+    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
         this.getEntityData().set(ITEM_STACK, ItemStack.of(tag.getCompound("item_stack")));
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
+    public void addAdditionalSaveData(@NotNull CompoundTag tag) {
         tag.put("item_stack", this.getEntityData().get(ITEM_STACK).serializeNBT());
     }
 

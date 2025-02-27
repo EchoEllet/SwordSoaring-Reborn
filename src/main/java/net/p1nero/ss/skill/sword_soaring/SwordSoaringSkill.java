@@ -81,7 +81,7 @@ public class SwordSoaringSkill extends Skill {
             return false;
         }
         SkillDataManager dataManager = executer.getSkill(SwordSoaringSkillSlots.SWORD_SOARING).getDataManager();
-        return !dataManager.getDataValue(FLYING) && dataManager.getDataValue(COOL_DOWN_TIMER) <= 0 && SwordSoaring.isValidSword(executer.getOriginal().getMainHandItem()) && executer.hasStamina(consumption + 0.1F);
+        return !dataManager.getDataValue(FLYING) && (dataManager.getDataValue(COOL_DOWN_TIMER) <= 0 || executer.getOriginal().isCreative()) && SwordSoaring.isValidSword(executer.getOriginal().getMainHandItem()) && executer.hasStamina(consumption + 0.1F);
     }
 
     @Override
@@ -230,7 +230,7 @@ public class SwordSoaringSkill extends Skill {
                 } else if (SwordSoaring.isValidSword(container.getExecuter().getOriginal().getMainHandItem())) {
                     container.getExecuter().consumeStamina(consumption * 0.33F);
                 }
-                if(container.getExecuter().getOriginal().isUnderWater()){
+                if(container.getExecuter().getOriginal().isUnderWater() || !container.getExecuter().hasStamina(consumption + 0.1F) || !SwordSoaring.isValidSword(container.getExecuter().getOriginal().getMainHandItem())){
                     stopFlying(container, ((ServerPlayer) container.getExecuter().getOriginal()));
                 }
             }

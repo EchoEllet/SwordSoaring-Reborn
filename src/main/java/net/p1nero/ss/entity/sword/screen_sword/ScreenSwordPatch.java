@@ -9,12 +9,13 @@ import net.p1nero.ss.gameassets.animations.ScreenSwordAnimations;
 import net.p1nero.ss.network.PacketHandler;
 import net.p1nero.ss.network.PacketRelay;
 import net.p1nero.ss.network.packet.server.RequestEntityPlayAnimationPacket;
-import net.p1nero.ss.skill.sword_controller.ScreenSwordSkill;
+import net.p1nero.ss.skill.sword_controller.KillAuraSkill;
 import yesman.epicfight.api.animation.LivingMotions;
 import yesman.epicfight.api.animation.types.StaticAnimation;
 import yesman.epicfight.api.client.animation.ClientAnimator;
+import yesman.epicfight.skill.SkillContainer;
 
-public class ScreenSwordPatch extends AbstractArtifactSpiritPatch<ScreenSword> {
+public class ScreenSwordPatch extends AbstractArtifactSpiritPatch<ScreenSwordEntity> {
     private boolean played;
 
     /**
@@ -26,10 +27,11 @@ public class ScreenSwordPatch extends AbstractArtifactSpiritPatch<ScreenSword> {
         super.clientTick(event);
         if(!played){
             if(this.isLogicalClient() && this.getOwnerPatch() != null){
-                if(this.getOwnerPatch().getSkill(SwordSoaringSkillSlots.SWORD_CONTROLLER).getSkill() instanceof ScreenSwordSkill skill){
-                    StaticAnimation toPlay = skill.getAnim().get();
-                    this.animator.playAnimation(toPlay, 0.0F);
-                    PacketRelay.sendToServer(PacketHandler.INSTANCE, new RequestEntityPlayAnimationPacket(this.getOriginal().getId(), toPlay.getNamespaceId(), toPlay.getId(), 0.0F));
+                SkillContainer container = this.getOwnerPatch().getSkill(SwordSoaringSkillSlots.SWORD_CONTROLLER);
+                if(container.getSkill() instanceof KillAuraSkill killAuraSkill){
+                    StaticAnimation toPlay = killAuraSkill.getAnim().get();
+                    this.animator.playAnimation(toPlay, 0.0001F);
+                    PacketRelay.sendToServer(PacketHandler.INSTANCE, new RequestEntityPlayAnimationPacket(this.getOriginal().getId(), toPlay.getNamespaceId(), toPlay.getId(), 0.0001F));
                     played = true;
                 }
             }

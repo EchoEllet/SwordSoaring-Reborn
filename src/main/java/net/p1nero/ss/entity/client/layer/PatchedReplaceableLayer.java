@@ -1,6 +1,7 @@
 package net.p1nero.ss.entity.client.layer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -20,7 +21,6 @@ import yesman.epicfight.api.utils.math.MathUtils;
 import yesman.epicfight.api.utils.math.OpenMatrix4f;
 import yesman.epicfight.client.renderer.patched.layer.PatchedLayer;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
-import yesman.epicfight.world.item.EpicFightItems;
 
 @OnlyIn(Dist.CLIENT)
 public class PatchedReplaceableLayer<E extends LivingEntity & OwnableEntity & IPatchedItemSupplier, T extends LivingEntityPatch<E>, M extends EntityModel<E>, AM extends AnimatedMesh> extends PatchedLayer<E, T, M, RenderLayer<E, M>, AM> {
@@ -43,10 +43,10 @@ public class PatchedReplaceableLayer<E extends LivingEntity & OwnableEntity & IP
     public static void renderScreenSword(ItemStack stack, LivingEntityPatch<?> entityPatch, IReplaceableArmature armature, OpenMatrix4f[] poses, MultiBufferSource buffer, PoseStack poseStack, int packedLight) {
         for(Joint joint : armature.getJoints(entityPatch)){
             OpenMatrix4f jointTransform = poses[joint.getId()];
-//            jointTransform.removeTranslation(); TODO 验证是否有用
             poseStack.pushPose();
             mulPoseStack(poseStack, jointTransform);
             ItemTransforms.TransformType transformType = ItemTransforms.TransformType.THIRD_PERSON_RIGHT_HAND;
+            poseStack.mulPose(Vector3f.YP.rotationDegrees(90));
             Minecraft.getInstance().getItemInHandRenderer().renderItem(entityPatch.getOriginal(), stack, transformType, false, poseStack, buffer, packedLight);
             poseStack.popPose();
         }

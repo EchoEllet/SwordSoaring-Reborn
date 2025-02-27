@@ -18,6 +18,15 @@
   "skill.sword_soaring.sword_soaring_elytra_master": "Elytra-Master",
   "skill.sword_soaring.sword_soaring_elytra_master.tooltip": "六根清净-Elytra\n\n If you have learnt this skill, when flying in apprentice and expert style, flying will not consume stamina and enter cooldown.",
 
+  "epicfight.skill_slot.sword_controller": "Sword Controller",
+  "skill.epicfight.sword_controller.category": "Sword Controller",
+  "skill.sword_soaring.screen_sword": "Screen Sword",
+  "skill.sword_soaring.screen_sword.tooltip": "",
+  "skill.sword_soaring.kill_aura_1": "Kill Aura 1",
+  "skill.sword_soaring.kill_aura_1.tooltip": "",
+  "skill.sword_soaring.kill_aura_2": "Kill Aura 2",
+  "skill.sword_soaring.kill_aura_2.tooltip": "",
+
   "key.sword_soaring.common": "Epic Fight: Sword Soaring",
   "key.sword_soaring.take_off": "Take off",
   "key.sword_soaring.acceleration": "Accelerate",
