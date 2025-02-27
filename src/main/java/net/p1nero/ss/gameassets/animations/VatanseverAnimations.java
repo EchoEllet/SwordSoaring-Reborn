@@ -136,7 +136,8 @@ public class VatanseverAnimations {
         VATANSEVER_STORM_START = new ActionAnimation(0.15F, "biped/vatansever/skill/vatansever_storm_start", vatanseverArmature);
         VATANSEVER_INIT = new ActionAnimation(0.15F, "biped/vatansever/vatansever_init", vatanseverArmature);
         VATANSEVER_FLY_BEGIN = new ActionAnimation(0.15F, "biped/vatansever/vatansever_fly_begin", vatanseverArmature)
-                .addProperty(AnimationProperty.ActionAnimationProperty.MOVE_VERTICAL, true);
+                .addProperty(AnimationProperty.ActionAnimationProperty.MOVE_VERTICAL, true)
+                .addEvents(AnimationEvent.TimePeriodEvent.create(0, 3, (entityPatch, self, params) -> flyVFX(entityPatch), AnimationEvent.Side.CLIENT));
 
         HumanoidArmature biped = Armatures.BIPED;
         PLAYER_AUTO1 = new LinkArtifactSpiritAnimation(0.15F, 1.1F, "biped/vatansever/vatansever_auto1_owner", biped, VATANSEVER_AUTO1)
