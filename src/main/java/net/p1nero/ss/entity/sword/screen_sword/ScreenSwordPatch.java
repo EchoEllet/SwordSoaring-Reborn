@@ -46,7 +46,6 @@ public class ScreenSwordPatch extends AbstractArtifactSpiritPatch<ScreenSwordEnt
 
     @Override
     public void updateMotion(boolean considerInaction) {
-        this.currentLivingMotion = LivingMotions.IDLE;
-        this.currentCompositeMotion = LivingMotions.IDLE;
+        keepIdleMotion(considerInaction);
     }
 }

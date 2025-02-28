@@ -15,8 +15,7 @@ public class VatanseverStormEntityPatch extends AbstractArtifactSpiritPatch<Vata
 
     @Override
     public void updateMotion(boolean considerInaction) {
-        this.currentLivingMotion = LivingMotions.IDLE;
-        this.currentCompositeMotion = LivingMotions.IDLE;
+        keepIdleMotion(considerInaction);
     }
 
 }

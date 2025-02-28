@@ -33,6 +33,15 @@ public abstract class AbstractArtifactSpiritPatch<T extends AbstractArtifactSpir
 
     @Override
     public void updateMotion(boolean considerInaction) {
+        if(this.state.inaction() && considerInaction){
+            this.currentLivingMotion = LivingMotions.IDLE;
+            this.currentCompositeMotion = LivingMotions.IDLE;
+        } else {
+            syncMotionToOwner(considerInaction);
+        }
+    }
+
+    public void syncMotionToOwner(boolean considerInaction){
         if (this.original.getOwner() instanceof Player player) {
             PlayerPatch<?> patch = EpicFightCapabilities.getEntityPatch(player, PlayerPatch.class);
             this.currentLivingMotion = patch.currentLivingMotion;
@@ -41,6 +50,11 @@ public abstract class AbstractArtifactSpiritPatch<T extends AbstractArtifactSpir
             this.currentLivingMotion = LivingMotions.IDLE;
             this.currentCompositeMotion = LivingMotions.IDLE;
         }
+    }
+
+    public void keepIdleMotion(boolean considerInaction){
+        this.currentLivingMotion = LivingMotions.IDLE;
+        this.currentCompositeMotion = LivingMotions.IDLE;
     }
 
     @Override

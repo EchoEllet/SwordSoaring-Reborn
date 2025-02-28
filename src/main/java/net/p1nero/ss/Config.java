@@ -15,14 +15,15 @@ public class Config
 {
     private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
     public static final ForgeConfigSpec.BooleanValue ENABLE_LOOT_TABLE;
+    public static final ForgeConfigSpec.BooleanValue ARACHNOPHOBIA_MODE;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> ITEMS_CAN_FLY;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> ITEMS_CAN_NOT_FLY;
 
     static final ForgeConfigSpec SPEC;
 
     static {
-        ENABLE_LOOT_TABLE = createBool("if true, you can get all skill books via fishing, end city, ancient city and strong hold library. or you have to add loot table yourself(for mod pack author)","enable_loot_table", true);
-
+        ENABLE_LOOT_TABLE = createBool("enable_loot_table", true, "If true, you can get all skill books via fishing, end city, ancient city and strong hold library. or you have to add loot table yourself(for mod pack author)", "若为true，则钓鱼，要塞图书馆，末地城和古城将可获取技能书。否则你将自己添加技能书获取方式。");
+        ARACHNOPHOBIA_MODE = createBool("arachnophobia_mode", false,"Arachnophobia mode, if true, the boss will have no legs.", "蜘蛛恐惧症模式：true时boss将不会有腿");
         BUILDER.push("Sword Soaring");
         ITEMS_CAN_FLY = BUILDER
                 .comment("A list of items considered as sword.")
@@ -38,7 +39,7 @@ public class Config
     public static Set<Item> swordItems = new HashSet<>();
     public static Set<Item> notSwordItems = new HashSet<>();
 
-    private static ForgeConfigSpec.BooleanValue createBool(String comment, String key, boolean defaultValue){
+    private static ForgeConfigSpec.BooleanValue createBool(String key, boolean defaultValue, String ...comment){
         return BUILDER
                 .comment(comment)
                 .translation("config."+SwordSoaring.MOD_ID+"."+key)

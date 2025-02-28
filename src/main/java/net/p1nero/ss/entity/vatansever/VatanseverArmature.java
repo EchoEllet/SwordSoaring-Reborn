@@ -7,7 +7,6 @@ import yesman.epicfight.api.model.Armature;
 import yesman.epicfight.skill.SkillDataManager;
 import yesman.epicfight.skill.SkillSlots;
 import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
-import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,9 +24,11 @@ public class VatanseverArmature extends Armature {
         R2 = getOrLogException(jointMap, "S_2_R");
         R3 = getOrLogException(jointMap, "S_3_R");
         joints = ImmutableList.of(R3, L3, R2, L2, R1, L1);
-//        joints = ImmutableList.of(L3, R3, L2, R2, L1, R1);
     }
 
+    /**
+     * 获取已经射出去的那几个Joint
+     */
     public List<Joint> getInvalidJoints(PlayerPatch<?> ownerPatch){
         List<Joint> invalidJoints = new ArrayList<>();
         SkillDataManager manager = ownerPatch.getSkill(SkillSlots.WEAPON_PASSIVE).getDataManager();

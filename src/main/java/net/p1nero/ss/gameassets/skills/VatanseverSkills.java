@@ -52,6 +52,9 @@ public class VatanseverSkills {
         aa.key3(shoot);
         aaa.key3(shoot);
         aaaa.key3(shoot);
+        shoot.key1(a);
+        shoot.key3(shoot);
+        shoot.addChild(SwordSoaringComboTypes.KEY_SWORD_SKILL, storm);
         root.addChild(SwordSoaringComboTypes.KEY_SWORD_SKILL, storm);
         VATANSEVER_INNATE = SwordSoaringSkills.build(event, VatanseverWeaponInnateSkill::new, ComboBasicAttack.createComboBasicAttack().setCombo(root), "vatansever_innate");
         VATANSEVER_PASSIVE = SwordSoaringSkills.build(event, VatanseverPassive::new, Skill.createBuilder().setCategory(SkillCategories.WEAPON_PASSIVE).setResource(Skill.Resource.NONE), "vatansever_passive");
