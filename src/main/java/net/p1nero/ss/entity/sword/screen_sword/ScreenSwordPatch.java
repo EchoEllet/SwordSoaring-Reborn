@@ -29,7 +29,7 @@ public class ScreenSwordPatch extends AbstractArtifactSpiritPatch<ScreenSwordEnt
             if(this.isLogicalClient() && this.getOwnerPatch() != null){
                 SkillContainer container = this.getOwnerPatch().getSkill(SwordSoaringSkillSlots.SWORD_CONTROLLER);
                 if(container.getSkill() instanceof KillAuraSkill killAuraSkill){
-                    StaticAnimation toPlay = killAuraSkill.getAnim().get();
+                    StaticAnimation toPlay = killAuraSkill.getSwordSummonAnim().get();
                     this.animator.playAnimation(toPlay, 0.0001F);
                     PacketRelay.sendToServer(PacketHandler.INSTANCE, new RequestEntityPlayAnimationPacket(this.getOriginal().getId(), toPlay.getNamespaceId(), toPlay.getId(), 0.0001F));
                     played = true;

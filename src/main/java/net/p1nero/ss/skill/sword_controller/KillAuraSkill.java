@@ -16,7 +16,6 @@ import net.p1nero.ss.SwordSoaring;
 import net.p1nero.ss.entity.sword.screen_sword.ScreenSwordEntity;
 import net.p1nero.ss.entity.sword.screen_sword.ScreenSwordPatch;
 import net.p1nero.ss.gameassets.SwordSoaringSkillCategories;
-import net.p1nero.ss.gameassets.animations.ScreenSwordAnimations;
 import yesman.epicfight.client.gui.BattleModeGui;
 import yesman.epicfight.skill.Skill;
 import yesman.epicfight.skill.SkillCategory;
@@ -27,16 +26,15 @@ import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 
 public class KillAuraSkill extends Skill {
     protected int lifeTime, cooldown;
-    protected StaticAnimationProvider anim;
-    protected StaticAnimationProvider summonAnim;
-    public static final SkillDataManager.SkillDataKey<Integer> DELAY_TIMER = SkillDataManager.SkillDataKey.createDataKey(SkillDataManager.ValueType.INTEGER);
+    protected StaticAnimationProvider playerSummonAnim;
+    protected StaticAnimationProvider swordSummonAnim;
     public static final SkillDataManager.SkillDataKey<Integer> COOL_DOWN_TIMER = SkillDataManager.SkillDataKey.createDataKey(SkillDataManager.ValueType.INTEGER);
     public static final SkillDataManager.SkillDataKey<Integer> SWORD_ENTITY_ID = SkillDataManager.SkillDataKey.createDataKey(SkillDataManager.ValueType.INTEGER);
 
     public KillAuraSkill(Builder builder) {
         super(builder);
-        this.anim = builder.anim;
-        this.summonAnim = builder.summonAnim;
+        this.playerSummonAnim = builder.playerSummonAnim;
+        this.swordSummonAnim = builder.swordSummonAnim;
     }
 
     @Override
@@ -50,8 +48,8 @@ public class KillAuraSkill extends Skill {
         return cooldown;
     }
 
-    public StaticAnimationProvider getAnim() {
-        return anim;
+    public StaticAnimationProvider getSwordSummonAnim() {
+        return swordSummonAnim;
     }
 
     public static Builder createKillAuraBuilder() {
@@ -61,7 +59,6 @@ public class KillAuraSkill extends Skill {
     @Override
     public void onInitiate(SkillContainer container) {
         super.onInitiate(container);
-        container.getDataManager().registerData(DELAY_TIMER);
         container.getDataManager().registerData(COOL_DOWN_TIMER);
         container.getDataManager().registerData(SWORD_ENTITY_ID);
     }
@@ -74,8 +71,10 @@ public class KillAuraSkill extends Skill {
     @Override
     public void executeOnServer(ServerPlayerPatch executer, FriendlyByteBuf args) {
         super.executeOnServer(executer, args);
-        executer.playAnimationSynchronized(summonAnim.get(), 0.15F);
-        executer.getSkill(this).getDataManager().setDataSync(DELAY_TIMER, 10, executer.getOriginal());
+        executer.playAnimationSynchronized(playerSummonAnim.get(), 0.15F);
+        ScreenSwordEntity screenSwordEntity = new ScreenSwordEntity(executer.getOriginal(), lifeTime);
+        executer.getOriginal().level.addFreshEntity(screenSwordEntity);
+        executer.getSkill(this).getDataManager().setDataSync(SWORD_ENTITY_ID, screenSwordEntity.getId(), executer.getOriginal());
         executer.getSkill(this).getDataManager().setDataSync(COOL_DOWN_TIMER, cooldown, executer.getOriginal());
     }
 
@@ -85,18 +84,9 @@ public class KillAuraSkill extends Skill {
     @Override
     public void updateContainer(SkillContainer container) {
         super.updateContainer(container);
-        int delayTime = container.getDataManager().getDataValue(DELAY_TIMER);
-        if(delayTime > 0){
-            container.getDataManager().setData(DELAY_TIMER, delayTime - 1);
-        }
         int cooldown = container.getDataManager().getDataValue(COOL_DOWN_TIMER);
         if(cooldown > 0){
             container.getDataManager().setData(COOL_DOWN_TIMER, cooldown - 1);
-        }
-        if(!container.getExecuter().isLogicalClient() && delayTime == 1){
-            ScreenSwordEntity screenSwordEntity = new ScreenSwordEntity(container.getExecuter().getOriginal(), lifeTime);
-            container.getExecuter().getOriginal().level.addFreshEntity(screenSwordEntity);
-            container.getDataManager().setDataSync(SWORD_ENTITY_ID, screenSwordEntity.getId(), ((ServerPlayer) container.getExecuter().getOriginal()));
         }
     }
 
@@ -117,8 +107,7 @@ public class KillAuraSkill extends Skill {
     }
 
     public static class Builder extends Skill.Builder<KillAuraSkill> {
-        protected StaticAnimationProvider anim;
-        protected StaticAnimationProvider summonAnim;
+        protected StaticAnimationProvider playerSummonAnim, swordSummonAnim;
         public Builder() {
         }
 
@@ -142,13 +131,13 @@ public class KillAuraSkill extends Skill {
             return this;
         }
 
-        public Builder setScreenSwordAnim(StaticAnimationProvider anim) {
-            this.anim = anim;
+        public Builder setPlayerSummonAnim(StaticAnimationProvider summonAnim) {
+            this.playerSummonAnim = summonAnim;
             return this;
         }
 
-        public Builder setSummonAnim(StaticAnimationProvider summonAnim) {
-            this.summonAnim = summonAnim;
+        public Builder setSwordSummonAnim(StaticAnimationProvider summonAnim) {
+            this.swordSummonAnim = summonAnim;
             return this;
         }
 

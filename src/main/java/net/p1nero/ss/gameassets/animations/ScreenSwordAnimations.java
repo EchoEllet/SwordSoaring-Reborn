@@ -1,5 +1,6 @@
 package net.p1nero.ss.gameassets.animations;
 
+import com.p1nero.invincible.api.animation.StaticAnimationProvider;
 import net.p1nero.ss.animation.ArtifactSpiritMultiPhaseAttackAnimation;
 import net.p1nero.ss.entity.sword.screen_sword.ScreenSwordArmature;
 import net.p1nero.ss.gameassets.SwordSoaringArmatures;
@@ -15,15 +16,22 @@ import yesman.epicfight.model.armature.HumanoidArmature;
 public class ScreenSwordAnimations {
     public static StaticAnimation SCREEN_SWORD_IDLE;
     public static StaticAnimation KILL_AURA_1;
-    public static StaticAnimation KILL_AURA_1_PLAYER_SUMMON;
+    public static StaticAnimation KILL_AURA_1_SUMMON;
     public static StaticAnimation KILL_AURA_2;
-    public static StaticAnimation KILL_AURA_2_PLAYER_SUMMON;
+    public static StaticAnimation KILL_AURA_2_SUMMON;
     public static StaticAnimation SCREEN_SWORD;
-    public static StaticAnimation SCREEN_SWORD_PLAYER_SUMMON;
+    public static StaticAnimation SCREEN_SWORD_SUMMON;
+    public static StaticAnimation PLAYER_SUMMON_SWORD;
 
     public static AnimationEvent.TimeStampedEvent RESET_ANIM = AnimationEvent.TimeStampedEvent.create(0.49F, ((livingEntityPatch, staticAnimation, objects) -> {
         livingEntityPatch.reserveAnimation(staticAnimation);
     }), AnimationEvent.Side.SERVER);
+
+    public static AnimationEvent onEndPlay(StaticAnimationProvider provider) {
+        return AnimationEvent.create(((livingEntityPatch, staticAnimation, objects) -> {
+            livingEntityPatch.reserveAnimation(provider.get());
+        }), AnimationEvent.Side.SERVER);
+    }
 
     public static void buildScreenSwordAnim() {
         ScreenSwordArmature screenSwordArmature = SwordSoaringArmatures.screenSwordArmature;
@@ -41,17 +49,21 @@ public class ScreenSwordAnimations {
                 .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10))
                 .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 0.2F))
                 .addEvents(RESET_ANIM);
+        KILL_AURA_1_SUMMON = new ActionAnimation(0.15F, "screen_sword/kill_aura_1_summon", screenSwordArmature)
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, onEndPlay(() -> KILL_AURA_1));
         KILL_AURA_2 = new ArtifactSpiritMultiPhaseAttackAnimation(0.001F, "screen_sword/kill_aura_2", screenSwordArmature, phases)
                 .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10))
                 .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 0.2F))
                 .addEvents(RESET_ANIM);
+        KILL_AURA_2_SUMMON = new ActionAnimation(0.15F, "screen_sword/kill_aura_2_summon", screenSwordArmature)
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, onEndPlay(() -> KILL_AURA_2));
         SCREEN_SWORD = new ActionAnimation(0.001F, "screen_sword/screen_sword", screenSwordArmature)
                 .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 0.2F))
                 .addEvents(RESET_ANIM);
+        SCREEN_SWORD_SUMMON = new ActionAnimation(0.15F, "screen_sword/screen_sword_summon", screenSwordArmature)
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, onEndPlay(() -> SCREEN_SWORD));
 
         HumanoidArmature biped = Armatures.BIPED;
-        KILL_AURA_1_PLAYER_SUMMON = new ActionAnimation(0.15F, "screen_sword/kill_aura_1_summon", biped);
-        KILL_AURA_2_PLAYER_SUMMON = new ActionAnimation(0.15F, "screen_sword/kill_aura_2_summon", biped);
-        SCREEN_SWORD_PLAYER_SUMMON = new ActionAnimation(0.15F, "screen_sword/screen_sword_start_player", biped);
+        PLAYER_SUMMON_SWORD = new ActionAnimation(0.15F, "screen_sword/sword_summon_owner", biped);
     }
 }

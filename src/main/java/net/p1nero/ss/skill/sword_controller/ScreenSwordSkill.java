@@ -1,11 +1,19 @@
 package net.p1nero.ss.skill.sword_controller;
 
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.p1nero.ss.entity.sword.screen_sword.ScreenSwordEntity;
 import yesman.epicfight.api.utils.AttackResult;
+import yesman.epicfight.client.gui.BattleModeGui;
 import yesman.epicfight.gameasset.EpicFightSounds;
+import yesman.epicfight.particle.EpicFightParticles;
+import yesman.epicfight.particle.HitParticleType;
 import yesman.epicfight.skill.SkillContainer;
 import yesman.epicfight.skill.SkillDataManager;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
@@ -43,12 +51,13 @@ public class ScreenSwordSkill extends KillAuraSkill {
                 if(protectCountLeft <= 0) {
                     return;
                 }
-                container.getDataManager().setData(PROTECT_COUNT, protectCountLeft - 1);
-                if((protectCountLeft - 1) % 6 == 0){
+                container.getDataManager().setDataSync(PROTECT_COUNT, protectCountLeft - 1, hurtEvent.getPlayerPatch().getOriginal());
+                if((protectCountLeft - 1) % (maxProtectCount / 6) == 0){
                     hurtEvent.getPlayerPatch().playSound(EpicFightSounds.NEUTRALIZE_MOBS, 0.0F, 0.0F);
                     hurtEvent.getPlayerPatch().getOriginal().heal(healCount);
                 } else {
                     hurtEvent.getPlayerPatch().playSound(EpicFightSounds.CLASH, 0.0F, 0.0F);
+                    EpicFightParticles.HIT_BLUNT.get().spawnParticleWithArgument(hurtEvent.getPlayerPatch().getOriginal().getLevel(), HitParticleType.FRONT_OF_EYES, HitParticleType.ZERO, hurtEvent.getPlayerPatch().getOriginal(), hurtEvent.getDamageSource().getDirectEntity());
                 }
                 //免疫硬直
                 if(hurtEvent.getDamageSource() instanceof EpicFightDamageSource epicFightDamageSource){
@@ -62,14 +71,14 @@ public class ScreenSwordSkill extends KillAuraSkill {
                     hurtEvent.setParried(true);
                     hurtEvent.setCanceled(true);
                 } else {
-                    //反伤
+                    //反伤（减伤有bug，setAmount无效，额外写太麻烦了）
                     Entity entity = hurtEvent.getDamageSource().getEntity();
                     if(entity != null){
                         hurtEvent.getDamageSource().getEntity().hurt(hurtEvent.getDamageSource(), hurtEvent.getAmount() * 0.25F);
                     }
                 }
             } else {
-                container.getDataManager().setData(PROTECT_COUNT, 0);
+                container.getDataManager().setDataSync(PROTECT_COUNT, 0, hurtEvent.getPlayerPatch().getOriginal());
             }
         });
     }
@@ -85,4 +94,25 @@ public class ScreenSwordSkill extends KillAuraSkill {
         super.executeOnServer(executer, args);
         executer.getSkill(this).getDataManager().setDataSync(PROTECT_COUNT, maxProtectCount, executer.getOriginal());
     }
+
+    @Override
+    public boolean shouldDraw(SkillContainer container) {
+        return container.getDataManager().getDataValue(PROTECT_COUNT) > 0 || super.shouldDraw(container);
+    }
+
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public void drawOnGui(BattleModeGui gui, SkillContainer container, PoseStack poseStack, float x, float y) {
+        poseStack.pushPose();
+        poseStack.translate(0.0, (float) gui.getSlidingProgression(), 0.0);
+        RenderSystem.setShaderTexture(0, getSkillTexture());
+        GuiComponent.blit(poseStack, (int) x, (int) y, 24, 24, 0.0F, 0.0F, 1, 1, 1, 1);
+        int protectCount = container.getDataManager().getDataValue(PROTECT_COUNT);
+        if(protectCount > 0) {
+            gui.font.drawShadow(poseStack, container.getDataManager().getDataValue(PROTECT_COUNT).toString(), x + 6.0F, y + 8.0F, 16777215);
+        } else {
+            gui.font.drawShadow(poseStack, String.format("%.1f", (container.getDataManager().getDataValue(COOL_DOWN_TIMER) / 20.0)), x + 6.0F, y + 8.0F, 16777215);
+        }
+    }
+
 }

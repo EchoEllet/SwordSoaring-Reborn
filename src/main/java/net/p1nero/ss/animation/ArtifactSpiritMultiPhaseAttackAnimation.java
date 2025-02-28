@@ -92,7 +92,7 @@ public class ArtifactSpiritMultiPhaseAttackAnimation extends AttackAnimation {
                 while (hitEntities.next()) {
                     Entity hit = hitEntities.getEntity();
                     LivingEntity trueEntity = this.getTrueEntity(hit);
-                    if (trueEntity != null && trueEntity.isAlive() && !ssPlayer.getCurrentlyHurtEntities(phase).contains(trueEntity)) {
+                    if (trueEntity != null && trueEntity.isAlive() && !ssPlayer.getCurrentlyHurtEntities(phase).contains(trueEntity) && !trueEntity.is(artifactSpiritPatch.getOwnerPatch().getOriginal()) && !trueEntity.is(artifactSpiritPatch.getOriginal())) {
                         if (hit instanceof LivingEntity || hit instanceof PartEntity) {
                             EpicFightDamageSource source = this.getEpicFightDamageSource(entityPatch, hit, phase);
                             int prevInvulTime = hit.invulnerableTime;
