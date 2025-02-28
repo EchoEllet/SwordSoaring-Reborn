@@ -64,6 +64,9 @@ public class ScreenSwordAnimations {
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, onEndPlay(() -> SCREEN_SWORD));
 
         HumanoidArmature biped = Armatures.BIPED;
-        PLAYER_SUMMON_SWORD = new ActionAnimation(0.15F, "screen_sword/sword_summon_owner", biped);
+        PLAYER_SUMMON_SWORD = new ActionAnimation(0.15F, "screen_sword/sword_summon_owner", biped)
+                .addEvents(AnimationEvent.TimeStampedEvent.create(0.7F, ((livingEntityPatch, staticAnimation, objects) -> {
+                    VatanseverAnimations.groundSplit(livingEntityPatch, 0, 0, 0, 0, 0, 2, 500);
+                }), AnimationEvent.Side.BOTH));;
     }
 }

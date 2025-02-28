@@ -208,13 +208,19 @@ public class VatanseverAnimations {
                     }
                 }, AnimationEvent.Side.SERVER));
         PLAYER_STORM_START = new LinkArtifactSpiritAnimation(0.15F, "biped/vatansever/skill/vatansever_storm_start", biped, VATANSEVER_STORM_START)
-                .addEvents(AnimationEvent.TimeStampedEvent.create(0.5F, ((livingEntityPatch, staticAnimation, objects) -> {
+                .addEvents(AnimationEvent.TimeStampedEvent.create(1.0F, ((livingEntityPatch, staticAnimation, objects) -> {
                     groundSplit(livingEntityPatch, 0, 0, 0, 0, 0, 3, 2000);
-                    createStorm(livingEntityPatch, 0, 18, 0, VatanseverStormAnimations.VATANSEVER_STORM_UP);
-                    createStorm(livingEntityPatch, 0, 20, 0, VatanseverStormAnimations.VATANSEVER_STORM_MIDDLE);
-                    createStorm(livingEntityPatch, 0, 20, 0, VatanseverStormAnimations.VATANSEVER_STORM_MIDDLE_2);
-                    createStorm(livingEntityPatch, 0, 22, 0, VatanseverStormAnimations.VATANSEVER_STORM_DOWN);
-                }), AnimationEvent.Side.BOTH));
+                    createStorm(livingEntityPatch, 0, 0, 0, VatanseverStormAnimations.VATANSEVER_STORM_RISE_1);
+                    createStorm(livingEntityPatch, 0, 0, 0, VatanseverStormAnimations.VATANSEVER_STORM_RISE_2);
+                    createStorm(livingEntityPatch, 0, 0, 0, VatanseverStormAnimations.VATANSEVER_STORM_RISE_3);
+                    createStorm(livingEntityPatch, 0, 0, 0, VatanseverStormAnimations.VATANSEVER_STORM_RISE_4);
+                }), AnimationEvent.Side.BOTH),
+                        AnimationEvent.TimeStampedEvent.create(2.2F, ((livingEntityPatch, staticAnimation, objects) -> {
+                            createStorm(livingEntityPatch, 0, 0, 0, VatanseverStormAnimations.VATANSEVER_STORM_MIDDLE_2);
+                            createStorm(livingEntityPatch, 0, 0, 0, VatanseverStormAnimations.VATANSEVER_STORM_MIDDLE);
+                            createStorm(livingEntityPatch, 0, 0, 0, VatanseverStormAnimations.VATANSEVER_STORM_UP);
+                            createStorm(livingEntityPatch, 0, 0, 0, VatanseverStormAnimations.VATANSEVER_STORM_DOWN);
+                        }), AnimationEvent.Side.BOTH));
     }
 
     public static void createStorm(LivingEntityPatch<?> entityPatch, double xOffset, double yOffset, double zOffset, StaticAnimation staticAnimation) {

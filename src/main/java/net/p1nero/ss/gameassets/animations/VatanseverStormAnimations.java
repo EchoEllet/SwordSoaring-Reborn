@@ -17,6 +17,10 @@ public class VatanseverStormAnimations {
     public static StaticAnimation VATANSEVER_STORM_MIDDLE;
     public static StaticAnimation VATANSEVER_STORM_MIDDLE_2;
     public static StaticAnimation VATANSEVER_STORM_DOWN;
+    public static StaticAnimation VATANSEVER_STORM_RISE_1;
+    public static StaticAnimation VATANSEVER_STORM_RISE_2;
+    public static StaticAnimation VATANSEVER_STORM_RISE_3;
+    public static StaticAnimation VATANSEVER_STORM_RISE_4;
     public static void buildVatanseverStormAnim() {
         VatanseverStormArmature stormArmature = SwordSoaringArmatures.vatanseverStormArmature;
         VATANSEVER_STORM_IDLE = new StaticAnimation(true, "vatansever_storm/vatansever_storm_idle", stormArmature);
@@ -34,13 +38,35 @@ public class VatanseverStormAnimations {
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.create(((livingEntityPatch, staticAnimation, objects) -> {
                     livingEntityPatch.reserveAnimation(VATANSEVER_STORM_MIDDLE_2);
                 }), AnimationEvent.Side.SERVER))
+                .addEvents(AnimationEvent.TimePeriodEvent.create(0F, 2.5F, (entityPatch, self, params) -> VatanseverAnimations.attractEntities(entityPatch,35,3,25), AnimationEvent.Side.BOTH))
                 .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 0.9F));
         VATANSEVER_STORM_DOWN = new ActionAnimation(0.0001F, "vatansever_storm/vatansever_storm_down", stormArmature)
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.create(((livingEntityPatch, staticAnimation, objects) -> {
                     livingEntityPatch.reserveAnimation(VATANSEVER_STORM_DOWN);
                 }), AnimationEvent.Side.SERVER))
                 .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 0.8F));
+        VATANSEVER_STORM_RISE_1 = new ActionAnimation(0.0001F, "vatansever_storm/vatansever_storm_rise_1", stormArmature)
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.create(((livingEntityPatch, staticAnimation, objects) -> {
+                    LivingEntity entity = livingEntityPatch.getOriginal();
+                    entity.discard();
+                }), AnimationEvent.Side.SERVER));
+        VATANSEVER_STORM_RISE_2 = new ActionAnimation(0.0001F, "vatansever_storm/vatansever_storm_rise_2", stormArmature)
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.create(((livingEntityPatch, staticAnimation, objects) -> {
+                    LivingEntity entity = livingEntityPatch.getOriginal();
+                    entity.discard();
+                }), AnimationEvent.Side.SERVER));
+        VATANSEVER_STORM_RISE_3 = new ActionAnimation(0.0001F, "vatansever_storm/vatansever_storm_rise_3", stormArmature)
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.create(((livingEntityPatch, staticAnimation, objects) -> {
+                    LivingEntity entity = livingEntityPatch.getOriginal();
+                    entity.discard();
+                }), AnimationEvent.Side.SERVER));
+        VATANSEVER_STORM_RISE_4 = new ActionAnimation(0.0001F, "vatansever_storm/vatansever_storm_rise_4", stormArmature)
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.create(((livingEntityPatch, staticAnimation, objects) -> {
+                    LivingEntity entity = livingEntityPatch.getOriginal();
+                    entity.discard();
+                }), AnimationEvent.Side.SERVER));
         }
+
 
 
 
