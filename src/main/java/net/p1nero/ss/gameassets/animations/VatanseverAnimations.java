@@ -13,6 +13,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.p1nero.ss.animation.LinkArtifactSpiritAnimation;
+import net.p1nero.ss.client.sound.SwordSoaringSounds;
 import net.p1nero.ss.entity.vatansever.VatanseverArmature;
 import net.p1nero.ss.entity.vatansever.VatanseverEntity;
 import net.p1nero.ss.entity.vatansever.VatanseverEntityPatch;
@@ -30,6 +31,7 @@ import yesman.epicfight.api.utils.math.OpenMatrix4f;
 import yesman.epicfight.api.utils.math.ValueModifier;
 import yesman.epicfight.api.utils.math.Vec3f;
 import yesman.epicfight.gameasset.Armatures;
+import yesman.epicfight.gameasset.EpicFightSounds;
 import yesman.epicfight.model.armature.HumanoidArmature;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
@@ -119,19 +121,22 @@ public class VatanseverAnimations {
         VATANSEVER_AUTO2 = new AttackAnimation(0.01F, "biped/vatansever/vatansever_auto2", vatanseverArmature,
                 new AttackAnimation.Phase(0.0F, 0.7F, 0.7F, 1.0F, 1.60F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, left)
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F)),
-                new AttackAnimation.Phase(1.63F, 1.7F, 1.2F, 1.9F, 1.9F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, left)
+                new AttackAnimation.Phase(1.8F, 1.8F, 1.2F, 1.9F, 1.9F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, left)
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F)));
         VATANSEVER_AUTO3 = new AttackAnimation(0.01F, "biped/vatansever/vatansever_auto3", vatanseverArmature,
                 new AttackAnimation.Phase(0.0F, 0.9F, 0.9F, 1.2F, 1.2F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, right)
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F)));
         VATANSEVER_AUTO3_B = new AttackAnimation(0.01F, "biped/vatansever/vatansever_auto3_b", vatanseverArmature,
-                new AttackAnimation.Phase(0.0F, 0.9F, 0.9F, 1.2F, 1.2F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, right)
+                new AttackAnimation.Phase(0.0F, 1.75F, 1.75F, 4.0F, 4.0F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, right)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.SWING_SOUND, SwordSoaringSounds.VATANSEVER_WHOOSH_BIG.get())
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F)));
         VATANSEVER_AUTO4 = new AttackAnimation(0.01F, "biped/vatansever/vatansever_auto4", vatanseverArmature,
                 new AttackAnimation.Phase(0.0F, 1.33F, 1.33F, 1.43F, 4.0F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, all)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.SWING_SOUND,SwordSoaringSounds.VATANSEVER_WHOOSH_BIG.get())
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F)));
         VATANSEVER_AUTO4_B = new AttackAnimation(0.01F, "biped/vatansever/vatansever_auto4_b", vatanseverArmature,
                 new AttackAnimation.Phase(0.0F, 1.33F, 1.33F, 1.43F, 4.0F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, all)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.SWING_SOUND, EpicFightSounds.NO_SOUND)
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F)));
         VATANSEVER_STORM_START = new ActionAnimation(0.15F, "biped/vatansever/skill/vatansever_storm_start", vatanseverArmature);
         VATANSEVER_INIT = new ActionAnimation(0.15F, "biped/vatansever/vatansever_init", vatanseverArmature);
@@ -169,9 +174,15 @@ public class VatanseverAnimations {
                         AnimationEvent.TimeStampedEvent.create(1.18F, ((livingEntityPatch, staticAnimation, objects) -> {
                             groundSplit(livingEntityPatch, 5, 0, 0, 0, 99999, 1.1F, 200);
                         }), AnimationEvent.Side.BOTH));
-        PLAYER_AUTO3_B = new LinkArtifactSpiritAnimation(0.15F, 2.25F, "biped/vatansever/vatansever_auto3_b_owner", biped, VATANSEVER_AUTO3_B)
+        PLAYER_AUTO3_B = new LinkArtifactSpiritAnimation(0.15F, 4.0F, "biped/vatansever/vatansever_auto3_b_owner", biped, VATANSEVER_AUTO3_B)
                 .newTimePair(0.0F, 3.0F)
-                .addStateRemoveOld(EntityState.TURNING_LOCKED, true);
+                .addStateRemoveOld(EntityState.TURNING_LOCKED, true)
+                .addEvents(AnimationEvent.TimeStampedEvent.create(2.0F, ((livingEntityPatch, staticAnimation, objects) -> {
+                    int n = 16;
+                    for (int i = 0;i< n; ++i){
+                        groundSplit(livingEntityPatch, 5+i*3, 0, 0, 0, 99999, 4, 100);
+                    }
+                }), AnimationEvent.Side.BOTH));;
         PLAYER_AUTO4 = new LinkArtifactSpiritAnimation(0.15F, 4F, "biped/vatansever/vatansever_auto4_owner", biped, VATANSEVER_AUTO4)
                 .newTimePair(1.0F, Float.MAX_VALUE)
                 .addStateRemoveOld(EntityState.TURNING_LOCKED, true)
@@ -180,7 +191,11 @@ public class VatanseverAnimations {
                 }), AnimationEvent.Side.BOTH));
         PLAYER_AUTO4_B = new LinkArtifactSpiritAnimation(0.15F, 4F, "biped/vatansever/vatansever_auto4_b_owner", biped, VATANSEVER_AUTO4_B)
                 .newTimePair(1.0F, Float.MAX_VALUE)
-                .addStateRemoveOld(EntityState.TURNING_LOCKED, true);
+                .addStateRemoveOld(EntityState.TURNING_LOCKED, true)
+                .addEvents(AnimationEvent.TimePeriodEvent.create(0.9F, 2.5F, (entityPatch, self, params) -> attractEntities(entityPatch,15,3,3), AnimationEvent.Side.BOTH))
+                .addEvents(AnimationEvent.TimeStampedEvent.create(2.5F, ((livingEntityPatch, staticAnimation, objects) -> {
+                    groundSplit(livingEntityPatch, 0, 0, 0, 0, 99999, 4, 1000);
+                }), AnimationEvent.Side.BOTH));
         PLAYER_INIT = new LinkArtifactSpiritAnimation(0.15F, "biped/vatansever/vatansever_init", biped, VATANSEVER_INIT)
                 .newTimePair(0.0F, Float.MAX_VALUE)
                 .addStateRemoveOld(EntityState.TURNING_LOCKED, false)
@@ -298,6 +313,38 @@ public class VatanseverAnimations {
         }
     }
 
+    public static void attractEntities(LivingEntityPatch<?> entityPatch,float attractRadius,float damage,float damageRadius){
+        LivingEntity source = entityPatch.getOriginal();
+        Vec3 sourcePos = source.position();
+        if(source.level instanceof ServerLevel level){
+
+            AABB area = new AABB(
+                    sourcePos.x - attractRadius, sourcePos.y - attractRadius, sourcePos.z - attractRadius,
+                    sourcePos.x + attractRadius, sourcePos.y + attractRadius, sourcePos.z + attractRadius);
+
+            source.level.getEntitiesOfClass(Entity.class, area).forEach(entity -> {
+                if (entity == source) return;
+                if (entity instanceof Player player && (player.isCreative() || player.isSpectator())) return;
+
+                Vec3 entityPos = entity.position();
+                Vec3 delta = sourcePos.subtract(entityPos);
+                double distance = delta.length();
+
+                if (distance > 1.0) {
+                    Vec3 direction = delta.normalize();
+                    double speed = 0.3;
+                    entity.setDeltaMovement(entity.getDeltaMovement().add(direction.scale(speed)));
+                } else {
+                    Vec3 safePos = sourcePos.subtract(delta.normalize().scale(1.0));
+                    entity.setPos(safePos.x, safePos.y, safePos.z);
+                    entity.setDeltaMovement(Vec3.ZERO);
+                }
+            });
+            dealAreaDamage(level,sourcePos, source, damage, damageRadius);
+        } else {
+            createRandomSmokeLine(source.level, sourcePos, 10);
+        }
+    }
     private static final double MIN_SPEED1 = 0.1;
     private static final double MAX_SPEED1 = 0.5;
 

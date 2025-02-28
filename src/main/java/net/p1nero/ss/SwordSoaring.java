@@ -12,6 +12,7 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.p1nero.ss.client.sound.SwordSoaringSounds;
 import net.p1nero.ss.enchantment.SwordSoaringEnchantments;
 import net.p1nero.ss.entity.SwordSoaringEntities;
 import net.p1nero.ss.gameassets.SwordSoaringCategories;
@@ -40,6 +41,7 @@ public class SwordSoaring {
         bus.addListener(this::commonSetup);
         SwordSoaringItems.ITEMS.register(bus);
         SwordSoaringEntities.ENTITIES.register(bus);
+        SwordSoaringSounds.SOUND_EVENTS.register(bus);
         SwordSoaringEnchantments.ENCHANTMENTS.register(bus);
         MinecraftForge.EVENT_BUS.addListener(SwordSoaringSkill::onLivingEquipmentChange);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);

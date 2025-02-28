@@ -4,6 +4,7 @@ import net.minecraft.world.item.Item;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.p1nero.ss.SwordSoaring;
+import net.p1nero.ss.client.sound.SwordSoaringSounds;
 import net.p1nero.ss.gameassets.animations.VatanseverAnimations;
 import net.p1nero.ss.gameassets.skills.VatanseverSkills;
 import yesman.epicfight.api.animation.LivingMotions;
@@ -17,12 +18,14 @@ import yesman.epicfight.world.capabilities.item.WeaponCapability;
 import java.util.function.Function;
 
 @Mod.EventBusSubscriber(modid = SwordSoaring.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
-public class SwordSoaringWeaponCapabilityPreset {
+public class
+SwordSoaringWeaponCapabilityPreset {
     public static final Function<Item, CapabilityItem.Builder> VATANSEVER = (item) ->
             (CapabilityItem.Builder) WeaponCapability.builder().category(SwordSoaringCategories.ARTIFACT_SPIRIT)
                     .styleProvider((livingEntityPatch) -> CapabilityItem.Styles.TWO_HAND)
                     .collider(SwordSoaringColliders.VATANSEVER)
                     .hitSound(EpicFightSounds.BLADE_HIT)
+                    .swingSound(SwordSoaringSounds.VATANSEVER_WHOOSH.get())
                     .hitParticle(EpicFightParticles.HIT_BLADE.get())
                     .canBePlacedOffhand(false)
                     .comboCancel((style) -> false)
