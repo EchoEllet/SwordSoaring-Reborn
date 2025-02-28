@@ -21,7 +21,7 @@ public class VatanseverStormRenderer extends MobRenderer<VatanseverStormEntity, 
     }
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull VatanseverStormEntity lianRenEntity) {
+    public @NotNull ResourceLocation getTextureLocation(@NotNull VatanseverStormEntity vatanseverStormEntity) {
         return TEXTURE;
     }
 }

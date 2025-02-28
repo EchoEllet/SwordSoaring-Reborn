@@ -1,4 +1,4 @@
-package net.p1nero.ss.entity.sword.screen_sword.client;
+package net.p1nero.ss.entity.sword.fly_sword.client;
 
 import net.minecraft.client.model.EntityModel;
 import net.minecraftforge.api.distmarker.Dist;
@@ -9,10 +9,10 @@ import net.p1nero.ss.gameassets.SwordSoaringMeshes;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 
 @OnlyIn(Dist.CLIENT)
-public class PatchedScreenSwordRenderer<E extends FlySwordEntity, T extends LivingEntityPatch<E>, M extends EntityModel<E>> extends PatchedSwordRenderer<E, T, M, ScreenSwordMesh> {
+public class PatchedFlySwordRenderer<E extends FlySwordEntity, T extends LivingEntityPatch<E>, M extends EntityModel<E>> extends PatchedSwordRenderer<E, T, M, FlySwordMesh> {
     @Override
-    public ScreenSwordMesh getMesh(T t) {
-        return SwordSoaringMeshes.screenSwordMesh;
+    public FlySwordMesh getMesh(T t) {
+        return SwordSoaringMeshes.flySwordMesh;
     }
 
 }

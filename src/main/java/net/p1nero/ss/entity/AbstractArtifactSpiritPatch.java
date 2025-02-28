@@ -106,6 +106,9 @@ public abstract class AbstractArtifactSpiritPatch<T extends AbstractArtifactSpir
      */
     @Override
     public boolean isTeammate(Entity entityIn) {
+        if(entityIn instanceof AbstractArtifactSpiritEntity artifactSpiritEntity && getOwnerPatch() != null){
+            return artifactSpiritEntity.is(getOwnerPatch().getOriginal());
+        }
         return false;
     }
 

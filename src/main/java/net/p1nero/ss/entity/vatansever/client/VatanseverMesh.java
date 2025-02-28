@@ -24,6 +24,6 @@ public class VatanseverMesh extends AnimatedMesh {
         this.R1 = this.getOrLogException(parts, "sss_1_r");
         this.R2 = this.getOrLogException(parts, "sss_2_r");
         this.R3 = this.getOrLogException(parts, "sss_3_r");
-        swordLists = List.of(L3, R3, L2, R2, L1, R1);
+        swordLists = List.of(R3, L3, R2, L2, R1, L1);
     }
 }

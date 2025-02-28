@@ -6,8 +6,12 @@ import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.p1nero.ss.entity.sword.screen_sword.ScreenSwordEntity;
 import yesman.epicfight.api.utils.AttackResult;
 import yesman.epicfight.client.gui.BattleModeGui;
@@ -22,11 +26,12 @@ import yesman.epicfight.world.damagesource.StunType;
 import yesman.epicfight.world.entity.eventlistener.PlayerEventListener;
 
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class ScreenSwordSkill extends KillAuraSkill {
 
     private static final UUID EVENT_UUID = UUID.fromString("051a9bb2-7541-11ee-b962-0242ac191981");
-    public static final SkillDataManager.SkillDataKey<Integer> PROTECT_COUNT = SkillDataManager.SkillDataKey.createDataKey(SkillDataManager.ValueType.INTEGER);
+    public static SkillDataManager.SkillDataKey<Integer> PROTECT_COUNT;
     private int maxProtectCount;
     private float healCount;
 
@@ -41,12 +46,16 @@ public class ScreenSwordSkill extends KillAuraSkill {
         healCount = parameters.getFloat("heal_count");
     }
 
+    public int getMaxProtectCount() {
+        return maxProtectCount;
+    }
+
     @Override
     public void onInitiate(SkillContainer container) {
         super.onInitiate(container);
         container.getDataManager().registerData(PROTECT_COUNT);
         container.getExecuter().getEventListener().addEventListener(PlayerEventListener.EventType.HURT_EVENT_PRE, EVENT_UUID, hurtEvent -> {
-            if(hurtEvent.getPlayerPatch().getOriginal().level.getEntity(container.getDataManager().getDataValue(SWORD_ENTITY_ID)) instanceof ScreenSwordEntity){
+            if(hurtEvent.getPlayerPatch().getOriginal().level.getEntity(container.getDataManager().getDataValue(SWORD_ENTITY_ID)) instanceof ScreenSwordEntity screenSwordEntity){
                 int protectCountLeft = container.getDataManager().getDataValue(PROTECT_COUNT);
                 if(protectCountLeft <= 0) {
                     return;
@@ -74,7 +83,16 @@ public class ScreenSwordSkill extends KillAuraSkill {
                     //反伤（减伤有bug，setAmount无效，额外写太麻烦了）
                     Entity entity = hurtEvent.getDamageSource().getEntity();
                     if(entity != null){
-                        hurtEvent.getDamageSource().getEntity().hurt(hurtEvent.getDamageSource(), hurtEvent.getAmount() * 0.25F);
+                        //难道没有直接获取某个武器的伤害的办法吗。。
+                        AtomicReference<Double> totalDamage = new AtomicReference<>(hurtEvent.getPlayerPatch().getOriginal().getAttributeBaseValue(Attributes.ATTACK_DAMAGE));
+                        screenSwordEntity.getItemStack(hurtEvent.getPlayerPatch()).getAttributeModifiers(EquipmentSlot.MAINHAND).get(Attributes.ATTACK_DAMAGE).forEach(attributeModifier -> {
+                            if(attributeModifier.getOperation().equals(AttributeModifier.Operation.ADDITION)){
+                                totalDamage.updateAndGet(v -> v + attributeModifier.getAmount());
+                            }
+                        });
+                        //反击伤害不超过武器最大伤害
+                        float counterattackDamage = hurtEvent.getAmount() * 0.5F > totalDamage.get() ? totalDamage.get().floatValue() : hurtEvent.getAmount() * 0.5F;
+                        hurtEvent.getDamageSource().getEntity().hurt(hurtEvent.getDamageSource(), counterattackDamage);
                     }
                 }
             } else {

@@ -4,6 +4,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.p1nero.ss.SwordSoaring;
 import net.p1nero.ss.entity.SwordSoaringEntities;
+import net.p1nero.ss.entity.sword.fly_sword.FlySwordArmature;
 import net.p1nero.ss.entity.sword.screen_sword.ScreenSwordArmature;
 import net.p1nero.ss.entity.vatansever.VatanseverArmature;
 import net.p1nero.ss.entity.vatansever_storm.VatanseverStormArmature;
@@ -12,15 +13,18 @@ import yesman.epicfight.gameasset.Armatures;
 
 @Mod.EventBusSubscriber(modid = SwordSoaring.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class SwordSoaringArmatures {
+    public static FlySwordArmature flySwordArmature;
     public static ScreenSwordArmature screenSwordArmature;
     public static VatanseverArmature vatanseverArmature;
     public static VatanseverStormArmature vatanseverStormArmature;
 
     @SubscribeEvent
     public static void build(ModelBuildEvent.ArmatureBuild event) {
+        flySwordArmature = event.get(SwordSoaring.MOD_ID, "entity/fly_sword", FlySwordArmature::new);
         screenSwordArmature = event.get(SwordSoaring.MOD_ID, "entity/screen_sword", ScreenSwordArmature::new);
         vatanseverArmature = event.get(SwordSoaring.MOD_ID, "entity/vatansever", VatanseverArmature::new);
         vatanseverStormArmature = event.get(SwordSoaring.MOD_ID, "entity/vatansever_swordgroup", VatanseverStormArmature::new);
+        Armatures.registerEntityTypeArmature(SwordSoaringEntities.FLY_SWORD.get(), SwordSoaringArmatures.flySwordArmature);
         Armatures.registerEntityTypeArmature(SwordSoaringEntities.SCREEN_SWORD.get(), SwordSoaringArmatures.screenSwordArmature);
         Armatures.registerEntityTypeArmature(SwordSoaringEntities.VATANSEVER.get(), SwordSoaringArmatures.vatanseverArmature);
         Armatures.registerEntityTypeArmature(SwordSoaringEntities.VATANSEVER_STORM.get(), SwordSoaringArmatures.vatanseverStormArmature);

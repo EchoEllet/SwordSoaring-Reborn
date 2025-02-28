@@ -6,6 +6,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.p1nero.ss.SwordSoaring;
 import net.p1nero.ss.entity.AbstractArtifactSpiritEntity;
 import net.p1nero.ss.entity.SwordSoaringEntities;
+import net.p1nero.ss.entity.sword.fly_sword.FlySwordPatch;
 import net.p1nero.ss.entity.sword.screen_sword.ScreenSwordPatch;
 import net.p1nero.ss.entity.vatansever.VatanseverEntityPatch;
 import net.p1nero.ss.entity.vatansever_storm.VatanseverStormEntityPatch;
@@ -16,6 +17,7 @@ public class ModEvents{
 
     @SubscribeEvent
     public static void entityAttributeEvent(EntityAttributeCreationEvent event) {
+        event.put(SwordSoaringEntities.FLY_SWORD.get(), AbstractArtifactSpiritEntity.getDefaultAttribute());
         event.put(SwordSoaringEntities.SCREEN_SWORD.get(), AbstractArtifactSpiritEntity.getDefaultAttribute());
         event.put(SwordSoaringEntities.VATANSEVER.get(), AbstractArtifactSpiritEntity.getDefaultAttribute());
         event.put(SwordSoaringEntities.VATANSEVER_STORM.get(), AbstractArtifactSpiritEntity.getDefaultAttribute());
@@ -23,6 +25,7 @@ public class ModEvents{
 
     @SubscribeEvent
     public static void setPatch(EntityPatchRegistryEvent event) {
+        event.getTypeEntry().put(SwordSoaringEntities.FLY_SWORD.get(), (entity) -> FlySwordPatch::new);
         event.getTypeEntry().put(SwordSoaringEntities.SCREEN_SWORD.get(), (entity) -> ScreenSwordPatch::new);
         event.getTypeEntry().put(SwordSoaringEntities.VATANSEVER.get(), (entity) -> VatanseverEntityPatch::new);
         event.getTypeEntry().put(SwordSoaringEntities.VATANSEVER_STORM.get(), (entity) -> VatanseverStormEntityPatch::new);

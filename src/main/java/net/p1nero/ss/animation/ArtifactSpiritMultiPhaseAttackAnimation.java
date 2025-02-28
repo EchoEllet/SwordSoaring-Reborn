@@ -16,7 +16,6 @@ import net.p1nero.ss.capability.SSCapabilityProvider;
 import net.p1nero.ss.capability.SSPlayer;
 import net.p1nero.ss.entity.AbstractArtifactSpiritPatch;
 import net.p1nero.ss.entity.sword.AbstractSwordEntity;
-import net.p1nero.ss.entity.sword.screen_sword.ScreenSwordPatch;
 import org.jetbrains.annotations.Nullable;
 import yesman.epicfight.api.animation.AnimationPlayer;
 import yesman.epicfight.api.animation.Joint;
@@ -58,6 +57,13 @@ public class ArtifactSpiritMultiPhaseAttackAnimation extends AttackAnimation {
     }
 
     /**
+     * 检查phase是否合法
+     */
+    public boolean isPhaseValid(LivingEntityPatch<?> entityPatch, Phase phase){
+        return true;
+    }
+
+    /**
      * 全部进行判断
      */
     @Override
@@ -68,9 +74,12 @@ public class ArtifactSpiritMultiPhaseAttackAnimation extends AttackAnimation {
         EntityState state = this.getState(entityPatch, elapsedTime);
         EntityState prevState = this.getState(entityPatch, prevElapsedTime);
         for(Phase phase : phases){
-            if(phase instanceof KillAuraAttackPhase killAuraAttackPhase){
+            if(!isPhaseValid(entityPatch, phase)){
+                continue;
+            }
+            if(phase instanceof MultiAttackPhase multiAttackPhase){
                 if (prevState.attacking() || state.attacking() || prevState.getLevel() < 2 && state.getLevel() > 2) {
-                    this.hurtCollidingEntities(entityPatch, prevElapsedTime, elapsedTime, prevState, state, killAuraAttackPhase);
+                    this.hurtCollidingEntities(entityPatch, prevElapsedTime, elapsedTime, prevState, state, multiAttackPhase);
                 }
             }
         }
@@ -79,7 +88,7 @@ public class ArtifactSpiritMultiPhaseAttackAnimation extends AttackAnimation {
     /**
      * 自己在Capability里实现根据phase判断是否攻击过，不同phase独立判断
      */
-    private void hurtCollidingEntities(LivingEntityPatch<?> entityPatch, float prevElapsedTime, float elapsedTime, EntityState prevState, EntityState state, KillAuraAttackPhase phase) {
+    private void hurtCollidingEntities(LivingEntityPatch<?> entityPatch, float prevElapsedTime, float elapsedTime, EntityState prevState, EntityState state, MultiAttackPhase phase) {
         entityPatch.getArmature().initializeTransform();
         float prevPoseTime = prevState.attacking() ? prevElapsedTime : phase.preDelay;
         float poseTime = state.attacking() ? elapsedTime : phase.contact;
@@ -130,6 +139,9 @@ public class ArtifactSpiritMultiPhaseAttackAnimation extends AttackAnimation {
         float prevElapsedTime = animPlayer.getPrevElapsedTime();
         float elapsedTime = animPlayer.getElapsedTime();
         for(Phase phase : phases){
+            if(!isPhaseValid(entityPatch, phase)){
+                continue;
+            }
             Pair<Joint, Collider> colliderInfo;
             Collider collider;
             boolean flag = false;
@@ -156,32 +168,32 @@ public class ArtifactSpiritMultiPhaseAttackAnimation extends AttackAnimation {
     /**
      * 获取武器对应碰撞箱
      */
-    public static class KillAuraAttackPhase extends AttackAnimation.Phase{
-        public KillAuraAttackPhase(float start, float antic, float contact, float recovery, float end, Joint joint, Collider collider) {
+    public static class MultiAttackPhase extends AttackAnimation.Phase{
+        public MultiAttackPhase(float start, float antic, float contact, float recovery, float end, Joint joint, Collider collider) {
             super(start, antic, contact, recovery, end, joint, collider);
         }
 
-        public KillAuraAttackPhase(float start, float antic, float contact, float recovery, float end, InteractionHand hand, Joint joint, Collider collider) {
+        public MultiAttackPhase(float start, float antic, float contact, float recovery, float end, InteractionHand hand, Joint joint, Collider collider) {
             super(start, antic, contact, recovery, end, hand, joint, collider);
         }
 
-        public KillAuraAttackPhase(float start, float antic, float preDelay, float contact, float recovery, float end, Joint joint, Collider collider) {
+        public MultiAttackPhase(float start, float antic, float preDelay, float contact, float recovery, float end, Joint joint, Collider collider) {
             super(start, antic, preDelay, contact, recovery, end, joint, collider);
         }
 
-        public KillAuraAttackPhase(float start, float antic, float preDelay, float contact, float recovery, float end, InteractionHand hand, Joint joint, Collider collider) {
+        public MultiAttackPhase(float start, float antic, float preDelay, float contact, float recovery, float end, InteractionHand hand, Joint joint, Collider collider) {
             super(start, antic, preDelay, contact, recovery, end, hand, joint, collider);
         }
 
-        public KillAuraAttackPhase(InteractionHand hand, Joint joint, Collider collider) {
+        public MultiAttackPhase(InteractionHand hand, Joint joint, Collider collider) {
             super(hand, joint, collider);
         }
 
-        public KillAuraAttackPhase(float start, float antic, float preDelay, float contact, float recovery, float end, boolean noStateBind, InteractionHand hand, Joint joint, Collider collider) {
+        public MultiAttackPhase(float start, float antic, float preDelay, float contact, float recovery, float end, boolean noStateBind, InteractionHand hand, Joint joint, Collider collider) {
             super(start, antic, preDelay, contact, recovery, end, noStateBind, hand, joint, collider);
         }
 
-        public KillAuraAttackPhase(float start, float antic, float preDelay, float contact, float recovery, float end, boolean noStateBind, InteractionHand hand, List<Pair<Joint, Collider>> colliders) {
+        public MultiAttackPhase(float start, float antic, float preDelay, float contact, float recovery, float end, boolean noStateBind, InteractionHand hand, List<Pair<Joint, Collider>> colliders) {
             super(start, antic, preDelay, contact, recovery, end, noStateBind, hand, colliders);
         }
 

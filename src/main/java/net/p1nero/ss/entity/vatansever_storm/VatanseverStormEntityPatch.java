@@ -1,6 +1,5 @@
 package net.p1nero.ss.entity.vatansever_storm;
 
-import net.minecraft.world.entity.Entity;
 import net.p1nero.ss.entity.AbstractArtifactSpiritPatch;
 import net.p1nero.ss.gameassets.animations.VatanseverAnimations;
 import yesman.epicfight.api.animation.LivingMotions;
@@ -18,14 +17,6 @@ public class VatanseverStormEntityPatch extends AbstractArtifactSpiritPatch<Vata
     public void updateMotion(boolean considerInaction) {
         this.currentLivingMotion = LivingMotions.IDLE;
         this.currentCompositeMotion = LivingMotions.IDLE;
-    }
-
-    /**
-     * 自己人也杀
-     */
-    @Override
-    public boolean isTeammate(Entity entityIn) {
-        return false;
     }
 
 }

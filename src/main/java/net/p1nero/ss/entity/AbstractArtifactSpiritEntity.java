@@ -1,14 +1,15 @@
 package net.p1nero.ss.entity;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.players.OldUsersConverter;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.OwnableEntity;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.Animal;
@@ -20,7 +21,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import yesman.epicfight.world.entity.ai.attribute.EpicFightAttributes;
 
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -35,28 +35,6 @@ public abstract class AbstractArtifactSpiritEntity extends PathfinderMob impleme
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(DATA_OWNERUUID_ID, Optional.empty());
-    }
-
-    public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        super.addAdditionalSaveData(pCompound);
-        if (this.getOwnerUUID() != null) {
-            pCompound.putUUID("Owner", this.getOwnerUUID());
-        }
-    }
-
-    public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
-        super.readAdditionalSaveData(pCompound);
-        UUID uuid;
-        if (pCompound.hasUUID("Owner")) {
-            uuid = pCompound.getUUID("Owner");
-        } else {
-            String s = pCompound.getString("Owner");
-            uuid = OldUsersConverter.convertMobOwnerIfNecessary(Objects.requireNonNull(this.getServer()), s);
-        }
-
-        if (uuid != null) {
-            this.setOwnerUUID(uuid);
-        }
     }
 
     @Nullable

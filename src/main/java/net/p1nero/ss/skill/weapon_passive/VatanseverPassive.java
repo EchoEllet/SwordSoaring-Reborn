@@ -18,7 +18,7 @@ import java.util.UUID;
 
 public class VatanseverPassive extends ArtifactSpiritPassiveSkill{
     private static final UUID EVENT_UUID = UUID.fromString("d1d114cc-f30f-11ed-a05b-0242ac114514");
-    public static SkillDataManager.SkillDataKey<Integer> SWORD_COUNT = SkillDataManager.SkillDataKey.createDataKey(SkillDataManager.ValueType.INTEGER);
+    public static SkillDataManager.SkillDataKey<Integer> SWORD_COUNT;
 
     public VatanseverPassive(Builder<? extends Skill> builder) {
         super(builder);

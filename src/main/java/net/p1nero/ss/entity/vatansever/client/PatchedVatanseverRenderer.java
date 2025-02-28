@@ -27,7 +27,7 @@ public class PatchedVatanseverRenderer extends PatchedLivingEntityRenderer<Vatan
             SkillDataManager manager = entityPatch.getOwnerPatch().getSkill(SkillSlots.WEAPON_PASSIVE).getDataManager();
             if (manager.hasData(VatanseverPassive.SWORD_COUNT)) {
                 for (int i = manager.getDataValue(VatanseverPassive.SWORD_COUNT); i < 6; i++) {
-                    mesh.swordLists.get(6 - i).hidden = true;
+                    mesh.swordLists.get(5 - i).hidden = true;
                 }
             }
         }

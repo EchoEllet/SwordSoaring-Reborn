@@ -36,12 +36,12 @@ public class ScreenSwordAnimations {
     public static void buildScreenSwordAnim() {
         ScreenSwordArmature screenSwordArmature = SwordSoaringArmatures.screenSwordArmature;
         AttackAnimation.Phase[] phases = new AttackAnimation.Phase[]{
-                new ArtifactSpiritMultiPhaseAttackAnimation.KillAuraAttackPhase(0.01F, 0.01F, 0.5F, 0.5F, Float.MAX_VALUE, screenSwordArmature.W1, null),
-                new ArtifactSpiritMultiPhaseAttackAnimation.KillAuraAttackPhase(0.01F, 0.01F, 0.5F, 0.5F, Float.MAX_VALUE, screenSwordArmature.W2, null),
-                new ArtifactSpiritMultiPhaseAttackAnimation.KillAuraAttackPhase(0.01F, 0.01F, 0.5F, 0.5F, Float.MAX_VALUE, screenSwordArmature.W3, null),
-                new ArtifactSpiritMultiPhaseAttackAnimation.KillAuraAttackPhase(0.01F, 0.01F, 0.5F, 0.5F, Float.MAX_VALUE, screenSwordArmature.W4, null),
-                new ArtifactSpiritMultiPhaseAttackAnimation.KillAuraAttackPhase(0.01F, 0.01F, 0.5F, 0.5F, Float.MAX_VALUE, screenSwordArmature.W5, null),
-                new ArtifactSpiritMultiPhaseAttackAnimation.KillAuraAttackPhase(0.01F, 0.01F, 0.5F, 0.5F, Float.MAX_VALUE, screenSwordArmature.W6, null)};
+                new ArtifactSpiritMultiPhaseAttackAnimation.MultiAttackPhase(0.01F, 0.01F, 0.5F, 0.5F, Float.MAX_VALUE, screenSwordArmature.W1, null),
+                new ArtifactSpiritMultiPhaseAttackAnimation.MultiAttackPhase(0.01F, 0.01F, 0.5F, 0.5F, Float.MAX_VALUE, screenSwordArmature.W2, null),
+                new ArtifactSpiritMultiPhaseAttackAnimation.MultiAttackPhase(0.01F, 0.01F, 0.5F, 0.5F, Float.MAX_VALUE, screenSwordArmature.W3, null),
+                new ArtifactSpiritMultiPhaseAttackAnimation.MultiAttackPhase(0.01F, 0.01F, 0.5F, 0.5F, Float.MAX_VALUE, screenSwordArmature.W4, null),
+                new ArtifactSpiritMultiPhaseAttackAnimation.MultiAttackPhase(0.01F, 0.01F, 0.5F, 0.5F, Float.MAX_VALUE, screenSwordArmature.W5, null),
+                new ArtifactSpiritMultiPhaseAttackAnimation.MultiAttackPhase(0.01F, 0.01F, 0.5F, 0.5F, Float.MAX_VALUE, screenSwordArmature.W6, null)};
 
         SCREEN_SWORD_IDLE = new StaticAnimation(true, "screen_sword/screen_sword_idle", screenSwordArmature)
                 .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 2.0F));

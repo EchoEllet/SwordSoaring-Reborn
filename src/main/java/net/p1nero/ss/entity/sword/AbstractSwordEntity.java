@@ -10,6 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.p1nero.ss.entity.AbstractArtifactSpiritEntity;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 
 public abstract class AbstractSwordEntity extends AbstractArtifactSpiritEntity implements IPatchedItemSupplier {
@@ -41,7 +42,7 @@ public abstract class AbstractSwordEntity extends AbstractArtifactSpiritEntity i
     }
 
     @Override
-    public ItemStack getItemStack(LivingEntityPatch<?> livingEntityPatch) {
+    public ItemStack getItemStack(@Nullable LivingEntityPatch<?> livingEntityPatch) {
         return this.getEntityData().get(ITEM_STACK);
     }
 

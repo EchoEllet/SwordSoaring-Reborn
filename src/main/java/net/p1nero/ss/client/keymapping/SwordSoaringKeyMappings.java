@@ -1,12 +1,14 @@
 package net.p1nero.ss.client.keymapping;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import com.p1nero.invincible.client.events.InputManager;
 import net.minecraft.client.KeyMapping;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.ClientRegistry;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.p1nero.ss.gameassets.SwordSoaringComboTypes;
 import org.lwjgl.glfw.GLFW;
 import yesman.epicfight.client.input.CombatKeyMapping;
 
@@ -23,6 +25,9 @@ public class SwordSoaringKeyMappings {
         ClientRegistry.registerKeyBinding(SWITCH_MODE);
         ClientRegistry.registerKeyBinding(ACCELERATION);
         ClientRegistry.registerKeyBinding(SWORD_SKILL);
+
+        InputManager.register(SwordSoaringComboTypes.KEY_SWORD_SKILL, SWORD_SKILL);
+        InputManager.register(SwordSoaringComboTypes.KEY_TAKE_OFF, TAKE_OFF);
     }
 
 }
