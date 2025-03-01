@@ -250,7 +250,15 @@ public class VatanseverStormAnimations {
                     }
                     if (entity.level instanceof ServerLevel serverLevel) {
                         serverLevel.sendParticles(
-                                ParticleTypes.SMOKE, entity.getX(), entity.getY() + entity.getBbHeight() / 2, entity.getZ(), 5,0.5, 0.25, 0.5, 0.2);
+                                ParticleTypes.SMOKE,
+                                entity.getX(),
+                                entity.getY() + entity.getBbHeight() / 2,
+                                entity.getZ(),
+                                5,
+                                0.5,
+                                0.25,
+                                0.5,
+                                0.2);
                         serverLevel.playSound(null, entity.getX(), entity.getY(), entity.getZ(), EpicFightSounds.BLADE_HIT, SoundSource.HOSTILE, 1.0F, 0.8F + entity.level.random.nextFloat() * 0.4F
                         );
                     }

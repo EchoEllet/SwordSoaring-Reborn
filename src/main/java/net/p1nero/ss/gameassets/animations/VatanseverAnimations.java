@@ -439,7 +439,6 @@ public class VatanseverAnimations {
                 (float) playerVelocity.y + baseVelocity.y,
                 (float) playerVelocity.z + baseVelocity.z
         );
-
         // 生成粒子
         for (int i = 0; i < 5 * particleCount; i++) {
             world.addParticle(
@@ -447,9 +446,9 @@ public class VatanseverAnimations {
                     transformMatrix.m30 + (float) vatanseverEntity.getX(),
                     transformMatrix.m31 + (float) vatanseverEntity.getY(),
                     transformMatrix.m32 + (float) vatanseverEntity.getZ(),
-                    relativeVelocity.x,
-                    relativeVelocity.y,
-                    relativeVelocity.z
+                    0,
+                    0,
+                    0
             );
         }
         for (int i = 0; i < 3 * particleCount; i++) {
@@ -458,9 +457,9 @@ public class VatanseverAnimations {
                     transformMatrix.m30 + (float) vatanseverEntity.getX(),
                     transformMatrix.m31 + (float) vatanseverEntity.getY(),
                     transformMatrix.m32 + (float) vatanseverEntity.getZ(),
-                    relativeVelocity.x,
-                    relativeVelocity.y,
-                    relativeVelocity.z
+                    0,
+                    0,
+                    0
             );
         }
     }
@@ -468,7 +467,7 @@ public class VatanseverAnimations {
     public static void flyVFX(LivingEntityPatch<?> entityPatch) {
         int particleCount = 1;
         Level world = entityPatch.getOriginal().level;
-        if (entityPatch instanceof VatanseverEntityPatch vatanseverEntityPatch && world.isClientSide) {
+        if (entityPatch instanceof VatanseverEntityPatch vatanseverEntityPatch) {
             jet(vatanseverEntityPatch, SwordSoaringArmatures.vatanseverArmature.L1, particleCount);
             jet(vatanseverEntityPatch, SwordSoaringArmatures.vatanseverArmature.L2, particleCount);
             jet(vatanseverEntityPatch, SwordSoaringArmatures.vatanseverArmature.L3, particleCount);
