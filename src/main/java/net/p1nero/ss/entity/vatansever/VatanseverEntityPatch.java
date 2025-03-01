@@ -1,11 +1,15 @@
 package net.p1nero.ss.entity.vatansever;
 
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.p1nero.ss.entity.AbstractArtifactSpiritPatch;
 import net.p1nero.ss.gameassets.animations.VatanseverAnimations;
+import net.p1nero.ss.skill.weapon_passive.VatanseverPassive;
 import yesman.epicfight.api.animation.LivingMotions;
 import yesman.epicfight.api.client.animation.ClientAnimator;
 import yesman.epicfight.api.utils.math.OpenMatrix4f;
+import yesman.epicfight.skill.SkillDataManager;
+import yesman.epicfight.skill.SkillSlots;
 
 public class VatanseverEntityPatch extends AbstractArtifactSpiritPatch<VatanseverEntity> {
 
@@ -42,6 +46,16 @@ public class VatanseverEntityPatch extends AbstractArtifactSpiritPatch<Vatanseve
             return getOwnerPatch().getOriginal().isFallFlying();
         }
         return false;
+    }
+
+    public int getLeftSwordCount(){
+        if (getOwnerPatch() != null) {
+            SkillDataManager manager = getOwnerPatch().getSkill(SkillSlots.WEAPON_PASSIVE).getDataManager();
+            if (manager.hasData(VatanseverPassive.SWORD_COUNT)) {
+                return manager.getDataValue(VatanseverPassive.SWORD_COUNT);
+            }
+        }
+        return 6;
     }
 
     /**

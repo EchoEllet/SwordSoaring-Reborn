@@ -5,6 +5,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -19,10 +20,11 @@ public abstract class AbstractSwordEntity extends AbstractArtifactSpiritEntity i
     public AbstractSwordEntity(EntityType<? extends AbstractArtifactSpiritEntity> entityType, Level level) {
         super(entityType, level);
     }
-    public AbstractSwordEntity(EntityType<? extends AbstractArtifactSpiritEntity> entityType, ItemStack itemStack, Player owner) {
+    public AbstractSwordEntity(EntityType<? extends AbstractArtifactSpiritEntity> entityType, ItemStack itemStack, LivingEntity owner) {
         super(entityType, owner.level);
         this.setItemStack(itemStack);
         this.tame(owner);
+        setPos(owner.position());
     }
 
     @Override

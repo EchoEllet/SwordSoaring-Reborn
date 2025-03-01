@@ -1,5 +1,6 @@
 package net.p1nero.ss.entity.vatansever;
 
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -19,13 +20,14 @@ public class VatanseverEntity extends AbstractArtifactSpiritEntity {
     public VatanseverEntity(Level level, Player owner) {
         super(SwordSoaringEntities.VATANSEVER.get(), level);
         tame(owner);
-        setItemSlot(EquipmentSlot.MAINHAND, owner.getItemBySlot(EquipmentSlot.MAINHAND).copy());
+        setPos(owner.position());
+        setItemInHand(InteractionHand.MAIN_HAND, owner.getMainHandItem().copy());
     }
 
     @Override
     protected void moveToOwner(LivingEntity owner) {
         if(level.isClientSide && owner.isFallFlying()){
-            //仅客户端同步位置，防止双端不同步导致的乱转
+            //仅客户端同步位置，防止双端不同步导致的乱转，旋转在Patch里同步matrix
             setPos(owner.position());
         } else {
             setYRot(owner.yBodyRot);

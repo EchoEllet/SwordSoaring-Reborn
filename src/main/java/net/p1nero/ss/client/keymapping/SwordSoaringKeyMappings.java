@@ -18,6 +18,7 @@ public class SwordSoaringKeyMappings {
     public static final KeyMapping SWITCH_MODE = new CombatKeyMapping("key.sword_soaring.switch_mode", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_TAB, "key.sword_soaring.common");
     public static final KeyMapping ACCELERATION = new CombatKeyMapping("key.sword_soaring.acceleration", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_LEFT_CONTROL, "key.sword_soaring.common");
     public static final KeyMapping SWORD_SKILL = new CombatKeyMapping("key.sword_soaring.sword_skill", InputConstants.Type.MOUSE, GLFW.GLFW_MOUSE_BUTTON_2, "key.sword_soaring.common");
+    public static final KeyMapping SWORD_BACK = new CombatKeyMapping("key.sword_soaring.sword_back", InputConstants.Type.MOUSE, GLFW.GLFW_MOUSE_BUTTON_5, "key.sword_soaring.common");
 
     @SubscribeEvent
     public static void registerKeys(FMLClientSetupEvent event) {
@@ -25,6 +26,7 @@ public class SwordSoaringKeyMappings {
         ClientRegistry.registerKeyBinding(SWITCH_MODE);
         ClientRegistry.registerKeyBinding(ACCELERATION);
         ClientRegistry.registerKeyBinding(SWORD_SKILL);
+        ClientRegistry.registerKeyBinding(SWORD_BACK);
 
         InputManager.register(SwordSoaringComboTypes.KEY_SWORD_SKILL, SWORD_SKILL);
         InputManager.register(SwordSoaringComboTypes.KEY_TAKE_OFF, TAKE_OFF);

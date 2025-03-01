@@ -22,8 +22,8 @@ public class TrailParticleMixin {
 
     @Inject(method = "render", at = @At("HEAD"), cancellable = true)
     private void sword_soaring$render(VertexConsumer vertexConsumer, Camera camera, float partialTick, CallbackInfo ci){
-        if(this.entitypatch instanceof VatanseverEntityPatch vatanseverEntityPatch && vatanseverEntityPatch.getArmature() instanceof VatanseverArmature vatanseverArmature && vatanseverEntityPatch.getOwnerPatch() != null){
-            for(Joint joint : vatanseverArmature.getInvalidJoints(vatanseverEntityPatch.getOwnerPatch())){
+        if(this.entitypatch instanceof VatanseverEntityPatch vatanseverEntityPatch && vatanseverEntityPatch.getArmature() instanceof VatanseverArmature vatanseverArmature){
+            for(Joint joint : vatanseverArmature.getInvalidJoints(vatanseverEntityPatch)){
                 if(joint.getId() == this.joint.getId()){
                     ci.cancel();
                 }

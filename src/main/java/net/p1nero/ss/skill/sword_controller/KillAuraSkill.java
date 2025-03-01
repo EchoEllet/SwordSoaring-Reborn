@@ -13,6 +13,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.p1nero.ss.SwordSoaring;
+import net.p1nero.ss.entity.AbstractArtifactSpiritEntity;
 import net.p1nero.ss.entity.sword.screen_sword.ScreenSwordEntity;
 import net.p1nero.ss.entity.sword.screen_sword.ScreenSwordPatch;
 import net.p1nero.ss.gameassets.SwordSoaringSkillCategories;
@@ -61,6 +62,24 @@ public class KillAuraSkill extends Skill {
         super.onInitiate(container);
         container.getDataManager().registerData(COOL_DOWN_TIMER);
         container.getDataManager().registerData(SWORD_ENTITY_ID);
+    }
+
+    @Override
+    public void onRemoved(SkillContainer container) {
+        super.onRemoved(container);
+        int id = getSwordEntityId(container);
+        if(id != 0 && container.getExecuter().getOriginal().level.getEntity(id) instanceof ScreenSwordEntity abstractArtifactSpiritEntity){
+            if(abstractArtifactSpiritEntity.isAlive()){
+                abstractArtifactSpiritEntity.discard();
+            }
+        }
+    }
+
+    public int getSwordEntityId(SkillContainer container){
+        if(container.getDataManager().hasData(SWORD_ENTITY_ID)){
+            return container.getDataManager().getDataValue(SWORD_ENTITY_ID);
+        }
+        return 0;
     }
 
     @Override

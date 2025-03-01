@@ -29,12 +29,14 @@ public class VatanseverPassive extends ArtifactSpiritPassiveSkill{
         super.onInitiate(container);
         container.getDataManager().registerData(SWORD_COUNT);
         container.getDataManager().setData(SWORD_COUNT, 6);
-        if(!container.getExecuter().isLogicalClient() && container.getDataManager().getDataValue(ARTIFACT_SPIRIT_ENTITY_ID) == 0){
-            VatanseverEntity vatanseverEntity = new VatanseverEntity(container.getExecuter().getOriginal().level, container.getExecuter().getOriginal());
-            container.getExecuter().getOriginal().level.addFreshEntity(vatanseverEntity);
-            container.getExecuter().playAnimationSynchronized(VatanseverAnimations.VATANSEVER_INIT, 0.15F);
-            container.getDataManager().setDataSync(ARTIFACT_SPIRIT_ENTITY_ID, vatanseverEntity.getId(), ((ServerPlayer) container.getExecuter().getOriginal()));
-        }
+        summonVatansever(container);
+        container.getExecuter().getEventListener().addEventListener(PlayerEventListener.EventType.SKILL_EXECUTE_EVENT, EVENT_UUID, skillExecuteEvent -> {
+            if(!skillExecuteEvent.getPlayerPatch().isLogicalClient() && !(skillExecuteEvent.getPlayerPatch().getOriginal().level.getEntity(getArtifactSpiritId(container)) instanceof VatanseverEntity)){
+                if(!summonVatansever(container)){
+                    container.getDataManager().setDataSync(SWORD_COUNT, 0, ((ServerPlayer) container.getExecuter().getOriginal()));
+                }
+            }
+        });
         container.getExecuter().getEventListener().addEventListener(PlayerEventListener.EventType.SET_TARGET_EVENT, EVENT_UUID, setTargetEvent -> {
             if(setTargetEvent.getTarget() instanceof VatanseverEntity){
                 setTargetEvent.getPlayerPatch().setAttackTarget(null);
@@ -68,10 +70,23 @@ public class VatanseverPassive extends ArtifactSpiritPassiveSkill{
         });
     }
 
+    public boolean summonVatansever(SkillContainer container){
+        if(!container.getExecuter().isLogicalClient() && container.getDataManager().getDataValue(ARTIFACT_SPIRIT_ENTITY_ID) == 0){
+            VatanseverEntity vatanseverEntity = new VatanseverEntity(container.getExecuter().getOriginal().level, container.getExecuter().getOriginal());
+            boolean success = container.getExecuter().getOriginal().level.addFreshEntity(vatanseverEntity);
+            container.getExecuter().playAnimationSynchronized(VatanseverAnimations.PLAYER_INIT, 0.15F);
+            container.getDataManager().setDataSync(ARTIFACT_SPIRIT_ENTITY_ID, vatanseverEntity.getId(), ((ServerPlayer) container.getExecuter().getOriginal()));
+            container.getDataManager().setDataSync(SWORD_COUNT, 6, ((ServerPlayer) container.getExecuter().getOriginal()));
+            return success;
+        }
+        return false;
+    }
+
     @Override
     public void onRemoved(SkillContainer container) {
         super.onRemoved(container);
-        if(container.getExecuter().getOriginal().level.getEntity(container.getDataManager().getDataValue(ARTIFACT_SPIRIT_ENTITY_ID)) instanceof AbstractArtifactSpiritEntity abstractArtifactSpiritEntity){
+        int id = getArtifactSpiritId(container);
+        if(id != 0 && container.getExecuter().getOriginal().level.getEntity(id) instanceof VatanseverEntity abstractArtifactSpiritEntity){
             if(abstractArtifactSpiritEntity.isAlive()){
                 abstractArtifactSpiritEntity.discard();
             }

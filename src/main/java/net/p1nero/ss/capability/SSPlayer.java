@@ -10,15 +10,6 @@ import java.util.*;
  * 记录飞行和技能使用的状态，被坑了，这玩意儿也分服务端和客户端...
  */
 public class SSPlayer {
-    private final ArrayList<Integer> screenSwordIds = new ArrayList<>();
-
-    public void addScreenSword(int id){
-        screenSwordIds.add(id);
-    }
-
-    public ArrayList<Integer> getScreenSwordIds() {
-        return screenSwordIds;
-    }
     private final Map<AttackAnimation.Phase, List<Entity>> phaseListMap = new HashMap<>();
 
     public Map<AttackAnimation.Phase, List<Entity>> getPhaseListMap() {

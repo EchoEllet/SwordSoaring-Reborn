@@ -17,15 +17,18 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.p1nero.ss.SwordSoaring;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import yesman.epicfight.world.capabilities.EpicFightCapabilities;
+import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 import yesman.epicfight.world.entity.ai.attribute.EpicFightAttributes;
 
 import java.util.Optional;
 import java.util.UUID;
 
 public abstract class AbstractArtifactSpiritEntity extends PathfinderMob implements OwnableEntity {
-    protected static final EntityDataAccessor<Optional<UUID>> DATA_OWNERUUID_ID = SynchedEntityData.defineId(AbstractArtifactSpiritEntity.class, EntityDataSerializers.OPTIONAL_UUID);
+    protected static final EntityDataAccessor<Optional<UUID>> DATA_OWNER_UUID = SynchedEntityData.defineId(AbstractArtifactSpiritEntity.class, EntityDataSerializers.OPTIONAL_UUID);
 
     public AbstractArtifactSpiritEntity(EntityType<? extends AbstractArtifactSpiritEntity> entityType, Level level) {
         super(entityType, level);
@@ -34,16 +37,16 @@ public abstract class AbstractArtifactSpiritEntity extends PathfinderMob impleme
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(DATA_OWNERUUID_ID, Optional.empty());
+        this.entityData.define(DATA_OWNER_UUID, Optional.empty());
     }
 
     @Nullable
     public UUID getOwnerUUID() {
-        return this.entityData.get(DATA_OWNERUUID_ID).orElse(null);
+        return this.entityData.get(DATA_OWNER_UUID).orElse(null);
     }
 
     public void setOwnerUUID(@Nullable UUID pUuid) {
-        this.entityData.set(DATA_OWNERUUID_ID, Optional.ofNullable(pUuid));
+        this.entityData.set(DATA_OWNER_UUID, Optional.ofNullable(pUuid));
     }
 
     public void tame(LivingEntity livingEntity) {
@@ -58,16 +61,21 @@ public abstract class AbstractArtifactSpiritEntity extends PathfinderMob impleme
                 Player player = this.level.getPlayerByUUID(uuid);
                 if(player == null){
                     if(this.level instanceof ServerLevel serverLevel){
-                        return (LivingEntity) serverLevel.getEntity(uuid);
+                        return serverLevel.getEntity(uuid) instanceof LivingEntity livingEntity ? livingEntity : null;
                     }
                 } else {
                     return player;
                 }
             }
             return null;
-        } catch (IllegalArgumentException | ClassCastException exception) {
+        } catch (IllegalArgumentException e) {
+            SwordSoaring.LOGGER.error("error in get artifact spirit's owner", e);
             return null;
         }
+    }
+
+    public LivingEntityPatch<?> getOwnerPatch(){
+        return EpicFightCapabilities.getEntityPatch(getOwner(), LivingEntityPatch.class);
     }
 
     @Override

@@ -29,13 +29,10 @@ public class VatanseverArmature extends Armature {
     /**
      * 获取已经射出去的那几个Joint
      */
-    public List<Joint> getInvalidJoints(PlayerPatch<?> ownerPatch){
+    public List<Joint> getInvalidJoints(VatanseverEntityPatch vatanseverEntityPatch){
         List<Joint> invalidJoints = new ArrayList<>();
-        SkillDataManager manager = ownerPatch.getSkill(SkillSlots.WEAPON_PASSIVE).getDataManager();
-        if(manager.hasData(VatanseverPassive.SWORD_COUNT)){
-            for (int i = manager.getDataValue(VatanseverPassive.SWORD_COUNT); i < 6; i++) {
-                invalidJoints.add(joints.get(5 - i));
-            }
+        for (int i = vatanseverEntityPatch.getLeftSwordCount(); i < 6; i++) {
+            invalidJoints.add(joints.get(5 - i));
         }
         return invalidJoints;
     }

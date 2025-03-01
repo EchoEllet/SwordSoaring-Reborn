@@ -5,6 +5,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.entity.PartEntity;
+import net.p1nero.ss.entity.vatansever.VatanseverEntityPatch;
+import net.p1nero.ss.skill.weapon_passive.VatanseverPassive;
 import org.jetbrains.annotations.Nullable;
 import yesman.epicfight.api.animation.AnimationPlayer;
 import yesman.epicfight.api.animation.Joint;
@@ -14,6 +16,9 @@ import yesman.epicfight.api.animation.types.StaticAnimation;
 import yesman.epicfight.api.collider.Collider;
 import yesman.epicfight.api.model.Armature;
 import yesman.epicfight.api.utils.math.MathUtils;
+import yesman.epicfight.skill.SkillDataManager;
+import yesman.epicfight.skill.SkillSlots;
+import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 import yesman.epicfight.world.capabilities.entitypatch.MobPatch;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
@@ -103,13 +108,13 @@ public class PlayerScanAnimation extends AttackAnimation implements ILinkArtifac
             return;
         }
         list.sort(Comparator.comparingDouble((entity) -> entity.distanceTo(entityPatch.getOriginal())));
-        if (!list.isEmpty()) {
-            Entity target = list.get(0);
+        for(Entity target : list){
             LivingEntity trueEntity = this.getTrueEntity(target);
-            if (trueEntity != null && trueEntity.isAlive() && !entityPatch.getCurrenltyAttackedEntities().contains(trueEntity) && !entityPatch.isTeammate(target)) {
+            if (trueEntity != null && trueEntity.isAlive() && !entityPatch.isTeammate(trueEntity)) {
                 if (target instanceof LivingEntity || target instanceof PartEntity) {
                     if (entityPatch instanceof ServerPlayerPatch serverPlayerPatch) {
                         serverPlayerPatch.setAttackTarget(trueEntity);
+                        break;
                     }
                 }
             }

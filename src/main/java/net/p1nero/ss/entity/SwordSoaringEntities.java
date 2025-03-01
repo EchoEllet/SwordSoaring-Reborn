@@ -16,7 +16,7 @@ import net.p1nero.ss.entity.vatansever_storm.VatanseverStormEntity;
 public class SwordSoaringEntities {
     public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES, SwordSoaring.MOD_ID);
     public static final RegistryObject<EntityType<FlySwordEntity>> FLY_SWORD = register("fly_sword",
-            EntityType.Builder.<FlySwordEntity>of(FlySwordEntity::new, MobCategory.MISC).sized(1, 1).clientTrackingRange(20).updateInterval(1).noSave());
+            EntityType.Builder.<FlySwordEntity>of(FlySwordEntity::new, MobCategory.MISC).sized(0, 0).clientTrackingRange(20).updateInterval(1).noSave());
     public static final RegistryObject<EntityType<ScreenSwordEntity>> SCREEN_SWORD = register("screen_sword",
             EntityType.Builder.<ScreenSwordEntity>of(ScreenSwordEntity::new, MobCategory.MISC).sized(0, 0).clientTrackingRange(20).updateInterval(1).noSave());
     public static final RegistryObject<EntityType<VatanseverEntity>> VATANSEVER = register("vatansever",

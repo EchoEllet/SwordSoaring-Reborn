@@ -23,13 +23,8 @@ public class PatchedVatanseverRenderer extends PatchedLivingEntityRenderer<Vatan
     protected void prepareModel(VatanseverMesh mesh, VatanseverEntity entity, VatanseverEntityPatch entityPatch) {
         super.prepareModel(mesh, entity, entityPatch);
         mesh.swordLists.forEach((part -> part.hidden = false));
-        if (entityPatch.getOwnerPatch() != null) {
-            SkillDataManager manager = entityPatch.getOwnerPatch().getSkill(SkillSlots.WEAPON_PASSIVE).getDataManager();
-            if (manager.hasData(VatanseverPassive.SWORD_COUNT)) {
-                for (int i = manager.getDataValue(VatanseverPassive.SWORD_COUNT); i < 6; i++) {
-                    mesh.swordLists.get(5 - i).hidden = true;
-                }
-            }
+        for (int i = entityPatch.getLeftSwordCount(); i < 6; i++) {
+            mesh.swordLists.get(5 - i).hidden = true;
         }
     }
 

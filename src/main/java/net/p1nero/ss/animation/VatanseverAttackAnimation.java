@@ -25,9 +25,9 @@ public class VatanseverAttackAnimation extends ArtifactSpiritMultiPhaseAttackAni
 
     @Override
     public boolean isPhaseValid(LivingEntityPatch<?> entityPatch, Phase phase) {
-        if(entityPatch instanceof VatanseverEntityPatch vatanseverEntityPatch && vatanseverEntityPatch.getOwnerPatch() != null && entityPatch.getArmature() instanceof VatanseverArmature vatanseverArmature){
+        if(entityPatch instanceof VatanseverEntityPatch vatanseverEntityPatch && entityPatch.getArmature() instanceof VatanseverArmature vatanseverArmature){
             for(Pair<Joint, Collider> pair : phase.colliders){
-                for(Joint joint : vatanseverArmature.getInvalidJoints(vatanseverEntityPatch.getOwnerPatch())){
+                for(Joint joint : vatanseverArmature.getInvalidJoints(vatanseverEntityPatch)){
                     //contain无法判断？只能换用id比较了
                     if(joint.getId() == pair.getFirst().getId()){
                         return false;

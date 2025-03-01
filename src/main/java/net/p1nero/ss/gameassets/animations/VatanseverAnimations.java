@@ -13,11 +13,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.p1nero.ss.animation.ArtifactSpiritMultiPhaseAttackAnimation;
-import net.p1nero.ss.animation.LinkArtifactSpiritAnimation;
-import net.p1nero.ss.animation.PlayerScanAnimation;
-import net.p1nero.ss.animation.VatanseverAttackAnimation;
+import net.p1nero.ss.animation.*;
 import net.p1nero.ss.client.sound.SwordSoaringSounds;
+import net.p1nero.ss.entity.sword.fly_sword.FlySwordEntity;
 import net.p1nero.ss.entity.vatansever.VatanseverArmature;
 import net.p1nero.ss.entity.vatansever.VatanseverEntity;
 import net.p1nero.ss.entity.vatansever.VatanseverEntityPatch;
@@ -26,11 +24,14 @@ import net.p1nero.ss.entity.vatansever_storm.VatanseverStormEntityPatch;
 import net.p1nero.ss.gameassets.SwordSoaringArmatures;
 import net.p1nero.ss.gameassets.SwordSoaringColliders;
 import net.p1nero.ss.skill.weapon_passive.VatanseverPassive;
+import yesman.epicfight.api.animation.Animator;
 import yesman.epicfight.api.animation.Joint;
+import yesman.epicfight.api.animation.Pose;
 import yesman.epicfight.api.animation.property.AnimationEvent;
 import yesman.epicfight.api.animation.property.AnimationProperty;
 import yesman.epicfight.api.animation.types.*;
 import yesman.epicfight.api.collider.Collider;
+import yesman.epicfight.api.model.Armature;
 import yesman.epicfight.api.utils.LevelUtil;
 import yesman.epicfight.api.utils.math.OpenMatrix4f;
 import yesman.epicfight.api.utils.math.ValueModifier;
@@ -182,27 +183,29 @@ public class VatanseverAnimations {
 
         VATANSEVER_SHOOT_L3 = new ActionAnimation(0.15F, "biped/vatansever/skill/vatansever_shoot_l3", vatanseverArmature)
                 .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 0.5F))
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, setVatanseverSwordCount(5))
-                .addEvents(AnimationEvent.TimeStampedEvent.create(0.3F, ((livingEntityPatch, staticAnimation, objects) -> {shootVFX(livingEntityPatch,vatanseverArmature.L3);}), AnimationEvent.Side.BOTH));
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, setVatanseverSwordCount(5), summonFlySwordInTarget())
+                .addEvents(AnimationEvent.TimeStampedEvent.create(0.3F, ((livingEntityPatch, staticAnimation, objects) -> {
+                    shootVFX(livingEntityPatch, vatanseverArmature.L3);
+                }), AnimationEvent.Side.BOTH));
         VATANSEVER_SHOOT_R3 = new ActionAnimation(0.15F, "biped/vatansever/skill/vatansever_shoot_r3", vatanseverArmature)
                 .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 0.5F))
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, setVatanseverSwordCount(4))
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, setVatanseverSwordCount(4), summonFlySwordInTarget())
                 .addEvents(AnimationEvent.TimeStampedEvent.create(0.3F, ((livingEntityPatch, staticAnimation, objects) -> {shootVFX(livingEntityPatch,vatanseverArmature.R2);}), AnimationEvent.Side.BOTH));
         VATANSEVER_SHOOT_L2 = new ActionAnimation(0.15F, "biped/vatansever/skill/vatansever_shoot_l2", vatanseverArmature)
                 .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 0.5F))
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, setVatanseverSwordCount(3))
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, setVatanseverSwordCount(3), summonFlySwordInTarget())
                 .addEvents(AnimationEvent.TimeStampedEvent.create(0.3F, ((livingEntityPatch, staticAnimation, objects) -> {shootVFX(livingEntityPatch,vatanseverArmature.L2);}), AnimationEvent.Side.BOTH));
         VATANSEVER_SHOOT_R2 = new ActionAnimation(0.15F, "biped/vatansever/skill/vatansever_shoot_r2", vatanseverArmature)
                 .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 0.5F))
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, setVatanseverSwordCount(2))
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, setVatanseverSwordCount(2), summonFlySwordInTarget())
                 .addEvents(AnimationEvent.TimeStampedEvent.create(0.3F, ((livingEntityPatch, staticAnimation, objects) -> {shootVFX(livingEntityPatch,vatanseverArmature.R2);}), AnimationEvent.Side.BOTH));
         VATANSEVER_SHOOT_L1 = new ActionAnimation(0.15F, "biped/vatansever/skill/vatansever_shoot_l1", vatanseverArmature)
                 .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 0.5F))
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, setVatanseverSwordCount(1))
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, setVatanseverSwordCount(1), summonFlySwordInTarget())
                 .addEvents(AnimationEvent.TimeStampedEvent.create(0.3F, ((livingEntityPatch, staticAnimation, objects) -> {shootVFX(livingEntityPatch,vatanseverArmature.L1);}), AnimationEvent.Side.BOTH));
         VATANSEVER_SHOOT_R1 = new ActionAnimation(0.15F, "biped/vatansever/skill/vatansever_shoot_r1", vatanseverArmature)
                 .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 0.5F))
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, setVatanseverSwordCount(0))
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, setVatanseverSwordCount(0), summonFlySwordInTarget())
                 .addEvents(AnimationEvent.TimeStampedEvent.create(0.3F, ((livingEntityPatch, staticAnimation, objects) -> {shootVFX(livingEntityPatch,vatanseverArmature.R1);}), AnimationEvent.Side.BOTH));
 
         HumanoidArmature biped = Armatures.BIPED;
@@ -211,7 +214,8 @@ public class VatanseverAnimations {
                 .addStateRemoveOld(EntityState.TURNING_LOCKED, false)
                 .addEvents(
                         AnimationEvent.TimeStampedEvent.create(0.7F, ((livingEntityPatch, staticAnimation, objects) -> {
-                            swingSounds(livingEntityPatch);}), AnimationEvent.Side.BOTH));
+                            swingSounds(livingEntityPatch);
+                        }), AnimationEvent.Side.BOTH));
         PLAYER_AUTO2 = new LinkArtifactSpiritAnimation(0.15F, 1.9F, "biped/vatansever/vatansever_auto2_owner", biped, VATANSEVER_AUTO2)
                 .newTimePair(1.0F, Float.MAX_VALUE)
                 .addStateRemoveOld(EntityState.TURNING_LOCKED, true)
@@ -264,10 +268,7 @@ public class VatanseverAnimations {
                 .addEvents(AnimationEvent.TimeStampedEvent.create(2.5F, ((livingEntityPatch, staticAnimation, objects) -> {
                     groundSplit(livingEntityPatch, 0, 0, 0, 0, 99999, 4, 1000);
                 }), AnimationEvent.Side.BOTH));
-        PLAYER_INIT = new LinkArtifactSpiritAnimation(0.15F, "biped/vatansever/vatansever_init", biped, VATANSEVER_INIT)
-                .newTimePair(0.0F, Float.MAX_VALUE)
-                .addStateRemoveOld(EntityState.TURNING_LOCKED, false)
-                .addStateRemoveOld(EntityState.MOVEMENT_LOCKED, false);
+        PLAYER_INIT = new LinkArtifactSpiritAnimation(0.15F, 0, "biped/vatansever/vatansever_init", biped, VATANSEVER_INIT);
         PLAYER_FLY_BEGIN = new ActionAnimation(0.15F, "biped/vatansever/vatansever_fly_begin", biped)
                 .addProperty(AnimationProperty.ActionAnimationProperty.MOVE_VERTICAL, true)
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> {
@@ -290,18 +291,42 @@ public class VatanseverAnimations {
                             createStorm(livingEntityPatch, 0, 0, 0, VatanseverStormAnimations.VATANSEVER_STORM_DOWN);
                         }), AnimationEvent.Side.BOTH));
 
-        PLAYER_SHOOT_L3 = new PlayerScanAnimation(0.15F, 0.0F, Float.MAX_VALUE, "biped/vatansever/skill/vatansever_shoot_l3", vatanseverArmature,
-                SwordSoaringColliders.SCAN_SCALE, vatanseverArmature.rootJoint).setArtifactSpiritAnimation(VATANSEVER_SHOOT_L3);
-        PLAYER_SHOOT_R3 = new PlayerScanAnimation(0.15F, 0.0F, Float.MAX_VALUE, "biped/vatansever/skill/vatansever_shoot_r3", vatanseverArmature,
-                SwordSoaringColliders.SCAN_SCALE, vatanseverArmature.rootJoint).setArtifactSpiritAnimation(VATANSEVER_SHOOT_R3);
-        PLAYER_SHOOT_L2 = new PlayerScanAnimation(0.15F, 0.0F, Float.MAX_VALUE, "biped/vatansever/skill/vatansever_shoot_l2", vatanseverArmature,
-                SwordSoaringColliders.SCAN_SCALE, vatanseverArmature.rootJoint).setArtifactSpiritAnimation(VATANSEVER_SHOOT_L2);
-        PLAYER_SHOOT_R2 = new PlayerScanAnimation(0.15F, 0.0F, Float.MAX_VALUE, "biped/vatansever/skill/vatansever_shoot_r2", vatanseverArmature,
-                SwordSoaringColliders.SCAN_SCALE, vatanseverArmature.rootJoint).setArtifactSpiritAnimation(VATANSEVER_SHOOT_R2);
-        PLAYER_SHOOT_L1 = new PlayerScanAnimation(0.15F, 0.0F, Float.MAX_VALUE, "biped/vatansever/skill/vatansever_shoot_l1", vatanseverArmature,
-                SwordSoaringColliders.SCAN_SCALE, vatanseverArmature.rootJoint).setArtifactSpiritAnimation(VATANSEVER_SHOOT_L1);
-        PLAYER_SHOOT_R1 = new PlayerScanAnimation(0.15F, 0.0F, Float.MAX_VALUE, "biped/vatansever/skill/vatansever_shoot_r1", vatanseverArmature,
-                SwordSoaringColliders.SCAN_SCALE, vatanseverArmature.rootJoint).setArtifactSpiritAnimation(VATANSEVER_SHOOT_R1);
+        PLAYER_SHOOT_L3 = new VatanseverPlayerShootAnimation(0.15F, 0.0F, Float.MAX_VALUE, "biped/vatansever/skill/vatansever_shoot_l3", vatanseverArmature,
+                SwordSoaringColliders.SCAN_SCALE, vatanseverArmature.rootJoint).setArtifactSpiritAnimation(VATANSEVER_SHOOT_L3)
+                .newTimePair(0.0F, Float.MAX_VALUE)
+                .addStateRemoveOld(EntityState.TURNING_LOCKED, false);
+        PLAYER_SHOOT_R3 = new VatanseverPlayerShootAnimation(0.15F, 0.0F, Float.MAX_VALUE, "biped/vatansever/skill/vatansever_shoot_r3", vatanseverArmature,
+                SwordSoaringColliders.SCAN_SCALE, vatanseverArmature.rootJoint).setArtifactSpiritAnimation(VATANSEVER_SHOOT_R3)
+                .newTimePair(0.0F, Float.MAX_VALUE)
+                .addStateRemoveOld(EntityState.TURNING_LOCKED, false);
+        PLAYER_SHOOT_L2 = new VatanseverPlayerShootAnimation(0.15F, 0.0F, Float.MAX_VALUE, "biped/vatansever/skill/vatansever_shoot_l2", vatanseverArmature,
+                SwordSoaringColliders.SCAN_SCALE, vatanseverArmature.rootJoint).setArtifactSpiritAnimation(VATANSEVER_SHOOT_L2)
+                .newTimePair(0.0F, Float.MAX_VALUE)
+                .addStateRemoveOld(EntityState.TURNING_LOCKED, false);
+        PLAYER_SHOOT_R2 = new VatanseverPlayerShootAnimation(0.15F, 0.0F, Float.MAX_VALUE, "biped/vatansever/skill/vatansever_shoot_r2", vatanseverArmature,
+                SwordSoaringColliders.SCAN_SCALE, vatanseverArmature.rootJoint).setArtifactSpiritAnimation(VATANSEVER_SHOOT_R2)
+                .newTimePair(0.0F, Float.MAX_VALUE)
+                .addStateRemoveOld(EntityState.TURNING_LOCKED, false);
+        PLAYER_SHOOT_L1 = new VatanseverPlayerShootAnimation(0.15F, 0.0F, Float.MAX_VALUE, "biped/vatansever/skill/vatansever_shoot_l1", vatanseverArmature,
+                SwordSoaringColliders.SCAN_SCALE, vatanseverArmature.rootJoint).setArtifactSpiritAnimation(VATANSEVER_SHOOT_L1)
+                .newTimePair(0.0F, Float.MAX_VALUE)
+                .addStateRemoveOld(EntityState.TURNING_LOCKED, false);
+        PLAYER_SHOOT_R1 = new VatanseverPlayerShootAnimation(0.15F, 0.0F, Float.MAX_VALUE, "biped/vatansever/skill/vatansever_shoot_r1", vatanseverArmature,
+                SwordSoaringColliders.SCAN_SCALE, vatanseverArmature.rootJoint).setArtifactSpiritAnimation(VATANSEVER_SHOOT_R1)
+                .newTimePair(0.0F, Float.MAX_VALUE)
+                .addStateRemoveOld(EntityState.TURNING_LOCKED, false);
+    }
+
+    public static Vec3 getJointWorldPos(LivingEntityPatch<?> entityPatch, Joint joint) {
+        Animator animator = entityPatch.getAnimator();
+        Pose pose = animator.getPlayerFor(null).getCurrentPose(entityPatch, 0.5F);
+        Vec3 pos = entityPatch.getOriginal().position();
+        OpenMatrix4f modelTf = OpenMatrix4f.createTranslation((float) pos.x, (float) pos.y, (float) pos.z)
+                .mulBack(OpenMatrix4f.createRotatorDeg(180.0F, Vec3f.Y_AXIS)
+                        .mulBack(entityPatch.getModelMatrix(1)));
+        OpenMatrix4f JointTf = new OpenMatrix4f(entityPatch.getArmature().getBindedTransformFor(pose, joint)).mulFront(modelTf);
+
+        return OpenMatrix4f.transform(JointTf, Vec3.ZERO);
     }
 
     public static AnimationEvent setVatanseverSwordCount(int count) {
@@ -310,6 +335,18 @@ public class VatanseverAnimations {
                 SkillDataManager manager = serverPlayerPatch.getSkill(SkillSlots.WEAPON_PASSIVE).getDataManager();
                 if (manager.hasData(VatanseverPassive.SWORD_COUNT)) {
                     manager.setDataSync(VatanseverPassive.SWORD_COUNT, count, serverPlayerPatch.getOriginal());
+                }
+            }
+        }, AnimationEvent.Side.SERVER);
+    }
+
+    public static AnimationEvent summonFlySwordInTarget() {
+        return AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> {
+            if (livingEntityPatch instanceof VatanseverEntityPatch vatanseverEntityPatch && vatanseverEntityPatch.getOwnerPatch() != null) {
+                System.out.println(vatanseverEntityPatch.getTarget());
+                if(vatanseverEntityPatch.getTarget() != null){
+                    FlySwordEntity flySwordEntity = new FlySwordEntity(vatanseverEntityPatch.getOwnerPatch().getOriginal(), 200, vatanseverEntityPatch.getTarget());
+                    vatanseverEntityPatch.getOriginal().level.addFreshEntity(flySwordEntity);
                 }
             }
         }, AnimationEvent.Side.SERVER);
