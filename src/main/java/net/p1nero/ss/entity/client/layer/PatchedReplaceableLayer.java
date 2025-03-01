@@ -15,9 +15,9 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.p1nero.ss.entity.IReplaceableArmature;
 import net.p1nero.ss.entity.sword.IPatchedItemSupplier;
+import net.p1nero.ss.util.MathUtils;
 import yesman.epicfight.api.animation.Joint;
 import yesman.epicfight.api.client.model.AnimatedMesh;
-import yesman.epicfight.api.utils.math.MathUtils;
 import yesman.epicfight.api.utils.math.OpenMatrix4f;
 import yesman.epicfight.client.renderer.patched.layer.PatchedLayer;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
@@ -32,7 +32,7 @@ public class PatchedReplaceableLayer<E extends LivingEntity & OwnableEntity & IP
         if(entityPatch.getArmature() instanceof IReplaceableArmature armature){
             ItemStack mainHandStack = entity.getItemStack(entityPatch);
             if (mainHandStack.getItem() != Items.AIR) {
-                renderScreenSword(mainHandStack, entityPatch, armature, poses, buffer, postStack, packedLightIn);
+                renderItemInJoint(mainHandStack, entityPatch, armature, poses, buffer, postStack, packedLightIn);
             }
         }
     }
@@ -40,23 +40,15 @@ public class PatchedReplaceableLayer<E extends LivingEntity & OwnableEntity & IP
     /**
      * 根据对应要替换Joint的位置渲染
      */
-    public static void renderScreenSword(ItemStack stack, LivingEntityPatch<?> entityPatch, IReplaceableArmature armature, OpenMatrix4f[] poses, MultiBufferSource buffer, PoseStack poseStack, int packedLight) {
+    public static void renderItemInJoint(ItemStack stack, LivingEntityPatch<?> entityPatch, IReplaceableArmature armature, OpenMatrix4f[] poses, MultiBufferSource buffer, PoseStack poseStack, int packedLight) {
         for(Joint joint : armature.getJoints(entityPatch)){
             OpenMatrix4f jointTransform = poses[joint.getId()];
             poseStack.pushPose();
-            mulPoseStack(poseStack, jointTransform);
+            MathUtils.mulPoseStack(poseStack, jointTransform);
             ItemTransforms.TransformType transformType = ItemTransforms.TransformType.THIRD_PERSON_RIGHT_HAND;
             poseStack.mulPose(Vector3f.YP.rotationDegrees(90));
             Minecraft.getInstance().getItemInHandRenderer().renderItem(entityPatch.getOriginal(), stack, transformType, false, poseStack, buffer, packedLight);
             poseStack.popPose();
         }
     }
-
-    public static void mulPoseStack(PoseStack poseStack, OpenMatrix4f pose) {
-        OpenMatrix4f transposed = pose.transpose(null);
-        MathUtils.translateStack(poseStack, pose);
-        MathUtils.rotateStack(poseStack, transposed);
-        MathUtils.scaleStack(poseStack, transposed);
-    }
-
 }

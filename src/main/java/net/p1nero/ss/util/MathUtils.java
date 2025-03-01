@@ -1,13 +1,21 @@
 package net.p1nero.ss.util;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Quaternion;
 import net.minecraft.world.phys.Vec3;
+import yesman.epicfight.api.utils.math.OpenMatrix4f;
 import yesman.epicfight.api.utils.math.Vec3f;
 
 /**
  * copy from org.joml.Quaternionf
  */
 public class MathUtils {
+    public static void mulPoseStack(PoseStack poseStack, OpenMatrix4f pose) {
+        OpenMatrix4f transposed = pose.transpose(null);
+        yesman.epicfight.api.utils.math.MathUtils.translateStack(poseStack, pose);
+        yesman.epicfight.api.utils.math.MathUtils.rotateStack(poseStack, transposed);
+        yesman.epicfight.api.utils.math.MathUtils.scaleStack(poseStack, transposed);
+    }
     public static Quaternion rotateTo(Vec3 from, Vec3 to){
         return rotateTo(Vec3f.fromDoubleVector(from), Vec3f.fromDoubleVector(to));
     }

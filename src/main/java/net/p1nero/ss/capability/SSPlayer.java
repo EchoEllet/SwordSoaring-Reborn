@@ -2,7 +2,16 @@ package net.p1nero.ss.capability;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.items.CapabilityItemHandler;
 import net.p1nero.ss.entity.sword.fly_sword.FlySwordEntity;
+import net.p1nero.ss.network.PacketHandler;
+import net.p1nero.ss.network.PacketRelay;
+import net.p1nero.ss.network.packet.client.RequestValidBabylonSyncPacket;
+import net.p3pp3rf1y.sophisticatedbackpacks.backpack.BackpackItem;
 import org.jetbrains.annotations.NotNull;
 import yesman.epicfight.api.animation.types.AttackAnimation;
 
@@ -44,6 +53,35 @@ public class SSPlayer {
 
     public void clearVatanseverShootEntities(){
         vatanseverShootEntities.clear();
+    }
+
+    private final ArrayList<Item> validBabylonItems = new ArrayList<>();
+    public void calculateValidBabylonItems(Player player){
+        for(ItemStack itemStack : player.getInventory().items){
+            if(!validBabylonItems.contains(itemStack.getItem())){
+                validBabylonItems.add(itemStack.getItem());
+            }
+            if(ModList.get().isLoaded("sophisticatedbackpacks")){
+                if(itemStack.getItem() instanceof BackpackItem){
+                    itemStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(iItemHandler -> {
+                        for(int i = 0; i < iItemHandler.getSlots(); i ++){
+                            Item inSideItem = iItemHandler.getStackInSlot(i).getItem();
+                            if(!validBabylonItems.contains(inSideItem)){
+                                validBabylonItems.add(inSideItem);
+                            }
+                        }
+                    });
+                }
+            }
+        }
+
+        if(!player.level.isClientSide){
+            PacketRelay.sendToAll(PacketHandler.INSTANCE, new RequestValidBabylonSyncPacket());
+        }
+    }
+
+    public ArrayList<Item> getValidBabylonItems() {
+        return validBabylonItems;
     }
 
     public void saveNBTData(CompoundTag tag){
