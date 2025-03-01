@@ -29,8 +29,6 @@ public class VatanseverItem extends WeaponItem {
                 ServerPlayerPatch serverPlayerPatch = EpicFightCapabilities.getEntityPatch(pPlayer, ServerPlayerPatch.class);
                 if(serverPlayerPatch.isBattleMode() && !serverPlayerPatch.getEntityState().inaction()){
                     serverPlayerPatch.playAnimationSynchronized(VatanseverAnimations.PLAYER_FLY_BEGIN, 0.15F);
-                    pLevel.playSound(null, pPlayer.getX(), pPlayer.getY(), pPlayer.getZ(), EpicFightSounds.ENTITY_MOVE, pPlayer.getSoundSource(), 1.0F, 1.0F);
-
                 }
             }
         } else if(!pPlayer.onGround && pPlayer.isFallFlying()){

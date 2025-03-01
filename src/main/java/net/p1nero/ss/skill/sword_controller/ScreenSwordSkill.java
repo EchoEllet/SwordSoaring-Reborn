@@ -25,6 +25,7 @@ import yesman.epicfight.world.damagesource.EpicFightDamageSource;
 import yesman.epicfight.world.damagesource.StunType;
 import yesman.epicfight.world.entity.eventlistener.PlayerEventListener;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -111,6 +112,13 @@ public class ScreenSwordSkill extends KillAuraSkill {
     public void executeOnServer(ServerPlayerPatch executer, FriendlyByteBuf args) {
         super.executeOnServer(executer, args);
         executer.getSkill(this).getDataManager().setDataSync(PROTECT_COUNT, maxProtectCount, executer.getOriginal());
+    }
+
+    @Override
+    public List<Object> getTooltipArgsOfScreen(List<Object> list) {
+        list.add(this.maxProtectCount);
+        list.add(this.healCount);
+        return list;
     }
 
     @Override

@@ -20,6 +20,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.p1nero.ss.SwordSoaring;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import yesman.epicfight.client.gui.HealthBarIndicator;
+import yesman.epicfight.client.world.capabilites.entitypatch.player.LocalPlayerPatch;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 import yesman.epicfight.world.entity.ai.attribute.EpicFightAttributes;
@@ -32,6 +34,15 @@ public abstract class AbstractArtifactSpiritEntity extends PathfinderMob impleme
 
     public AbstractArtifactSpiritEntity(EntityType<? extends AbstractArtifactSpiritEntity> entityType, Level level) {
         super(entityType, level);
+    }
+
+    /**
+     * 取消血条渲染
+     * {@link HealthBarIndicator#shouldDraw(LivingEntity, LivingEntityPatch, LocalPlayerPatch)}
+     */
+    @Override
+    public boolean canChangeDimensions() {
+        return false;
     }
 
     @Override
@@ -76,6 +87,10 @@ public abstract class AbstractArtifactSpiritEntity extends PathfinderMob impleme
 
     public LivingEntityPatch<?> getOwnerPatch(){
         return EpicFightCapabilities.getEntityPatch(getOwner(), LivingEntityPatch.class);
+    }
+
+    public LivingEntityPatch<?> getPatch(){
+        return EpicFightCapabilities.getEntityPatch(this, LivingEntityPatch.class);
     }
 
     @Override

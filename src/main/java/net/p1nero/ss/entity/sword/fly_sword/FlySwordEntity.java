@@ -1,29 +1,32 @@
 package net.p1nero.ss.entity.sword.fly_sword;
 
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import net.p1nero.ss.entity.AbstractArtifactSpiritEntity;
 import net.p1nero.ss.entity.SwordSoaringEntities;
 import net.p1nero.ss.entity.sword.AbstractSwordEntity;
-import net.p1nero.ss.gameassets.SwordSoaringSkillSlots;
-import net.p1nero.ss.skill.sword_controller.ScreenSwordSkill;
+import net.p1nero.ss.gameassets.animations.FlySwordAnimations;
 import net.p1nero.ss.skill.weapon_passive.VatanseverPassive;
-import org.jetbrains.annotations.NotNull;
+import yesman.epicfight.api.utils.math.MathUtils;
 import yesman.epicfight.skill.SkillDataManager;
 import yesman.epicfight.skill.SkillSlots;
-import yesman.epicfight.world.capabilities.EpicFightCapabilities;
-import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 
 public class FlySwordEntity extends AbstractSwordEntity {
     private int maxTickCount = -1;
-
+    private static final EntityDataAccessor<Boolean> ANIMATION_END = SynchedEntityData.defineId(FlySwordEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> FLYING_BACK = SynchedEntityData.defineId(FlySwordEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> READY_TO_FLY_BACK = SynchedEntityData.defineId(FlySwordEntity.class, EntityDataSerializers.BOOLEAN);
     private LivingEntity target;
     public FlySwordEntity(EntityType<? extends AbstractArtifactSpiritEntity> entityType, Level level) {
         super(entityType, level);
+        noPhysics = true;//穿墙
     }
 
     public FlySwordEntity(LivingEntity owner, int maxTickCount, LivingEntity target){
@@ -36,14 +39,49 @@ public class FlySwordEntity extends AbstractSwordEntity {
     }
 
     @Override
-    public void tick() {
-        super.tick();
-        if(!level.isClientSide){
-            ServerPlayerPatch serverPlayerPatch = EpicFightCapabilities.getEntityPatch(getOwner(), ServerPlayerPatch.class);
-            if(serverPlayerPatch != null){
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        getEntityData().define(FLYING_BACK, false);
+        getEntityData().define(READY_TO_FLY_BACK, false);
+        getEntityData().define(ANIMATION_END, false);
+    }
 
+    public boolean isAnimationEnd(){
+        return getEntityData().get(ANIMATION_END);
+    }
+    public void setAnimationEnd(boolean flying){
+        getEntityData().set(ANIMATION_END, flying);
+    }
+
+    public boolean isFlyingBack(){
+        return getEntityData().get(FLYING_BACK);
+    }
+
+    public void setFlyingBack(boolean flying){
+        getEntityData().set(FLYING_BACK, flying);
+    }
+
+    public boolean isReadyToFlyBack(){
+        return getEntityData().get(READY_TO_FLY_BACK);
+    }
+
+    public void setReadyToFlyBack(boolean flying){
+        getEntityData().set(READY_TO_FLY_BACK, flying);
+    }
+
+    public boolean callFlyingBack(){
+        if(getPatch() instanceof FlySwordPatch flySwordPatch){
+            if(flySwordPatch.getEntityState().inaction()){
+                return false;
             }
+            flySwordPatch.playAnimationSynchronized(FlySwordAnimations.FLY_SWORD_ATK_FLY_BACK, 0.001F);
+            if(getOwner() != null){
+                flySwordPatch.rotateTo(getOwner(), 30, true);
+                setReadyToFlyBack(true);
+            }
+            return true;
         }
+        return false;
     }
 
     @Override
@@ -60,12 +98,43 @@ public class FlySwordEntity extends AbstractSwordEntity {
 
     @Override
     protected void moveToOwner(LivingEntity owner) {
-        setYRot(0);
-        setYBodyRot(0);
-        setYHeadRot(0);
-        if(!level.isClientSide){
-            if(target != null && target.isAlive()){
-                this.setPos(target.position());
+        if(isFlyingBack()){
+            if(!level.isClientSide){
+                if(this.position().distanceTo(owner.getEyePosition()) < 1.5){
+                    addOwnerSwordCount();
+                    this.discard();
+                    return;
+                    //TODO 补特效
+                }
+                Vec3 dir = owner.getEyePosition().subtract(this.getEyePosition()).normalize().scale(1.5F);
+                setDeltaMovement(dir);//旋转在Patch里操作
+            }
+        } else {
+            if(isReadyToFlyBack()){
+                getPatch().rotateTo(owner, 30, true);
+            } else {
+                setYRot(0);
+                setYBodyRot(0);
+                setYHeadRot(0);
+            }
+            if(!level.isClientSide){
+                if(target != null && target.isAlive() && !isAnimationEnd()){
+                    this.setPos(target.position());
+                }
+                if(tickCount == maxTickCount){
+                    addOwnerSwordCount();
+                    this.discard();
+                }
+            }
+        }
+    }
+
+    public void addOwnerSwordCount(){
+        if(getOwnerPatch() instanceof ServerPlayerPatch serverPlayerPatch){
+            SkillDataManager manager = serverPlayerPatch.getSkill(SkillSlots.WEAPON_PASSIVE).getDataManager();
+            if(manager.hasData(VatanseverPassive.SWORD_COUNT)){
+                int currentCnt = manager.getDataValue(VatanseverPassive.SWORD_COUNT);
+                manager.setDataSync(VatanseverPassive.SWORD_COUNT, Math.min(currentCnt + 1, 6), serverPlayerPatch.getOriginal());
             }
         }
     }

@@ -49,22 +49,13 @@ public class SwordSoaring {
         ComboType.ENUM_MANAGER.loadPreemptive(SwordSoaringComboTypes.class);
 
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-        bus.addListener(this::commonSetup);
         SwordSoaringItems.ITEMS.register(bus);
         SwordSoaringEntities.ENTITIES.register(bus);
         SwordSoaringSounds.SOUND_EVENTS.register(bus);
         SwordSoaringEnchantments.ENCHANTMENTS.register(bus);
-        MinecraftForge.EVENT_BUS.addListener(SwordSoaringSkill::onLivingEquipmentChange);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
 
-    private void commonSetup(FMLCommonSetupEvent event) {
-        PacketHandler.register();
-        event.enqueueWork(() -> {
-            ScreenSwordSkill.PROTECT_COUNT = SkillDataManager.SkillDataKey.createDataKey(SkillDataManager.ValueType.INTEGER, true);
-            VatanseverPassive.SWORD_COUNT = SkillDataManager.SkillDataKey.createDataKey(SkillDataManager.ValueType.INTEGER, true);
-        });
-    }
 
     /**
      * 判断物品是否属于剑或者被视为剑。

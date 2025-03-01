@@ -1,17 +1,24 @@
 package net.p1nero.ss.skill.weapon_passive;
 
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
+import net.minecraftforge.eventbus.api.Event;
 import net.p1nero.ss.entity.AbstractArtifactSpiritEntity;
 import net.p1nero.ss.entity.vatansever.VatanseverEntity;
 import net.p1nero.ss.entity.vatansever.VatanseverEntityPatch;
+import net.p1nero.ss.gameassets.SwordSoaringSkillSlots;
 import net.p1nero.ss.gameassets.animations.VatanseverAnimations;
+import net.p1nero.ss.skill.sword_soaring.SwordSoaringSkill;
 import yesman.epicfight.api.utils.AttackResult;
 import yesman.epicfight.api.utils.LevelUtil;
 import yesman.epicfight.skill.Skill;
 import yesman.epicfight.skill.SkillContainer;
 import yesman.epicfight.skill.SkillDataManager;
+import yesman.epicfight.skill.SkillSlots;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
+import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 import yesman.epicfight.world.entity.eventlistener.PlayerEventListener;
 
 import java.util.UUID;
@@ -92,9 +99,24 @@ public class VatanseverPassive extends ArtifactSpiritPassiveSkill{
             }
         }
         container.getDataManager().setData(ARTIFACT_SPIRIT_ENTITY_ID, 0);
+        container.getExecuter().getEventListener().removeListener(PlayerEventListener.EventType.SKILL_EXECUTE_EVENT, EVENT_UUID);
         container.getExecuter().getEventListener().removeListener(PlayerEventListener.EventType.TARGET_INDICATOR_ALERT_CHECK_EVENT, EVENT_UUID);
         container.getExecuter().getEventListener().removeListener(PlayerEventListener.EventType.SET_TARGET_EVENT, EVENT_UUID);
         container.getExecuter().getEventListener().removeListener(PlayerEventListener.EventType.HURT_EVENT_PRE, EVENT_UUID);
         container.getExecuter().getEventListener().removeListener(PlayerEventListener.EventType.FALL_EVENT, EVENT_UUID);
     }
+
+    public static void onLivingEquipmentChange(LivingEquipmentChangeEvent event){
+        if(event.getEntityLiving() instanceof ServerPlayer serverPlayer && serverPlayer.isAlive()){
+            ServerPlayerPatch serverPlayerPatch = EpicFightCapabilities.getEntityPatch(serverPlayer, ServerPlayerPatch.class);
+            SkillDataManager manager = serverPlayerPatch.getSkill(SkillSlots.WEAPON_PASSIVE).getDataManager();
+            if(manager.hasData(ARTIFACT_SPIRIT_ENTITY_ID)){
+                VatanseverEntityPatch vatanseverEntityPatch = EpicFightCapabilities.getEntityPatch(serverPlayer.level.getEntity(manager.getDataValue(ARTIFACT_SPIRIT_ENTITY_ID)), VatanseverEntityPatch.class);
+                if(vatanseverEntityPatch != null && vatanseverEntityPatch.getEntityState().inaction()){
+                    event.setResult(Event.Result.DENY);
+                }
+            }
+        }
+    }
+
 }

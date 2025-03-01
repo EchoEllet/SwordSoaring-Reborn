@@ -1,5 +1,6 @@
 package net.p1nero.ss.entity.sword.screen_sword;
 
+import net.minecraft.world.InteractionHand;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -13,7 +14,9 @@ import net.p1nero.ss.skill.sword_controller.KillAuraSkill;
 import yesman.epicfight.api.animation.LivingMotions;
 import yesman.epicfight.api.animation.types.StaticAnimation;
 import yesman.epicfight.api.client.animation.ClientAnimator;
+import yesman.epicfight.api.collider.Collider;
 import yesman.epicfight.skill.SkillContainer;
+import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 
 public class ScreenSwordPatch extends AbstractArtifactSpiritPatch<ScreenSwordEntity> {
     private boolean played;
@@ -43,6 +46,12 @@ public class ScreenSwordPatch extends AbstractArtifactSpiritPatch<ScreenSwordEnt
         animator.addLivingAnimation(LivingMotions.IDLE, ScreenSwordAnimations.SCREEN_SWORD_IDLE);
         animator.setCurrentMotionsAsDefault();
     }
+
+    @Override
+    public Collider getColliderMatching(InteractionHand hand) {
+        return EpicFightCapabilities.getItemStackCapability(getOriginal().getItemStack(this)).getWeaponCollider();
+    }
+
 
     @Override
     public void updateMotion(boolean considerInaction) {

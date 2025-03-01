@@ -12,6 +12,9 @@ import net.p1nero.ss.client.keymapping.SwordSoaringKeyMappings;
 import net.p1nero.ss.gameassets.SwordSoaringSkillCategories;
 import net.p1nero.ss.gameassets.SwordSoaringSkillSlots;
 import net.p1nero.ss.mixin.ControlEngineAccessor;
+import net.p1nero.ss.network.PacketHandler;
+import net.p1nero.ss.network.PacketRelay;
+import net.p1nero.ss.network.packet.server.RequestVatanseverSwordBackPacket;
 import yesman.epicfight.client.ClientEngine;
 import yesman.epicfight.client.world.capabilites.entitypatch.player.LocalPlayerPatch;
 import yesman.epicfight.network.EpicFightNetworkManager;
@@ -38,6 +41,9 @@ public class ClientInputManager {
             if(event.getButton() == SwordSoaringKeyMappings.SWORD_SKILL.getKey().getValue()){
                 swordSkillKeyPressed(event.getAction());
             }
+            if(event.getButton() == SwordSoaringKeyMappings.SWORD_BACK.getKey().getValue()){
+                swordBackKeyPressed(event.getAction());
+            }
         }
     }
 
@@ -53,6 +59,9 @@ public class ClientInputManager {
             if(event.getKey() == SwordSoaringKeyMappings.SWORD_SKILL.getKey().getValue()){
                 swordSkillKeyPressed(event.getAction());
             }
+            if(event.getKey() == SwordSoaringKeyMappings.SWORD_BACK.getKey().getValue()){
+                swordBackKeyPressed(event.getAction());
+            }
         }
     }
 
@@ -65,6 +74,12 @@ public class ClientInputManager {
     public static void swordSkillKeyPressed(int action){
         if(action == 1){
             sendSkillPacket(SwordSoaringSkillSlots.SWORD_CONTROLLER, SwordSoaringKeyMappings.SWORD_SKILL);
+        }
+    }
+
+    public static void swordBackKeyPressed(int action){
+        if(action == 1){
+            PacketRelay.sendToServer(PacketHandler.INSTANCE, new RequestVatanseverSwordBackPacket());
         }
     }
 

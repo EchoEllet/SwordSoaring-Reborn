@@ -2,6 +2,8 @@ package net.p1nero.ss.capability;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
+import net.p1nero.ss.entity.sword.fly_sword.FlySwordEntity;
+import org.jetbrains.annotations.NotNull;
 import yesman.epicfight.api.animation.types.AttackAnimation;
 
 import java.util.*;
@@ -28,6 +30,20 @@ public class SSPlayer {
 
     public void clearMap(){
         phaseListMap.clear();
+    }
+
+    private final ArrayList<FlySwordEntity> vatanseverShootEntities = new ArrayList<>();
+
+    public ArrayList<FlySwordEntity> getVatanseverShootEntities() {
+        return vatanseverShootEntities;
+    }
+
+    public void addVatanseverShootEntity(@NotNull FlySwordEntity flySwordEntity){
+        vatanseverShootEntities.add(flySwordEntity);
+    }
+
+    public void clearVatanseverShootEntities(){
+        vatanseverShootEntities.clear();
     }
 
     public void saveNBTData(CompoundTag tag){

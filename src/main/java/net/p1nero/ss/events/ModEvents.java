@@ -3,6 +3,7 @@ package net.p1nero.ss.events;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.p1nero.ss.SwordSoaring;
 import net.p1nero.ss.entity.AbstractArtifactSpiritEntity;
 import net.p1nero.ss.entity.SwordSoaringEntities;
@@ -10,7 +11,11 @@ import net.p1nero.ss.entity.sword.fly_sword.FlySwordPatch;
 import net.p1nero.ss.entity.sword.screen_sword.ScreenSwordPatch;
 import net.p1nero.ss.entity.vatansever.VatanseverEntityPatch;
 import net.p1nero.ss.entity.vatansever_storm.VatanseverStormEntityPatch;
+import net.p1nero.ss.network.PacketHandler;
+import net.p1nero.ss.skill.sword_controller.ScreenSwordSkill;
+import net.p1nero.ss.skill.weapon_passive.VatanseverPassive;
 import yesman.epicfight.api.forgeevent.EntityPatchRegistryEvent;
+import yesman.epicfight.skill.SkillDataManager;
 
 @Mod.EventBusSubscriber(modid = SwordSoaring.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModEvents{
@@ -31,4 +36,12 @@ public class ModEvents{
         event.getTypeEntry().put(SwordSoaringEntities.VATANSEVER_STORM.get(), (entity) -> VatanseverStormEntityPatch::new);
     }
 
+    @SubscribeEvent
+    public static void commonSetup(FMLCommonSetupEvent event) {
+        PacketHandler.register();
+        event.enqueueWork(() -> {
+            ScreenSwordSkill.PROTECT_COUNT = SkillDataManager.SkillDataKey.createDataKey(SkillDataManager.ValueType.INTEGER, true);
+            VatanseverPassive.SWORD_COUNT = SkillDataManager.SkillDataKey.createDataKey(SkillDataManager.ValueType.INTEGER, true);
+        });
+    }
 }

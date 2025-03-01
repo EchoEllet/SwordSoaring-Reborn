@@ -14,6 +14,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.p1nero.ss.animation.*;
+import net.p1nero.ss.capability.SSCapabilityProvider;
 import net.p1nero.ss.client.sound.SwordSoaringSounds;
 import net.p1nero.ss.entity.sword.fly_sword.FlySwordEntity;
 import net.p1nero.ss.entity.vatansever.VatanseverArmature;
@@ -183,29 +184,27 @@ public class VatanseverAnimations {
 
         VATANSEVER_SHOOT_L3 = new ActionAnimation(0.15F, "biped/vatansever/skill/vatansever_shoot_l3", vatanseverArmature)
                 .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 0.5F))
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, setVatanseverSwordCount(5), summonFlySwordInTarget())
-                .addEvents(AnimationEvent.TimeStampedEvent.create(0.3F, ((livingEntityPatch, staticAnimation, objects) -> {
-                    shootVFX(livingEntityPatch, vatanseverArmature.L3);
-                }), AnimationEvent.Side.BOTH));
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, summonFlySwordInTarget())
+                .addEvents(AnimationEvent.TimeStampedEvent.create(0.3F, ((livingEntityPatch, staticAnimation, objects) -> shootVFX(livingEntityPatch, vatanseverArmature.L3)), AnimationEvent.Side.BOTH));
         VATANSEVER_SHOOT_R3 = new ActionAnimation(0.15F, "biped/vatansever/skill/vatansever_shoot_r3", vatanseverArmature)
                 .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 0.5F))
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, setVatanseverSwordCount(4), summonFlySwordInTarget())
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, summonFlySwordInTarget())
                 .addEvents(AnimationEvent.TimeStampedEvent.create(0.3F, ((livingEntityPatch, staticAnimation, objects) -> {shootVFX(livingEntityPatch,vatanseverArmature.R2);}), AnimationEvent.Side.BOTH));
         VATANSEVER_SHOOT_L2 = new ActionAnimation(0.15F, "biped/vatansever/skill/vatansever_shoot_l2", vatanseverArmature)
                 .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 0.5F))
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, setVatanseverSwordCount(3), summonFlySwordInTarget())
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, summonFlySwordInTarget())
                 .addEvents(AnimationEvent.TimeStampedEvent.create(0.3F, ((livingEntityPatch, staticAnimation, objects) -> {shootVFX(livingEntityPatch,vatanseverArmature.L2);}), AnimationEvent.Side.BOTH));
         VATANSEVER_SHOOT_R2 = new ActionAnimation(0.15F, "biped/vatansever/skill/vatansever_shoot_r2", vatanseverArmature)
                 .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 0.5F))
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, setVatanseverSwordCount(2), summonFlySwordInTarget())
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, summonFlySwordInTarget())
                 .addEvents(AnimationEvent.TimeStampedEvent.create(0.3F, ((livingEntityPatch, staticAnimation, objects) -> {shootVFX(livingEntityPatch,vatanseverArmature.R2);}), AnimationEvent.Side.BOTH));
         VATANSEVER_SHOOT_L1 = new ActionAnimation(0.15F, "biped/vatansever/skill/vatansever_shoot_l1", vatanseverArmature)
                 .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 0.5F))
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, setVatanseverSwordCount(1), summonFlySwordInTarget())
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, summonFlySwordInTarget())
                 .addEvents(AnimationEvent.TimeStampedEvent.create(0.3F, ((livingEntityPatch, staticAnimation, objects) -> {shootVFX(livingEntityPatch,vatanseverArmature.L1);}), AnimationEvent.Side.BOTH));
         VATANSEVER_SHOOT_R1 = new ActionAnimation(0.15F, "biped/vatansever/skill/vatansever_shoot_r1", vatanseverArmature)
                 .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 0.5F))
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, setVatanseverSwordCount(0), summonFlySwordInTarget())
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, summonFlySwordInTarget())
                 .addEvents(AnimationEvent.TimeStampedEvent.create(0.3F, ((livingEntityPatch, staticAnimation, objects) -> {shootVFX(livingEntityPatch,vatanseverArmature.R1);}), AnimationEvent.Side.BOTH));
 
         HumanoidArmature biped = Armatures.BIPED;
@@ -329,38 +328,37 @@ public class VatanseverAnimations {
         return OpenMatrix4f.transform(JointTf, Vec3.ZERO);
     }
 
-    public static AnimationEvent setVatanseverSwordCount(int count) {
-        return AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> {
-            if (livingEntityPatch instanceof VatanseverEntityPatch vatanseverEntityPatch && vatanseverEntityPatch.getOwnerPatch() instanceof ServerPlayerPatch serverPlayerPatch) {
-                SkillDataManager manager = serverPlayerPatch.getSkill(SkillSlots.WEAPON_PASSIVE).getDataManager();
-                if (manager.hasData(VatanseverPassive.SWORD_COUNT)) {
-                    manager.setDataSync(VatanseverPassive.SWORD_COUNT, count, serverPlayerPatch.getOriginal());
-                }
-            }
-        }, AnimationEvent.Side.SERVER);
-    }
-
     public static AnimationEvent summonFlySwordInTarget() {
         return AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> {
-            if (livingEntityPatch instanceof VatanseverEntityPatch vatanseverEntityPatch && vatanseverEntityPatch.getOwnerPatch() != null) {
-                System.out.println(vatanseverEntityPatch.getTarget());
+            if (livingEntityPatch instanceof VatanseverEntityPatch vatanseverEntityPatch && vatanseverEntityPatch.getOwnerPatch() instanceof ServerPlayerPatch serverPlayerPatch) {
                 if(vatanseverEntityPatch.getTarget() != null){
-                    FlySwordEntity flySwordEntity = new FlySwordEntity(vatanseverEntityPatch.getOwnerPatch().getOriginal(), 200, vatanseverEntityPatch.getTarget());
-                    vatanseverEntityPatch.getOriginal().level.addFreshEntity(flySwordEntity);
+                    vatanseverEntityPatch.getOwnerPatch().getOriginal().getCapability(SSCapabilityProvider.SS_PLAYER).ifPresent(ssPlayer -> {
+                        //确保没有多余的剑
+                        if(ssPlayer.getVatanseverShootEntities().size() == 6 - vatanseverEntityPatch.getLeftSwordCount()){
+                            FlySwordEntity flySwordEntity = new FlySwordEntity(vatanseverEntityPatch.getOwnerPatch().getOriginal(), 500, vatanseverEntityPatch.getTarget());
+                            if(vatanseverEntityPatch.getOriginal().level.addFreshEntity(flySwordEntity)){
+                                ssPlayer.addVatanseverShootEntity(flySwordEntity);
+                                SkillDataManager manager = serverPlayerPatch.getSkill(SkillSlots.WEAPON_PASSIVE).getDataManager();
+                                if (manager.hasData(VatanseverPassive.SWORD_COUNT)) {
+                                    manager.setDataSync(VatanseverPassive.SWORD_COUNT, vatanseverEntityPatch.getLeftSwordCount() - 1, serverPlayerPatch.getOriginal());
+                                }
+                            }
+                        }
+                    });
                 }
             }
         }, AnimationEvent.Side.SERVER);
     }
 
-    private static void swingSounds(LivingEntityPatch livingEntityPatch){
+    private static void swingSounds(LivingEntityPatch<?> livingEntityPatch){
         Entity entity = livingEntityPatch.getOriginal();
         if (entity.level instanceof ServerLevel serverLevel) {
             serverLevel.playSound(null, entity.getX(), entity.getY(), entity.getZ(), SwordSoaringSounds.VATANSEVER_WHOOSH.get(), SoundSource.HOSTILE, 1.0F, 1.0F
             );
         }
     }
-    private static void shootVFX(LivingEntityPatch livingEntityPatch,Joint toolJoint){
-        LivingEntity entity = (LivingEntity) livingEntityPatch.getOriginal();
+    private static void shootVFX(LivingEntityPatch<?> livingEntityPatch,Joint toolJoint){
+        LivingEntity entity = livingEntityPatch.getOriginal();
         OpenMatrix4f transformMatrix = livingEntityPatch.getArmature()
                 .getBindedTransformFor(
                         livingEntityPatch.getArmature().getCurrentPose(),
