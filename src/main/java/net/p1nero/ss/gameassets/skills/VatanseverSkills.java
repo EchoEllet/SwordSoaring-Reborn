@@ -27,7 +27,7 @@ public class VatanseverSkills {
         ComboNode aab = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_AUTO3_B).addCondition(checkSwordCount(5, 6));
         ComboNode aaaa = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_AUTO4).addCondition(checkSwordCount(6));
         ComboNode aaab = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_AUTO4_B).addCondition(checkSwordCount(6));
-        ComboNode storm = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_STORM_START);
+        ComboNode storm = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_STORM_START).addCondition(checkSwordCount(6));
         ComboNode shootL3 = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_SHOOT_L3).addCondition(checkSwordCount(6)).setPriority(6);
         ComboNode shootR3 = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_SHOOT_R3).addCondition(checkSwordCount(5)).setPriority(5);
         ComboNode shootL2 = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_SHOOT_L2).addCondition(checkSwordCount(4)).setPriority(4);
@@ -41,6 +41,7 @@ public class VatanseverSkills {
                 .addConditionAnimation(shootR2)
                 .addConditionAnimation(shootR3);
         root.key1(a);
+        root.key4(storm);
         a.key1(aa);
         aa.key1(aaa);
         aa.key2(aab);
