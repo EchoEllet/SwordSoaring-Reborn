@@ -16,6 +16,7 @@ import net.p1nero.ss.gameassets.animations.ScreenSwordAnimations;
 import net.p1nero.ss.util.vfx.ParticleVFX;
 import yesman.epicfight.client.gui.BattleModeGui;
 import yesman.epicfight.skill.Skill;
+import yesman.epicfight.skill.SkillCategories;
 import yesman.epicfight.skill.SkillContainer;
 import yesman.epicfight.skill.SkillDataManager;
 import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
@@ -64,12 +65,25 @@ public class RainSwordSkill extends Skill {
                 container.getDataManager().setDataSync(DELAY_TIMER, count * interval, basicAttackEvent.getPlayerPatch().getOriginal());
             }
         });
+        container.getExecuter().getEventListener().addEventListener(PlayerEventListener.EventType.SKILL_EXECUTE_EVENT, EVENT_UUID, skillExecuteEvent -> {
+            if(skillExecuteEvent.getPlayerPatch().isLogicalClient() && skillExecuteEvent.getSkillContainer().getSkill().getCategory().equals(SkillCategories.BASIC_ATTACK)){
+                int currentLifetime = this.cooldown - container.getDataManager().getDataValue(COOLDOWN_TIMER);
+                if(currentLifetime > this.lifeTime){
+                    return;
+                }
+                Player player = skillExecuteEvent.getPlayerPatch().getOriginal();
+                boolean b = player.getRandom().nextBoolean();
+                ParticleVFX.createBigDipperXYParticle(ParticleTypes.END_ROD, player.level, player.getEyePosition().add(0, 1, 0), -1, 0.8F, player.getYRot(), currentLifetime, 0, 0, 0);
+                ParticleVFX.createBigDipperXYParticle(ParticleTypes.WAX_ON, player.level, player.getEyePosition().add(0, 1, 0), b ? -1 : 0.1F, 0.8F, player.getYRot(), currentLifetime, 0, 0, 0);
+                ParticleVFX.createBigDipperXYParticle(ParticleTypes.WAX_OFF, player.level, player.getEyePosition().add(0, 1, 0), b ? 0.1F : -1, 0.8F, player.getYRot(), currentLifetime, 0, 0.00F, 0);
+            }
+        });
     }
 
     @Override
     public void onRemoved(SkillContainer container) {
         super.onRemoved(container);
-        container.getExecuter().getEventListener().removeListener(PlayerEventListener.EventType.BASIC_ATTACK_EVENT, EVENT_UUID);
+        container.getExecuter().getEventListener().removeListener(PlayerEventListener.EventType.SKILL_EXECUTE_EVENT, EVENT_UUID);
     }
 
     @Override
@@ -98,18 +112,13 @@ public class RainSwordSkill extends Skill {
             if (currentLifetime <= 10) {
                 ParticleVFX.createBigDipperXZParticle(ParticleTypes.END_ROD, player.level, player.getEyePosition(), -1, 0.8F, player.getYRot(), 0, -0.1F, 0);
                 ParticleVFX.createBigDipperXZParticle(ParticleTypes.WAX_OFF, player.level, player.position().add(0, 0.3, 0), 0.1F, 0.8F, player.getYRot(), 0, 0.0F, 0);
-            } else if (currentLifetime % 30 == 0) {
-                if (currentLifetime % 60 == 0) {
-                    ParticleVFX.createBigDipperXZParticle(ParticleTypes.END_ROD, player.level, player.position().add(0, 0.3, 0), -1, 1.5F, currentLifetime, 0, 0.05F, 0);
-                    ParticleVFX.createBigDipperXZParticle(ParticleTypes.END_ROD, player.level, player.position().add(0, 0.3, 0), -1, 1.5F, currentLifetime, 0, 0, 0);
-                    ParticleVFX.createBigDipperXZParticle(ParticleTypes.END_ROD, player.level, player.position().add(0, 0.3, 0), -1, 1.5F, currentLifetime, 0, -0.05F, 0);
-                    ParticleVFX.createBigDipperXZParticle(ParticleTypes.WAX_ON, player.level, player.position().add(0, 0.3, 0), 0.1F, 1.5F, currentLifetime, 0, -0.15F, 0);
-                    ParticleVFX.createBigDipperXZParticle(ParticleTypes.WAX_OFF, player.level, player.position().add(0, 0.3, 0), -1, 1.5F, currentLifetime, 0, 0.00F, 0);
-                } else {
-                    ParticleVFX.createBigDipperXYParticle(ParticleTypes.END_ROD, player.level, player.getEyePosition().add(0, 1, 0), -1, 0.8F, player.getYRot(), currentLifetime, 0, 0, 0);
-                    ParticleVFX.createBigDipperXYParticle(ParticleTypes.WAX_ON, player.level, player.getEyePosition().add(0, 1, 0), -1, 0.8F, player.getYRot(), currentLifetime, 0, 0, 0);
-                    ParticleVFX.createBigDipperXYParticle(ParticleTypes.WAX_OFF, player.level, player.getEyePosition().add(0, 1, 0), 0.1F, 0.8F, player.getYRot(), currentLifetime, 0, 0.00F, 0);
-                }
+            } else if (currentLifetime % 60 == 0) {
+                boolean b = (currentLifetime % 120 == 0);
+                ParticleVFX.createBigDipperXZParticle(ParticleTypes.END_ROD, player.level, player.position().add(0, 0.3, 0), -1, 1.5F, currentLifetime, 0, 0.05F, 0);
+                ParticleVFX.createBigDipperXZParticle(ParticleTypes.END_ROD, player.level, player.position().add(0, 0.3, 0), -1, 1.5F, currentLifetime, 0, 0, 0);
+                ParticleVFX.createBigDipperXZParticle(ParticleTypes.END_ROD, player.level, player.position().add(0, 0.3, 0), -1, 1.5F, currentLifetime, 0, -0.05F, 0);
+                ParticleVFX.createBigDipperXZParticle(ParticleTypes.WAX_ON, player.level, player.position().add(0, 0.3, 0), b ? -1 : 0.1F, 1.5F, currentLifetime, 0, 0, 0);
+                ParticleVFX.createBigDipperXZParticle(ParticleTypes.WAX_OFF, player.level, player.position().add(0, 0.3, 0), b ? -0.1F : -1, 1.5F, currentLifetime, 0, 0, 0);
             }
         }
         int delayTimer = container.getDataManager().getDataValue(DELAY_TIMER);
