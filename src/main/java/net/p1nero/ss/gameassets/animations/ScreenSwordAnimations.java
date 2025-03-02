@@ -79,6 +79,7 @@ public class ScreenSwordAnimations {
                 .addEvents(RESET_ANIM, spawnHexagram(0.15F, () -> ParticleTypes.WAX_ON, 0.2F, 4), spawnHexagram(0.25F, () -> ParticleTypes.END_ROD, 0.2F, 2), spawnHexagram(0.35F, () -> ParticleTypes.WAX_OFF, 0.2F, 4));
         KILL_AURA_1_SUMMON = new ActionAnimation(0.15F, "screen_sword/kill_aura_1_summon", screenSwordArmature)
                 .addEvents(spawnHexagram(0.15F, () -> ParticleTypes.WAX_ON, 0.2F, 0.5F), spawnHexagram(0.25F, () -> ParticleTypes.END_ROD, 0.2F, 1), spawnHexagram(0.35F, () -> ParticleTypes.WAX_OFF, 0.2F, 2))
+                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 0.5F))
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_BEGIN_EVENTS, SET_GLOWING)
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, onEndPlay(() -> KILL_AURA_1));
         KILL_AURA_2 = new ArtifactSpiritMultiPhaseAttackAnimation(0.001F, "screen_sword/kill_aura_2", screenSwordArmature, AnimationUtils.getPhases(screenSwordArmature.joints, 0.5F))
@@ -88,11 +89,13 @@ public class ScreenSwordAnimations {
                 .addEvents(RESET_ANIM, spawnFireParticle(0.1F, screenSwordArmature.joints, 5), spawnParticles(0.3F, screenSwordArmature.joints, 5, EpicFightParticles.BLOOD::get), spawnFireParticle(0.49F, screenSwordArmature.joints, 5));
         KILL_AURA_2_SUMMON = new ActionAnimation(0.15F, "screen_sword/kill_aura_2_summon", screenSwordArmature)
                 .addEvents(spawnFireParticle(0.1F, screenSwordArmature.joints, 1), spawnParticles(0.3F, screenSwordArmature.joints, 2, EpicFightParticles.BLOOD::get), spawnFireParticle(0.49F, screenSwordArmature.joints, 2))
+                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 0.5F))
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, onEndPlay(() -> KILL_AURA_2));
         SCREEN_SWORD = new ActionAnimation(0.001F, "screen_sword/screen_sword", screenSwordArmature)
-                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 0.2F))
+                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 0.1F))
                 .addEvents(RESET_ANIM);
         SCREEN_SWORD_SUMMON = new ActionAnimation(0.15F, "screen_sword/screen_sword_summon", screenSwordArmature)
+                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 0.5F))
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_BEGIN_EVENTS, SET_GLOWING)
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, onEndPlay(() -> SCREEN_SWORD));
 

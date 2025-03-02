@@ -5,13 +5,14 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.p1nero.ss.entity.sword.screen_sword.ScreenSwordEntity;
 import yesman.epicfight.api.utils.AttackResult;
 import yesman.epicfight.client.gui.BattleModeGui;
@@ -112,6 +113,7 @@ public class ScreenSwordSkill extends KillAuraSkill {
     public void executeOnServer(ServerPlayerPatch executer, FriendlyByteBuf args) {
         super.executeOnServer(executer, args);
         executer.getSkill(this).getDataManager().setDataSync(PROTECT_COUNT, maxProtectCount, executer.getOriginal());
+        executer.getOriginal().addEffect(new MobEffectInstance(MobEffects.GLOWING, lifeTime));
     }
 
     @Override

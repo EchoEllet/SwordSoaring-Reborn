@@ -83,6 +83,7 @@ public class RainSwordSkill extends Skill {
     @Override
     public void onRemoved(SkillContainer container) {
         super.onRemoved(container);
+        container.getExecuter().getEventListener().removeListener(PlayerEventListener.EventType.BASIC_ATTACK_EVENT, EVENT_UUID);
         container.getExecuter().getEventListener().removeListener(PlayerEventListener.EventType.SKILL_EXECUTE_EVENT, EVENT_UUID);
     }
 
@@ -118,7 +119,7 @@ public class RainSwordSkill extends Skill {
                 ParticleVFX.createBigDipperXZParticle(ParticleTypes.END_ROD, player.level, player.position().add(0, 0.3, 0), -1, 1.5F, currentLifetime, 0, 0, 0);
                 ParticleVFX.createBigDipperXZParticle(ParticleTypes.END_ROD, player.level, player.position().add(0, 0.3, 0), -1, 1.5F, currentLifetime, 0, -0.05F, 0);
                 ParticleVFX.createBigDipperXZParticle(ParticleTypes.WAX_ON, player.level, player.position().add(0, 0.3, 0), b ? -1 : 0.1F, 1.5F, currentLifetime, 0, 0, 0);
-                ParticleVFX.createBigDipperXZParticle(ParticleTypes.WAX_OFF, player.level, player.position().add(0, 0.3, 0), b ? -0.1F : -1, 1.5F, currentLifetime, 0, 0, 0);
+                ParticleVFX.createBigDipperXZParticle(ParticleTypes.WAX_OFF, player.level, player.position().add(0, 0.3, 0), b ? 0.1F : -1, 1.5F, currentLifetime, 0, 0, 0);
             }
         }
         int delayTimer = container.getDataManager().getDataValue(DELAY_TIMER);

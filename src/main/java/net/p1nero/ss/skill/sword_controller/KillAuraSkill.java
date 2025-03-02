@@ -93,9 +93,6 @@ public class KillAuraSkill extends Skill {
     public void executeOnServer(ServerPlayerPatch executer, FriendlyByteBuf args) {
         super.executeOnServer(executer, args);
         executer.playAnimationSynchronized(playerSummonAnim.get(), 0.15F);
-        ScreenSwordEntity screenSwordEntity = new ScreenSwordEntity(executer.getOriginal(), lifeTime);
-        executer.getOriginal().level.addFreshEntity(screenSwordEntity);
-        executer.getSkill(this).getDataManager().setDataSync(SWORD_ENTITY_ID, screenSwordEntity.getId(), executer.getOriginal());
         executer.getSkill(this).getDataManager().setDataSync(COOL_DOWN_TIMER, cooldown, executer.getOriginal());
     }
 
@@ -108,6 +105,11 @@ public class KillAuraSkill extends Skill {
         int cooldown = container.getDataManager().getDataValue(COOL_DOWN_TIMER);
         if(cooldown > 0){
             container.getDataManager().setData(COOL_DOWN_TIMER, cooldown - 1);
+        }
+        if(cooldown == this.cooldown - (int) (playerSummonAnim.get().getTotalTime() * 10) && !container.getExecuter().isLogicalClient()){
+            ScreenSwordEntity screenSwordEntity = new ScreenSwordEntity(container.getExecuter().getOriginal(), lifeTime);
+            container.getExecuter().getOriginal().level.addFreshEntity(screenSwordEntity);
+            container.getExecuter().getSkill(this).getDataManager().setDataSync(SWORD_ENTITY_ID, screenSwordEntity.getId(), ((ServerPlayer) container.getExecuter().getOriginal()));
         }
     }
 
