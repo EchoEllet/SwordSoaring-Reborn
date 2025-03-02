@@ -1,0 +1,8 @@
+{
+    "min_count": 2,
+    "max_count": 5,
+    "interval": 5,
+    "cooldown": 600,
+    "life_time": 300,
+    "xp_requirement": 5
+}

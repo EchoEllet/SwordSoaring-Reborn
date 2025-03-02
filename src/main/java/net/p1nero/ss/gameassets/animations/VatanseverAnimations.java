@@ -316,18 +316,6 @@ public class VatanseverAnimations {
                 .addStateRemoveOld(EntityState.TURNING_LOCKED, false);
     }
 
-    public static Vec3 getJointWorldPos(LivingEntityPatch<?> entityPatch, Joint joint) {
-        Animator animator = entityPatch.getAnimator();
-        Pose pose = animator.getPlayerFor(null).getCurrentPose(entityPatch, 0.5F);
-        Vec3 pos = entityPatch.getOriginal().position();
-        OpenMatrix4f modelTf = OpenMatrix4f.createTranslation((float) pos.x, (float) pos.y, (float) pos.z)
-                .mulBack(OpenMatrix4f.createRotatorDeg(180.0F, Vec3f.Y_AXIS)
-                        .mulBack(entityPatch.getModelMatrix(1)));
-        OpenMatrix4f JointTf = new OpenMatrix4f(entityPatch.getArmature().getBindedTransformFor(pose, joint)).mulFront(modelTf);
-
-        return OpenMatrix4f.transform(JointTf, Vec3.ZERO);
-    }
-
     public static AnimationEvent summonFlySwordInTarget() {
         return AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> {
             if (livingEntityPatch instanceof VatanseverEntityPatch vatanseverEntityPatch && vatanseverEntityPatch.getOwnerPatch() instanceof ServerPlayerPatch serverPlayerPatch) {
@@ -427,16 +415,6 @@ public class VatanseverAnimations {
         );
         OpenMatrix4f.mul(rotation, transformMatrix, transformMatrix);
 
-        // 提取旋转后的 Y 轴方向作为基础速度
-        Vec3f baseVelocity = new Vec3f(transformMatrix.m10 * 0.1F, transformMatrix.m11 * 0.1F, transformMatrix.m12 * 0.1F);
-
-        // 获取玩家当前速度
-        Vec3 playerVelocity = vatanseverEntity.getOwner().getDeltaMovement();
-        Vec3f relativeVelocity = new Vec3f(
-                (float) playerVelocity.x + baseVelocity.x,
-                (float) playerVelocity.y + baseVelocity.y,
-                (float) playerVelocity.z + baseVelocity.z
-        );
         // 生成粒子
         for (int i = 0; i < 5 * particleCount; i++) {
             world.addParticle(
@@ -464,7 +442,6 @@ public class VatanseverAnimations {
 
     public static void flyVFX(LivingEntityPatch<?> entityPatch) {
         int particleCount = 1;
-        Level world = entityPatch.getOriginal().level;
         if (entityPatch instanceof VatanseverEntityPatch vatanseverEntityPatch) {
             jet(vatanseverEntityPatch, SwordSoaringArmatures.vatanseverArmature.L1, particleCount);
             jet(vatanseverEntityPatch, SwordSoaringArmatures.vatanseverArmature.L2, particleCount);

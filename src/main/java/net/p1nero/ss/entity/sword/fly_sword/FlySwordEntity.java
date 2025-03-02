@@ -20,6 +20,7 @@ import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 
 public class FlySwordEntity extends AbstractSwordEntity {
     private int maxTickCount = -1;
+    private static final EntityDataAccessor<Boolean> ROTATION_LOCK = SynchedEntityData.defineId(FlySwordEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> ANIMATION_END = SynchedEntityData.defineId(FlySwordEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> FLYING_BACK = SynchedEntityData.defineId(FlySwordEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> READY_TO_FLY_BACK = SynchedEntityData.defineId(FlySwordEntity.class, EntityDataSerializers.BOOLEAN);
@@ -41,9 +42,18 @@ public class FlySwordEntity extends AbstractSwordEntity {
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
+        getEntityData().define(ROTATION_LOCK, true);
         getEntityData().define(FLYING_BACK, false);
         getEntityData().define(READY_TO_FLY_BACK, false);
         getEntityData().define(ANIMATION_END, false);
+    }
+
+    public boolean isRotationLock(){
+        return getEntityData().get(ROTATION_LOCK);
+    }
+
+    public void setRotationLock(boolean rotationLock){
+        getEntityData().set(ROTATION_LOCK, rotationLock);
     }
 
     public boolean isAnimationEnd(){
@@ -112,7 +122,7 @@ public class FlySwordEntity extends AbstractSwordEntity {
         } else {
             if(isReadyToFlyBack()){
                 getPatch().rotateTo(owner, 30, true);
-            } else {
+            } else if(isRotationLock()){
                 setYRot(0);
                 setYBodyRot(0);
                 setYHeadRot(0);
@@ -127,6 +137,14 @@ public class FlySwordEntity extends AbstractSwordEntity {
                 }
             }
         }
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        setYBodyRot(120);
+        setYRot(120);
+        setYHeadRot(120);
     }
 
     public void addOwnerSwordCount(){

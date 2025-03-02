@@ -18,6 +18,7 @@ import yesman.epicfight.api.collider.Collider;
 import yesman.epicfight.api.utils.math.MathUtils;
 import yesman.epicfight.api.utils.math.OpenMatrix4f;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
+import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 
 public class FlySwordPatch extends AbstractArtifactSpiritPatch<FlySwordEntity> {
     private boolean played;
@@ -31,19 +32,27 @@ public class FlySwordPatch extends AbstractArtifactSpiritPatch<FlySwordEntity> {
         super.clientTick(event);
         if (!played) {
             if (this.isLogicalClient() && this.getOwnerPatch() != null) {
-                if (this.getOriginal().getItemStack(this).getItem() instanceof VatanseverItem) {
-                    StaticAnimation toPlay;
-                    if (getOriginal().getRandom().nextBoolean()) {
-                        toPlay = FlySwordAnimations.FLY_SWORD_ATK_1;
-                    } else {
-                        toPlay = FlySwordAnimations.FLY_SWORD_ATK_2;
-                    }
-                    this.animator.playAnimation(toPlay, 0.0001F);
-                    PacketRelay.sendToServer(PacketHandler.INSTANCE, new RequestEntityPlayAnimationPacket(this.getOriginal().getId(), toPlay.getNamespaceId(), toPlay.getId(), 0.0001F));
-                }
+                StaticAnimation toPlay = getInitAnimation(this.getOwnerPatch());
+                this.animator.playAnimation(toPlay, 0.0001F);
+                PacketRelay.sendToServer(PacketHandler.INSTANCE, new RequestEntityPlayAnimationPacket(this.getOriginal().getId(), toPlay.getNamespaceId(), toPlay.getId(), 0.0001F));
+
                 played = true;
             }
         }
+    }
+
+    public StaticAnimation getInitAnimation(PlayerPatch<?> ownerPatch){
+        StaticAnimation toPlay;
+        if (this.getOriginal().getItemStack(this).getItem() instanceof VatanseverItem) {
+            if (getOriginal().getRandom().nextBoolean()) {
+                toPlay = FlySwordAnimations.FLY_SWORD_ATK_1;
+            } else {
+                toPlay = FlySwordAnimations.FLY_SWORD_ATK_2;
+            }
+        } else {
+            toPlay = FlySwordAnimations.FLY_SWORD_ATK_3;
+        }
+        return toPlay;
     }
 
     @Override
@@ -60,7 +69,7 @@ public class FlySwordPatch extends AbstractArtifactSpiritPatch<FlySwordEntity> {
 
     @Override
     public void updateMotion(boolean considerInaction) {
-        if(getOriginal().isFlyingBack()){
+        if (getOriginal().isFlyingBack()) {
             this.currentLivingMotion = LivingMotions.FLY;
             this.currentCompositeMotion = LivingMotions.FLY;
         } else {
@@ -70,13 +79,15 @@ public class FlySwordPatch extends AbstractArtifactSpiritPatch<FlySwordEntity> {
 
     @Override
     public OpenMatrix4f getModelMatrix(float partialTicks) {
-        if(this.getOriginal().isFlyingBack() && getOwnerPatch() != null){
+        if (this.getOriginal().isFlyingBack() && getOwnerPatch() != null) {
             Vec3 dir = getOwnerPatch().getOriginal().getEyePosition(partialTicks).subtract(this.getOriginal().getPosition(partialTicks)).normalize();
             float xRot = (float) MathUtils.getXRotOfVector(dir);
             float yRot = (float) MathUtils.getYRotOfVector(dir);
             return MathUtils.getModelMatrixIntegral(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, xRot, xRot, yRot, yRot, 1.0F, 1.0F, 1.0F, 1.0F);
         }
-        return super.getModelMatrix(partialTicks);
+        System.out.println("modify");
+        return getOwnerPatch().getModelMatrix(partialTicks);
+//        return super.getModelMatrix(partialTicks);
     }
 
 }

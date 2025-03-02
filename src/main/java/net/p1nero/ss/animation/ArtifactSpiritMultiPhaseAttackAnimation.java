@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -16,6 +17,7 @@ import net.p1nero.ss.capability.SSCapabilityProvider;
 import net.p1nero.ss.capability.SSPlayer;
 import net.p1nero.ss.entity.AbstractArtifactSpiritPatch;
 import net.p1nero.ss.entity.sword.AbstractSwordEntity;
+import net.p1nero.ss.gameassets.animations.ScreenSwordAnimations;
 import org.jetbrains.annotations.Nullable;
 import yesman.epicfight.api.animation.AnimationPlayer;
 import yesman.epicfight.api.animation.Joint;
@@ -112,7 +114,9 @@ public class ArtifactSpiritMultiPhaseAttackAnimation extends AttackAnimation {
 
                             if (attackResult.resultType.dealtDamage()) {
                                 artifactSpiritPatch.getOwnerPatch().getEventListener().triggerEvents(PlayerEventListener.EventType.DEALT_DAMAGE_EVENT_POST, new DealtDamageEvent(((ServerPlayerPatch) artifactSpiritPatch.getOwnerPatch()), trueEntity, source, attackResult.damage));
-
+                                if(this.equals(ScreenSwordAnimations.KILL_AURA_2)){
+                                    trueEntity.setSecondsOnFire(5);
+                                }
                                 hit.level.playSound(null, hit.getX(), hit.getY(), hit.getZ(), this.getHitSound(entityPatch, phase), hit.getSoundSource(), 1.0F, 1.0F);
                                 this.spawnHitParticle((ServerLevel)hit.getLevel(), entityPatch, hit, phase);
                             }

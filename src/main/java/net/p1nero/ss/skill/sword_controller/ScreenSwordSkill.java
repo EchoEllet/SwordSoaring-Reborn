@@ -118,7 +118,7 @@ public class ScreenSwordSkill extends KillAuraSkill {
     public List<Object> getTooltipArgsOfScreen(List<Object> list) {
         list.add(this.maxProtectCount);
         list.add(this.healCount);
-        return list;
+        return super.getTooltipArgsOfScreen(list);
     }
 
     @Override

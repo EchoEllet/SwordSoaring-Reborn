@@ -1,6 +1,7 @@
 package net.p1nero.ss.gameassets.animations;
 
 import net.p1nero.ss.animation.ArtifactSpiritMultiPhaseAttackAnimation;
+import net.p1nero.ss.animation.AutoDiscardAnimation;
 import net.p1nero.ss.entity.sword.fly_sword.FlySwordArmature;
 import net.p1nero.ss.entity.sword.fly_sword.FlySwordEntity;
 import net.p1nero.ss.gameassets.SwordSoaringArmatures;
@@ -49,9 +50,15 @@ public class FlySwordAnimations {
                 .addProperty(AnimationProperty.ActionAnimationProperty.MOVE_VERTICAL, true)
                 .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 0.3F))
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, SET_ANIMATION_END);
-        FLY_SWORD_ATK_3 = new AttackAnimation(0.15F, "fly_sword/fly_sword_atk_3", flySwordArmature)
+        FLY_SWORD_ATK_3 = new AutoDiscardAnimation(0.15F, "fly_sword/fly_sword_atk_3", flySwordArmature,
+                new AttackAnimation.Phase(0.0F, 0.0F, 1, 1, 1, flySwordArmature.body, SwordSoaringColliders.FLY_SWORD_COMMON))
                 .addProperty(AnimationProperty.ActionAnimationProperty.MOVE_VERTICAL, true)
-                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 0.2F));
+                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 0.17F))
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_BEGIN_EVENTS, AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> {
+                    if(livingEntityPatch.getOriginal() instanceof FlySwordEntity flySwordEntity){
+                        flySwordEntity.setRotationLock(false);
+                    }
+                }, AnimationEvent.Side.SERVER));
         FLY_SWORD_ATK_IDLE = new StaticAnimation(true, "fly_sword/fly_sword_idle", flySwordArmature);
         FLY_SWORD_ATK_FLY = new StaticAnimation(true, "fly_sword/fly_sword_fly", flySwordArmature);
         FLY_SWORD_ATK_FLY_BACK = new ActionAnimation(0.15F, "fly_sword/fly_sword_back", flySwordArmature)

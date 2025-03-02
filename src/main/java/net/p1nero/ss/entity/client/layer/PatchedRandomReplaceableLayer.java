@@ -7,9 +7,6 @@ import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -23,7 +20,7 @@ import yesman.epicfight.api.animation.Joint;
 import yesman.epicfight.api.client.model.AnimatedMesh;
 import yesman.epicfight.api.utils.math.OpenMatrix4f;
 import yesman.epicfight.client.renderer.patched.layer.PatchedLayer;
-import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
+import yesman.epicfight.world.item.EpicFightItems;
 
 import java.util.Collections;
 import java.util.List;
@@ -36,7 +33,7 @@ public class PatchedRandomReplaceableLayer<E extends AbstractArtifactSpiritEntit
 
     protected void renderLayer(T entityPatch, E entity, RenderLayer<E, M> vanillaLayer, PoseStack postStack, MultiBufferSource buffer, int packedLightIn, OpenMatrix4f[] poses, float bob, float yRot, float xRot, float partialTicks) {
         if (entityPatch.getArmature() instanceof IReplaceableArmature armature) {
-            renderItemInJoint(entity, entityPatch, armature, poses, buffer, postStack, packedLightIn);
+            renderItemInJoint(entity, entityPatch, armature, poses, buffer, postStack, 0xf000ff);
         }
     }
 
@@ -47,6 +44,9 @@ public class PatchedRandomReplaceableLayer<E extends AbstractArtifactSpiritEntit
         if (entity.getOwner() != null) {
             SSPlayer ssPlayer = entity.getOwner().getCapability(SSCapabilityProvider.SS_PLAYER).orElse(new SSPlayer());
             List<Item> babylons = ssPlayer.getValidBabylonItems();
+            if(babylons.isEmpty()){
+                PatchedReplaceableLayer.renderItemInJoint(EpicFightItems.GOLDEN_LONGSWORD.get().getDefaultInstance(), artifactSpiritPatch, armature, poses, buffer, poseStack, packedLight);
+            }
             Collections.shuffle(babylons);//打乱
             List<Joint> jointList = armature.getJoints(artifactSpiritPatch);
 

@@ -25,6 +25,8 @@ import yesman.epicfight.skill.SkillDataManager;
 import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 
+import java.util.List;
+
 public class KillAuraSkill extends Skill {
     protected int lifeTime, cooldown;
     protected StaticAnimationProvider playerSummonAnim;
@@ -107,6 +109,13 @@ public class KillAuraSkill extends Skill {
         if(cooldown > 0){
             container.getDataManager().setData(COOL_DOWN_TIMER, cooldown - 1);
         }
+    }
+
+    @Override
+    public List<Object> getTooltipArgsOfScreen(List<Object> list) {
+        list.add(this.lifeTime / 20.0);
+        list.add(this.cooldown / 20.0);
+        return list;
     }
 
     @Override
