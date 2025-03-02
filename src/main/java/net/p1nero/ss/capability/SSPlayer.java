@@ -55,35 +55,6 @@ public class SSPlayer {
         vatanseverShootEntities.clear();
     }
 
-    private final ArrayList<Item> validBabylonItems = new ArrayList<>();
-    public void calculateValidBabylonItems(Player player){
-        for(ItemStack itemStack : player.getInventory().items){
-            if(!validBabylonItems.contains(itemStack.getItem())){
-                validBabylonItems.add(itemStack.getItem());
-            }
-            if(ModList.get().isLoaded("sophisticatedbackpacks")){
-                if(itemStack.getItem() instanceof BackpackItem){
-                    itemStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(iItemHandler -> {
-                        for(int i = 0; i < iItemHandler.getSlots(); i ++){
-                            Item inSideItem = iItemHandler.getStackInSlot(i).getItem();
-                            if(!validBabylonItems.contains(inSideItem)){
-                                validBabylonItems.add(inSideItem);
-                            }
-                        }
-                    });
-                }
-            }
-        }
-
-        if(!player.level.isClientSide){
-            PacketRelay.sendToAll(PacketHandler.INSTANCE, new RequestValidBabylonSyncPacket());
-        }
-    }
-
-    public ArrayList<Item> getValidBabylonItems() {
-        return validBabylonItems;
-    }
-
     public void saveNBTData(CompoundTag tag){
 
     }

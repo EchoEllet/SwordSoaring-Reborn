@@ -139,14 +139,6 @@ public class FlySwordEntity extends AbstractSwordEntity {
         }
     }
 
-    @Override
-    public void tick() {
-        super.tick();
-        setYBodyRot(120);
-        setYRot(120);
-        setYHeadRot(120);
-    }
-
     public void addOwnerSwordCount(){
         if(getOwnerPatch() instanceof ServerPlayerPatch serverPlayerPatch){
             SkillDataManager manager = serverPlayerPatch.getSkill(SkillSlots.WEAPON_PASSIVE).getDataManager();

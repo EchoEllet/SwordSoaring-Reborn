@@ -34,10 +34,14 @@ public class ScreenSwordEntity extends AbstractSwordEntity {
                 SkillDataManager dataManager = serverPlayerPatch.getSkill(SwordSoaringSkillSlots.SWORD_CONTROLLER).getDataManager();
                 //时间到了或次数用尽就紫砂
                 if(dataManager.hasData(ScreenSwordSkill.PROTECT_COUNT)){
-                    if(tickCount == maxTickCount || dataManager.getDataValue(ScreenSwordSkill.PROTECT_COUNT) <= 0){
+                    if(dataManager.getDataValue(ScreenSwordSkill.PROTECT_COUNT) <= 0){
                         dataManager.setDataSync(ScreenSwordSkill.PROTECT_COUNT, 0, serverPlayerPatch.getOriginal());
                         this.discard();
+                        return;
                     }
+                }
+                if(tickCount == maxTickCount){
+                    this.discard();
                 }
             }
 

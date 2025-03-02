@@ -23,7 +23,8 @@ public class BabylonArmature extends Armature implements IReplaceableArmature {
 
     public final ImmutableList<Joint> joints;
     public BabylonArmature(int jointNumber, Joint rootJoint, Map<String, Joint> jointMap) {
-        super(jointNumber, rootJoint, jointMap);W001 = getOrLogException(jointMap, "W.001");
+        super(jointNumber, rootJoint, jointMap);
+        W001 = getOrLogException(jointMap, "W.001");
         W002 = getOrLogException(jointMap, "W.002");
         W003 = getOrLogException(jointMap, "W.003");
         W004 = getOrLogException(jointMap, "W.004");

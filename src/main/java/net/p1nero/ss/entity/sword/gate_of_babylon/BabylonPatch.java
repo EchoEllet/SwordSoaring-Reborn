@@ -7,7 +7,11 @@ import net.minecraftforge.event.entity.living.LivingEvent;
 import net.p1nero.ss.entity.AbstractArtifactSpiritPatch;
 import net.p1nero.ss.gameassets.SwordSoaringColliders;
 import net.p1nero.ss.gameassets.animations.BabylonAnimations;
+import net.p1nero.ss.network.PacketHandler;
+import net.p1nero.ss.network.PacketRelay;
+import net.p1nero.ss.network.packet.server.RequestEntityPlayAnimationPacket;
 import yesman.epicfight.api.animation.LivingMotions;
+import yesman.epicfight.api.animation.types.StaticAnimation;
 import yesman.epicfight.api.client.animation.ClientAnimator;
 import yesman.epicfight.api.collider.Collider;
 
@@ -23,7 +27,9 @@ public class BabylonPatch extends AbstractArtifactSpiritPatch<BabylonEntity> {
         super.clientTick(event);
         if(!played){
             if(this.isLogicalClient() && this.getOwnerPatch() != null){
-
+                StaticAnimation toPlay = BabylonAnimations.BABYLON_SHOOT;
+                this.animator.playAnimation(toPlay, 0.0001F);
+                PacketRelay.sendToServer(PacketHandler.INSTANCE, new RequestEntityPlayAnimationPacket(this.getOriginal().getId(), toPlay.getNamespaceId(), toPlay.getId(), 0.0001F));
                 played = true;
             }
         }
@@ -31,7 +37,7 @@ public class BabylonPatch extends AbstractArtifactSpiritPatch<BabylonEntity> {
 
     @Override
     public void initAnimator(ClientAnimator animator) {
-        animator.addLivingAnimation(LivingMotions.IDLE, BabylonAnimations.BABYLON_SHOOT);
+        animator.addLivingAnimation(LivingMotions.IDLE, BabylonAnimations.BABYLON_IDLE);
         animator.setCurrentMotionsAsDefault();
     }
 

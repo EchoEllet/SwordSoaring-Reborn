@@ -1,12 +1,16 @@
 package net.p1nero.ss.util;
 
 import net.minecraft.world.phys.Vec3;
+import net.p1nero.ss.animation.ArtifactSpiritMultiPhaseAttackAnimation;
 import yesman.epicfight.api.animation.Animator;
 import yesman.epicfight.api.animation.Joint;
 import yesman.epicfight.api.animation.Pose;
 import yesman.epicfight.api.utils.math.OpenMatrix4f;
 import yesman.epicfight.api.utils.math.Vec3f;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AnimationUtils {
 
@@ -20,6 +24,14 @@ public class AnimationUtils {
         OpenMatrix4f JointTf = new OpenMatrix4f(entityPatch.getArmature().getBindedTransformFor(pose, joint)).mulFront(modelTf);
 
         return OpenMatrix4f.transform(JointTf, Vec3.ZERO);
+    }
+
+    public static ArtifactSpiritMultiPhaseAttackAnimation.MultiAttackPhase[] getPhases(List<Joint> joints, float maxTime){
+        ArrayList<ArtifactSpiritMultiPhaseAttackAnimation.MultiAttackPhase> multiAttackPhases = new ArrayList<>();
+        for(Joint joint : joints){
+            multiAttackPhases.add(new ArtifactSpiritMultiPhaseAttackAnimation.MultiAttackPhase(0.01F, 0.01F, maxTime, maxTime, Float.MAX_VALUE, joint, null));
+        }
+        return multiAttackPhases.toArray(new ArtifactSpiritMultiPhaseAttackAnimation.MultiAttackPhase[0]);
     }
 
 }

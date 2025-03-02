@@ -18,7 +18,7 @@ public class BabylonRenderer extends MobRenderer<BabylonEntity, EmptyEntityModel
 
     @Override
     public boolean shouldRender(@NotNull BabylonEntity pLivingEntity, @NotNull Frustum pCamera, double pCamX, double pCamY, double pCamZ) {
-        return pLivingEntity.tickCount > 5;
+        return pLivingEntity.tickCount > 15;
     }
 
     @Override

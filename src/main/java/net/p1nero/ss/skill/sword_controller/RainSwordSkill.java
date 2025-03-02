@@ -3,14 +3,17 @@ package net.p1nero.ss.skill.sword_controller;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.p1nero.ss.SwordSoaring;
 import net.p1nero.ss.entity.sword.fly_sword.FlySwordEntity;
 import net.p1nero.ss.gameassets.animations.ScreenSwordAnimations;
+import net.p1nero.ss.util.vfx.ParticleVFX;
 import yesman.epicfight.client.gui.BattleModeGui;
 import yesman.epicfight.skill.Skill;
 import yesman.epicfight.skill.SkillContainer;
@@ -78,22 +81,42 @@ public class RainSwordSkill extends Skill {
     public void executeOnServer(ServerPlayerPatch executer, FriendlyByteBuf args) {
         super.executeOnServer(executer, args);
         executer.getSkill(this).getDataManager().setDataSync(COOLDOWN_TIMER, cooldown, executer.getOriginal());
-        executer.playAnimationSynchronized(ScreenSwordAnimations.PLAYER_SUMMON_SWORD, 0.15F);
+        executer.playAnimationSynchronized(ScreenSwordAnimations.PLAYER_SUMMON_SCREEN_SWORD, 0.15F);
         executer.playSound(SoundEvents.EVOKER_PREPARE_SUMMON, 0.0F, 0.0F);
     }
 
     @Override
     public void updateContainer(SkillContainer container) {
         super.updateContainer(container);
-        int cooldown = container.getDataManager().getDataValue(COOLDOWN_TIMER);
-        if (cooldown > 0) {
-            container.getDataManager().setData(COOLDOWN_TIMER, cooldown - 1);
+        int currentCooldown = container.getDataManager().getDataValue(COOLDOWN_TIMER);
+        if (currentCooldown > 0) {
+            container.getDataManager().setData(COOLDOWN_TIMER, currentCooldown - 1);
+        }
+        int currentLifetime = this.cooldown - currentCooldown;
+        if (currentLifetime < this.lifeTime && container.getExecuter().isLogicalClient()) {
+            Player player = container.getExecuter().getOriginal();
+            if (currentLifetime <= 10) {
+                ParticleVFX.createBigDipperXZParticle(ParticleTypes.END_ROD, player.level, player.getEyePosition(), -1, 0.8F, player.getYRot(), 0, -0.1F, 0);
+                ParticleVFX.createBigDipperXZParticle(ParticleTypes.WAX_OFF, player.level, player.position().add(0, 0.3, 0), 0.1F, 0.8F, player.getYRot(), 0, 0.0F, 0);
+            } else if (currentLifetime % 30 == 0) {
+                if (currentLifetime % 60 == 0) {
+                    ParticleVFX.createBigDipperXZParticle(ParticleTypes.END_ROD, player.level, player.position().add(0, 0.3, 0), -1, 1.5F, currentLifetime, 0, 0.05F, 0);
+                    ParticleVFX.createBigDipperXZParticle(ParticleTypes.END_ROD, player.level, player.position().add(0, 0.3, 0), -1, 1.5F, currentLifetime, 0, 0, 0);
+                    ParticleVFX.createBigDipperXZParticle(ParticleTypes.END_ROD, player.level, player.position().add(0, 0.3, 0), -1, 1.5F, currentLifetime, 0, -0.05F, 0);
+                    ParticleVFX.createBigDipperXZParticle(ParticleTypes.WAX_ON, player.level, player.position().add(0, 0.3, 0), 0.1F, 1.5F, currentLifetime, 0, -0.15F, 0);
+                    ParticleVFX.createBigDipperXZParticle(ParticleTypes.WAX_OFF, player.level, player.position().add(0, 0.3, 0), -1, 1.5F, currentLifetime, 0, 0.00F, 0);
+                } else {
+                    ParticleVFX.createBigDipperXYParticle(ParticleTypes.END_ROD, player.level, player.getEyePosition().add(0, 1, 0), -1, 0.8F, player.getYRot(), currentLifetime, 0, 0, 0);
+                    ParticleVFX.createBigDipperXYParticle(ParticleTypes.WAX_ON, player.level, player.getEyePosition().add(0, 1, 0), -1, 0.8F, player.getYRot(), currentLifetime, 0, 0, 0);
+                    ParticleVFX.createBigDipperXYParticle(ParticleTypes.WAX_OFF, player.level, player.getEyePosition().add(0, 1, 0), 0.1F, 0.8F, player.getYRot(), currentLifetime, 0, 0.00F, 0);
+                }
+            }
         }
         int delayTimer = container.getDataManager().getDataValue(DELAY_TIMER);
         if (delayTimer > 0) {
             if (!container.getExecuter().isLogicalClient() && delayTimer % interval == 0) {
                 LivingEntity target = container.getExecuter().getTarget();
-                if(target != null){
+                if (target != null) {
                     FlySwordEntity flySwordEntity = new FlySwordEntity(container.getExecuter().getOriginal(), -114, target);
                     flySwordEntity.setRotationLock(false);
                     float yRot = (delayTimer * 1.0F / interval) / maxCount * 360.0F;

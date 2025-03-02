@@ -18,9 +18,7 @@ public record RequestValidBabylonSyncPacket() implements BasePacket {
     @Override
     public void execute(@Nullable Player player) {
         if(Minecraft.getInstance().player != null && Minecraft.getInstance().level != null){
-            Minecraft.getInstance().player.getCapability(SSCapabilityProvider.SS_PLAYER).ifPresent(ssPlayer -> {
-                ssPlayer.calculateValidBabylonItems(Minecraft.getInstance().player);
-            });
+
         }
     }
 }

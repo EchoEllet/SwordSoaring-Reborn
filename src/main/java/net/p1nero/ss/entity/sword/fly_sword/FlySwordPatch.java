@@ -35,7 +35,6 @@ public class FlySwordPatch extends AbstractArtifactSpiritPatch<FlySwordEntity> {
                 StaticAnimation toPlay = getInitAnimation(this.getOwnerPatch());
                 this.animator.playAnimation(toPlay, 0.0001F);
                 PacketRelay.sendToServer(PacketHandler.INSTANCE, new RequestEntityPlayAnimationPacket(this.getOriginal().getId(), toPlay.getNamespaceId(), toPlay.getId(), 0.0001F));
-
                 played = true;
             }
         }
@@ -85,9 +84,7 @@ public class FlySwordPatch extends AbstractArtifactSpiritPatch<FlySwordEntity> {
             float yRot = (float) MathUtils.getYRotOfVector(dir);
             return MathUtils.getModelMatrixIntegral(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, xRot, xRot, yRot, yRot, 1.0F, 1.0F, 1.0F, 1.0F);
         }
-        System.out.println("modify");
-        return getOwnerPatch().getModelMatrix(partialTicks);
-//        return super.getModelMatrix(partialTicks);
+        return super.getModelMatrix(partialTicks);
     }
 
 }

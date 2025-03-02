@@ -15,6 +15,7 @@ import net.p1nero.ss.item.VatanseverItem;
 import yesman.epicfight.api.animation.AnimationPlayer;
 import yesman.epicfight.api.client.animation.Layer;
 import yesman.epicfight.api.client.model.AnimatedMesh;
+import yesman.epicfight.api.model.Armature;
 import yesman.epicfight.api.utils.math.OpenMatrix4f;
 import yesman.epicfight.client.renderer.patched.entity.PatchedLivingEntityRenderer;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
@@ -31,8 +32,10 @@ public abstract class PatchedSwordRenderer<E extends AbstractSwordEntity, T exte
     public void render(E entityIn, T entityPatch, LivingEntityRenderer<E, M> renderer, MultiBufferSource buffer, PoseStack poseStack, int packedLight, float partialTicks) {
         if(entityIn.getOwner() != null && !(entityIn.getItemStack(entityPatch).getItem() instanceof VatanseverItem)){
             this.addPatchedLayer(ReplaceableRenderLayer.class, new PatchedReplaceableLayer<>());
+            Armature armature = entityPatch.getArmature();
+            this.mulPoseStack(poseStack, armature, entityIn, entityPatch, partialTicks);
             OpenMatrix4f[] poseMatrices = this.getPoseMatrices(entityPatch, entityPatch.getArmature(), partialTicks);
-            this.renderLayer(renderer, entityPatch, entityIn, poseMatrices, buffer, poseStack, packedLight, partialTicks);
+            this.renderLayer(renderer, entityPatch, entityIn, poseMatrices, buffer, poseStack, 0xf000ff, partialTicks);
 
             //画攻击碰撞箱
             Minecraft mc = Minecraft.getInstance();
