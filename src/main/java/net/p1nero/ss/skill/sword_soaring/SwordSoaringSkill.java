@@ -145,6 +145,12 @@ public class SwordSoaringSkill extends Skill {
             }
         });
 
+        container.getExecuter().getEventListener().addEventListener(PlayerEventListener.EventType.SKILL_EXECUTE_EVENT, EVENT_UUID, skillExecuteEvent -> {
+            if (container.getDataManager().getDataValue(FLYING) && !skillExecuteEvent.getPlayerPatch().isLogicalClient()) {
+                stopFlying(container, ((ServerPlayer) skillExecuteEvent.getPlayerPatch().getOriginal()));
+            }
+        });
+
         //成为大师后，初级和高级飞行将不消耗耐力
         Collection<?> capabilitySkill = container.getExecuter().getSkillCapability().getLearnedSkills(SwordSoaringSkillCategories.SWORD_SOARING);
         if(capabilitySkill.contains(FlyingSkills.SWORD_SOARING_MASTER) || capabilitySkill.contains(FlyingSkills.SWORD_SOARING_ELYTRA_MASTER)){
@@ -173,6 +179,7 @@ public class SwordSoaringSkill extends Skill {
         listener.removeListener(PlayerEventListener.EventType.HURT_EVENT_POST, EVENT_UUID);
         listener.removeListener(PlayerEventListener.EventType.FALL_EVENT, EVENT_UUID);
         listener.removeListener(PlayerEventListener.EventType.BASIC_ATTACK_EVENT, EVENT_UUID);
+        listener.removeListener(PlayerEventListener.EventType.SKILL_EXECUTE_EVENT, EVENT_UUID);
     }
 
     @Override

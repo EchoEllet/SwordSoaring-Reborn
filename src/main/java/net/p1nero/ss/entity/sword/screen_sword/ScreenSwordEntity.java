@@ -36,16 +36,20 @@ public class ScreenSwordEntity extends AbstractSwordEntity {
                 if(dataManager.hasData(ScreenSwordSkill.PROTECT_COUNT)){
                     if(dataManager.getDataValue(ScreenSwordSkill.PROTECT_COUNT) <= 0){
                         dataManager.setDataSync(ScreenSwordSkill.PROTECT_COUNT, 0, serverPlayerPatch.getOriginal());
+                        if(getOwner().isCurrentlyGlowing()){
+                            getOwner().setGlowingTag(false);
+                        }
                         this.discard();
                         return;
                     }
                 }
                 if(tickCount == maxTickCount){
+                    if(getOwner().isCurrentlyGlowing()){
+                        getOwner().setGlowingTag(false);
+                    }
                     this.discard();
                 }
             }
-
-
         }
     }
 

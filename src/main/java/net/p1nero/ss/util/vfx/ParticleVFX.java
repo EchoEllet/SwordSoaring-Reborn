@@ -236,6 +236,13 @@ public class ParticleVFX {
         return new ArrayList<>(path);
     }
 
+    public static void createLineBetweenJoint(LivingEntityPatch<?> entityPatch, Joint joint1, Joint joint2, ParticleOptions particleOptions, int count) {
+        Vec3 pos1 = AnimationUtils.getJointWorldPos(entityPatch, joint1);
+        Vec3 pos2 = AnimationUtils.getJointWorldPos(entityPatch, joint2);
+        LivingEntity livingEntity = entityPatch.getOriginal();
+        createLineSegmentParticles(livingEntity.level, pos1, pos2, particleOptions, count, livingEntity.getDeltaMovement());
+    }
+
 
     public static void createRandomLine(Level level, Vec3 center, ParticleOptions particleOptions, double minSpeed, double maxSpeed, int particleCount) {
         Random random1 = level.random;
@@ -421,6 +428,14 @@ public class ParticleVFX {
         }
     }
 
+    public static void createLineSegmentParticles(Level level, Vec3 start, Vec3 end, ParticleOptions particleOptions, int particleCount, Vec3 deltaMovement) {
+        Vec3 direction = end.subtract(start);
+        for (int i = 0; i < particleCount; i++) {
+            double t = (double) i / (particleCount - 1);
+            Vec3 pos = start.add(direction.scale(t));
+            level.addParticle(particleOptions, pos.x, pos.y, pos.z, deltaMovement.x, deltaMovement.y, deltaMovement.z);
+        }
+    }
 
     public static void createLineSegmentParticles(Level level, Vec3 start, Vec3 end, ParticleOptions particleOptions, double minSpeed, double maxSpeed, int particleCount) {
         Random random = level.random;

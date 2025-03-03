@@ -45,6 +45,7 @@ public class KillAuraSkill extends Skill {
         super.setParams(parameters);
         lifeTime = parameters.getInt("life_time");
         cooldown = parameters.getInt("cooldown");
+        cooldown += lifeTime;
     }
 
     public int getMaxCooldown() {
@@ -86,7 +87,7 @@ public class KillAuraSkill extends Skill {
 
     @Override
     public boolean canExecute(PlayerPatch<?> executer) {
-        return SwordSoaring.isValidSword(executer.getValidItemInHand(InteractionHand.MAIN_HAND)) && (executer.getSkill(this).getDataManager().getDataValue(COOL_DOWN_TIMER) <= 0 || executer.getOriginal().isCreative());
+        return executer.getOriginal().isOnGround() && SwordSoaring.isValidSword(executer.getValidItemInHand(InteractionHand.MAIN_HAND)) && (executer.getSkill(this).getDataManager().getDataValue(COOL_DOWN_TIMER) <= 0 || executer.getOriginal().isCreative());
     }
 
     @Override
@@ -133,7 +134,7 @@ public class KillAuraSkill extends Skill {
         poseStack.translate(0.0, (float) gui.getSlidingProgression(), 0.0);
         RenderSystem.setShaderTexture(0, getSkillTexture());
         GuiComponent.blit(poseStack, (int) x, (int) y, 24, 24, 0.0F, 0.0F, 1, 1, 1, 1);
-        gui.font.drawShadow(poseStack, String.format("%.1f", (container.getDataManager().getDataValue(COOL_DOWN_TIMER) / 20.0)), x + 6.0F, y + 8.0F, 16777215);
+        gui.font.drawShadow(poseStack, String.format("%.1f", (container.getDataManager().getDataValue(COOL_DOWN_TIMER) / 20.0)), x + 6.0F, y + 8.0F, 16733525);
     }
 
     public static class Builder extends Skill.Builder<KillAuraSkill> {

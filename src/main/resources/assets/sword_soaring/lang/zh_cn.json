@@ -32,6 +32,8 @@
   "skill.sword_soaring.babylon.tooltip": "从王之宝库中获取所有物品，并化为剑射向前方\\n\\n §e§l「哼。因为有用于回收的优秀宝具」\n\n冷却： %.1f s",
 
   "key.sword_soaring.common": "史诗战斗：御剑飞行",
+  "key.sword_soaring.sword_skill": "御剑技",
+  "key.sword_soaring.sword_back": "收剑（卫国者）",
   "key.sword_soaring.take_off": "开始飞行",
   "key.sword_soaring.acceleration": "加速",
   "key.sword_soaring.switch_mode": "切换模式",
