@@ -1,8 +1,10 @@
 package net.p1nero.ss.entity.sword.fly_sword;
 
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
@@ -11,12 +13,21 @@ import net.minecraft.world.phys.Vec3;
 import net.p1nero.ss.entity.AbstractArtifactSpiritEntity;
 import net.p1nero.ss.entity.SwordSoaringEntities;
 import net.p1nero.ss.entity.sword.AbstractSwordEntity;
+import net.p1nero.ss.entity.vatansever.VatanseverEntityPatch;
+import net.p1nero.ss.gameassets.SwordSoaringArmatures;
 import net.p1nero.ss.gameassets.animations.FlySwordAnimations;
+import net.p1nero.ss.gameassets.animations.VatanseverAnimations;
 import net.p1nero.ss.skill.weapon_passive.VatanseverPassive;
+import net.p1nero.ss.util.AnimationUtils;
+import net.p1nero.ss.util.vfx.ParticleVFX;
 import yesman.epicfight.api.utils.math.MathUtils;
 import yesman.epicfight.skill.SkillDataManager;
 import yesman.epicfight.skill.SkillSlots;
+import yesman.epicfight.world.capabilities.EpicFightCapabilities;
+import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
+
+import java.util.Random;
 
 public class FlySwordEntity extends AbstractSwordEntity {
     private int maxTickCount = -1;
@@ -109,14 +120,22 @@ public class FlySwordEntity extends AbstractSwordEntity {
     @Override
     protected void moveToOwner(LivingEntity owner) {
         if(isFlyingBack()){
+            Vec3 vec3 = AnimationUtils.getJointWorldPos(getPatch(), SwordSoaringArmatures.flySwordArmature.body);
+            ParticleVFX.createSphereParticles(level,vec3,ParticleTypes.SMOKE,0.2,0.01,0.05,100);
+            FlySwordAnimations.flySwordDamage(getPatch(),2,2.5F);
             if(!level.isClientSide){
                 if(this.position().distanceTo(owner.getEyePosition()) < 1.5){
+                    ((ServerLevel)level).sendParticles( ParticleTypes.SMOKE,getX(),getY(),getZ(),
+                            300,
+                            0.5,
+                            0.5,
+                            0.5,
+                            0.5);
                     addOwnerSwordCount();
                     this.discard();
                     return;
-                    //TODO 补特效
                 }
-                Vec3 dir = owner.getEyePosition().subtract(this.getEyePosition()).normalize().scale(1.5F);
+                Vec3 dir = owner.getEyePosition().subtract(this.getEyePosition()).normalize().scale(0.8F);
                 setDeltaMovement(dir);//旋转在Patch里操作
             }
         } else {

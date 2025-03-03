@@ -9,6 +9,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -16,6 +17,7 @@ import net.minecraft.world.phys.Vec3;
 import net.p1nero.ss.animation.*;
 import net.p1nero.ss.capability.SSCapabilityProvider;
 import net.p1nero.ss.client.sound.SwordSoaringSounds;
+import net.p1nero.ss.entity.AbstractArtifactSpiritPatch;
 import net.p1nero.ss.entity.sword.fly_sword.FlySwordEntity;
 import net.p1nero.ss.entity.vatansever.VatanseverArmature;
 import net.p1nero.ss.entity.vatansever.VatanseverEntity;
@@ -24,15 +26,14 @@ import net.p1nero.ss.entity.vatansever_storm.VatanseverStormEntity;
 import net.p1nero.ss.entity.vatansever_storm.VatanseverStormEntityPatch;
 import net.p1nero.ss.gameassets.SwordSoaringArmatures;
 import net.p1nero.ss.gameassets.SwordSoaringColliders;
+import net.p1nero.ss.skill.weapon_innate.VatanseverWeaponInnateSkill;
+import net.p1nero.ss.skill.weapon_passive.ArtifactSpiritPassiveSkill;
 import net.p1nero.ss.skill.weapon_passive.VatanseverPassive;
-import yesman.epicfight.api.animation.Animator;
 import yesman.epicfight.api.animation.Joint;
-import yesman.epicfight.api.animation.Pose;
 import yesman.epicfight.api.animation.property.AnimationEvent;
 import yesman.epicfight.api.animation.property.AnimationProperty;
 import yesman.epicfight.api.animation.types.*;
 import yesman.epicfight.api.collider.Collider;
-import yesman.epicfight.api.model.Armature;
 import yesman.epicfight.api.utils.LevelUtil;
 import yesman.epicfight.api.utils.math.OpenMatrix4f;
 import yesman.epicfight.api.utils.math.ValueModifier;
@@ -41,8 +42,10 @@ import yesman.epicfight.gameasset.Armatures;
 import yesman.epicfight.gameasset.EpicFightSounds;
 import yesman.epicfight.model.armature.HumanoidArmature;
 import yesman.epicfight.skill.SkillDataManager;
+import yesman.epicfight.skill.SkillSlot;
 import yesman.epicfight.skill.SkillSlots;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
+import yesman.epicfight.world.capabilities.entitypatch.EntityPatch;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 
@@ -150,7 +153,6 @@ public class VatanseverAnimations {
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F)),
                 new ArtifactSpiritMultiPhaseAttackAnimation.MultiAttackPhase(0.0F, 0.7F, 1.0F, 1.60F, Float.MAX_VALUE, vatanseverArmature.L3, SwordSoaringColliders.VATANSEVER)
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F)),
-
                 new ArtifactSpiritMultiPhaseAttackAnimation.MultiAttackPhase(1.8F, 1.8F, 1.9F, 1.9F, Float.MAX_VALUE, vatanseverArmature.L1, SwordSoaringColliders.VATANSEVER)
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F)),
                 new ArtifactSpiritMultiPhaseAttackAnimation.MultiAttackPhase(1.8F, 1.8F, 1.9F, 1.9F, Float.MAX_VALUE, vatanseverArmature.L2, SwordSoaringColliders.VATANSEVER)
@@ -224,30 +226,34 @@ public class VatanseverAnimations {
                         AnimationEvent.TimeStampedEvent.create(0.7F, ((livingEntityPatch, staticAnimation, objects) -> {
                             swingSounds(livingEntityPatch);}), AnimationEvent.Side.BOTH),
                         AnimationEvent.TimeStampedEvent.create(1.56F, ((livingEntityPatch, staticAnimation, objects) -> {
-                            groundSplit(livingEntityPatch, 3, 0, 0, 0, 99999, 1.1F, 200);}), AnimationEvent.Side.BOTH),
+                            if (SwordCountis(livingEntityPatch,6)){
+                                groundSplit(livingEntityPatch, 3, 0, 0, 0, getTotalAttackDamage(livingEntityPatch)*3, 1.1F, 200);}}), AnimationEvent.Side.BOTH),
                         AnimationEvent.TimeStampedEvent.create(1.65F, ((livingEntityPatch, staticAnimation, objects) -> {
-                            groundSplit(livingEntityPatch, 3.8, 0, 0, 0, 99999, 1.1F, 200);}), AnimationEvent.Side.BOTH),
+                            if (SwordCountis(livingEntityPatch,4)){
+                                groundSplit(livingEntityPatch, 3.8, 0, 0, 0, getTotalAttackDamage(livingEntityPatch)*3, 1.1F, 200);}}), AnimationEvent.Side.BOTH),
                         AnimationEvent.TimeStampedEvent.create(1.74F, ((livingEntityPatch, staticAnimation, objects) -> {
-                            groundSplit(livingEntityPatch, 5, 0, 0, 0, 99999, 1.1F, 200);}), AnimationEvent.Side.BOTH));
+                            if (SwordCountis(livingEntityPatch,2)){
+                                groundSplit(livingEntityPatch, 5, 0, 0, 0, getTotalAttackDamage(livingEntityPatch)*3, 1.1F, 200);}}), AnimationEvent.Side.BOTH));
         PLAYER_AUTO3 = new LinkArtifactSpiritAnimation(0.15F, 2.25F, "biped/vatansever/vatansever_auto3_owner", biped, VATANSEVER_AUTO3)
                 .newTimePair(0.0F, 3.0F)
                 .addStateRemoveOld(EntityState.TURNING_LOCKED, true)
-                .addEvents(AnimationEvent.TimeStampedEvent.create(1F, ((livingEntityPatch, staticAnimation, objects) -> {
-                            groundSplit(livingEntityPatch, 3, 0, 0, 0, 99999, 1.1F, 200);
-                        }), AnimationEvent.Side.BOTH),
+                .addEvents(
+                        AnimationEvent.TimeStampedEvent.create(1F, ((livingEntityPatch, staticAnimation, objects) -> {
+                            if (SwordCountis(livingEntityPatch,5)){
+                                groundSplit(livingEntityPatch, 3, 0, 0, 0, getTotalAttackDamage(livingEntityPatch)*3, 1.1F, 200);}}), AnimationEvent.Side.BOTH),
                         AnimationEvent.TimeStampedEvent.create(1.09F, ((livingEntityPatch, staticAnimation, objects) -> {
-                            groundSplit(livingEntityPatch, 3.8, 0, 0, 0, 99999, 1.1F, 200);
-                        }), AnimationEvent.Side.BOTH),
+                            if (SwordCountis(livingEntityPatch,3)){
+                                groundSplit(livingEntityPatch, 3.8, 0, 0, 0, getTotalAttackDamage(livingEntityPatch)*3, 1.1F, 200);}}), AnimationEvent.Side.BOTH),
                         AnimationEvent.TimeStampedEvent.create(1.18F, ((livingEntityPatch, staticAnimation, objects) -> {
-                            groundSplit(livingEntityPatch, 5, 0, 0, 0, 99999, 1.1F, 200);
-                        }), AnimationEvent.Side.BOTH));
+                            if (SwordCountis(livingEntityPatch,1)){
+                                groundSplit(livingEntityPatch, 5, 0, 0, 0, getTotalAttackDamage(livingEntityPatch)*3, 1.1F, 200);}}), AnimationEvent.Side.BOTH));
         PLAYER_AUTO3_B = new LinkArtifactSpiritAnimation(0.15F, 4.0F, "biped/vatansever/vatansever_auto3_b_owner", biped, VATANSEVER_AUTO3_B)
                 .newTimePair(0.0F, 3.0F)
                 .addStateRemoveOld(EntityState.TURNING_LOCKED, true)
                 .addEvents(AnimationEvent.TimeStampedEvent.create(2.0F, ((livingEntityPatch, staticAnimation, objects) -> {
                     int n = 16;
                     for (int i = 0; i < n; ++i) {
-                        groundSplit(livingEntityPatch, 5 + i * 3, 0, 0, 0, 99999, 4, 100);
+                        groundSplit(livingEntityPatch, 5 + i * 3, 0, 0, 0, getTotalAttackDamage(livingEntityPatch)*3, 4, 100);
                     }
                 }), AnimationEvent.Side.BOTH));
         ;
@@ -255,17 +261,17 @@ public class VatanseverAnimations {
                 .newTimePair(1.0F, Float.MAX_VALUE)
                 .addStateRemoveOld(EntityState.TURNING_LOCKED, true)
                 .addEvents(AnimationEvent.TimeStampedEvent.create(1.38F, ((livingEntityPatch, staticAnimation, objects) -> {
-                    groundSplit(livingEntityPatch, 4.2, 0, 0, 0, 99999, 5, 2000);
+                    groundSplit(livingEntityPatch, 4.2, 0, 0, 0, getTotalAttackDamage(livingEntityPatch)*10, 5, 2000);
                 }), AnimationEvent.Side.BOTH));
         PLAYER_AUTO4_B = new LinkArtifactSpiritAnimation(0.15F, 4F, "biped/vatansever/vatansever_auto4_b_owner", biped, VATANSEVER_AUTO4_B)
                 .newTimePair(1.0F, Float.MAX_VALUE)
                 .addStateRemoveOld(EntityState.TURNING_LOCKED, true)
                 .addEvents(AnimationEvent.TimePeriodEvent.create(0.9F, 2.5F, (entityPatch, self, params) ->
                         {swingSounds(entityPatch);
-                        attractEntities(entityPatch, 15, 3, 3);},
+                        attractEntities(entityPatch, 15, getTotalAttackDamage(entityPatch), 3);},
                         AnimationEvent.Side.BOTH))
                 .addEvents(AnimationEvent.TimeStampedEvent.create(2.5F, ((livingEntityPatch, staticAnimation, objects) -> {
-                    groundSplit(livingEntityPatch, 0, 0, 0, 0, 99999, 4, 1000);
+                    groundSplit(livingEntityPatch, 0, 0, 0, 0, getTotalAttackDamage(livingEntityPatch)*3, 4, 1000);
                 }), AnimationEvent.Side.BOTH));
         PLAYER_INIT = new LinkArtifactSpiritAnimation(0.15F, 0, "biped/vatansever/vatansever_init", biped, VATANSEVER_INIT);
         PLAYER_FLY_BEGIN = new ActionAnimation(0.15F, "biped/vatansever/vatansever_fly_begin", biped)
@@ -536,5 +542,34 @@ public class VatanseverAnimations {
             }
         }
     }
+    public static float getTotalAttackDamage(EntityPatch entityPatch) {
+        LivingEntity owner = (LivingEntity) entityPatch.getOriginal();
+        double baseDamage = owner.getAttributeValue(Attributes.ATTACK_DAMAGE);
+        return (float) baseDamage;
+    }
 
+    public static VatanseverEntityPatch getVatanseverPatch(LivingEntityPatch ownerPatch){
+        if (ownerPatch instanceof ServerPlayerPatch serverPlayerPatch) {
+            if (serverPlayerPatch.getSkill(SkillSlots.WEAPON_PASSIVE) != null){
+                SkillDataManager manager = serverPlayerPatch.getSkill(SkillSlots.WEAPON_PASSIVE).getDataManager();
+                if(manager.hasData(ArtifactSpiritPassiveSkill.ARTIFACT_SPIRIT_ENTITY_ID)){
+                    Entity entity = serverPlayerPatch.getOriginal().level.getEntity(manager.getDataValue(ArtifactSpiritPassiveSkill.ARTIFACT_SPIRIT_ENTITY_ID));
+                    if(entity != null){
+                        VatanseverEntityPatch vatanseverEntityPatch = EpicFightCapabilities.getEntityPatch(entity,VatanseverEntityPatch.class);
+                        return vatanseverEntityPatch;
+                    }
+            }}
+        }return null;
+    }
+
+    public static boolean SwordCountis(LivingEntityPatch ownerPatch, float count){
+        if (getVatanseverPatch(ownerPatch) == null){
+            return false;
+        }else {
+            VatanseverEntityPatch vatanseverEntityPatch = getVatanseverPatch(ownerPatch);
+            if (vatanseverEntityPatch.getLeftSwordCount() >= count){
+                return true;
+            }
+        }return false;
+    }
 }

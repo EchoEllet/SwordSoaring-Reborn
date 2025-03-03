@@ -241,7 +241,7 @@ public class VatanseverStormAnimations {
                     entity.isAlive() && entity.distanceToSqr(Pos) <= damageRadius * damageRadius && !(entity instanceof Player player && player.isCreative()) && entity != source
             );
             for (LivingEntity entity : new ArrayList<>(entities)) {
-                if (entity.invulnerableTime >= 0 && source != null) {
+                if (entity.invulnerableTime == 0 && source != null) {
                     entity.hurt(DamageSource.indirectMagic(source, source), damage);
                     entity.invulnerableTime = 5;
                     if (!entity.level.isClientSide) {
