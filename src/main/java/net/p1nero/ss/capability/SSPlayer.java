@@ -52,7 +52,14 @@ public class SSPlayer {
     }
 
     public void clearVatanseverShootEntities(){
-        vatanseverShootEntities.clear();
+        Iterator<FlySwordEntity> iterator = vatanseverShootEntities.iterator();
+        while (iterator.hasNext()){
+            FlySwordEntity flySwordEntity = iterator.next();
+            if(flySwordEntity != null && flySwordEntity.isAlive()){
+                flySwordEntity.discard();
+            }
+            iterator.remove();
+        }
     }
 
     public void saveNBTData(CompoundTag tag){

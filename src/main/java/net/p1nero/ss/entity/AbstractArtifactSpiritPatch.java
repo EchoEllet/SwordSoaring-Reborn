@@ -3,6 +3,7 @@ package net.p1nero.ss.entity;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -15,8 +16,11 @@ import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.Faction;
 import yesman.epicfight.world.capabilities.entitypatch.MobPatch;
 import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
+import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 import yesman.epicfight.world.damagesource.EpicFightDamageSource;
 import yesman.epicfight.world.damagesource.StunType;
+import yesman.epicfight.world.entity.eventlistener.DealtDamageEvent;
+import yesman.epicfight.world.entity.eventlistener.PlayerEventListener;
 
 public abstract class AbstractArtifactSpiritPatch<T extends AbstractArtifactSpiritEntity> extends MobPatch<T> {
 
@@ -74,10 +78,17 @@ public abstract class AbstractArtifactSpiritPatch<T extends AbstractArtifactSpir
         return null;
     }
 
+    /**
+     * 视为主人攻击，并触发事件
+     */
     @Override
     public AttackResult attack(EpicFightDamageSource damageSource, Entity target, InteractionHand hand) {
         if (getOwnerPatch() != null) {
-            return getOwnerPatch().attack(damageSource, target, hand);
+            AttackResult result = getOwnerPatch().attack(damageSource, target, hand);
+            if(result.resultType.dealtDamage() && getOwnerPatch() instanceof ServerPlayerPatch serverPlayerPatch){
+                serverPlayerPatch.getEventListener().triggerEvents(PlayerEventListener.EventType.DEALT_DAMAGE_EVENT_POST, new DealtDamageEvent(serverPlayerPatch, target instanceof LivingEntity livingEntity ? livingEntity : null, damageSource, result.damage));
+            }
+            return result;
         }
         return super.attack(damageSource, target, hand);
     }

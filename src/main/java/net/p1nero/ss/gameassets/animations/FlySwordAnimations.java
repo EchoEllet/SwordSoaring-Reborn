@@ -82,6 +82,7 @@ public class FlySwordAnimations {
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_BEGIN_EVENTS, AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> {
                     if(livingEntityPatch.getOriginal() instanceof FlySwordEntity flySwordEntity){
                         flySwordEntity.setRotationLock(false);
+                        flySwordEntity.setGlowingTag(true);
                     }
                 }, AnimationEvent.Side.SERVER));
         FLY_SWORD_ATK_IDLE = new StaticAnimation(true, "fly_sword/fly_sword_idle", flySwordArmature);

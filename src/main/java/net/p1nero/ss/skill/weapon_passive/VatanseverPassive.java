@@ -5,6 +5,8 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.minecraftforge.eventbus.api.Event;
+import net.p1nero.ss.capability.SSCapabilityProvider;
+import net.p1nero.ss.capability.SSPlayer;
 import net.p1nero.ss.entity.AbstractArtifactSpiritEntity;
 import net.p1nero.ss.entity.vatansever.VatanseverEntity;
 import net.p1nero.ss.entity.vatansever.VatanseverEntityPatch;
@@ -98,6 +100,7 @@ public class VatanseverPassive extends ArtifactSpiritPassiveSkill{
                 abstractArtifactSpiritEntity.discard();
             }
         }
+        container.getExecuter().getOriginal().getCapability(SSCapabilityProvider.SS_PLAYER).ifPresent(SSPlayer::clearVatanseverShootEntities);
         container.getDataManager().setData(ARTIFACT_SPIRIT_ENTITY_ID, 0);
         container.getExecuter().getEventListener().removeListener(PlayerEventListener.EventType.SKILL_EXECUTE_EVENT, EVENT_UUID);
         container.getExecuter().getEventListener().removeListener(PlayerEventListener.EventType.TARGET_INDICATOR_ALERT_CHECK_EVENT, EVENT_UUID);

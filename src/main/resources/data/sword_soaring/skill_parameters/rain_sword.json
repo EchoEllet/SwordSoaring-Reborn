@@ -2,7 +2,7 @@
     "min_count": 3,
     "max_count": 7,
     "interval": 5,
-    "cooldown": 800,
+    "cooldown": 400,
     "life_time": 400,
     "xp_requirement": 5
 }

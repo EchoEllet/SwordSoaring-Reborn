@@ -3,6 +3,7 @@ package net.p1nero.ss.skill.sword_controller;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -30,6 +31,7 @@ public class RainSwordSkill extends Skill {
     private static final UUID EVENT_UUID = UUID.fromString("051a9bb2-1145-14ee-b962-0242ac191981");
     public static SkillDataManager.SkillDataKey<Integer> DELAY_TIMER = SkillDataManager.SkillDataKey.createDataKey(SkillDataManager.ValueType.INTEGER);
     public static SkillDataManager.SkillDataKey<Integer> COOLDOWN_TIMER = SkillDataManager.SkillDataKey.createDataKey(SkillDataManager.ValueType.INTEGER);
+    public static SkillDataManager.SkillDataKey<Boolean> PLAY_BIG_DIPPER = SkillDataManager.SkillDataKey.createDataKey(SkillDataManager.ValueType.BOOLEAN);
     private int lifeTime, minCount, maxCount, interval, cooldown;
 
     public RainSwordSkill(Builder<? extends Skill> builder) {
@@ -44,9 +46,7 @@ public class RainSwordSkill extends Skill {
         minCount = parameters.getInt("min_count");
         maxCount = parameters.getInt("max_count");
         cooldown = parameters.getInt("cooldown");
-        if (cooldown < lifeTime) {
-            throw new IllegalArgumentException("cooldown can not be less than lifetime!");
-        }
+        cooldown += lifeTime;
         if (minCount > maxCount) {
             throw new IllegalArgumentException("max count can not be less than min count!");
         }
@@ -57,6 +57,7 @@ public class RainSwordSkill extends Skill {
         super.onInitiate(container);
         container.getDataManager().registerData(DELAY_TIMER);
         container.getDataManager().registerData(COOLDOWN_TIMER);
+        container.getDataManager().registerData(PLAY_BIG_DIPPER);
         container.getExecuter().getEventListener().addEventListener(PlayerEventListener.EventType.BASIC_ATTACK_EVENT, EVENT_UUID, basicAttackEvent -> {
             LivingEntity target = basicAttackEvent.getPlayerPatch().getTarget();
             int currentLifeTime = cooldown - container.getDataManager().getDataValue(COOLDOWN_TIMER);
@@ -65,18 +66,9 @@ public class RainSwordSkill extends Skill {
                 container.getDataManager().setDataSync(DELAY_TIMER, count * interval, basicAttackEvent.getPlayerPatch().getOriginal());
             }
         });
-        container.getExecuter().getEventListener().addEventListener(PlayerEventListener.EventType.SKILL_EXECUTE_EVENT, EVENT_UUID, skillExecuteEvent -> {
-            if(skillExecuteEvent.getPlayerPatch().isLogicalClient() && skillExecuteEvent.getSkillContainer().getSkill().getCategory().equals(SkillCategories.BASIC_ATTACK)){
-                int currentLifetime = this.cooldown - container.getDataManager().getDataValue(COOLDOWN_TIMER);
-                if(currentLifetime > this.lifeTime){
-                    return;
-                }
-                Player player = skillExecuteEvent.getPlayerPatch().getOriginal();
-                boolean b = player.getRandom().nextBoolean();
-                ParticleVFX.createBigDipperXYParticle(ParticleTypes.END_ROD, player.level, player.getEyePosition().add(0, 1, 0), -1, 0.8F, player.getYRot(), currentLifetime, 0, 0, 0);
-                ParticleVFX.createBigDipperXYParticle(ParticleTypes.WAX_ON, player.level, player.getEyePosition().add(0, 1, 0), b ? -1 : 0.1F, 0.8F, player.getYRot(), currentLifetime, 0, 0, 0);
-                ParticleVFX.createBigDipperXYParticle(ParticleTypes.WAX_OFF, player.level, player.getEyePosition().add(0, 1, 0), b ? 0.1F : -1, 0.8F, player.getYRot(), currentLifetime, 0, 0.00F, 0);
-            }
+        //造成伤害就画一次
+        container.getExecuter().getEventListener().addEventListener(PlayerEventListener.EventType.DEALT_DAMAGE_EVENT_POST, EVENT_UUID, skillExecuteEvent -> {
+            container.getDataManager().setDataSync(PLAY_BIG_DIPPER, true, skillExecuteEvent.getPlayerPatch().getOriginal());
         });
     }
 
@@ -84,19 +76,19 @@ public class RainSwordSkill extends Skill {
     public void onRemoved(SkillContainer container) {
         super.onRemoved(container);
         container.getExecuter().getEventListener().removeListener(PlayerEventListener.EventType.BASIC_ATTACK_EVENT, EVENT_UUID);
-        container.getExecuter().getEventListener().removeListener(PlayerEventListener.EventType.SKILL_EXECUTE_EVENT, EVENT_UUID);
+        container.getExecuter().getEventListener().removeListener(PlayerEventListener.EventType.DEALT_DAMAGE_EVENT_POST, EVENT_UUID);
     }
 
     @Override
     public boolean canExecute(PlayerPatch<?> executer) {
-        return SwordSoaring.isValidSword(executer.getValidItemInHand(InteractionHand.MAIN_HAND)) && (executer.getSkill(this).getDataManager().getDataValue(COOLDOWN_TIMER) <= 0 || executer.getOriginal().isCreative());
+        return executer.getOriginal().isOnGround() && SwordSoaring.isValidSword(executer.getValidItemInHand(InteractionHand.MAIN_HAND)) && (executer.getSkill(this).getDataManager().getDataValue(COOLDOWN_TIMER) <= 0 || executer.getOriginal().isCreative());
     }
 
     @Override
     public void executeOnServer(ServerPlayerPatch executer, FriendlyByteBuf args) {
         super.executeOnServer(executer, args);
         executer.getSkill(this).getDataManager().setDataSync(COOLDOWN_TIMER, cooldown, executer.getOriginal());
-        executer.playAnimationSynchronized(ScreenSwordAnimations.PLAYER_SUMMON_SCREEN_SWORD, 0.15F);
+        executer.playAnimationSynchronized(ScreenSwordAnimations.PLAYER_SUMMON_RAIN_SWORD, 0.15F);
         executer.playSound(SoundEvents.EVOKER_PREPARE_SUMMON, 0.0F, 0.0F);
     }
 
@@ -115,6 +107,7 @@ public class RainSwordSkill extends Skill {
                 ParticleVFX.createBigDipperXZParticle(ParticleTypes.WAX_OFF, player.level, player.position().add(0, 0.3, 0), 0.1F, 0.8F, player.getYRot(), 0, 0.0F, 0);
             } else if (currentLifetime % 60 == 0) {
                 boolean b = (currentLifetime % 120 == 0);
+                container.getExecuter().playSound(b ? SoundEvents.AMETHYST_CLUSTER_STEP : SoundEvents.AMETHYST_BLOCK_STEP, 2.5F, -0.5F, 0.5F);
                 ParticleVFX.createBigDipperXZParticle(ParticleTypes.END_ROD, player.level, player.position().add(0, 0.3, 0), -1, 1.5F, currentLifetime, 0, 0.05F, 0);
                 ParticleVFX.createBigDipperXZParticle(ParticleTypes.END_ROD, player.level, player.position().add(0, 0.3, 0), -1, 1.5F, currentLifetime, 0, 0, 0);
                 ParticleVFX.createBigDipperXZParticle(ParticleTypes.END_ROD, player.level, player.position().add(0, 0.3, 0), -1, 1.5F, currentLifetime, 0, -0.05F, 0);
@@ -138,6 +131,19 @@ public class RainSwordSkill extends Skill {
             }
             container.getDataManager().setData(DELAY_TIMER, delayTimer - 1);
         }
+
+        if(container.getDataManager().getDataValue(PLAY_BIG_DIPPER) && container.getExecuter().isLogicalClient()){
+            if(currentLifetime > this.lifeTime){
+                return;
+            }
+            Player player = container.getExecuter().getOriginal();
+            boolean b = player.getRandom().nextBoolean();
+            ParticleVFX.createBigDipperXYParticle(ParticleTypes.END_ROD, player.level, player.getEyePosition().add(0, 1, 0), -1, 0.8F, player.getYRot(), currentLifetime, 0, 0, 0);
+            ParticleVFX.createBigDipperXYParticle(ParticleTypes.WAX_ON, player.level, player.getEyePosition().add(0, 1, 0), b ? -1 : 0.1F, 0.8F, player.getYRot(), currentLifetime, 0, 0, 0);
+            ParticleVFX.createBigDipperXYParticle(ParticleTypes.WAX_OFF, player.level, player.getEyePosition().add(0, 1, 0), b ? 0.1F : -1, 0.8F, player.getYRot(), currentLifetime, 0, 0.00F, 0);
+            container.getDataManager().setDataSync(PLAY_BIG_DIPPER, false, ((LocalPlayer) player));
+        }
+
     }
 
     @Override
@@ -163,7 +169,7 @@ public class RainSwordSkill extends Skill {
         int currentCooldown = container.getDataManager().getDataValue(COOLDOWN_TIMER);
         int currentLifetime = this.cooldown - currentCooldown;
         if (currentLifetime > this.lifeTime) {
-            gui.font.drawShadow(poseStack, String.format("%.1f", currentCooldown / 20.0), x + 6.0F, y + 8.0F, 16777215);
+            gui.font.drawShadow(poseStack, String.format("%.1f", currentCooldown / 20.0), x + 6.0F, y + 8.0F, 16733525);
         } else {
             gui.font.drawShadow(poseStack, String.format("%.1f", (this.lifeTime - currentLifetime) / 20.0), x + 6.0F, y + 8.0F, 16777215);
         }

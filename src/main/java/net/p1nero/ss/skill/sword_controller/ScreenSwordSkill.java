@@ -56,6 +56,7 @@ public class ScreenSwordSkill extends KillAuraSkill {
     public void onInitiate(SkillContainer container) {
         super.onInitiate(container);
         container.getDataManager().registerData(PROTECT_COUNT);
+        container.getExecuter().getOriginal().setGlowingTag(false);
         container.getExecuter().getEventListener().addEventListener(PlayerEventListener.EventType.HURT_EVENT_PRE, EVENT_UUID, hurtEvent -> {
             if(hurtEvent.getPlayerPatch().getOriginal().level.getEntity(container.getDataManager().getDataValue(SWORD_ENTITY_ID)) instanceof ScreenSwordEntity screenSwordEntity){
                 int protectCountLeft = container.getDataManager().getDataValue(PROTECT_COUNT);
@@ -99,6 +100,9 @@ public class ScreenSwordSkill extends KillAuraSkill {
                 }
             } else {
                 container.getDataManager().setDataSync(PROTECT_COUNT, 0, hurtEvent.getPlayerPatch().getOriginal());
+                if(container.getExecuter().getOriginal().isCurrentlyGlowing()){
+                    container.getExecuter().getOriginal().setGlowingTag(false);
+                }
             }
         });
     }
@@ -106,6 +110,7 @@ public class ScreenSwordSkill extends KillAuraSkill {
     @Override
     public void onRemoved(SkillContainer container) {
         super.onRemoved(container);
+        container.getExecuter().getOriginal().setGlowingTag(false);
         container.getExecuter().getEventListener().removeListener(PlayerEventListener.EventType.HURT_EVENT_PRE, EVENT_UUID);
     }
 
@@ -113,7 +118,6 @@ public class ScreenSwordSkill extends KillAuraSkill {
     public void executeOnServer(ServerPlayerPatch executer, FriendlyByteBuf args) {
         super.executeOnServer(executer, args);
         executer.getSkill(this).getDataManager().setDataSync(PROTECT_COUNT, maxProtectCount, executer.getOriginal());
-        executer.getOriginal().addEffect(new MobEffectInstance(MobEffects.GLOWING, lifeTime));
     }
 
     @Override
@@ -136,10 +140,12 @@ public class ScreenSwordSkill extends KillAuraSkill {
         RenderSystem.setShaderTexture(0, getSkillTexture());
         GuiComponent.blit(poseStack, (int) x, (int) y, 24, 24, 0.0F, 0.0F, 1, 1, 1, 1);
         int protectCount = container.getDataManager().getDataValue(PROTECT_COUNT);
-        if(protectCount > 0) {
+        int currentCooldown = container.getDataManager().getDataValue(COOL_DOWN_TIMER);
+        int currentLifetime = this.cooldown - currentCooldown;
+        if(protectCount > 0 && currentLifetime < this.lifeTime) {
             gui.font.drawShadow(poseStack, container.getDataManager().getDataValue(PROTECT_COUNT).toString(), x + 6.0F, y + 8.0F, 16777215);
         } else {
-            gui.font.drawShadow(poseStack, String.format("%.1f", (container.getDataManager().getDataValue(COOL_DOWN_TIMER) / 20.0)), x + 6.0F, y + 8.0F, 16777215);
+            gui.font.drawShadow(poseStack, String.format("%.1f", (container.getDataManager().getDataValue(COOL_DOWN_TIMER) / 20.0)), x + 6.0F, y + 8.0F, 16733525);
         }
     }
 
