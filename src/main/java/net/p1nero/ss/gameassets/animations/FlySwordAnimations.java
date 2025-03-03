@@ -85,6 +85,26 @@ public class FlySwordAnimations {
                         flySwordEntity.setGlowingTag(true);
                     }
                 }, AnimationEvent.Side.SERVER));
+        FLY_SWORD_ATK_4_1 = new AutoDiscardAnimation(0.15F, "fly_sword/fly_sword_atk_4_1", flySwordArmature,
+                new AttackAnimation.Phase(0.0F, 0.0F, 1, 1, 1, flySwordArmature.body, SwordSoaringColliders.FLY_SWORD_COMMON))
+                .addProperty(AnimationProperty.ActionAnimationProperty.MOVE_VERTICAL, true)
+                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 0.3F))
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_BEGIN_EVENTS, AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> livingEntityPatch.getOriginal().setGlowingTag(true), AnimationEvent.Side.SERVER));
+        FLY_SWORD_ATK_4_2 = new AutoDiscardAnimation(0.15F, "fly_sword/fly_sword_atk_4_2", flySwordArmature,
+                new AttackAnimation.Phase(0.0F, 0.0F, 1, 1, 1, flySwordArmature.body, SwordSoaringColliders.FLY_SWORD_COMMON))
+                .addProperty(AnimationProperty.ActionAnimationProperty.MOVE_VERTICAL, true)
+                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 0.3F))
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_BEGIN_EVENTS, AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> livingEntityPatch.getOriginal().setGlowingTag(true), AnimationEvent.Side.SERVER));
+        FLY_SWORD_ATK_4_3 = new AutoDiscardAnimation(0.15F, "fly_sword/fly_sword_atk_4_3", flySwordArmature,
+                new AttackAnimation.Phase(0.0F, 0.0F, 1, 1, 1, flySwordArmature.body, SwordSoaringColliders.FLY_SWORD_COMMON))
+                .addProperty(AnimationProperty.ActionAnimationProperty.MOVE_VERTICAL, true)
+                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 0.3F))
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_BEGIN_EVENTS, AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> livingEntityPatch.getOriginal().setGlowingTag(true), AnimationEvent.Side.SERVER));
+        FLY_SWORD_ATK_4_4 = new AutoDiscardAnimation(0.15F, "fly_sword/fly_sword_atk_4_4", flySwordArmature,
+                new AttackAnimation.Phase(0.0F, 0.0F, 1, 1, 1, flySwordArmature.body, SwordSoaringColliders.FLY_SWORD_COMMON))
+                .addProperty(AnimationProperty.ActionAnimationProperty.MOVE_VERTICAL, true)
+                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 0.3F))
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_BEGIN_EVENTS, AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> livingEntityPatch.getOriginal().setGlowingTag(true), AnimationEvent.Side.SERVER));
         FLY_SWORD_ATK_IDLE = new StaticAnimation(true, "fly_sword/fly_sword_idle", flySwordArmature);
         FLY_SWORD_ATK_FLY = new StaticAnimation(true, "fly_sword/fly_sword_fly", flySwordArmature);
         FLY_SWORD_ATK_FLY_BACK = new ActionAnimation(0.15F, "fly_sword/fly_sword_back", flySwordArmature)

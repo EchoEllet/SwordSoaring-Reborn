@@ -27,7 +27,7 @@ public class BabylonPatch extends AbstractArtifactSpiritPatch<BabylonEntity> {
         super.clientTick(event);
         if(!played){
             if(this.isLogicalClient() && this.getOwnerPatch() != null){
-                StaticAnimation toPlay = BabylonAnimations.BABYLON_SHOOT;
+                StaticAnimation toPlay = getOriginal().getAnimationToPlay();
                 this.animator.playAnimation(toPlay, 0.0001F);
                 PacketRelay.sendToServer(PacketHandler.INSTANCE, new RequestEntityPlayAnimationPacket(this.getOriginal().getId(), toPlay.getNamespaceId(), toPlay.getId(), 0.0001F));
                 played = true;

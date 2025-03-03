@@ -20,8 +20,11 @@ import yesman.epicfight.api.utils.math.OpenMatrix4f;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 
+import java.util.List;
+
 public class FlySwordPatch extends AbstractArtifactSpiritPatch<FlySwordEntity> {
     private boolean played;
+    public List<StaticAnimation> list = List.of(FlySwordAnimations.FLY_SWORD_ATK_4_1, FlySwordAnimations.FLY_SWORD_ATK_4_2, FlySwordAnimations.FLY_SWORD_ATK_4_3, FlySwordAnimations.FLY_SWORD_ATK_4_4, FlySwordAnimations.FLY_SWORD_ATK_3);
 
     /**
      * 播放初始动画
@@ -49,7 +52,7 @@ public class FlySwordPatch extends AbstractArtifactSpiritPatch<FlySwordEntity> {
                 toPlay = FlySwordAnimations.FLY_SWORD_ATK_2;
             }
         } else {
-            toPlay = FlySwordAnimations.FLY_SWORD_ATK_3;
+            toPlay = list.get(getOriginal().getRandom().nextInt(list.size()));
         }
         return toPlay;
     }

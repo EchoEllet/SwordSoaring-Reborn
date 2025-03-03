@@ -18,13 +18,19 @@ public class BabylonAnimations {
 
     public static StaticAnimation BABYLON_IDLE;
     public static StaticAnimation BABYLON_SHOOT;
+    public static StaticAnimation BABYLON_SHOOT_L;
+    public static StaticAnimation BABYLON_SHOOT_R;
 
     public static void buildBabylonAnim() {
         BabylonArmature babylonArmature = SwordSoaringArmatures.babylonArmature;
         BABYLON_IDLE = new StaticAnimation(true, "babylon/babylon_idle", babylonArmature);
-//        BABYLON_SHOOT = new ArtifactSpiritMultiPhaseAttackAnimation(0.15F, "babylon/babylon_shoot", babylonArmature, AnimationUtils.getPhases(babylonArmature.joints, 3.0F))
-//                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> livingEntityPatch.getOriginal().discard(), AnimationEvent.Side.SERVER));
-        BABYLON_SHOOT = new ActionAnimation(0.15F, "babylon/babylon_shoot", babylonArmature)
+        BABYLON_SHOOT = new ArtifactSpiritMultiPhaseAttackAnimation(0.15F, "babylon/babylon_shoot", babylonArmature, AnimationUtils.getPhases(babylonArmature.joints, 3.0F))
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> livingEntityPatch.getOriginal().discard(), AnimationEvent.Side.SERVER))
+                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, (dynamicAnimation, livingEntityPatch, v, v1) -> 0.5F);
+        BABYLON_SHOOT_L = new ArtifactSpiritMultiPhaseAttackAnimation(0.15F, "babylon/babylon_shoot_l", babylonArmature, AnimationUtils.getPhases(babylonArmature.joints, 3.0F))
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> livingEntityPatch.getOriginal().discard(), AnimationEvent.Side.SERVER))
+                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, (dynamicAnimation, livingEntityPatch, v, v1) -> 0.5F);
+        BABYLON_SHOOT_R = new ArtifactSpiritMultiPhaseAttackAnimation(0.15F, "babylon/babylon_shoot_r", babylonArmature, AnimationUtils.getPhases(babylonArmature.joints, 3.0F))
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> livingEntityPatch.getOriginal().discard(), AnimationEvent.Side.SERVER))
                 .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, (dynamicAnimation, livingEntityPatch, v, v1) -> 0.5F);
     }

@@ -1,5 +1,8 @@
 package net.p1nero.ss.entity.sword.gate_of_babylon;
 
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -12,14 +15,19 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.p1nero.ss.entity.AbstractArtifactSpiritEntity;
 import net.p1nero.ss.entity.SwordSoaringEntities;
 import net.p1nero.ss.entity.sword.AbstractSwordEntity;
+import yesman.epicfight.api.animation.types.StaticAnimation;
+import yesman.epicfight.api.data.reloader.MobPatchReloadListener;
+import yesman.epicfight.main.EpicFightMod;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class BabylonEntity extends AbstractSwordEntity {
     private final ArrayList<Item> validBabylonItems = new ArrayList<>();
     private long seed;
     private float startYRot;
+    private static final EntityDataAccessor<String> ANIMATION_TO_PLAY = SynchedEntityData.defineId(BabylonEntity.class, EntityDataSerializers.STRING);
     public BabylonEntity(EntityType<? extends AbstractArtifactSpiritEntity> entityType, Level level) {
         super(entityType, level);
     }
@@ -35,6 +43,20 @@ public class BabylonEntity extends AbstractSwordEntity {
         }
         setNoGravity(true);
         noPhysics = true;
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        getEntityData().define(ANIMATION_TO_PLAY, "sword_soaring:babylon/babylon_shoot");
+    }
+
+    public StaticAnimation getAnimationToPlay() {
+        return EpicFightMod.getInstance().animationManager.findAnimationByPath(this.getEntityData().get(ANIMATION_TO_PLAY));
+    }
+
+    public void setAnimationToPlay(StaticAnimation staticAnimation){
+        getEntityData().set(ANIMATION_TO_PLAY, staticAnimation.getRegistryName().toString());
     }
 
     /**
@@ -56,11 +78,18 @@ public class BabylonEntity extends AbstractSwordEntity {
     @OnlyIn(Dist.CLIENT)
     public void calculateValidBabylonItems(Player player){
         validBabylonItems.clear();
-        for(ItemStack itemStack : player.getInventory().items){
+        checkItemList(player.getInventory().items);
+        //TODO 获取末影箱
+        Collections.shuffle(validBabylonItems);//打乱
+        seed = random.nextLong();
+    }
+
+    public void checkItemList(List<ItemStack> list){
+        list.forEach(itemStack -> {
             if(!validBabylonItems.contains(itemStack.getItem())){
                 validBabylonItems.add(itemStack.getItem());
             }
-            //包括背包
+            //包括背包，潜影贝等
             itemStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(iItemHandler -> {
                 for(int i = 0; i < iItemHandler.getSlots(); i ++){
                     Item inSideItem = iItemHandler.getStackInSlot(i).getItem();
@@ -69,9 +98,7 @@ public class BabylonEntity extends AbstractSwordEntity {
                     }
                 }
             });
-        }
-        Collections.shuffle(validBabylonItems);//打乱
-        seed = random.nextLong();
+        });
     }
 
     public long getSeed() {

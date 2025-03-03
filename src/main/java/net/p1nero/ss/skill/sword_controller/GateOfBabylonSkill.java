@@ -3,6 +3,7 @@ package net.p1nero.ss.skill.sword_controller;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.p1nero.ss.entity.sword.gate_of_babylon.BabylonEntity;
+import net.p1nero.ss.gameassets.animations.BabylonAnimations;
 import net.p1nero.ss.gameassets.animations.ScreenSwordAnimations;
 import yesman.epicfight.skill.Skill;
 import yesman.epicfight.skill.SkillContainer;
@@ -51,8 +52,15 @@ public class GateOfBabylonSkill extends Skill {
         }
         if(!container.getExecuter().isLogicalClient()){
             if(currentCooldown == this.cooldown - 1){
-                BabylonEntity babylonEntity = new BabylonEntity(container.getExecuter().getOriginal());
-                container.getExecuter().getOriginal().level.addFreshEntity(babylonEntity);
+                BabylonEntity babylonEntityCenter = new BabylonEntity(container.getExecuter().getOriginal());
+                babylonEntityCenter.setAnimationToPlay(BabylonAnimations.BABYLON_SHOOT);
+                container.getExecuter().getOriginal().level.addFreshEntity(babylonEntityCenter);
+                BabylonEntity babylonEntityL = new BabylonEntity(container.getExecuter().getOriginal());
+                babylonEntityL.setAnimationToPlay(BabylonAnimations.BABYLON_SHOOT_L);
+                container.getExecuter().getOriginal().level.addFreshEntity(babylonEntityL);
+                BabylonEntity babylonEntityR = new BabylonEntity(container.getExecuter().getOriginal());
+                babylonEntityR.setAnimationToPlay(BabylonAnimations.BABYLON_SHOOT_R);
+                container.getExecuter().getOriginal().level.addFreshEntity(babylonEntityR);
             }
         }
     }
