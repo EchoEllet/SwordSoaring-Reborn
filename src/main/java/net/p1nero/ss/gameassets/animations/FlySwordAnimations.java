@@ -13,6 +13,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.p1nero.ss.animation.AutoDiscardAnimation;
+import net.p1nero.ss.entity.AbstractArtifactSpiritEntity;
 import net.p1nero.ss.entity.sword.fly_sword.FlySwordArmature;
 import net.p1nero.ss.entity.sword.fly_sword.FlySwordEntity;
 import net.p1nero.ss.entity.sword.fly_sword.FlySwordPatch;
@@ -57,7 +58,6 @@ public class FlySwordAnimations {
                 new AttackAnimation.Phase(0.9F, 1.1F, 1.3F, 1.3F, 1.3F, flySwordArmature.body, SwordSoaringColliders.FLY_SWORD_COMMON),
                 new AttackAnimation.Phase(1.3F, 1.3F, 1.5F, 1.5F, 1.5F, flySwordArmature.body, SwordSoaringColliders.FLY_SWORD_COMMON),
                 new AttackAnimation.Phase(1.5F, 1.9F, 2.0F, 2.0F, 2.0F, flySwordArmature.body, SwordSoaringColliders.FLY_SWORD_COMMON))
-                .addProperty(AnimationProperty.ActionAnimationProperty.MOVE_VERTICAL, true)
                 .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 0.5F))
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, SET_ANIMATION_END)
                 .addEvents(AnimationEvent.TimeStampedEvent.create(1.3F, ((livingEntityPatch, staticAnimation, objects) -> {
@@ -69,7 +69,6 @@ public class FlySwordAnimations {
                 new AttackAnimation.Phase(0.45F, 0.7F, 0.7F, 0.7F, 0.7F, flySwordArmature.body, SwordSoaringColliders.FLY_SWORD_COMMON),
                 new AttackAnimation.Phase(0.7F, 0.9F, 1.1F, 1.1F, 1.1F, flySwordArmature.body, SwordSoaringColliders.FLY_SWORD_COMMON),
                 new AttackAnimation.Phase(1.1F, 1.3F, 1.5167F, 1.5167F, 1.5167F, flySwordArmature.body, SwordSoaringColliders.FLY_SWORD_COMMON))
-                .addProperty(AnimationProperty.ActionAnimationProperty.MOVE_VERTICAL, true)
                 .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 0.5F))
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, SET_ANIMATION_END)
                 .addEvents(AnimationEvent.TimeStampedEvent.create(1.3F, ((livingEntityPatch, staticAnimation, objects) -> {
@@ -115,11 +114,13 @@ public class FlySwordAnimations {
                 }, AnimationEvent.Side.SERVER));
     }
 
-    public static void flySwordDamage(EntityPatch entityPatch, float attractRadius, float damageRadius){
-        FlySwordPatch flySwordPatch = (FlySwordPatch) entityPatch;
-        LivingEntityPatch ownerPatch = flySwordPatch.getOwnerPatch();
+    public static void flySwordDamage(FlySwordPatch flySwordPatch, float attractRadius, float damageRadius){
+        LivingEntityPatch<?> ownerPatch = flySwordPatch.getOwnerPatch();
+        if(ownerPatch == null){
+            return;
+        }
         LivingEntity sword = flySwordPatch.getOriginal();
-        LivingEntity source = (LivingEntity) ownerPatch.getOriginal();
+        LivingEntity source = ownerPatch.getOriginal();
         double baseDamage = source.getAttributeValue(Attributes.ATTACK_DAMAGE)*3;
 
         Vec3 Pos = sword.position();
@@ -152,10 +153,10 @@ public class FlySwordAnimations {
             );
             //来源实体过滤
             List<LivingEntity> entities = level.getEntitiesOfClass(LivingEntity.class, damageArea, entity ->
-                    entity.isAlive() && entity.distanceToSqr(Pos) <= damageRadius * damageRadius && !(entity instanceof Player player && player.isCreative()) && entity != source
+                    entity.isAlive() && entity.distanceToSqr(Pos) <= damageRadius * damageRadius && !(entity instanceof Player player && player.isCreative()) && entity != source && !(entity instanceof AbstractArtifactSpiritEntity)
             );
             for (LivingEntity entity : new ArrayList<>(entities)) {
-                if (entity.invulnerableTime == 0 && source != null) {
+                if (entity.invulnerableTime == 0) {
                     entity.hurt(DamageSource.indirectMagic(source, source), (float) baseDamage);
                     entity.invulnerableTime = 10;
                     if (!entity.level.isClientSide) {

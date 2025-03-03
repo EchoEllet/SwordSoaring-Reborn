@@ -1,5 +1,7 @@
 package net.p1nero.ss.item;
 
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffects;
@@ -7,15 +9,23 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import net.p1nero.ss.gameassets.animations.VatanseverAnimations;
+import net.p1nero.ss.skill.weapon_passive.VatanseverPassive;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import yesman.epicfight.gameasset.EpicFightSounds;
+import yesman.epicfight.skill.Skill;
+import yesman.epicfight.skill.SkillDataManager;
+import yesman.epicfight.skill.SkillSlots;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 import yesman.epicfight.world.item.WeaponItem;
+
+import java.util.List;
 
 public class VatanseverItem extends WeaponItem {
     public VatanseverItem(Tier tier, int damageIn, float speedIn, Properties builder) {
@@ -28,7 +38,10 @@ public class VatanseverItem extends WeaponItem {
             if (pPlayer.onGround && !pPlayer.isFallFlying() && !pPlayer.isInWater() && !pPlayer.hasEffect(MobEffects.LEVITATION)) {
                 ServerPlayerPatch serverPlayerPatch = EpicFightCapabilities.getEntityPatch(pPlayer, ServerPlayerPatch.class);
                 if(serverPlayerPatch.isBattleMode() && !serverPlayerPatch.getEntityState().inaction()){
-                    serverPlayerPatch.playAnimationSynchronized(VatanseverAnimations.PLAYER_FLY_BEGIN, 0.15F);
+                    SkillDataManager manager = serverPlayerPatch.getSkill(SkillSlots.WEAPON_PASSIVE).getDataManager();
+                    if(manager.hasData(VatanseverPassive.SWORD_COUNT) && manager.getDataValue(VatanseverPassive.SWORD_COUNT) >= 4){
+                        serverPlayerPatch.playAnimationSynchronized(VatanseverAnimations.PLAYER_FLY_BEGIN, 0.15F);
+                    }
                 }
             }
         } else if(!pPlayer.onGround && pPlayer.isFallFlying()){
@@ -47,5 +60,11 @@ public class VatanseverItem extends WeaponItem {
             }
         }
         return true;
+    }
+
+    @Override
+    public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, @NotNull List<Component> pTooltipComponents, @NotNull TooltipFlag pIsAdvanced) {
+        pTooltipComponents.add(new TranslatableComponent("item.sword_soaring.vatansever.description1"));
+        pTooltipComponents.add(new TranslatableComponent("item.sword_soaring.vatansever.description2"));
     }
 }

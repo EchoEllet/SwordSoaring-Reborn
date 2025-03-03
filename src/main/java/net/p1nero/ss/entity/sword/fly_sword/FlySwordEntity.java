@@ -38,7 +38,6 @@ public class FlySwordEntity extends AbstractSwordEntity {
     private LivingEntity target;
     public FlySwordEntity(EntityType<? extends AbstractArtifactSpiritEntity> entityType, Level level) {
         super(entityType, level);
-        noPhysics = true;//穿墙
     }
 
     public FlySwordEntity(LivingEntity owner, int maxTickCount, LivingEntity target){
@@ -48,6 +47,7 @@ public class FlySwordEntity extends AbstractSwordEntity {
         if(target != null && target.isAlive()){
             setPos(target.position());
         }
+        setNoGravity(true);
     }
 
     @Override
@@ -119,10 +119,11 @@ public class FlySwordEntity extends AbstractSwordEntity {
 
     @Override
     protected void moveToOwner(LivingEntity owner) {
+        noPhysics = true;
         if(isFlyingBack()){
             Vec3 vec3 = AnimationUtils.getJointWorldPos(getPatch(), SwordSoaringArmatures.flySwordArmature.body);
             ParticleVFX.createSphereParticles(level,vec3,ParticleTypes.SMOKE,0.2,0.01,0.05,100);
-            FlySwordAnimations.flySwordDamage(getPatch(),2,2.5F);
+            FlySwordAnimations.flySwordDamage(getPatch(FlySwordPatch.class),2,2.5F);
             if(!level.isClientSide){
                 if(this.position().distanceTo(owner.getEyePosition()) < 1.5){
                     ((ServerLevel)level).sendParticles( ParticleTypes.SMOKE,getX(),getY(),getZ(),
@@ -156,6 +157,7 @@ public class FlySwordEntity extends AbstractSwordEntity {
                 }
             }
         }
+        noPhysics = false;
     }
 
     public void addOwnerSwordCount(){

@@ -41,7 +41,6 @@ public class VatanseverSkills {
                 .addConditionAnimation(shootR2)
                 .addConditionAnimation(shootR3);
         root.key1(a);
-        root.key4(storm);
         a.key1(aa);
         aa.key1(aaa);
         aa.key2(aab);

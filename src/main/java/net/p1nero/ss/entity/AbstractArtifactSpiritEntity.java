@@ -23,6 +23,7 @@ import org.jetbrains.annotations.Nullable;
 import yesman.epicfight.client.gui.HealthBarIndicator;
 import yesman.epicfight.client.world.capabilites.entitypatch.player.LocalPlayerPatch;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
+import yesman.epicfight.world.capabilities.entitypatch.EntityPatch;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 import yesman.epicfight.world.entity.ai.attribute.EpicFightAttributes;
 
@@ -91,6 +92,10 @@ public abstract class AbstractArtifactSpiritEntity extends PathfinderMob impleme
 
     public LivingEntityPatch<?> getPatch(){
         return EpicFightCapabilities.getEntityPatch(this, LivingEntityPatch.class);
+    }
+
+    public <T extends EntityPatch<?>> T getPatch(Class<T> type){
+        return EpicFightCapabilities.getEntityPatch(this, type);
     }
 
     @Override
