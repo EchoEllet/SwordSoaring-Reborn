@@ -1,6 +1,7 @@
 package net.p1nero.ss.mixin;
 
 import com.mojang.math.Quaternion;
+import net.p1nero.ss.util.MathUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -17,7 +18,7 @@ public class OpenMatrix4fMixin {
     @Inject(method = "toQuaternion(Lyesman/epicfight/api/utils/math/OpenMatrix4f;)Lcom/mojang/math/Quaternion;", at = @At("HEAD"), cancellable = true, remap = false)
     private static void sword_soaring$toQuaternion(OpenMatrix4f matrix, CallbackInfoReturnable<Quaternion> cir){
         OpenMatrix4f newMatrix = new OpenMatrix4f(matrix);
-        newMatrix = sword_soaring$removeScale(newMatrix);
+        newMatrix = MathUtils.removeScale(newMatrix);
         float diagonal = newMatrix.m00 + newMatrix.m11 + newMatrix.m22;
         float w;
         float x;
@@ -51,18 +52,6 @@ public class OpenMatrix4fMixin {
         }
 
         cir.setReturnValue(new Quaternion(x, y, z, w));
-    }
-
-    @Unique
-    private static OpenMatrix4f sword_soaring$removeScale(OpenMatrix4f src) {
-        float xScale = new Vec3f(src.m00, src.m01, src.m02).length();
-        float yScale = new Vec3f(src.m10, src.m11, src.m12).length();
-        float zScale = new Vec3f(src.m20, src.m21, src.m22).length();
-
-        OpenMatrix4f copy = new OpenMatrix4f(src);
-        copy.scale(1 / xScale, 1 / yScale, 1 / zScale);
-
-        return copy;
     }
 
 }

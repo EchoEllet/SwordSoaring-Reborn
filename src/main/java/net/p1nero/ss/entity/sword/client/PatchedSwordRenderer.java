@@ -3,6 +3,7 @@ package net.p1nero.ss.entity.sword.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
@@ -35,7 +36,7 @@ public abstract class PatchedSwordRenderer<E extends AbstractSwordEntity, T exte
             Armature armature = entityPatch.getArmature();
             this.mulPoseStack(poseStack, armature, entityIn, entityPatch, partialTicks);
             OpenMatrix4f[] poseMatrices = this.getPoseMatrices(entityPatch, entityPatch.getArmature(), partialTicks);
-            this.renderLayer(renderer, entityPatch, entityIn, poseMatrices, buffer, poseStack, 0xf000ff, partialTicks);
+            this.renderLayer(renderer, entityPatch, entityIn, poseMatrices, buffer, poseStack, LightTexture.FULL_BRIGHT, partialTicks);
 
             //画攻击碰撞箱
             Minecraft mc = Minecraft.getInstance();

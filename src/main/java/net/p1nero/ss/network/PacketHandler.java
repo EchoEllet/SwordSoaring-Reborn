@@ -6,7 +6,7 @@ import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
 import net.p1nero.ss.SwordSoaring;
 import net.p1nero.ss.network.packet.BasePacket;
-import net.p1nero.ss.network.packet.client.RequestValidBabylonSyncPacket;
+import net.p1nero.ss.network.packet.client.SyncEnderChestValidBabylonPacket;
 import net.p1nero.ss.network.packet.server.RequestEntityPlayAnimationPacket;
 import net.p1nero.ss.network.packet.server.RequestVatanseverSwordBackPacket;
 
@@ -25,7 +25,7 @@ public class PacketHandler {
         register(RequestEntityPlayAnimationPacket.class, RequestEntityPlayAnimationPacket::decode);
         register(RequestVatanseverSwordBackPacket.class, RequestVatanseverSwordBackPacket::decode);
 
-        register(RequestValidBabylonSyncPacket.class, RequestValidBabylonSyncPacket::decode);
+        register(SyncEnderChestValidBabylonPacket.class, SyncEnderChestValidBabylonPacket::decode);
     }
 
     private static <MSG extends BasePacket> void register(final Class<MSG> packet, Function<FriendlyByteBuf, MSG> decoder) {

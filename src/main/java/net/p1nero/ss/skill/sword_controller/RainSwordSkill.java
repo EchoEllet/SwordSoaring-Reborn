@@ -17,7 +17,6 @@ import net.p1nero.ss.gameassets.animations.ScreenSwordAnimations;
 import net.p1nero.ss.util.vfx.ParticleVFX;
 import yesman.epicfight.client.gui.BattleModeGui;
 import yesman.epicfight.skill.Skill;
-import yesman.epicfight.skill.SkillCategories;
 import yesman.epicfight.skill.SkillContainer;
 import yesman.epicfight.skill.SkillDataManager;
 import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;

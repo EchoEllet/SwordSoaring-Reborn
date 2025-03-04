@@ -2,16 +2,7 @@ package net.p1nero.ss.capability;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.p1nero.ss.entity.sword.fly_sword.FlySwordEntity;
-import net.p1nero.ss.network.PacketHandler;
-import net.p1nero.ss.network.PacketRelay;
-import net.p1nero.ss.network.packet.client.RequestValidBabylonSyncPacket;
-import net.p3pp3rf1y.sophisticatedbackpacks.backpack.BackpackItem;
 import org.jetbrains.annotations.NotNull;
 import yesman.epicfight.api.animation.types.AttackAnimation;
 

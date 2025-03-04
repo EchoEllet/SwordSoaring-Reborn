@@ -10,6 +10,18 @@ import yesman.epicfight.api.utils.math.Vec3f;
  * copy from org.joml.Quaternionf
  */
 public class MathUtils {
+
+    public static OpenMatrix4f removeScale(OpenMatrix4f src) {
+        float xScale = new Vec3f(src.m00, src.m01, src.m02).length();
+        float yScale = new Vec3f(src.m10, src.m11, src.m12).length();
+        float zScale = new Vec3f(src.m20, src.m21, src.m22).length();
+
+        OpenMatrix4f copy = new OpenMatrix4f(src);
+        copy.scale(1 / xScale, 1 / yScale, 1 / zScale);
+
+        return copy;
+    }
+
     public static void mulPoseStack(PoseStack poseStack, OpenMatrix4f pose) {
         OpenMatrix4f transposed = pose.transpose(null);
         yesman.epicfight.api.utils.math.MathUtils.translateStack(poseStack, pose);
