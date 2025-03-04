@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.p1nero.ss.SwordSoaring;
@@ -50,7 +51,7 @@ public class PatchedBabylonRandomReplaceableLayer<E extends BabylonEntity, T ext
      */
     public static void renderItemInJoint(BabylonEntity entity, AbstractArtifactSpiritPatch<?> artifactSpiritPatch, IReplaceableArmature armature, OpenMatrix4f[] poses, MultiBufferSource buffer, PoseStack poseStack, int packedLight) {
         if (entity.getOwner() != null) {
-            List<Item> babylons = entity.getValidBabylonItems();
+            List<ItemStack> babylons = entity.getValidBabylonItems();
             if (babylons.isEmpty()) {
                 PatchedReplaceableLayer.renderItemInJoint(EpicFightItems.GOLDEN_LONGSWORD.get().getDefaultInstance(), artifactSpiritPatch, armature, poses, buffer, poseStack, packedLight);
             }
@@ -58,13 +59,13 @@ public class PatchedBabylonRandomReplaceableLayer<E extends BabylonEntity, T ext
             Random random = new Random(entity.getSeed());
             for (int i = 0; i < jointList.size(); i++) {
                 Joint joint = jointList.get(i);
-                Item item;
+                ItemStack itemStack;
                 if (i < babylons.size()) {
-                    item = babylons.get(i);//尽可能都用上
+                    itemStack = babylons.get(i);//尽可能都用上
                 } else {
-                    item = babylons.get(random.nextInt(babylons.size()));
+                    itemStack = babylons.get(random.nextInt(babylons.size()));
                 }
-                if (item != null) {
+                if (itemStack != null) {
                     OpenMatrix4f jointTransform = poses[joint.getId()];
                     if (entity.getStartTransform(joint.getId()) == null) {
                         entity.bindStartTransform(joint.getId(), MathUtils.removeScale(jointTransform));
@@ -99,7 +100,7 @@ public class PatchedBabylonRandomReplaceableLayer<E extends BabylonEntity, T ext
                     MathUtils.mulPoseStack(poseStack, jointTransform);
                     ItemTransforms.TransformType transformType = ItemTransforms.TransformType.THIRD_PERSON_RIGHT_HAND;
                     poseStack.mulPose(Vector3f.YP.rotationDegrees(90));
-                    Minecraft.getInstance().getItemInHandRenderer().renderItem(artifactSpiritPatch.getOriginal(), item.getDefaultInstance(), transformType, false, poseStack, buffer, packedLight);
+                    Minecraft.getInstance().getItemInHandRenderer().renderItem(artifactSpiritPatch.getOriginal(), itemStack, transformType, false, poseStack, buffer, packedLight);
                     poseStack.popPose();
                 }
             }

@@ -14,11 +14,11 @@ import yesman.epicfight.api.animation.Joint;
 import yesman.epicfight.client.particle.TrailParticle;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 
-@Mixin(value = TrailParticle.class, remap = false)
+@Mixin(value = TrailParticle.class)
 public class TrailParticleMixin {
-    @Shadow @Final private LivingEntityPatch<?> entitypatch;
+    @Shadow(remap = false) @Final private LivingEntityPatch<?> entitypatch;
 
-    @Shadow @Final private Joint joint;
+    @Shadow(remap = false) @Final private Joint joint;
 
     @Inject(method = "render", at = @At("HEAD"), cancellable = true)
     private void sword_soaring$render(VertexConsumer vertexConsumer, Camera camera, float partialTick, CallbackInfo ci){

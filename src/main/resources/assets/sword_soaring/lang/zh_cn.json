@@ -40,7 +40,7 @@
   "skill.sword_soaring.rain_sword": "雨剑",
   "skill.sword_soaring.rain_sword.tooltip": "释放后普攻将附加额外剑雨攻击，每次最多生成 %d ~ %d 把额外剑。\n\n持续时间：%.1f s\n\n冷却： %.1f s",
   "skill.sword_soaring.babylon": "王之财宝",
-  "skill.sword_soaring.babylon.tooltip": "从王之宝库中获取所有物品，并化为剑射向前方\\n\\n §e§l「哼。因为有用于回收的优秀宝具」\n\n冷却： %.1f s",
+  "skill.sword_soaring.babylon.tooltip": "从王之宝库（背包，背包的背包，以及末影箱）中获取所有物品，并化为剑射向前方\n\n §e§l「哼。因为有用于回收的优秀宝具」\n\n冷却： %.1f s",
 
   "key.sword_soaring.common": "史诗战斗：御剑飞行",
   "key.sword_soaring.sword_skill": "御剑技",

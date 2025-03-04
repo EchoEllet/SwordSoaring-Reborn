@@ -1,5 +1,6 @@
 package net.p1nero.ss.gameassets.skills;
 
+import com.p1nero.invincible.conditions.CooldownCondition;
 import com.p1nero.invincible.conditions.CustomCondition;
 import com.p1nero.invincible.skill.ComboBasicAttack;
 import com.p1nero.invincible.skill.api.ComboNode;
@@ -27,7 +28,9 @@ public class VatanseverSkills {
         ComboNode aab = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_AUTO3_B).addCondition(checkSwordCount(5, 6));
         ComboNode aaaa = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_AUTO4).addCondition(checkSwordCount(6));
         ComboNode aaab = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_AUTO4_B).addCondition(checkSwordCount(6));
-        ComboNode storm = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_STORM_START).addCondition(checkSwordCount(6));
+        ComboNode storm = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_STORM_START).addCondition(checkSwordCount(6))
+                .setCooldown(300)
+                .addCondition(new CooldownCondition(true));
         ComboNode shootL3 = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_SHOOT_L3).addCondition(checkSwordCount(6)).setPriority(6);
         ComboNode shootR3 = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_SHOOT_R3).addCondition(checkSwordCount(5)).setPriority(5);
         ComboNode shootL2 = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_SHOOT_L2).addCondition(checkSwordCount(4)).setPriority(4);
@@ -56,21 +59,12 @@ public class VatanseverSkills {
         shoot.key3(shoot);
         shoot.addChild(SwordSoaringComboTypes.KEY_SWORD_SKILL, storm);
         root.addChild(SwordSoaringComboTypes.KEY_SWORD_SKILL, storm);
-        VATANSEVER_INNATE = SwordSoaringSkills.build(event, VatanseverWeaponInnateSkill::new, ComboBasicAttack.createComboBasicAttack().setCombo(root), "vatansever_innate");
+        VATANSEVER_INNATE = SwordSoaringSkills.build(event, VatanseverWeaponInnateSkill::new, ComboBasicAttack.createComboBasicAttack().setCombo(root).setShouldDrawGui(true), "vatansever_innate");
         VATANSEVER_PASSIVE = SwordSoaringSkills.build(event, VatanseverPassive::new, Skill.createBuilder().setCategory(SkillCategories.WEAPON_PASSIVE).setResource(Skill.Resource.NONE), "vatansever_passive");
     }
 
     public static CustomCondition checkSwordCount(int swordCount) {
-        return new CustomCondition() {
-            @Override
-            public boolean predicate(LivingEntityPatch<?> entityPatch) {
-                if (entityPatch instanceof ServerPlayerPatch serverPlayerPatch) {
-                    return serverPlayerPatch.getSkill(SkillSlots.WEAPON_PASSIVE).getDataManager().getDataValue(VatanseverPassive.SWORD_COUNT) == swordCount;
-                }
-                return false;
-            }
-
-        };
+        return checkSwordCount(swordCount, swordCount);
     }
 
     public static CustomCondition checkSwordCount(int min, int max) {

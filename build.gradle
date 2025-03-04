@@ -126,6 +126,7 @@ dependencies {
     implementation fg.deobf("curse.maven:mmmmmmmmmmmm-225738:3820503")
     implementation fg.deobf("curse.maven:sophisticated-core-618298:5296312")
     implementation fg.deobf("curse.maven:sophisticated-backpacks-422301:5654080")
+    implementation fg.deobf("curse.maven:armourers-workshop-229523:6232898")
 }
 
 mixin {

@@ -13,6 +13,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import net.p1nero.ss.entity.AbstractArtifactSpiritEntity;
 import net.p1nero.ss.entity.SwordSoaringEntities;
 import net.p1nero.ss.entity.sword.AbstractSwordEntity;
@@ -26,7 +27,7 @@ import yesman.epicfight.main.EpicFightMod;
 import java.util.*;
 
 public class BabylonEntity extends AbstractSwordEntity {
-    private final ArrayList<Item> validBabylonItems = new ArrayList<>();
+    private final ArrayList<ItemStack> validBabylonItems = new ArrayList<>();
     private float startYRot;
     private final Map<Integer, OpenMatrix4f> jointTransformMap = new HashMap<>();
     private static final EntityDataAccessor<String> ANIMATION_TO_PLAY = SynchedEntityData.defineId(BabylonEntity.class, EntityDataSerializers.STRING);
@@ -91,37 +92,35 @@ public class BabylonEntity extends AbstractSwordEntity {
     public void calculateValidBabylonItems(Player player){
         validBabylonItems.clear();
         player.getInventory().items.forEach(itemStack -> {
-            if(itemStack.isEmpty()){
-                return;
-            }
-            if(!validBabylonItems.contains(itemStack.getItem())){
-                validBabylonItems.add(itemStack.getItem());
-            }
+
             //包括背包，潜影贝等
-            itemStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(iItemHandler -> {
-                for(int i = 0; i < iItemHandler.getSlots(); i ++){
-                    Item inSideItem = iItemHandler.getStackInSlot(i).getItem();
-                    if(!validBabylonItems.contains(inSideItem)){
-                        validBabylonItems.add(inSideItem);
+            boolean isItemHandler = itemStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent();
+            if(isItemHandler) {
+                itemStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(iItemHandler -> {
+                    for (int i = 0; i < iItemHandler.getSlots(); i++) {
+                        ItemStack inSideItem = iItemHandler.getStackInSlot(i);
+                        if (!inSideItem.isEmpty()) {
+                            validBabylonItems.add(inSideItem);
+                        }
                     }
+                });
+            } else {
+                if(!itemStack.isEmpty()){
+                    validBabylonItems.add(itemStack);
                 }
-            });
+            }
         });
         if(!level.isClientSide){
             List<ItemStack> enderChestStacks = new ArrayList<>();
             PlayerEnderChestContainer enderChestContainer = player.getEnderChestInventory();
             for(int i = 0; i < enderChestContainer.getContainerSize(); i++){
                 ItemStack itemStack = enderChestContainer.getItem(i);
-                if(itemStack.isEmpty()){
-                    continue;
-                }
-                Item inSideItem = itemStack.getItem();
-                if(!validBabylonItems.contains(inSideItem)){
-                    validBabylonItems.add(inSideItem);
+                if(!itemStack.isEmpty()){
                     enderChestStacks.add(itemStack);
                 }
             }
             PacketRelay.sendToAll(PacketHandler.INSTANCE, new SyncEnderChestValidBabylonPacket(getId(), enderChestStacks.size(), enderChestStacks));
+            validBabylonItems.addAll(enderChestStacks);
         }
         Collections.shuffle(validBabylonItems, new Random(getSeed()));//打乱但客户端服务端打乱顺序要一致
     }
@@ -130,19 +129,14 @@ public class BabylonEntity extends AbstractSwordEntity {
      * 接收来自服务端的
      */
     public void receiveServerEnderChestItem(List<ItemStack> items){
-        items.forEach(itemStack -> {
-            Item item = itemStack.getItem();
-            if(!validBabylonItems.contains(item)){
-                validBabylonItems.add(item);
-            }
-        });
+        validBabylonItems.addAll(items);
     }
 
     public long getSeed() {
         return getEntityData().get(SEED);
     }
 
-    public ArrayList<Item> getValidBabylonItems() {
+    public ArrayList<ItemStack> getValidBabylonItems() {
         return validBabylonItems;
     }
 
