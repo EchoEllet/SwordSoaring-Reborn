@@ -83,7 +83,7 @@ public abstract class AbstractArtifactSpiritPatch<T extends AbstractArtifactSpir
      */
     @Override
     public AttackResult attack(EpicFightDamageSource damageSource, Entity target, InteractionHand hand) {
-        if (getOwnerPatch() != null) {
+        if (getOwnerPatch() != null && shouldUseOwnerAttack()) {
             AttackResult result = getOwnerPatch().attack(damageSource, target, hand);
             if(result.resultType.dealtDamage() && getOwnerPatch() instanceof ServerPlayerPatch serverPlayerPatch){
                 serverPlayerPatch.getEventListener().triggerEvents(PlayerEventListener.EventType.DEALT_DAMAGE_EVENT_POST, new DealtDamageEvent(serverPlayerPatch, target instanceof LivingEntity livingEntity ? livingEntity : null, damageSource, result.damage));
@@ -91,6 +91,10 @@ public abstract class AbstractArtifactSpiritPatch<T extends AbstractArtifactSpir
             return result;
         }
         return super.attack(damageSource, target, hand);
+    }
+
+    public boolean shouldUseOwnerAttack(){
+        return true;
     }
 
     @Nullable

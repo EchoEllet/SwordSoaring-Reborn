@@ -18,6 +18,8 @@ import yesman.epicfight.api.collider.Collider;
 public class BabylonPatch extends AbstractArtifactSpiritPatch<BabylonEntity> {
     private boolean played;
 
+    private float baseDamage;
+
     /**
      * Join World的时候主人还没初始化，只能换这里操作
      */
@@ -49,6 +51,19 @@ public class BabylonPatch extends AbstractArtifactSpiritPatch<BabylonEntity> {
         return SwordSoaringColliders.FLY_SWORD_COMMON;
     }
 
+    @Override
+    public boolean shouldUseOwnerAttack() {
+        return false;
+    }
+
+    public void setModifiedBaseDamage(float modifiedBaseDamage) {
+        this.baseDamage = modifiedBaseDamage;
+    }
+
+    @Override
+    public float getModifiedBaseDamage(float baseDamage) {
+        return this.baseDamage;
+    }
 
     @Override
     public void updateMotion(boolean considerInaction) {

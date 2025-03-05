@@ -14,6 +14,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.p1nero.ss.entity.sword.screen_sword.ScreenSwordEntity;
+import net.p1nero.ss.util.ItemUtils;
 import yesman.epicfight.api.utils.AttackResult;
 import yesman.epicfight.client.gui.BattleModeGui;
 import yesman.epicfight.gameasset.EpicFightSounds;
@@ -87,14 +88,9 @@ public class ScreenSwordSkill extends KillAuraSkill {
                     Entity entity = hurtEvent.getDamageSource().getEntity();
                     if(entity != null){
                         //难道没有直接获取某个武器的伤害的办法吗。。
-                        AtomicReference<Double> totalDamage = new AtomicReference<>(hurtEvent.getPlayerPatch().getOriginal().getAttributeBaseValue(Attributes.ATTACK_DAMAGE));
-                        screenSwordEntity.getItemStack(hurtEvent.getPlayerPatch()).getAttributeModifiers(EquipmentSlot.MAINHAND).get(Attributes.ATTACK_DAMAGE).forEach(attributeModifier -> {
-                            if(attributeModifier.getOperation().equals(AttributeModifier.Operation.ADDITION)){
-                                totalDamage.updateAndGet(v -> v + attributeModifier.getAmount());
-                            }
-                        });
+                        double total = ItemUtils.getItemAttackDamage(hurtEvent.getPlayerPatch().getOriginal(), screenSwordEntity.getItemStack(null));
                         //反击伤害不超过武器最大伤害
-                        float counterattackDamage = hurtEvent.getAmount() * 0.5F > totalDamage.get() ? totalDamage.get().floatValue() : hurtEvent.getAmount() * 0.5F;
+                        float counterattackDamage = hurtEvent.getAmount() * 0.5F > total ? (float) total : hurtEvent.getAmount() * 0.5F;
                         hurtEvent.getDamageSource().getEntity().hurt(hurtEvent.getDamageSource(), counterattackDamage);
                     }
                 }

@@ -8,6 +8,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -34,6 +35,7 @@ import yesman.epicfight.skill.SkillDataManager;
 import yesman.epicfight.skill.SkillSlot;
 import yesman.epicfight.world.capabilities.item.CapabilityItem;
 
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Mod(SwordSoaring.MOD_ID)
@@ -56,6 +58,9 @@ public class SwordSoaring {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
 
+    public static boolean isArmourersWorkshopLoaded() {
+        return ModList.get().isLoaded("armourers_workshop");
+    }
 
     /**
      * 判断物品是否属于剑或者被视为剑。
@@ -74,6 +79,12 @@ public class SwordSoaring {
             return false;
         }
         return sword.getItem() instanceof SwordItem || Config.swordItems.contains(sword.getItem());
+    }
+
+    public static void runInArmourersWorkshopLoaded(Supplier<Runnable> handler) {
+        if (isArmourersWorkshopLoaded()) {
+            handler.get().run();
+        }
     }
 
 }

@@ -5,6 +5,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.p1nero.ss.SwordSoaring;
+import net.p1nero.ss.compat.ArmourersWorkshopCompat;
 import net.p1nero.ss.entity.AbstractArtifactSpiritEntity;
 import net.p1nero.ss.entity.SwordSoaringEntities;
 import net.p1nero.ss.entity.sword.fly_sword.FlySwordPatch;
@@ -42,6 +43,7 @@ public class ModEvents{
     @SubscribeEvent
     public static void commonSetup(FMLCommonSetupEvent event) {
         PacketHandler.register();
+        SwordSoaring.runInArmourersWorkshopLoaded(() -> ArmourersWorkshopCompat::registerSwordSoaringItemProvider);
         event.enqueueWork(() -> {
             ScreenSwordSkill.PROTECT_COUNT = SkillDataManager.SkillDataKey.createDataKey(SkillDataManager.ValueType.INTEGER, true);
             VatanseverPassive.SWORD_COUNT = SkillDataManager.SkillDataKey.createDataKey(SkillDataManager.ValueType.INTEGER, true);

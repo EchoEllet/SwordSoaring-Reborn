@@ -37,7 +37,7 @@ public class PatchedBabylonRandomReplaceableLayer<E extends BabylonEntity, T ext
     public PatchedBabylonRandomReplaceableLayer() {
         super(null);
     }
-    public static final int FADE_TIME = 30, LIFE_TIME = 130;
+    public static final int FADE_TIME = 20, LIFE_TIME = 130;
     public static final ResourceLocation PORTAL_TEXTURE = new ResourceLocation(SwordSoaring.MOD_ID, "textures/entity/portal.png");
 
     protected void renderLayer(T entityPatch, E entity, RenderLayer<E, M> vanillaLayer, PoseStack postStack, MultiBufferSource buffer, int packedLightIn, OpenMatrix4f[] poses, float bob, float yRot, float xRot, float partialTicks) {

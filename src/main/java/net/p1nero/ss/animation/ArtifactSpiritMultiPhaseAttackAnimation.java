@@ -90,7 +90,7 @@ public class ArtifactSpiritMultiPhaseAttackAnimation extends AttackAnimation {
     /**
      * 自己在Capability里实现根据phase判断是否攻击过，不同phase独立判断
      */
-    private void hurtCollidingEntities(LivingEntityPatch<?> entityPatch, float prevElapsedTime, float elapsedTime, EntityState prevState, EntityState state, MultiAttackPhase phase) {
+    protected void hurtCollidingEntities(LivingEntityPatch<?> entityPatch, float prevElapsedTime, float elapsedTime, EntityState prevState, EntityState state, MultiAttackPhase phase) {
         entityPatch.getArmature().initializeTransform();
         float prevPoseTime = prevState.attacking() ? prevElapsedTime : phase.preDelay;
         float poseTime = state.attacking() ? elapsedTime : phase.contact;
