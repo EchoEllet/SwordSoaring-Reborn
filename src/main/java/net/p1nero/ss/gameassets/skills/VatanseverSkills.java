@@ -30,7 +30,7 @@ public class VatanseverSkills {
         ComboNode aaab = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_AUTO4_B).addCondition(checkSwordCount(6));
         ComboNode storm = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_STORM_START).addCondition(checkSwordCount(6))
                 .setCooldown(300)
-                .addCondition(new CooldownCondition(true));
+                .addCondition(new CooldownCondition(false));
         ComboNode shootL3 = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_SHOOT_L3).addCondition(checkSwordCount(6)).setPriority(6);
         ComboNode shootR3 = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_SHOOT_R3).addCondition(checkSwordCount(5)).setPriority(5);
         ComboNode shootL2 = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_SHOOT_L2).addCondition(checkSwordCount(4)).setPriority(4);

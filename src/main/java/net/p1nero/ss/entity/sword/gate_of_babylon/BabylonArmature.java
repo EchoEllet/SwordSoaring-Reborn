@@ -68,7 +68,8 @@ public class BabylonArmature extends Armature implements IReplaceableArmature {
         W042 = getOrLogException(jointMap, "W.042");
         W043 = getOrLogException(jointMap, "W.043");
         W044 = getOrLogException(jointMap, "W.044");
-        joints = ImmutableList.of(W001, W002, W003, W004, W005, W006, W007, W008, W009, W010,
+        //你问为什么没有009？因为猪鼻merlin把它掰弯了，含泪抛弃
+        joints = ImmutableList.of(W001, W002, W003, W004, W005, W006, W007, W008, W010,
                 W011, W012, W013, W014, W015, W016, W017, W018, W019, W020,
                 W021, W022, W023, W024, W025, W026, W027, W028, W029, W030,
                 W031, W032, W033, W034, W035, W036, W037, W038, W039, W040,

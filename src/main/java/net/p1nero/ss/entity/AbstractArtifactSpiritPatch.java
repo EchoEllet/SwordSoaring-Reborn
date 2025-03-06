@@ -131,12 +131,12 @@ public abstract class AbstractArtifactSpiritPatch<T extends AbstractArtifactSpir
     }
 
     /**
-     * 自己人也杀
+     * 主人不同则杀
      */
     @Override
     public boolean isTeammate(Entity entityIn) {
         if(entityIn instanceof AbstractArtifactSpiritEntity artifactSpiritEntity && getOwnerPatch() != null){
-            return artifactSpiritEntity.is(getOwnerPatch().getOriginal());
+            return getOwnerPatch().getOriginal().equals(artifactSpiritEntity.getOwner());
         }
         return false;
     }

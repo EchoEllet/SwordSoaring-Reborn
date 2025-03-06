@@ -38,7 +38,7 @@
   "skill.sword_soaring.kill_aura_2": "血戮蓮華·燼",
   "skill.sword_soaring.kill_aura_2.tooltip": "§c§l赤焰環刃綻如蓮，焚盡蒼生不留痕§r\n\n喚赤蓮之陣焚四野，其威視兵刃而定，中者皆燃\n\n存續：%.1f 息\n\n調息：%.1f 息",
   "skill.sword_soaring.rain_sword": "天罡劍陣·滅",
-  "skill.sword_soaring.rain_sword.tooltip": "§f§l北斗天罡化劍域，環陣所至盡誅邪§r\n\n施術則凡擊皆引劍雨，每擊可生 %d 餘刃\n\n存續：%.1f 息\n\n調息：%.1f 息",
+  "skill.sword_soaring.rain_sword.tooltip": "§f§l北斗天罡化劍域，環陣所至盡誅邪§r\n\n施術則凡擊皆引劍雨，每擊可生 %d 至 %d 餘刃\n\n存續：%.1f 息\n\n調息：%.1f 息",
   "skill.sword_soaring.babylon": "王庭寶庫",
   "skill.sword_soaring.babylon.tooltip": "啟寶庫納萬兵，化劍雨貫長空\n\n §e§l「哼。此等寶具，回收方顯其用」 §r\n\n調息：%.1f 息",
 

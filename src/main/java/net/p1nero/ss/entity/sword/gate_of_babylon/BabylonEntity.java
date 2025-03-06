@@ -5,57 +5,55 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.PlayerEnderChestContainer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.p1nero.ss.SwordSoaring;
-import net.p1nero.ss.compat.ArmourersWorkshopCompat;
+import net.minecraft.world.phys.Vec3;
+import net.p1nero.ss.Config;
 import net.p1nero.ss.entity.AbstractArtifactSpiritEntity;
 import net.p1nero.ss.entity.SwordSoaringEntities;
 import net.p1nero.ss.entity.sword.AbstractSwordEntity;
 import net.p1nero.ss.gameassets.SwordSoaringArmatures;
+import net.p1nero.ss.gameassets.animations.BabylonAnimations;
 import net.p1nero.ss.network.PacketHandler;
 import net.p1nero.ss.network.PacketRelay;
-import net.p1nero.ss.network.packet.client.SyncEnderChestValidBabylonPacket;
+import net.p1nero.ss.network.packet.server.RequestBabylonSyncPacket;
+import net.p1nero.ss.util.AnimationUtils;
 import net.p1nero.ss.util.ItemUtils;
 import yesman.epicfight.api.animation.Joint;
 import yesman.epicfight.api.animation.types.StaticAnimation;
+import yesman.epicfight.api.utils.LevelUtil;
 import yesman.epicfight.api.utils.math.OpenMatrix4f;
 import yesman.epicfight.main.EpicFightMod;
 
 import java.util.*;
-import java.util.function.Supplier;
 
 public class BabylonEntity extends AbstractSwordEntity {
-    private final ArrayList<ItemStack> validBabylonItems = new ArrayList<>();
+    private ArrayList<ItemStack> validBabylonItems = new ArrayList<>();
     private float startYRot;
-    private final Map<Integer, OpenMatrix4f> jointTransformMap = new HashMap<>();
+    private final Map<Integer, OpenMatrix4f> startJointTransformMap = new HashMap<>();
     private final Map<Integer, Double> jointDamageMap = new HashMap<>();
+    private final Map<Integer, Boolean> jointsHittenGroundMap = new HashMap<>();
     private static final EntityDataAccessor<String> ANIMATION_TO_PLAY = SynchedEntityData.defineId(BabylonEntity.class, EntityDataSerializers.STRING);
-    private static final EntityDataAccessor<Integer> SEED = SynchedEntityData.defineId(BabylonEntity.class, EntityDataSerializers.INT);//双端打乱顺序需要同步
+    private static final EntityDataAccessor<Boolean> CLIENT_INIT = SynchedEntityData.defineId(BabylonEntity.class, EntityDataSerializers.BOOLEAN);
 
     public BabylonEntity(EntityType<? extends AbstractArtifactSpiritEntity> entityType, Level level) {
         super(entityType, level);
     }
 
-    public BabylonEntity(Player owner) {
+    public BabylonEntity(Player owner, Vec3 startPos, float yRot) {
         super(SwordSoaringEntities.BABYLON.get(), owner.getMainHandItem().copy(), owner);
-        setPos(owner.position());
-        setYBodyRot(owner.getYRot());
-        setYRot(owner.getYRot());
-        setYHeadRot(owner.getYRot());
+        setPos(startPos);
+        setYBodyRot(yRot);
+        setYRot(yRot);
+        setYHeadRot(yRot);
         if (!level.isClientSide) {
-            startYRot = owner.getYRot();
-            getEntityData().set(SEED, random.nextInt());
+            startYRot = yRot;
         }
         setNoGravity(true);
         noPhysics = true;
-
-        //时装工坊联动，拷贝时装栏
-        SwordSoaring.runInArmourersWorkshopLoaded(() -> () -> ArmourersWorkshopCompat.copyArmourers(owner, this));
 
     }
 
@@ -63,7 +61,7 @@ public class BabylonEntity extends AbstractSwordEntity {
     protected void defineSynchedData() {
         super.defineSynchedData();
         getEntityData().define(ANIMATION_TO_PLAY, "sword_soaring:babylon/babylon_shoot");
-        getEntityData().define(SEED, 0);
+        getEntityData().define(CLIENT_INIT, false);
     }
 
     public StaticAnimation getAnimationToPlay() {
@@ -75,11 +73,11 @@ public class BabylonEntity extends AbstractSwordEntity {
     }
 
     public void bindStartTransform(int jointId, OpenMatrix4f startTransform) {
-        this.jointTransformMap.put(jointId, startTransform);
+        this.startJointTransformMap.put(jointId, startTransform);
     }
 
     public OpenMatrix4f getStartTransform(int jointId) {
-        return jointTransformMap.get(jointId);
+        return startJointTransformMap.get(jointId);
     }
 
     /**
@@ -90,59 +88,52 @@ public class BabylonEntity extends AbstractSwordEntity {
         return 0xf9fb74;
     }
 
-//    @Override
-//    public boolean isCurrentlyGlowing() {
-//        return true;
-//    }
+    @Override
+    public boolean isCurrentlyGlowing() {
+        return Config.ITEMS_BLOOM.get();
+    }
 
     /**
-     * 双端分别计算，并共用seed
+     * 应在服务端调用
      */
-    public void calculateValidBabylonItems(Player player) {
-        validBabylonItems.clear();
-        player.getInventory().items.forEach(itemStack -> {
-
-            //包括背包，潜影贝等
-            boolean isItemHandler = itemStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent();
-            if (isItemHandler) {
-                itemStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(iItemHandler -> {
-                    for (int i = 0; i < iItemHandler.getSlots(); i++) {
-                        ItemStack inSideItem = iItemHandler.getStackInSlot(i);
-                        if (!inSideItem.isEmpty()) {
-                            validBabylonItems.add(inSideItem.copy());
-                        }
-                    }
-                });
-            } else {
-                if (!itemStack.isEmpty()) {
-                    validBabylonItems.add(itemStack.copy());
-                }
-            }
-        });
-        if (!level.isClientSide) {
-            List<ItemStack> enderChestStacks = new ArrayList<>();
-            PlayerEnderChestContainer enderChestContainer = player.getEnderChestInventory();
-            for (int i = 0; i < enderChestContainer.getContainerSize(); i++) {
-                ItemStack itemStack = enderChestContainer.getItem(i);
-                if (!itemStack.isEmpty()) {
-                    enderChestStacks.add(itemStack.copy());
-                }
-            }
-            PacketRelay.sendToAll(PacketHandler.INSTANCE, new SyncEnderChestValidBabylonPacket(getId(), enderChestStacks.size(), enderChestStacks));
-            validBabylonItems.addAll(enderChestStacks);
-        }
-        Collections.shuffle(validBabylonItems, new Random(getSeed()));//打乱但客户端服务端打乱顺序要一致
+    public void initBabylonItems(ArrayList<ItemStack> babylonItems){
+        validBabylonItems = babylonItems;
+        Collections.shuffle(validBabylonItems);
+        //记录Joint和伤害的关系
         if (!level.isClientSide) {
             List<Joint> joints = SwordSoaringArmatures.babylonArmature.getJoints(getPatch());
-            for (int i = 0; i < joints.size(); i++) {
+            for (int i = 0; i < joints.size() && i < validBabylonItems.size(); i++) {
                 Joint joint = joints.get(i);
-                ItemStack itemStack;
-                if (i < validBabylonItems.size()) {
-                    itemStack = validBabylonItems.get(i);//尽可能都用上
-                } else {
-                    itemStack = validBabylonItems.get(new Random(getSeed()).nextInt(validBabylonItems.size()));
-                }
+                ItemStack itemStack = validBabylonItems.get(i);
                 jointDamageMap.put(joint.getId(), ItemUtils.getItemAttackDamage(this.getOwner(), itemStack));
+            }
+        }
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if(getOwner() != null && level.isClientSide && !getEntityData().get(CLIENT_INIT)){
+            getEntityData().set(CLIENT_INIT, true);
+            PacketRelay.sendToServer(PacketHandler.INSTANCE, new RequestBabylonSyncPacket(getId()));
+        }
+        if(!level.isClientSide && !jointDamageMap.isEmpty() && getPatch() != null){
+            if(getPatch().getAnimator().getPlayerFor(null).getElapsedTime() > 1.33F){
+                for(int id : jointDamageMap.keySet()){
+                    if(jointsHittenGroundMap.getOrDefault(id, false)) {
+                        continue;
+                    }
+                    Joint joint = SwordSoaringArmatures.babylonArmature.searchJointById(id);
+                    Vec3 jointPos = AnimationUtils.getJointWorldPos(getPatch(), joint);
+                    if(jointPos.y() <= getY() + 0.5F){
+                        LevelUtil.circleSlamFracture(getOwner(), level, jointPos.add(0, -1, 0), 2.5, false);
+                        jointsHittenGroundMap.put(id, true);
+                        if(Config.REMOVE_ITEM.get()){
+                            ItemEntity itemEntity = new ItemEntity(level, jointPos.x, jointPos.y, jointPos.z, validBabylonItems.get(SwordSoaringArmatures.babylonArmature.joints.indexOf(joint)));
+                            level.addFreshEntity(itemEntity);
+                        }
+                    }
+                }
             }
         }
     }
@@ -150,12 +141,8 @@ public class BabylonEntity extends AbstractSwordEntity {
     /**
      * 接收来自服务端的
      */
-    public void receiveServerEnderChestItem(List<ItemStack> items) {
-        validBabylonItems.addAll(items);
-    }
-
-    public long getSeed() {
-        return getEntityData().get(SEED);
+    public void updateBabylonItems(ArrayList<ItemStack> items) {
+        validBabylonItems = items;
     }
 
     public ArrayList<ItemStack> getValidBabylonItems() {
@@ -167,22 +154,7 @@ public class BabylonEntity extends AbstractSwordEntity {
     }
 
     public double getJointDamage(Joint joint) {
-        return jointDamageMap.get(joint.getId());
-    }
-
-    @Override
-    public void tick() {
-        super.tick();
-        if (validBabylonItems.isEmpty() && getSeed() != 0) {
-            if (getOwner() instanceof Player player) {
-                calculateValidBabylonItems(player);
-                if (!level.isClientSide) {
-                    setYRot(player.getYRot());
-                    setYBodyRot(player.getYRot());
-                    setYHeadRot(player.getYRot());
-                }
-            }
-        }
+        return Objects.requireNonNullElse(jointDamageMap.get(joint.getId()), 0.0);
     }
 
     @Override
