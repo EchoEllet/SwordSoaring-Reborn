@@ -11,7 +11,7 @@ import net.p1nero.ss.entity.SwordSoaringEntities;
 import net.p1nero.ss.item.SwordSoaringItems;
 
 public class VatanseverStormEntity extends AbstractArtifactSpiritEntity {
-
+    public static final int MAX_LIFE_TIME = 400;
     public VatanseverStormEntity(EntityType<? extends VatanseverStormEntity> entityType, Level level) {
         super(entityType, level);
     }
@@ -31,6 +31,16 @@ public class VatanseverStormEntity extends AbstractArtifactSpiritEntity {
         setYRot(0);
         setYBodyRot(0);
         setYHeadRot(0);
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if(!level.isClientSide){
+            if(tickCount > MAX_LIFE_TIME) {
+                this.discard();
+            }
+        }
     }
 
     @Override

@@ -7,7 +7,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -15,11 +14,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.p1nero.ss.Config;
 import net.p1nero.ss.entity.AbstractArtifactSpiritEntity;
+import net.p1nero.ss.entity.ReplaceableArmature;
 import net.p1nero.ss.entity.SwordSoaringEntities;
 import net.p1nero.ss.entity.sword.AbstractSwordEntity;
 import net.p1nero.ss.gameassets.SwordSoaringArmatures;
 import net.p1nero.ss.gameassets.animations.BabylonAnimations;
-import net.p1nero.ss.item.SwordSoaringItems;
 import net.p1nero.ss.network.PacketHandler;
 import net.p1nero.ss.network.PacketRelay;
 import net.p1nero.ss.network.packet.server.RequestBabylonSyncPacket;
@@ -47,7 +46,7 @@ public class BabylonEntity extends AbstractSwordEntity {
         setItemInHand(InteractionHand.MAIN_HAND, Items.GOLDEN_SWORD.getDefaultInstance());
     }
 
-    public BabylonEntity(EntityType<? extends BabylonEntity> entityType, Player owner, Vec3 startPos, float yRot) {
+    public BabylonEntity(EntityType<? extends BabylonEntity> entityType, LivingEntity owner, Vec3 startPos, float yRot) {
         super(entityType, owner.getMainHandItem().copy(), owner);
         setItemInHand(InteractionHand.MAIN_HAND, Items.GOLDEN_SWORD.getDefaultInstance());
         setPos(startPos);
@@ -61,7 +60,7 @@ public class BabylonEntity extends AbstractSwordEntity {
         noPhysics = true;
     }
 
-    public BabylonEntity(Player owner, Vec3 startPos, float yRot) {
+    public BabylonEntity(LivingEntity owner, Vec3 startPos, float yRot) {
         this(SwordSoaringEntities.BABYLON.get(), owner, startPos, yRot);
     }
 
@@ -104,7 +103,7 @@ public class BabylonEntity extends AbstractSwordEntity {
     /**
      * 应在服务端调用
      */
-    public void initBabylonItems(ArrayList<ItemStack> babylonItems){
+    public void initBabylonItems(ArrayList<ItemStack> babylonItems, boolean shuffle){
         validBabylonItems = babylonItems;
         Collections.shuffle(validBabylonItems);
         //记录Joint和伤害的关系
@@ -131,13 +130,13 @@ public class BabylonEntity extends AbstractSwordEntity {
                     if(jointsHittenGroundMap.getOrDefault(id, false)) {
                         continue;
                     }
-                    Joint joint = SwordSoaringArmatures.babylonArmature.searchJointById(id);
+                    Joint joint = getArmature().searchJointById(id);
                     Vec3 jointPos = AnimationUtils.getJointWorldPos(getPatch(), joint);
                     if(jointPos.y() <= getY() + 0.5F){
                         LevelUtil.circleSlamFracture(getOwner(), level, jointPos.add(0, -1, 0), 2.5, false);
                         jointsHittenGroundMap.put(id, true);
                         if(Config.REMOVE_ITEM.get()){
-                            ItemEntity itemEntity = new ItemEntity(level, jointPos.x, jointPos.y, jointPos.z, validBabylonItems.get(SwordSoaringArmatures.babylonArmature.joints.indexOf(joint)));
+                            ItemEntity itemEntity = new ItemEntity(level, jointPos.x, jointPos.y, jointPos.z, validBabylonItems.get(getArmature().joints.indexOf(joint)));
                             level.addFreshEntity(itemEntity);
                         }
                     }
@@ -155,6 +154,9 @@ public class BabylonEntity extends AbstractSwordEntity {
      */
     public void updateBabylonItems(ArrayList<ItemStack> items) {
         validBabylonItems = items;
+        if(level.isClientSide){
+
+        }
     }
 
     public ArrayList<ItemStack> getValidBabylonItems() {
@@ -181,6 +183,19 @@ public class BabylonEntity extends AbstractSwordEntity {
     @Override
     protected Item getOriginalItem() {
         return null;
+    }
+
+    public ReplaceableArmature getArmature(){
+        return SwordSoaringArmatures.babylonArmature;
+    }
+
+    public boolean hasJoint(Joint joint){
+        for(int i = 0; i < validBabylonItems.size() && i < getArmature().joints.size(); i++){
+            if(getArmature().joints.get(i).getId() == joint.getId()){
+                return true;
+            }
+        }
+        return false;
     }
 
 

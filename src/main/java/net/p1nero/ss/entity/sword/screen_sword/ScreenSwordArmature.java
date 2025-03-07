@@ -1,23 +1,19 @@
 package net.p1nero.ss.entity.sword.screen_sword;
 
-import com.google.common.collect.ImmutableList;
 import net.p1nero.ss.entity.AbstractArtifactSpiritPatch;
-import net.p1nero.ss.entity.IReplaceableArmature;
+import net.p1nero.ss.entity.ReplaceableArmature;
 import net.p1nero.ss.gameassets.SwordSoaringSkillSlots;
 import net.p1nero.ss.skill.sword_controller.ScreenSwordSkill;
 import yesman.epicfight.api.animation.Joint;
-import yesman.epicfight.api.model.Armature;
 import yesman.epicfight.skill.SkillDataManager;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
-import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class ScreenSwordArmature extends Armature implements IReplaceableArmature {
+public class ScreenSwordArmature extends ReplaceableArmature {
     public final Joint W1, W2, W3, W4, W5, W6;
-    public final ImmutableList<Joint> joints;
     public ScreenSwordArmature(int jointNumber, Joint rootJoint, Map<String, Joint> jointMap) {
         super(jointNumber, rootJoint, jointMap);
         W1 = getOrLogException(jointMap, "W_1");
@@ -26,7 +22,12 @@ public class ScreenSwordArmature extends Armature implements IReplaceableArmatur
         W4 = getOrLogException(jointMap, "W_4");
         W5 = getOrLogException(jointMap, "W_5");
         W6 = getOrLogException(jointMap, "W_6");
-        joints = ImmutableList.of(W1, W2, W3, W4, W5, W6);
+        joints.add(W1);
+        joints.add(W2);
+        joints.add(W3);
+        joints.add(W4);
+        joints.add(W5);
+        joints.add(W6);
     }
 
     @Override

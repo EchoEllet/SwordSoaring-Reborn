@@ -19,7 +19,7 @@ public class SwordConvergenceRenderer extends MobRenderer<AbstractArtifactSpirit
 
     @Override
     public boolean shouldRender(@NotNull AbstractArtifactSpiritEntity pLivingEntity, @NotNull Frustum pCamera, double pCamX, double pCamY, double pCamZ) {
-        return pLivingEntity.tickCount > 5;
+        return pLivingEntity.tickCount > 2;
     }
 
     @Override

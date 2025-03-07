@@ -1,13 +1,11 @@
 package net.p1nero.ss.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.p1nero.ss.entity.IReplaceableArmature;
+import net.p1nero.ss.entity.ReplaceableArmature;
 import net.p1nero.ss.entity.LongArmature;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -40,7 +38,7 @@ public abstract class ColliderMixin {
     @Inject(method = "updateAndSelectCollideEntity", at = @At("HEAD"), cancellable = true)
     private void sword_soaring$updateAndSelectCollideEntity(LivingEntityPatch<?> entityPatch, AttackAnimation attackAnimation, float prevElapsedTime, float elapsedTime, Joint joint, float attackSpeed, CallbackInfoReturnable<List<Entity>> cir){
         Armature armature = entityPatch.getArmature();
-        if(armature instanceof LongArmature || armature instanceof IReplaceableArmature){
+        if(armature instanceof LongArmature || armature instanceof ReplaceableArmature){
             long pathIndex = armature instanceof LongArmature longArmature ? longArmature.searchPathIndexLong(joint.getName()) : armature.searchPathIndex(joint.getName());
 
             OpenMatrix4f transformMatrix;
@@ -59,7 +57,7 @@ public abstract class ColliderMixin {
             transformMatrix.mulFront(toWorldCoord.mulBack(entityPatch.getModelMatrix(1.0F)));
 
             //校正旋转
-            if(armature instanceof IReplaceableArmature){
+            if(armature instanceof ReplaceableArmature){
                 transformMatrix.rotateDeg(90, Vec3f.X_AXIS);
                 transformMatrix.rotateDeg(90, Vec3f.Z_AXIS);
             }
@@ -76,7 +74,7 @@ public abstract class ColliderMixin {
     private void sword_soaring$draw(PoseStack matrixStackIn, MultiBufferSource buffer, LivingEntityPatch<?> entityPatch, AttackAnimation animation, Joint joint, float prevElapsedTime, float elapsedTime, float partialTicks, float attackSpeed, CallbackInfo ci){
         Armature armature = entityPatch.getArmature();
 
-        if(armature instanceof LongArmature || armature instanceof IReplaceableArmature){
+        if(armature instanceof LongArmature || armature instanceof ReplaceableArmature){
             long pathIndex = armature instanceof LongArmature longArmature ? longArmature.searchPathIndexLong(joint.getName()) : armature.searchPathIndex(joint.getName());
             EntityState state = animation.getState(entityPatch, elapsedTime);
             EntityState prevState = animation.getState(entityPatch, prevElapsedTime);
@@ -93,7 +91,7 @@ public abstract class ColliderMixin {
             }
 
             //校正旋转
-            if(armature instanceof IReplaceableArmature){
+            if(armature instanceof ReplaceableArmature){
                 mat.rotateDeg(90, Vec3f.X_AXIS);
                 mat.rotateDeg(90, Vec3f.Z_AXIS);
             }

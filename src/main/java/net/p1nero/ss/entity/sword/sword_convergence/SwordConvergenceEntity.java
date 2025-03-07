@@ -8,8 +8,10 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.p1nero.ss.entity.AbstractArtifactSpiritEntity;
+import net.p1nero.ss.entity.ReplaceableArmature;
 import net.p1nero.ss.entity.SwordSoaringEntities;
 import net.p1nero.ss.entity.sword.gate_of_babylon.BabylonEntity;
+import net.p1nero.ss.gameassets.SwordSoaringArmatures;
 import net.p1nero.ss.gameassets.SwordSoaringSkillSlots;
 import net.p1nero.ss.gameassets.animations.SwordConvergenceAnimations;
 import net.p1nero.ss.skill.sword_controller.WanJianGuiZongSkill;
@@ -23,7 +25,7 @@ public class SwordConvergenceEntity extends BabylonEntity {
         super(entityType, level);
     }
 
-    public SwordConvergenceEntity(Player owner) {
+    public SwordConvergenceEntity(LivingEntity owner) {
         super(SwordSoaringEntities.SWORD_CONVERGENCE_ENTITY.get(), owner, owner.position(), owner.getYRot());
         if (!level.isClientSide) {
             getEntityData().set(SEED, random.nextInt());
@@ -67,6 +69,10 @@ public class SwordConvergenceEntity extends BabylonEntity {
             setYBodyRot(owner.getYRot());
             setYHeadRot(owner.getYRot());
         }
+    }
+
+    public ReplaceableArmature getArmature(){
+        return SwordSoaringArmatures.vatanseverStormArmature;
     }
 
 }

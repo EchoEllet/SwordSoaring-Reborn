@@ -63,11 +63,13 @@ public class CameraAnim {
     public static void cameraSetupEvent(EntityViewRenderEvent.CameraSetup event) {
         if (zoomCount > 0) {
             setCameraAnimThirdPerson(event, Minecraft.getInstance().options.getCameraType(), event.getPartialTicks());
-            zoomCount = aiming ? zoomCount + 1 : zoomCount - 1;
-            zoomCount = Math.min(ZOOM_MAX_COUNT, zoomCount);
-            zoomOutTimer--;
-            if(zoomOutTimer < 0){
-                aiming = false;
+            if(!Minecraft.getInstance().isPaused()) {
+                zoomCount = aiming ? zoomCount + 1 : zoomCount - 1;
+                zoomCount = Math.min(ZOOM_MAX_COUNT, zoomCount);
+                zoomOutTimer--;
+                if(zoomOutTimer < 0){
+                    aiming = false;
+                }
             }
         }
     }

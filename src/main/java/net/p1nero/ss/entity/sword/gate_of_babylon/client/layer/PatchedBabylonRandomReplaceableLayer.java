@@ -16,7 +16,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.p1nero.ss.SwordSoaring;
 import net.p1nero.ss.entity.AbstractArtifactSpiritPatch;
-import net.p1nero.ss.entity.IReplaceableArmature;
+import net.p1nero.ss.entity.ReplaceableArmature;
 import net.p1nero.ss.entity.sword.gate_of_babylon.BabylonEntity;
 import net.p1nero.ss.util.MathUtils;
 import yesman.epicfight.api.animation.Joint;
@@ -35,8 +35,9 @@ public class PatchedBabylonRandomReplaceableLayer<E extends BabylonEntity, T ext
     public static final ResourceLocation LIGHT_TEXTURE = new ResourceLocation(SwordSoaring.MOD_ID, "textures/entity/light.png");
     public static final ResourceLocation PORTAL_TEXTURE = new ResourceLocation(SwordSoaring.MOD_ID, "textures/entity/portal.png");
 
+    @Override
     protected void renderLayer(T entityPatch, E entity, RenderLayer<E, M> vanillaLayer, PoseStack postStack, MultiBufferSource buffer, int packedLightIn, OpenMatrix4f[] poses, float bob, float yRot, float xRot, float partialTicks) {
-        if (entityPatch.getArmature() instanceof IReplaceableArmature armature) {
+        if (entityPatch.getArmature() instanceof ReplaceableArmature armature) {
             renderItemInJoint(entity, entityPatch, armature, poses, buffer, postStack, LightTexture.FULL_BRIGHT);
         }
     }
@@ -44,7 +45,7 @@ public class PatchedBabylonRandomReplaceableLayer<E extends BabylonEntity, T ext
     /**
      * 根据王之宝库随机替换Joint的位置渲染
      */
-    public static void renderItemInJoint(BabylonEntity entity, AbstractArtifactSpiritPatch<?> artifactSpiritPatch, IReplaceableArmature armature, OpenMatrix4f[] poses, MultiBufferSource buffer, PoseStack poseStack, int packedLight) {
+    public static void renderItemInJoint(BabylonEntity entity, AbstractArtifactSpiritPatch<?> artifactSpiritPatch, ReplaceableArmature armature, OpenMatrix4f[] poses, MultiBufferSource buffer, PoseStack poseStack, int packedLight) {
         if (entity.getOwner() != null) {
             List<ItemStack> babylons = entity.getValidBabylonItems();
             if (babylons.isEmpty()) {

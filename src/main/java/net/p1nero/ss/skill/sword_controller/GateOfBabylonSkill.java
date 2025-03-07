@@ -17,7 +17,6 @@ import net.p1nero.ss.client.CameraAnim;
 import net.p1nero.ss.entity.sword.gate_of_babylon.BabylonEntity;
 import net.p1nero.ss.gameassets.SwordSoaringArmatures;
 import net.p1nero.ss.gameassets.animations.BabylonAnimations;
-import net.p1nero.ss.gameassets.animations.ScreenSwordAnimations;
 import yesman.epicfight.api.utils.math.Vec3f;
 import yesman.epicfight.client.gui.BattleModeGui;
 import yesman.epicfight.skill.Skill;
@@ -31,6 +30,7 @@ import java.util.List;
 
 public class GateOfBabylonSkill extends Skill {
     public static SkillDataManager.SkillDataKey<Integer> COOLDOWN_TIMER = SkillDataManager.SkillDataKey.createDataKey(SkillDataManager.ValueType.INTEGER);
+    public static SkillDataManager.SkillDataKey<Integer> CAMERA_TIMER = SkillDataManager.SkillDataKey.createDataKey(SkillDataManager.ValueType.INTEGER);
     private int cooldown, interval;
     private int count = -1;
     private final int perShootCount;
@@ -53,6 +53,7 @@ public class GateOfBabylonSkill extends Skill {
     public void onInitiate(SkillContainer container) {
         super.onInitiate(container);
         container.getDataManager().registerData(COOLDOWN_TIMER);
+        container.getDataManager().registerData(CAMERA_TIMER);
     }
 
     @Override
@@ -67,6 +68,7 @@ public class GateOfBabylonSkill extends Skill {
         executer.getOriginal().getCapability(SSCapabilityProvider.SS_PLAYER).ifPresent(ssPlayer -> {
             int size = ssPlayer.initBabylonItems(executer.getOriginal());
             count = size / (perShootCount + 1) + 1;
+            executer.getSkill(this).getDataManager().setDataSync(CAMERA_TIMER, count * interval, executer.getOriginal());
         });
         startPos = executer.getOriginal().position();
         startYRot = executer.getOriginal().getYRot();
@@ -79,6 +81,10 @@ public class GateOfBabylonSkill extends Skill {
         if (currentCooldown > 0) {
             container.getDataManager().setData(COOLDOWN_TIMER, currentCooldown - 1);
         }
+        int currentCameraTimer = container.getDataManager().getDataValue(CAMERA_TIMER);
+        if (currentCameraTimer > 0) {
+            container.getDataManager().setData(CAMERA_TIMER, currentCameraTimer - 1);
+        }
         if(!container.getExecuter().isLogicalClient()){
             ServerPlayer serverPlayer = ((ServerPlayer) container.getExecuter().getOriginal());
             SSPlayer ssPlayer = serverPlayer.getCapability(SSCapabilityProvider.SS_PLAYER).orElse(new SSPlayer());
@@ -88,14 +94,14 @@ public class GateOfBabylonSkill extends Skill {
                 for(int i = perShootCount * (count-1); i < count * perShootCount && i < ssPlayer.getValidBabylonItems().size(); i++){
                     itemStacks.add(ssPlayer.getValidBabylonItems().get(i));
                 }
-                babylonEntity.initBabylonItems(itemStacks);
+                babylonEntity.initBabylonItems(itemStacks, true);
                 babylonEntity.setAnimationToPlay(currentCooldown == this.cooldown - 1 ? BabylonAnimations.BABYLON_SHOOT_START : BabylonAnimations.BABYLON_SHOOT_LOOP);
                 serverPlayer.level.addFreshEntity(babylonEntity);
                 count--;
                 container.getExecuter().playSound(SoundEvents.PORTAL_AMBIENT, 3.0F, 0.0F, 0.0F);
             }
         } else {
-            if(count > 0){
+            if(currentCameraTimer > 0){
                 CameraAnim.zoomIn(new Vec3f(0, -3 ,-6), 200);
             }
         }

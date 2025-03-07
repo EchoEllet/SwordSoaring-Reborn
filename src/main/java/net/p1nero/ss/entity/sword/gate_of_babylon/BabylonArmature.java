@@ -1,6 +1,6 @@
 package net.p1nero.ss.entity.sword.gate_of_babylon;
 
-import net.p1nero.ss.entity.IReplaceableArmature;
+import net.p1nero.ss.entity.ReplaceableArmature;
 import yesman.epicfight.api.animation.Joint;
 import yesman.epicfight.api.model.Armature;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
@@ -9,9 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class BabylonArmature extends Armature implements IReplaceableArmature {
+public class BabylonArmature extends ReplaceableArmature {
 
-    public final ArrayList<Joint> joints = new ArrayList<>();
     public BabylonArmature(int jointNumber, Joint rootJoint, Map<String, Joint> jointMap) {
         super(jointNumber, rootJoint, jointMap);
         for(int i = 1; i <= 44; i++){
@@ -23,8 +22,4 @@ public class BabylonArmature extends Armature implements IReplaceableArmature {
         }
     }
 
-    @Override
-    public List<Joint> getJoints(LivingEntityPatch<?> livingEntityPatch) {
-        return joints;
-    }
 }

@@ -1,26 +1,18 @@
 package net.p1nero.ss.entity.sword.sword_convergence.client.layer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Matrix3f;
-import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.p1nero.ss.SwordSoaring;
 import net.p1nero.ss.entity.AbstractArtifactSpiritPatch;
-import net.p1nero.ss.entity.IReplaceableArmature;
-import net.p1nero.ss.entity.sword.gate_of_babylon.BabylonEntity;
+import net.p1nero.ss.entity.ReplaceableArmature;
 import net.p1nero.ss.entity.sword.sword_convergence.SwordConvergenceEntity;
 import net.p1nero.ss.util.MathUtils;
 import yesman.epicfight.api.animation.Joint;
@@ -37,16 +29,17 @@ public class PatchedSwordConvergenceRandomReplaceableLayer<E extends SwordConver
         super(null);
     }
 
+    @Override
     protected void renderLayer(T entityPatch, E entity, RenderLayer<E, M> vanillaLayer, PoseStack postStack, MultiBufferSource buffer, int packedLightIn, OpenMatrix4f[] poses, float bob, float yRot, float xRot, float partialTicks) {
-        if (entityPatch.getArmature() instanceof IReplaceableArmature armature) {
+        if (entityPatch.getArmature() instanceof ReplaceableArmature armature) {
             renderItemInJoint(entity, entityPatch, armature, poses, buffer, postStack, LightTexture.FULL_BRIGHT);
         }
     }
 
     /**
-     * 根据王之宝库随机替换Joint的位置渲染
+     * 根据玩家物品栏物品随机替换Joint的位置渲染
      */
-    public static void renderItemInJoint(SwordConvergenceEntity entity, AbstractArtifactSpiritPatch<?> artifactSpiritPatch, IReplaceableArmature armature, OpenMatrix4f[] poses, MultiBufferSource buffer, PoseStack poseStack, int packedLight) {
+    public static void renderItemInJoint(SwordConvergenceEntity entity, AbstractArtifactSpiritPatch<?> artifactSpiritPatch, ReplaceableArmature armature, OpenMatrix4f[] poses, MultiBufferSource buffer, PoseStack poseStack, int packedLight) {
         if (entity.getOwner() != null) {
             List<ItemStack> babylons = entity.getValidBabylonItems();
             if (babylons.isEmpty()) {

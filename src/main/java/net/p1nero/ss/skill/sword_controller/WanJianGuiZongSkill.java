@@ -35,7 +35,7 @@ public class WanJianGuiZongSkill extends Skill {
     public static SkillDataManager.SkillDataKey<Boolean> IS_PRESSING = SkillDataManager.SkillDataKey.createDataKey(SkillDataManager.ValueType.BOOLEAN);
     private static final UUID EVENT_UUID = UUID.fromString("d2d810cc-f30f-11ed-a05b-0242ac114581");
     private int cooldown;
-    private ArrayList<ItemStack> firstHalf, secondHalf;
+
     public WanJianGuiZongSkill(Builder<? extends Skill> builder) {
         super(builder);
     }
@@ -74,7 +74,7 @@ public class WanJianGuiZongSkill extends Skill {
 
     @Override
     public boolean canExecute(PlayerPatch<?> executer) {
-        return (executer.getSkill(this).getDataManager().getDataValue(COOLDOWN_TIMER) <= 0 || executer.getOriginal().isCreative()) && executer.getOriginal().isOnGround();
+        return (executer.getSkill(this).getDataManager().getDataValue(COOLDOWN_TIMER) <= 0 || executer.getOriginal().isCreative()) && executer.getOriginal().isOnGround() && SwordSoaring.isValidSword(executer.getOriginal().getMainHandItem());
     }
 
     @Override
@@ -83,13 +83,22 @@ public class WanJianGuiZongSkill extends Skill {
         executer.getSkill(this).getDataManager().setDataSync(COOLDOWN_TIMER, cooldown, executer.getOriginal());
         executer.playAnimationSynchronized(SwordConvergenceAnimations.WAN1_PLAYER, 0.15F);
         ArrayList<ItemStack> list = ItemUtils.calculateValidBabylonItems(executer.getOriginal(), false, (SwordSoaring::isValidSword));
-        // 创建两个新的 List
-        firstHalf = new ArrayList<>(list.subList(0, list.size() / 2));
-        secondHalf = new ArrayList<>(list.subList(list.size() / 2, list.size()));
+        ArrayList<ItemStack> firstHalf;
+        ArrayList<ItemStack> secondHalf;
+        if(list.size() <= 1){
+            firstHalf = secondHalf = list;
+        } else {
+            firstHalf = new ArrayList<>(list.subList(0, list.size() / 2));
+            secondHalf = new ArrayList<>(list.subList(list.size() / 2, list.size()));
+        }
         SwordConvergenceEntity leftOne = new SwordConvergenceEntity(executer.getOriginal());
         leftOne.setAnimationToPlay(SwordConvergenceAnimations.WAN1_L);
-        leftOne.initBabylonItems(firstHalf);
+        leftOne.initBabylonItems(firstHalf, true);
         executer.getOriginal().level.addFreshEntity(leftOne);
+        SwordConvergenceEntity rightOne = new SwordConvergenceEntity(executer.getOriginal());
+        rightOne.setAnimationToPlay(SwordConvergenceAnimations.WAN1_R);
+        rightOne.initBabylonItems(secondHalf, true);
+        executer.getOriginal().level.addFreshEntity(rightOne);
     }
 
     @Override
@@ -104,14 +113,6 @@ public class WanJianGuiZongSkill extends Skill {
         int currentCooldown = container.getDataManager().getDataValue(COOLDOWN_TIMER);
         if (currentCooldown > 0) {
             container.getDataManager().setData(COOLDOWN_TIMER, currentCooldown - 1);
-        }
-        if(container.getExecuter().getOriginal() instanceof ServerPlayer serverPlayer){
-            if(currentCooldown == this.cooldown - 26){
-                SwordConvergenceEntity rightOne = new SwordConvergenceEntity(serverPlayer);
-                rightOne.setAnimationToPlay(SwordConvergenceAnimations.WAN1_R);
-                rightOne.initBabylonItems(secondHalf);
-                serverPlayer.level.addFreshEntity(rightOne);
-            }
         }
     }
 

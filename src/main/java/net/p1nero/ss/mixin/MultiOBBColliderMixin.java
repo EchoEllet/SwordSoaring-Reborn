@@ -6,7 +6,7 @@ import com.mojang.math.Vector3f;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.p1nero.ss.entity.IReplaceableArmature;
+import net.p1nero.ss.entity.ReplaceableArmature;
 import net.p1nero.ss.entity.LongArmature;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -42,7 +42,7 @@ public abstract class MultiOBBColliderMixin extends MultiCollider<OBBCollider> {
         float partialScale = 1.0F / (numberOf - 1);
         float interpolation = 0.0F;
         Armature armature = entitypatch.getArmature();
-        if(armature instanceof LongArmature || armature instanceof IReplaceableArmature){
+        if(armature instanceof LongArmature || armature instanceof ReplaceableArmature){
             long pathIndex;
             if(armature instanceof LongArmature longArmature){
                 pathIndex = longArmature.searchPathIndexLong(joint.getName());
@@ -89,7 +89,7 @@ public abstract class MultiOBBColliderMixin extends MultiCollider<OBBCollider> {
                 }
 
                 //校正
-                if(armature instanceof IReplaceableArmature){
+                if(armature instanceof ReplaceableArmature){
                     mat.rotateDeg(90, Vec3f.X_AXIS);
                     mat.rotateDeg(90, Vec3f.Z_AXIS);
                 }
