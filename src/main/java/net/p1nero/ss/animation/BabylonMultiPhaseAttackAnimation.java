@@ -59,7 +59,11 @@ public class BabylonMultiPhaseAttackAnimation extends ArtifactSpiritMultiPhaseAt
                             EpicFightDamageSource source = this.getEpicFightDamageSource(entityPatch, hit, phase);
                             int prevInvulTime = hit.invulnerableTime;
                             hit.invulnerableTime = 0;
-                            babylonPatch.setModifiedBaseDamage((float) babylonPatch.getOriginal().getJointDamage(phase.colliders.get(0).getFirst()));
+                            double damage = babylonPatch.getOriginal().getJointDamage(phase.colliders.get(0).getFirst());
+                            if(damage == 0){
+                                continue;
+                            }
+                            babylonPatch.setModifiedBaseDamage((float) damage);
                             AttackResult attackResult = entityPatch.attack(source, hit, phase.hand);
                             hit.invulnerableTime = prevInvulTime;
 

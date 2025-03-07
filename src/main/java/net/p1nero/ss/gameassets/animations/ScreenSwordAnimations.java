@@ -175,8 +175,7 @@ public class ScreenSwordAnimations {
                         spawnSummonParticle(2.3F, () -> ParticleTypes.END_ROD, () -> ParticleTypes.CLOUD),
                         playSound(1.7F, ()->SoundEvents.ANVIL_LAND, -0.5F, 0.0F, 1F),
                         playSound(1.7F, ()->SoundEvents.BELL_BLOCK, -0.5F, 0.0F, 2.5F),
-                        setGlowing(1.7F))
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS);
+                        setGlowing(1.7F));
         PLAYER_SUMMON_KILL_AURA_1 = new ActionAnimation(0.15F, "screen_sword/kill_aura_1_summon_player", biped)
                 .addEvents(AnimationEvent.TimeStampedEvent.create(0.7F, ((livingEntityPatch, staticAnimation, objects) -> {
                     VatanseverAnimations.groundSplit(livingEntityPatch, 0, 0, 0, 0, 0, 2, 0);

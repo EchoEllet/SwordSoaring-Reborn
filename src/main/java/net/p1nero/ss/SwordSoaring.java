@@ -1,22 +1,17 @@
 package net.p1nero.ss;
 
 import com.mojang.logging.LogUtils;
-import com.p1nero.invincible.client.events.InputManager;
 import com.p1nero.invincible.skill.api.ComboType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.p1nero.ss.client.keymapping.SwordSoaringKeyMappings;
 import net.p1nero.ss.client.sound.SwordSoaringSounds;
 import net.p1nero.ss.enchantment.SwordSoaringEnchantments;
 import net.p1nero.ss.entity.SwordSoaringEntities;
@@ -25,13 +20,8 @@ import net.p1nero.ss.gameassets.SwordSoaringComboTypes;
 import net.p1nero.ss.gameassets.SwordSoaringSkillCategories;
 import net.p1nero.ss.gameassets.SwordSoaringSkillSlots;
 import net.p1nero.ss.item.SwordSoaringItems;
-import net.p1nero.ss.network.PacketHandler;
-import net.p1nero.ss.skill.sword_controller.ScreenSwordSkill;
-import net.p1nero.ss.skill.sword_soaring.SwordSoaringSkill;
-import net.p1nero.ss.skill.weapon_passive.VatanseverPassive;
 import org.slf4j.Logger;
 import yesman.epicfight.skill.SkillCategories;
-import yesman.epicfight.skill.SkillDataManager;
 import yesman.epicfight.skill.SkillSlot;
 import yesman.epicfight.world.capabilities.item.CapabilityItem;
 

@@ -5,7 +5,9 @@
   "package": "net.p1nero.ss.mixin",
   "client": [
     "ControlEngineAccessor",
+    "GameRendererMixin",
     "LocalPlayerPatchMixin",
+    "RenderEngineMixin",
     "TrailParticleMixin"
   ],
   "mixins": [
