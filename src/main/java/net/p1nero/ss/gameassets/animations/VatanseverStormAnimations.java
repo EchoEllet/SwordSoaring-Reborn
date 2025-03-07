@@ -272,21 +272,9 @@ public class VatanseverStormAnimations {
         int particleCount = 1;
         Level world = entityPatch.getOriginal().level;
         if (entityPatch instanceof VatanseverStormEntityPatch vatanseverStormEntityPatch && world.isClientSide) {
-            stormParticle(vatanseverStormEntityPatch, SwordSoaringArmatures.vatanseverStormArmature.R101, particleCount);
-            stormParticle(vatanseverStormEntityPatch, SwordSoaringArmatures.vatanseverStormArmature.R102, particleCount);
-            stormParticle(vatanseverStormEntityPatch, SwordSoaringArmatures.vatanseverStormArmature.R103, particleCount);
-            stormParticle(vatanseverStormEntityPatch, SwordSoaringArmatures.vatanseverStormArmature.R104, particleCount);
-            stormParticle(vatanseverStormEntityPatch, SwordSoaringArmatures.vatanseverStormArmature.R105, particleCount);
-            stormParticle(vatanseverStormEntityPatch, SwordSoaringArmatures.vatanseverStormArmature.R106, particleCount);
-            stormParticle(vatanseverStormEntityPatch, SwordSoaringArmatures.vatanseverStormArmature.R107, particleCount);
-            stormParticle(vatanseverStormEntityPatch, SwordSoaringArmatures.vatanseverStormArmature.R108, particleCount);
-            stormParticle(vatanseverStormEntityPatch, SwordSoaringArmatures.vatanseverStormArmature.R109, particleCount);
-            stormParticle(vatanseverStormEntityPatch, SwordSoaringArmatures.vatanseverStormArmature.R111, particleCount);
-            stormParticle(vatanseverStormEntityPatch, SwordSoaringArmatures.vatanseverStormArmature.R112, particleCount);
-            stormParticle(vatanseverStormEntityPatch, SwordSoaringArmatures.vatanseverStormArmature.R113, particleCount);
-            stormParticle(vatanseverStormEntityPatch, SwordSoaringArmatures.vatanseverStormArmature.R114, particleCount);
-            stormParticle(vatanseverStormEntityPatch, SwordSoaringArmatures.vatanseverStormArmature.R115, particleCount);
-            stormParticle(vatanseverStormEntityPatch, SwordSoaringArmatures.vatanseverStormArmature.R116, particleCount);
+            for(Joint joint : SwordSoaringArmatures.vatanseverStormArmature.rootJoints){
+                stormParticle(vatanseverStormEntityPatch, joint, particleCount);
+            }
         }
     }
 }

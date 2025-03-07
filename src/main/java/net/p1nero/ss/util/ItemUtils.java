@@ -11,6 +11,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Predicate;
 
 public class ItemUtils {
     public static double getItemAttackDamage(LivingEntity livingEntity, ItemStack itemStack){
@@ -31,10 +32,14 @@ public class ItemUtils {
         return totalDamage.get();
     }
 
+    public static ArrayList<ItemStack> calculateValidBabylonItems(ServerPlayer player, boolean shouldDelete) {
+        return calculateValidBabylonItems(player, shouldDelete, (itemStack -> true));
+    }
+
     /**
      * 获取玩家身上以及末影箱的所有物品
      */
-    public static ArrayList<ItemStack> calculateValidBabylonItems(ServerPlayer player, boolean shouldDelete) {
+    public static ArrayList<ItemStack> calculateValidBabylonItems(ServerPlayer player, boolean shouldDelete, Predicate<ItemStack> predicate) {
         ArrayList<ItemStack> validBabylonItems = new ArrayList<>();
         player.getInventory().items.forEach(itemStack -> {
 
@@ -44,7 +49,7 @@ public class ItemUtils {
                 itemStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(iItemHandler -> {
                     for (int i = 0; i < iItemHandler.getSlots(); i++) {
                         ItemStack inSideItem = iItemHandler.getStackInSlot(i);
-                        if (!inSideItem.isEmpty()) {
+                        if (!inSideItem.isEmpty() && predicate.test(inSideItem)) {
                             validBabylonItems.add(inSideItem.copy());
                             if(shouldDelete){
                                 inSideItem.setCount(0);
@@ -53,7 +58,7 @@ public class ItemUtils {
                     }
                 });
             } else {
-                if (!itemStack.isEmpty()) {
+                if (!itemStack.isEmpty() && predicate.test(itemStack)) {
                     validBabylonItems.add(itemStack.copy());
                     if(shouldDelete){
                         itemStack.setCount(0);
@@ -65,7 +70,7 @@ public class ItemUtils {
         PlayerEnderChestContainer enderChestContainer = player.getEnderChestInventory();
         for (int i = 0; i < enderChestContainer.getContainerSize(); i++) {
             ItemStack itemStack = enderChestContainer.getItem(i);
-            if (!itemStack.isEmpty()) {
+            if (!itemStack.isEmpty() && predicate.test(itemStack)) {
                 enderChestStacks.add(itemStack.copy());
                 if(shouldDelete){
                     itemStack.setCount(0);

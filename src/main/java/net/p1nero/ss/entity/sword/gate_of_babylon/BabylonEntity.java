@@ -3,12 +3,14 @@ package net.p1nero.ss.entity.sword.gate_of_babylon;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.p1nero.ss.Config;
@@ -17,6 +19,7 @@ import net.p1nero.ss.entity.SwordSoaringEntities;
 import net.p1nero.ss.entity.sword.AbstractSwordEntity;
 import net.p1nero.ss.gameassets.SwordSoaringArmatures;
 import net.p1nero.ss.gameassets.animations.BabylonAnimations;
+import net.p1nero.ss.item.SwordSoaringItems;
 import net.p1nero.ss.network.PacketHandler;
 import net.p1nero.ss.network.PacketRelay;
 import net.p1nero.ss.network.packet.server.RequestBabylonSyncPacket;
@@ -41,10 +44,12 @@ public class BabylonEntity extends AbstractSwordEntity {
 
     public BabylonEntity(EntityType<? extends AbstractArtifactSpiritEntity> entityType, Level level) {
         super(entityType, level);
+        setItemInHand(InteractionHand.MAIN_HAND, Items.GOLDEN_SWORD.getDefaultInstance());
     }
 
-    public BabylonEntity(Player owner, Vec3 startPos, float yRot) {
-        super(SwordSoaringEntities.BABYLON.get(), owner.getMainHandItem().copy(), owner);
+    public BabylonEntity(EntityType<? extends BabylonEntity> entityType, Player owner, Vec3 startPos, float yRot) {
+        super(entityType, owner.getMainHandItem().copy(), owner);
+        setItemInHand(InteractionHand.MAIN_HAND, Items.GOLDEN_SWORD.getDefaultInstance());
         setPos(startPos);
         setYBodyRot(yRot);
         setYRot(yRot);
@@ -54,13 +59,16 @@ public class BabylonEntity extends AbstractSwordEntity {
         }
         setNoGravity(true);
         noPhysics = true;
+    }
 
+    public BabylonEntity(Player owner, Vec3 startPos, float yRot) {
+        this(SwordSoaringEntities.BABYLON.get(), owner, startPos, yRot);
     }
 
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        getEntityData().define(ANIMATION_TO_PLAY, "sword_soaring:babylon/babylon_shoot");
+        getEntityData().define(ANIMATION_TO_PLAY, BabylonAnimations.BABYLON_SHOOT_START.getRegistryName().toString());
         getEntityData().define(CLIENT_INIT, false);
     }
 
@@ -117,7 +125,7 @@ public class BabylonEntity extends AbstractSwordEntity {
             getEntityData().set(CLIENT_INIT, true);
             PacketRelay.sendToServer(PacketHandler.INSTANCE, new RequestBabylonSyncPacket(getId()));
         }
-        if(!level.isClientSide && !jointDamageMap.isEmpty() && getPatch() != null){
+        if(!level.isClientSide && !jointDamageMap.isEmpty() && getPatch() != null && shouldGroundSlam()){
             if(getPatch().getAnimator().getPlayerFor(null).getElapsedTime() > 1.33F){
                 for(int id : jointDamageMap.keySet()){
                     if(jointsHittenGroundMap.getOrDefault(id, false)) {
@@ -136,6 +144,10 @@ public class BabylonEntity extends AbstractSwordEntity {
                 }
             }
         }
+    }
+
+    public boolean shouldGroundSlam(){
+        return true;
     }
 
     /**

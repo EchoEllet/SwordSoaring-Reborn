@@ -32,5 +32,6 @@ public class SwordSoaringArmatures {
         Armatures.registerEntityTypeArmature(SwordSoaringEntities.SCREEN_SWORD.get(), screenSwordArmature);
         Armatures.registerEntityTypeArmature(SwordSoaringEntities.VATANSEVER.get(), vatanseverArmature);
         Armatures.registerEntityTypeArmature(SwordSoaringEntities.VATANSEVER_STORM.get(), vatanseverStormArmature);
+        Armatures.registerEntityTypeArmature(SwordSoaringEntities.SWORD_CONVERGENCE_ENTITY.get(), vatanseverStormArmature);
     }
 }

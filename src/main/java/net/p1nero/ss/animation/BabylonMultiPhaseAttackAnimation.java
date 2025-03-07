@@ -7,6 +7,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.entity.PartEntity;
 import net.p1nero.ss.capability.SSCapabilityProvider;
 import net.p1nero.ss.capability.SSPlayer;
+import net.p1nero.ss.entity.sword.gate_of_babylon.BabylonEntity;
 import net.p1nero.ss.entity.sword.gate_of_babylon.BabylonPatch;
 import org.jetbrains.annotations.Nullable;
 import yesman.epicfight.api.animation.Joint;

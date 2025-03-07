@@ -12,6 +12,7 @@ public class SwordSoaringAnimations {
     @SubscribeEvent
     public static void registerAnimations(AnimationRegistryEvent event) {
         event.getRegistryMap().put(SwordSoaring.MOD_ID, ()->{
+            SwordConvergenceAnimations.buildSwordConvergenceAnim();
             BabylonAnimations.buildBabylonAnim();
             FlyAnimations.buildFlyAnim();
             FlySwordAnimations.buildFlySwordAnim();
