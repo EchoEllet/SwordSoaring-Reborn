@@ -1,5 +1,7 @@
 package net.p1nero.ss.entity.vatansever.client;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
@@ -20,7 +22,13 @@ public class VatanseverRenderer extends MobRenderer<VatanseverEntity, EmptyEntit
      */
     @Override
     public boolean shouldRender(@NotNull VatanseverEntity pLivingEntity, @NotNull Frustum pCamera, double pCamX, double pCamY, double pCamZ) {
-        return pLivingEntity.tickCount > 5;
+        return pLivingEntity.tickCount > 2;
+    }
+
+    @Override
+    public void render(@NotNull VatanseverEntity pEntity, float pEntityYaw, float pPartialTicks, @NotNull PoseStack pMatrixStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
+        this.shadowRadius = 0;
+        super.render(pEntity, pEntityYaw, pPartialTicks, pMatrixStack, pBuffer, pPackedLight);
     }
 
     @Override

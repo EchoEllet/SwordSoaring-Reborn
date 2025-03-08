@@ -5,11 +5,14 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.p1nero.ss.client.sound.SwordSoaringSounds;
 import net.p1nero.ss.entity.AbstractArtifactSpiritEntity;
 import net.p1nero.ss.entity.SwordSoaringEntities;
 import net.p1nero.ss.entity.sword.AbstractSwordEntity;
@@ -36,15 +39,16 @@ public class FlySwordEntity extends AbstractSwordEntity {
     private static final EntityDataAccessor<Boolean> FLYING_BACK = SynchedEntityData.defineId(FlySwordEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> READY_TO_FLY_BACK = SynchedEntityData.defineId(FlySwordEntity.class, EntityDataSerializers.BOOLEAN);
     private LivingEntity target;
+
     public FlySwordEntity(EntityType<? extends AbstractArtifactSpiritEntity> entityType, Level level) {
         super(entityType, level);
     }
 
-    public FlySwordEntity(LivingEntity owner, int maxTickCount, LivingEntity target){
+    public FlySwordEntity(LivingEntity owner, int maxTickCount, LivingEntity target) {
         super(SwordSoaringEntities.FLY_SWORD.get(), owner.getMainHandItem().copy(), owner);
         this.maxTickCount = maxTickCount;
         this.target = target;
-        if(target != null && target.isAlive()){
+        if (target != null && target.isAlive()) {
             setPos(target.position());
         }
         setNoGravity(true);
@@ -59,44 +63,45 @@ public class FlySwordEntity extends AbstractSwordEntity {
         getEntityData().define(ANIMATION_END, false);
     }
 
-    public boolean isRotationLock(){
+    public boolean isRotationLock() {
         return getEntityData().get(ROTATION_LOCK);
     }
 
-    public void setRotationLock(boolean rotationLock){
+    public void setRotationLock(boolean rotationLock) {
         getEntityData().set(ROTATION_LOCK, rotationLock);
     }
 
-    public boolean isAnimationEnd(){
+    public boolean isAnimationEnd() {
         return getEntityData().get(ANIMATION_END);
     }
-    public void setAnimationEnd(boolean flying){
+
+    public void setAnimationEnd(boolean flying) {
         getEntityData().set(ANIMATION_END, flying);
     }
 
-    public boolean isFlyingBack(){
+    public boolean isFlyingBack() {
         return getEntityData().get(FLYING_BACK);
     }
 
-    public void setFlyingBack(boolean flying){
+    public void setFlyingBack(boolean flying) {
         getEntityData().set(FLYING_BACK, flying);
     }
 
-    public boolean isReadyToFlyBack(){
+    public boolean isReadyToFlyBack() {
         return getEntityData().get(READY_TO_FLY_BACK);
     }
 
-    public void setReadyToFlyBack(boolean flying){
+    public void setReadyToFlyBack(boolean flying) {
         getEntityData().set(READY_TO_FLY_BACK, flying);
     }
 
-    public boolean callFlyingBack(){
-        if(getPatch() instanceof FlySwordPatch flySwordPatch){
-            if(flySwordPatch.getEntityState().inaction()){
+    public boolean callFlyingBack() {
+        if (getPatch() instanceof FlySwordPatch flySwordPatch) {
+            if (flySwordPatch.getEntityState().inaction()) {
                 return false;
             }
             flySwordPatch.playAnimationSynchronized(FlySwordAnimations.FLY_SWORD_ATK_FLY_BACK, 0.001F);
-            if(getOwner() != null){
+            if (getOwner() != null) {
                 flySwordPatch.rotateTo(getOwner(), 30, true);
                 setReadyToFlyBack(true);
             }
@@ -120,18 +125,14 @@ public class FlySwordEntity extends AbstractSwordEntity {
     @Override
     protected void moveToOwner(LivingEntity owner) {
         noPhysics = true;
-        if(isFlyingBack()){
+        if (isFlyingBack()) {
             Vec3 vec3 = AnimationUtils.getJointWorldPos(getPatch(), SwordSoaringArmatures.flySwordArmature.body);
-            ParticleVFX.createSphereParticles(level,vec3,ParticleTypes.SMOKE,0.2,0.01,0.05,100);
-            FlySwordAnimations.flySwordDamage(getPatch(FlySwordPatch.class),2,2.5F);
-            if(!level.isClientSide){
-                if(this.position().distanceTo(owner.getEyePosition()) < 1.5){
-                    ((ServerLevel)level).sendParticles( ParticleTypes.SMOKE,getX(),getY(),getZ(),
-                            300,
-                            0.5,
-                            0.5,
-                            0.5,
-                            0.5);
+            ParticleVFX.createSphereParticles(level, vec3, ParticleTypes.SMOKE, 0.2, 0.01, 0.05, 100);
+            FlySwordAnimations.flySwordDamage(getPatch(FlySwordPatch.class), 2, 2.5F);
+            if (!level.isClientSide) {
+                if (this.position().distanceTo(owner.getEyePosition()) < 1.5) {
+                    ((ServerLevel) level).sendParticles(ParticleTypes.SMOKE, getX(), getY(), getZ(), 300, 0.5, 0.5, 0.5, 0.5);
+                    level.playSound(null, getX(), getY(), getZ(), SoundEvents.FIRE_EXTINGUISH, owner.getSoundSource(), 1.0F, 1.0F);
                     addOwnerSwordCount();
                     this.discard();
                     return;
@@ -140,18 +141,18 @@ public class FlySwordEntity extends AbstractSwordEntity {
                 setDeltaMovement(dir);//旋转在Patch里操作
             }
         } else {
-            if(isReadyToFlyBack()){
+            if (isReadyToFlyBack()) {
                 getPatch().rotateTo(owner, 30, true);
-            } else if(isRotationLock()){
+            } else if (isRotationLock()) {
                 setYRot(0);
                 setYBodyRot(0);
                 setYHeadRot(0);
             }
-            if(!level.isClientSide){
-                if(target != null && target.isAlive() && !isAnimationEnd()){
+            if (!level.isClientSide) {
+                if (target != null && target.isAlive() && !isAnimationEnd()) {
                     this.setPos(target.position());
                 }
-                if(tickCount == maxTickCount){
+                if (tickCount == maxTickCount) {
                     addOwnerSwordCount();
                     this.discard();
                 }
@@ -160,10 +161,10 @@ public class FlySwordEntity extends AbstractSwordEntity {
         noPhysics = false;
     }
 
-    public void addOwnerSwordCount(){
-        if(getOwnerPatch() instanceof ServerPlayerPatch serverPlayerPatch){
+    public void addOwnerSwordCount() {
+        if (getOwnerPatch() instanceof ServerPlayerPatch serverPlayerPatch) {
             SkillDataManager manager = serverPlayerPatch.getSkill(SkillSlots.WEAPON_PASSIVE).getDataManager();
-            if(manager.hasData(VatanseverPassive.SWORD_COUNT)){
+            if (manager.hasData(VatanseverPassive.SWORD_COUNT)) {
                 int currentCnt = manager.getDataValue(VatanseverPassive.SWORD_COUNT);
                 manager.setDataSync(VatanseverPassive.SWORD_COUNT, Math.min(currentCnt + 1, 6), serverPlayerPatch.getOriginal());
             }

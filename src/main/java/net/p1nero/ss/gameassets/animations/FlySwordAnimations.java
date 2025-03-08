@@ -39,42 +39,43 @@ public class FlySwordAnimations {
     public static StaticAnimation FLY_SWORD_ATK_FLY;
     public static StaticAnimation FLY_SWORD_ATK_FLY_BACK;
     public static AnimationEvent SET_ANIMATION_END = AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> {
-        if(livingEntityPatch.getOriginal() instanceof FlySwordEntity flySwordEntity){
+        if (livingEntityPatch.getOriginal() instanceof FlySwordEntity flySwordEntity) {
             flySwordEntity.setAnimationEnd(true);
         }
     }, AnimationEvent.Side.SERVER);
+
     public static void buildFlySwordAnim() {
         FlySwordArmature flySwordArmature = SwordSoaringArmatures.flySwordArmature;
         FLY_SWORD_ATK_1 = new AttackAnimation(0.15F, "fly_sword/fly_sword_atk_1", flySwordArmature,
                 new AttackAnimation.Phase(0.0F, 0.1F, 0.2F, 0.2F, 0.2F, flySwordArmature.body, SwordSoaringColliders.FLY_SWORD_COMMON),
                 new AttackAnimation.Phase(0.2F, 0.35F, 0.42F, 0.42F, 0.42F, flySwordArmature.body, SwordSoaringColliders.FLY_SWORD_COMMON),
-                new AttackAnimation.Phase(0.42F, 0.8F, 0.9F, 0.9F, 0.9F, flySwordArmature.body, SwordSoaringColliders.FLY_SWORD_COMMON),
+                new AttackAnimation.Phase(0.42F, 0.42F, 0.62F, 0.62F, 0.62F, flySwordArmature.body, SwordSoaringColliders.FLY_SWORD_COMMON),
+                new AttackAnimation.Phase(0.62F, 0.72F, 0.9F, 0.9F, 0.9F, flySwordArmature.body, SwordSoaringColliders.FLY_SWORD_COMMON),
                 new AttackAnimation.Phase(0.9F, 1.1F, 1.3F, 1.3F, 1.3F, flySwordArmature.body, SwordSoaringColliders.FLY_SWORD_COMMON),
                 new AttackAnimation.Phase(0.9F, 1.1F, 1.3F, 1.3F, 1.3F, flySwordArmature.body, SwordSoaringColliders.FLY_SWORD_COMMON),
-                new AttackAnimation.Phase(1.3F, 1.3F, 1.5F, 1.5F, 1.5F, flySwordArmature.body, SwordSoaringColliders.FLY_SWORD_COMMON),
-                new AttackAnimation.Phase(1.5F, 1.9F, 2.0F, 2.0F, 2.0F, flySwordArmature.body, SwordSoaringColliders.FLY_SWORD_COMMON))
+                new AttackAnimation.Phase(1.3F, 1.3F, 1.5F, 1.5F, 1.5F, flySwordArmature.body, SwordSoaringColliders.FLY_SWORD_COMMON))
                 .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 0.5F))
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, SET_ANIMATION_END)
-                .addEvents(AnimationEvent.TimeStampedEvent.create(1.3F, ((livingEntityPatch, staticAnimation, objects) -> {
-                    VatanseverAnimations.groundSplit(livingEntityPatch, 0, 0, 0, 0, VatanseverAnimations.getTotalAttackDamage(livingEntityPatch)*5, 3, 500);
-                }), AnimationEvent.Side.BOTH));
+                .addEvents(AnimationEvent.TimeStampedEvent.create(1.3F, ((livingEntityPatch, staticAnimation, objects) ->
+                        VatanseverAnimations.groundSplit(livingEntityPatch, 0, 0, 0, 0, VatanseverAnimations.getTotalAttackDamage(livingEntityPatch) * 5, 3, 500)), AnimationEvent.Side.BOTH));
         FLY_SWORD_ATK_2 = new AttackAnimation(0.15F, "fly_sword/fly_sword_atk_2", flySwordArmature,
-                new AttackAnimation.Phase(0.0F, 0.0F, 0.2F, 0.2F, 0.2F, flySwordArmature.body, SwordSoaringColliders.FLY_SWORD_COMMON),
-                new AttackAnimation.Phase(0.2F, 0.35F, 0.45F, 0.45F, 0.45F, flySwordArmature.body, SwordSoaringColliders.FLY_SWORD_COMMON),
-                new AttackAnimation.Phase(0.45F, 0.7F, 0.7F, 0.7F, 0.7F, flySwordArmature.body, SwordSoaringColliders.FLY_SWORD_COMMON),
-                new AttackAnimation.Phase(0.7F, 0.9F, 1.1F, 1.1F, 1.1F, flySwordArmature.body, SwordSoaringColliders.FLY_SWORD_COMMON),
-                new AttackAnimation.Phase(1.1F, 1.3F, 1.5167F, 1.5167F, 1.5167F, flySwordArmature.body, SwordSoaringColliders.FLY_SWORD_COMMON))
+                new AttackAnimation.Phase(0.0F, 0.1F, 0.2F, 0.2F, 0.2F, flySwordArmature.body, SwordSoaringColliders.FLY_SWORD_COMMON),
+                new AttackAnimation.Phase(0.2F, 0.2F, 0.4F, 0.4F, 0.4F, flySwordArmature.body, SwordSoaringColliders.FLY_SWORD_COMMON),
+                new AttackAnimation.Phase(0.4F, 0.4F, 0.6F, 0.6F, 0.6F, flySwordArmature.body, SwordSoaringColliders.FLY_SWORD_COMMON),
+                new AttackAnimation.Phase(0.6F, 0.6F, 0.8F, 0.8F, 0.8F, flySwordArmature.body, SwordSoaringColliders.FLY_SWORD_COMMON),
+                new AttackAnimation.Phase(0.8F, 0.8F, 1.0F, 1.0F, 1.0F, flySwordArmature.body, SwordSoaringColliders.FLY_SWORD_COMMON),
+                new AttackAnimation.Phase(1.0F, 1.0F, 1.3F, 1.3F, 1.3F, flySwordArmature.body, SwordSoaringColliders.FLY_SWORD_COMMON),
+                new AttackAnimation.Phase(1.3F, 1.3F, 1.5167F, 1.5167F, 1.5167F, flySwordArmature.body, SwordSoaringColliders.FLY_SWORD_COMMON))
                 .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 0.5F))
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, SET_ANIMATION_END)
-                .addEvents(AnimationEvent.TimeStampedEvent.create(1.3F, ((livingEntityPatch, staticAnimation, objects) -> {
-                    VatanseverAnimations.groundSplit(livingEntityPatch, 0, 0, 0, 0, VatanseverAnimations.getTotalAttackDamage(livingEntityPatch)*5, 3, 500);
-                }), AnimationEvent.Side.BOTH));
+                .addEvents(AnimationEvent.TimeStampedEvent.create(1.3F, ((livingEntityPatch, staticAnimation, objects) ->
+                        VatanseverAnimations.groundSplit(livingEntityPatch, 0, 0, 0, 0, VatanseverAnimations.getTotalAttackDamage(livingEntityPatch) * 5, 3, 500)), AnimationEvent.Side.BOTH));
         FLY_SWORD_ATK_3 = new AutoDiscardAttackAnimation(0.15F, "fly_sword/fly_sword_atk_3", flySwordArmature,
                 new AttackAnimation.Phase(0.0F, 0.0F, 1, 1, 1, flySwordArmature.body, SwordSoaringColliders.FLY_SWORD_COMMON))
                 .addProperty(AnimationProperty.ActionAnimationProperty.MOVE_VERTICAL, true)
                 .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 0.17F))
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_BEGIN_EVENTS, AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> {
-                    if(livingEntityPatch.getOriginal() instanceof FlySwordEntity flySwordEntity){
+                    if (livingEntityPatch.getOriginal() instanceof FlySwordEntity flySwordEntity) {
                         flySwordEntity.setRotationLock(false);
                         flySwordEntity.setGlowingTag(true);
                     }
@@ -103,23 +104,23 @@ public class FlySwordAnimations {
         FLY_SWORD_ATK_FLY = new StaticAnimation(true, "fly_sword/fly_sword_fly", flySwordArmature);
         FLY_SWORD_ATK_FLY_BACK = new ActionAnimation(0.15F, "fly_sword/fly_sword_back", flySwordArmature)
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> {
-                    if(livingEntityPatch.getOriginal() instanceof FlySwordEntity flySwordEntity){
+                    if (livingEntityPatch.getOriginal() instanceof FlySwordEntity flySwordEntity) {
                         flySwordEntity.setFlyingBack(true);
                     }
                 }, AnimationEvent.Side.SERVER));
     }
 
-    public static void flySwordDamage(FlySwordPatch flySwordPatch, float attractRadius, float damageRadius){
+    public static void flySwordDamage(FlySwordPatch flySwordPatch, float attractRadius, float damageRadius) {
         LivingEntityPatch<?> ownerPatch = flySwordPatch.getOwnerPatch();
-        if(ownerPatch == null){
+        if (ownerPatch == null) {
             return;
         }
         LivingEntity sword = flySwordPatch.getOriginal();
         LivingEntity source = ownerPatch.getOriginal();
-        double baseDamage = source.getAttributeValue(Attributes.ATTACK_DAMAGE)*3;
+        double baseDamage = source.getAttributeValue(Attributes.ATTACK_DAMAGE) * 3;
 
         Vec3 Pos = sword.position();
-        if(sword.level instanceof ServerLevel level){
+        if (sword.level instanceof ServerLevel level) {
 
             AABB area = new AABB(
                     Pos.x - attractRadius, Pos.y - attractRadius, Pos.z - attractRadius,
