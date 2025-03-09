@@ -65,7 +65,6 @@ public class PatchedSwordConvergenceRandomReplaceableLayer<E extends SwordConver
                     poseStack.pushPose();
                     MathUtils.mulPoseStack(poseStack, jointTransform);
                     ItemTransforms.TransformType transformType = ItemTransforms.TransformType.THIRD_PERSON_RIGHT_HAND;
-                    poseStack.scale(0.7F, 0.7F, 0.7F);
                     Minecraft.getInstance().getItemInHandRenderer().renderItem(artifactSpiritPatch.getOriginal(), itemStack, transformType, false, poseStack, buffer, packedLight);
                     poseStack.popPose();
                 }

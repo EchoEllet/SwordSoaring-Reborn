@@ -1,7 +1,6 @@
 package net.p1nero.ss.entity.vatansever;
 
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
 import net.p1nero.ss.entity.AbstractArtifactSpiritPatch;
 import net.p1nero.ss.gameassets.animations.VatanseverAnimations;
 import net.p1nero.ss.skill.weapon_passive.VatanseverPassive;

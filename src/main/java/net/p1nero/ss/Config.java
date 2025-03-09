@@ -25,7 +25,7 @@ public class Config
 
     static {
         ENABLE_LOOT_TABLE = createBool("enable_loot_table", true, "If true, you will get the skill book when defeat the boss.", "若为true，击败boss将可获取技能书。否则你将自己添加技能书获取方式。");
-        ARACHNOPHOBIA_MODE = createBool("arachnophobia_mode", false,"Arachnophobia mode, if true, the boss will have no legs.", "蜘蛛恐惧症模式：true时boss将不会有腿");
+        ARACHNOPHOBIA_MODE = createBool("arachnophobia_mode", false,"Arachnophobia mode, if true, the boss will have no legs.", "蜘蛛恐惧症模式：true时boss将不会有腿（1.20boss开发中）");
         BUILDER.push("Sword Properties");
         ITEMS_CAN_FLY = BUILDER
                 .comment("A list of items considered as sword.", "被视为剑的物品")

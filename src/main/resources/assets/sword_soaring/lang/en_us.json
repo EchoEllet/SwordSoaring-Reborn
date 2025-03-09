@@ -42,7 +42,7 @@
   "skill.sword_soaring.babylon": "王庭寶庫",
   "skill.sword_soaring.babylon.tooltip": "啟寶庫納萬兵，化劍雨貫長空\n\n §e§l「哼。此等寶具，回收方顯其用」 §r\n\n調息：%.1f 息",
   "skill.sword_soaring.wan_jian_gui_zong": "萬劍歸宗",
-  "skill.sword_soaring.wan_jian_gui_zong.tooltip": " §r\n\n調息：%.1f 息",
+  "skill.sword_soaring.wan_jian_gui_zong.tooltip": "炁引八荒，劍禦六合。\n\n馭炁淩虛，千刃嘯空如龍驤\n凝神守中，萬鋒歸一若星聚\n\n此乃劍道極詣，非通玄者不可闚其奧也。   §r\n\n調息：%.1f 息",
 
   "key.sword_soaring.common": "Epic Fight: Sword Soaring",
   "key.sword_soaring.sword_skill": "Sword Skill",

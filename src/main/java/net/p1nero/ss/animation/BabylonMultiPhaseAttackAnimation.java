@@ -4,11 +4,12 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraftforge.entity.PartEntity;
 import net.p1nero.ss.capability.SSCapabilityProvider;
 import net.p1nero.ss.capability.SSPlayer;
-import net.p1nero.ss.entity.sword.gate_of_babylon.BabylonEntity;
-import net.p1nero.ss.entity.sword.gate_of_babylon.BabylonPatch;
+import net.p1nero.ss.entity.sword.gate_of_babylon.AbstractBabylonPatch;
+import net.p1nero.ss.entity.sword.sword_convergence.SwordConvergenceEntity;
 import org.jetbrains.annotations.Nullable;
 import yesman.epicfight.api.animation.Joint;
 import yesman.epicfight.api.animation.property.AnimationProperty;
@@ -50,7 +51,7 @@ public class BabylonMultiPhaseAttackAnimation extends ArtifactSpiritMultiPhaseAt
         if (!list.isEmpty()) {
             HitEntityList hitEntities = new HitEntityList(entityPatch, list, phase.getProperty(AnimationProperty.AttackPhaseProperty.HIT_PRIORITY).orElse(HitEntityList.Priority.DISTANCE));
 
-            if (entityPatch instanceof BabylonPatch babylonPatch && babylonPatch.getOwnerPatch() != null) {
+            if (entityPatch instanceof AbstractBabylonPatch<?> babylonPatch && babylonPatch.getOwnerPatch() != null) {
                 SSPlayer ssPlayer = babylonPatch.getOwnerPatch().getOriginal().getCapability(SSCapabilityProvider.SS_PLAYER).orElse(new SSPlayer());
                 while (hitEntities.next()) {
                     Entity hit = hitEntities.getEntity();
@@ -61,6 +62,10 @@ public class BabylonMultiPhaseAttackAnimation extends ArtifactSpiritMultiPhaseAt
                             int prevInvulTime = hit.invulnerableTime;
                             hit.invulnerableTime = 0;
                             double damage = babylonPatch.getOriginal().getJointDamage(phase.colliders.get(0).getFirst());
+                            //万剑不知道为何没法计算各部伤害？
+                            if(entityPatch.getOriginal() instanceof SwordConvergenceEntity){
+                                damage = babylonPatch.getOwnerPatch().getOriginal().getAttributeValue(Attributes.ATTACK_DAMAGE);
+                            }
                             if(damage == 0){
                                 continue;
                             }

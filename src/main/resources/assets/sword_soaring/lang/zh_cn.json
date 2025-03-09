@@ -1,8 +1,8 @@
 {
   "itemGroup.sword_soaring.items": "御剑凌虚 物品",
   "item.sword_soaring.vatansever": "卫国者",
-  "item.sword_soaring.vatansever.description1": "参阅文言-华夏",
-  "item.sword_soaring.vatansever.description2": "",
+  "item.sword_soaring.vatansever.description1": "上古神兵",
+  "item.sword_soaring.vatansever.description2": "古籍（文言-华夏）之中，或许藏有此至宝由来的线索",
   "skill.sword_soaring.vatansever.tooltip1": "§3§l吸星法§r ——",
   "skill.sword_soaring.vatansever.tooltip2": "§7从深渊中汲取力量化作风暴，吸引周围实体并绞杀",
   "skill.sword_soaring.vatansever.tooltip3": "§c§l三剑穿心§r ——",
@@ -42,7 +42,7 @@
   "skill.sword_soaring.babylon": "王之财宝",
   "skill.sword_soaring.babylon.tooltip": "从王之宝库（背包，背包的背包，以及末影箱）中获取所有物品，并化为剑射向前方\n\n §e§l「哼。因为有用于回收的优秀宝具」\n\n冷却： %.1f s",
   "skill.sword_soaring.wan_jian_gui_zong": "万剑归宗",
-  "skill.sword_soaring.wan_jian_gui_zong.tooltip": " §r\n\n冷却：%.1f s",
+  "skill.sword_soaring.wan_jian_gui_zong.tooltip": "凝气召唤万剑至身边，朝前方射出。长按可调整方向 §r\n\n冷却：%.1f s",
 
   "key.sword_soaring.common": "史诗战斗：御剑凌虚",
   "key.sword_soaring.sword_skill": "御剑技",
