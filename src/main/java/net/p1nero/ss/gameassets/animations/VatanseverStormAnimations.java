@@ -13,6 +13,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.p1nero.ss.entity.AbstractArtifactSpiritEntity;
 import net.p1nero.ss.entity.vatansever.VatanseverEntity;
 import net.p1nero.ss.entity.vatansever.VatanseverEntityPatch;
 import net.p1nero.ss.entity.vatansever_storm.VatanseverStormArmature;
@@ -238,8 +239,7 @@ public class VatanseverStormAnimations {
             );
             //来源实体过滤
             List<LivingEntity> entities = level.getEntitiesOfClass(LivingEntity.class, damageArea, entity ->
-                    entity.isAlive() && entity.distanceToSqr(Pos) <= damageRadius * damageRadius && !(entity instanceof Player player && player.isCreative()) && entity != source
-            );
+                    entity.isAlive() && entity.distanceToSqr(Pos) <= damageRadius * damageRadius && !(entity instanceof Player player && player.isCreative()) && entity != source && !(entity instanceof AbstractArtifactSpiritEntity));
             for (LivingEntity entity : new ArrayList<>(entities)) {
                 if (entity.invulnerableTime == 0 && source != null) {
                     entity.hurt(DamageSource.indirectMagic(source, source), damage);
