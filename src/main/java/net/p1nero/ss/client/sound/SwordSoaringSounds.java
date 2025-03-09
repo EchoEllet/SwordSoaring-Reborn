@@ -13,6 +13,8 @@ public class SwordSoaringSounds {
 
     public static RegistryObject<SoundEvent> VATANSEVER_WHOOSH = registerSoundEvent("vatansever_whoosh");
     public static RegistryObject<SoundEvent> VATANSEVER_WHOOSH_BIG = registerSoundEvent("vatansever_whoosh_big");
+    public static RegistryObject<SoundEvent> VATANSEVER_STORM = registerSoundEvent("vatansever_storm");
+    public static RegistryObject<SoundEvent> SWORD_CONVERGENCE = registerSoundEvent("sword_convergence");
 
     private static RegistryObject<SoundEvent> registerSoundEvent(String name) {
         return SOUND_EVENTS.register(name, () -> new SoundEvent(new ResourceLocation(SwordSoaring.MOD_ID, name)));

@@ -10,5 +10,17 @@
     "sounds": [
       "sword_soaring:vatansever_whoosh_big"
     ]
+  },
+  "vatansever_storm": {
+    "subtitle": "sounds.sword_soaring.vatansever_storm",
+    "sounds": [
+      "sword_soaring:vatansever_storm"
+    ]
+  },
+  "sword_convergence": {
+    "subtitle": "sounds.sword_soaring.sword_convergence",
+    "sounds": [
+      "sword_soaring:sword_convergence"
+    ]
   }
 }
