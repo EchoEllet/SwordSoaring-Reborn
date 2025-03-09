@@ -18,6 +18,7 @@ import net.minecraft.world.phys.Vec3;
 import net.p1nero.ss.animation.*;
 import net.p1nero.ss.capability.SSCapabilityProvider;
 import net.p1nero.ss.client.sound.SwordSoaringSounds;
+import net.p1nero.ss.entity.AbstractArtifactSpiritEntity;
 import net.p1nero.ss.entity.sword.fly_sword.FlySwordEntity;
 import net.p1nero.ss.entity.vatansever.VatanseverArmature;
 import net.p1nero.ss.entity.vatansever.VatanseverEntity;
@@ -469,8 +470,10 @@ public class VatanseverAnimations {
                     entity.setPos(safePos.x, safePos.y, safePos.z);
                     entity.setDeltaMovement(Vec3.ZERO);
                 }
+                if(entity.distanceTo(source) < damageRadius){
+                    entity.hurt(DamageSource.indirectMagic(source, source), damage);
+                }
             });
-            dealAreaDamage(level, sourcePos, source, damage, damageRadius);
         } else {
             createRandomSmokeLine(source.level, sourcePos, 10);
         }
@@ -513,8 +516,7 @@ public class VatanseverAnimations {
         );
         //来源实体过滤
         List<LivingEntity> entities = level.getEntitiesOfClass(LivingEntity.class, area, entity ->
-                entity.isAlive() && entity.distanceToSqr(center) <= radius * radius && !(entity instanceof Player player && player.isCreative()) && entity != source
-        );
+                entity.isAlive() && entity.distanceToSqr(center) <= radius * radius && !(entity instanceof Player player && player.isCreative()) && entity != source  && !(entity instanceof AbstractArtifactSpiritEntity));
         //线程安全迭代
         for (LivingEntity entity : new ArrayList<>(entities)) {
             if (entity.invulnerableTime >= 0 && source != null) {

@@ -2,7 +2,6 @@ package net.p1nero.ss.gameassets.animations;
 
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -13,9 +12,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.p1nero.ss.entity.AbstractArtifactSpiritEntity;
-import net.p1nero.ss.entity.vatansever.VatanseverEntity;
-import net.p1nero.ss.entity.vatansever.VatanseverEntityPatch;
 import net.p1nero.ss.entity.vatansever_storm.VatanseverStormArmature;
 import net.p1nero.ss.entity.vatansever_storm.VatanseverStormEntity;
 import net.p1nero.ss.entity.vatansever_storm.VatanseverStormEntityPatch;
@@ -28,7 +24,6 @@ import yesman.epicfight.api.animation.types.StaticAnimation;
 import yesman.epicfight.api.utils.math.OpenMatrix4f;
 import yesman.epicfight.api.utils.math.Vec3f;
 import yesman.epicfight.gameasset.EpicFightSounds;
-import yesman.epicfight.particle.EpicFightParticles;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 
 import java.util.ArrayList;
@@ -46,6 +41,7 @@ public class VatanseverStormAnimations {
     public static StaticAnimation VATANSEVER_STORM_RISE_2;
     public static StaticAnimation VATANSEVER_STORM_RISE_3;
     public static StaticAnimation VATANSEVER_STORM_RISE_4;
+
     public static void buildVatanseverStormAnim() {
         VatanseverStormArmature stormArmature = SwordSoaringArmatures.vatanseverStormArmature;
         VATANSEVER_STORM_IDLE = new StaticAnimation(true, "vatansever_storm/vatansever_storm_idle", stormArmature);
@@ -64,8 +60,8 @@ public class VatanseverStormAnimations {
         VATANSEVER_STORM_MIDDLE_2 = new ActionAnimation(0.0001F, "vatansever_storm/vatansever_storm_middle_2", stormArmature)
                 .addEvents(AnimationEvent.TimePeriodEvent.create(0, 3, (entityPatch, self, params) -> {
                             stormVFX(entityPatch);
-                            if (entityPatch instanceof VatanseverStormEntityPatch vatanseverStormEntityPatch){
-                                stromDamage(vatanseverStormEntityPatch,35,2,25);
+                            if (entityPatch instanceof VatanseverStormEntityPatch vatanseverStormEntityPatch) {
+                                stormDamage(vatanseverStormEntityPatch, 35, 2, 25);
                             }
                         }
                         , AnimationEvent.Side.BOTH))
@@ -102,14 +98,9 @@ public class VatanseverStormAnimations {
     }
 
 
-
-
-
-
     private static void stormParticle(VatanseverStormEntityPatch vatanseverStormEntityPatch, Joint toolJoint, int particleCount) {
         VatanseverStormEntity vatanseverStormEntity = vatanseverStormEntityPatch.getOriginal();
         if (vatanseverStormEntity.getOwner() == null) return;
-        Vec3 pos = vatanseverStormEntity.position();
         Level world = vatanseverStormEntity.level;
         Random random = world.random;
         // 速度范围
@@ -120,10 +111,7 @@ public class VatanseverStormAnimations {
         float rzv = minSpeed + (maxSpeed - minSpeed) * random.nextFloat();
         // 获取变换矩阵
         OpenMatrix4f transformMatrix = vatanseverStormEntityPatch.getArmature()
-                .getBindedTransformFor(
-                        vatanseverStormEntityPatch.getArmature().getCurrentPose(),
-                        toolJoint
-                );
+                .getBindedTransformFor(vatanseverStormEntityPatch.getArmature().getCurrentPose(), toolJoint);
         // 应用旋转
         OpenMatrix4f rotation = new OpenMatrix4f().rotate(
                 -(float) Math.toRadians(vatanseverStormEntity.yBodyRot + 180.0F),
@@ -143,7 +131,7 @@ public class VatanseverStormAnimations {
                 xOffset = random.nextFloat() * 4 - 2;
                 yOffset = random.nextFloat() * 4 - 2;
                 zOffset = random.nextFloat() * 4 - 2;
-            } while (xOffset*xOffset + yOffset*yOffset + zOffset*zOffset > 4.0f);
+            } while (xOffset * xOffset + yOffset * yOffset + zOffset * zOffset > 4.0f);
 
             // 计算最终位置
             float x = baseX + xOffset;
@@ -161,9 +149,9 @@ public class VatanseverStormAnimations {
                     world.addParticle(
                             ParticleTypes.SMOKE,
                             true,
-                            x + (random.nextFloat()-0.5f)*0.2f, // 添加水平随机偏移
+                            x + (random.nextFloat() - 0.5f) * 0.2f, // 添加水平随机偏移
                             currentY,
-                            z + (random.nextFloat()-0.5f)*0.2f,
+                            z + (random.nextFloat() - 0.5f) * 0.2f,
                             0f, -0.2f, 0f // 向下运动
                     );
                 }
@@ -176,7 +164,7 @@ public class VatanseverStormAnimations {
                 xOffset = random.nextFloat() * 4 - 2;
                 yOffset = random.nextFloat() * 4 - 2;
                 zOffset = random.nextFloat() * 4 - 2;
-            } while (xOffset*xOffset + yOffset*yOffset + zOffset*zOffset > 4.0f);
+            } while (xOffset * xOffset + yOffset * yOffset + zOffset * zOffset > 4.0f);
 
             // 计算最终位置
             float x = baseX + xOffset;
@@ -191,33 +179,26 @@ public class VatanseverStormAnimations {
                 float currentY = y;
                 for (int j = 0; j < 20; j++) {
                     currentY -= 2f; // 每次下落0.5格
-                    world.addParticle(
-                            ParticleTypes.SMOKE,
-                            true,
-                            x + (random.nextFloat()-0.5f)*0.2f, // 添加水平随机偏移
-                            currentY,
-                            z + (random.nextFloat()-0.5f)*0.2f,
-                            0f, -0.2f, 0f // 向下运动
+                    world.addParticle(ParticleTypes.SMOKE, true, x + (random.nextFloat() - 0.5f) * 0.2f, currentY, z + (random.nextFloat() - 0.5f) * 0.2f, 0f, -0.2f, 0f // 向下运动
                     );
                 }
             }
         }
     }
 
-    public static void stromDamage(VatanseverStormEntityPatch vatanseverStormEntityPatch,float attractRadius,float damage,float damageRadius){
-        LivingEntityPatch entityPatch = vatanseverStormEntityPatch.getOwnerPatch();
-        LivingEntity strom = vatanseverStormEntityPatch.getOriginal();
-        LivingEntity source = (LivingEntity) entityPatch.getOriginal();
+    public static void stormDamage(VatanseverStormEntityPatch vatanseverStormEntityPatch, float attractRadius, float damage, float damageRadius) {
+        VatanseverStormEntity storm = vatanseverStormEntityPatch.getOriginal();
+        LivingEntity source = storm.getOwner();
 
-        Vec3 Pos = strom.position();
-        if(strom.level instanceof ServerLevel level){
+        Vec3 Pos = storm.position();
+        if (storm.level instanceof ServerLevel level) {
 
             AABB area = new AABB(
                     Pos.x - attractRadius, Pos.y - attractRadius, Pos.z - attractRadius,
                     Pos.x + attractRadius, Pos.y + attractRadius, Pos.z + attractRadius);
 
-            strom.level.getEntitiesOfClass(Entity.class, area).forEach(entity -> {
-                if (entity == strom) return;
+            storm.level.getEntitiesOfClass(Entity.class, area).forEach(entity -> {
+                if (entity == storm) return;
                 if (entity instanceof Player player && (player.isCreative() || player.isSpectator())) return;
 
                 Vec3 entityPos = entity.position();
@@ -234,12 +215,11 @@ public class VatanseverStormAnimations {
                     entity.setDeltaMovement(Vec3.ZERO);
                 }
             });
-            AABB damageArea = new AABB(
-                    Pos.x() - damageRadius, Pos.y() - damageRadius, Pos.z() - damageRadius, Pos.x() + damageRadius, Pos.y() + damageRadius, Pos.z() + damageRadius
-            );
+            AABB damageArea = new AABB(Pos.x() - damageRadius, Pos.y() - damageRadius, Pos.z() - damageRadius, Pos.x() + damageRadius, Pos.y() + damageRadius, Pos.z() + damageRadius);
             //来源实体过滤
             List<LivingEntity> entities = level.getEntitiesOfClass(LivingEntity.class, damageArea, entity ->
-                    entity.isAlive() && entity.distanceToSqr(Pos) <= damageRadius * damageRadius && !(entity instanceof Player player && player.isCreative()) && entity != source && !(entity instanceof AbstractArtifactSpiritEntity));
+                    entity.isAlive() && entity.distanceToSqr(Pos) <= damageRadius * damageRadius && !(entity instanceof Player player && player.isCreative()) && entity != source
+            );
             for (LivingEntity entity : new ArrayList<>(entities)) {
                 if (entity.invulnerableTime == 0 && source != null) {
                     entity.hurt(DamageSource.indirectMagic(source, source), damage);
@@ -249,16 +229,7 @@ public class VatanseverStormAnimations {
                         entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 200, 1));
                     }
                     if (entity.level instanceof ServerLevel serverLevel) {
-                        serverLevel.sendParticles(
-                                ParticleTypes.SMOKE,
-                                entity.getX(),
-                                entity.getY() + entity.getBbHeight() / 2,
-                                entity.getZ(),
-                                5,
-                                0.5,
-                                0.25,
-                                0.5,
-                                0.2);
+                        serverLevel.sendParticles(ParticleTypes.SMOKE, entity.getX(), entity.getY() + entity.getBbHeight() / 2, entity.getZ(), 5, 0.5, 0.25, 0.5, 0.2);
                         serverLevel.playSound(null, entity.getX(), entity.getY(), entity.getZ(), EpicFightSounds.BLADE_HIT, SoundSource.HOSTILE, 1.0F, 0.8F + entity.level.random.nextFloat() * 0.4F
                         );
                     }
@@ -272,7 +243,7 @@ public class VatanseverStormAnimations {
         int particleCount = 1;
         Level world = entityPatch.getOriginal().level;
         if (entityPatch instanceof VatanseverStormEntityPatch vatanseverStormEntityPatch && world.isClientSide) {
-            for(Joint joint : SwordSoaringArmatures.vatanseverStormArmature.rootJoints){
+            for (Joint joint : SwordSoaringArmatures.vatanseverStormArmature.rootJoints) {
                 stormParticle(vatanseverStormEntityPatch, joint, particleCount);
             }
         }

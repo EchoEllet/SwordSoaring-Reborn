@@ -13,7 +13,6 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.p1nero.ss.client.sound.SwordSoaringSounds;
-import net.p1nero.ss.enchantment.SwordSoaringEnchantments;
 import net.p1nero.ss.entity.SwordSoaringEntities;
 import net.p1nero.ss.gameassets.SwordSoaringCategories;
 import net.p1nero.ss.gameassets.SwordSoaringComboTypes;
@@ -44,7 +43,6 @@ public class SwordSoaring {
         SwordSoaringItems.ITEMS.register(bus);
         SwordSoaringEntities.ENTITIES.register(bus);
         SwordSoaringSounds.SOUND_EVENTS.register(bus);
-        SwordSoaringEnchantments.ENCHANTMENTS.register(bus);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
 
