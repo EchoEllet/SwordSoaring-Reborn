@@ -72,7 +72,7 @@ public class SwordConvergenceEntity extends BabylonEntity {
     }
 
     public ReplaceableArmature getArmature(){
-        return SwordSoaringArmatures.vatanseverStormArmature;
+        return SwordSoaringArmatures.wanArmature;
     }
 
 }

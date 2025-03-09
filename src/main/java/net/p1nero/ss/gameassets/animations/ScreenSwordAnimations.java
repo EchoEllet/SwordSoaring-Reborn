@@ -92,6 +92,9 @@ public class ScreenSwordAnimations {
         return spawnStaticHexagram(time, particleOptions, interval, radius, 1.0F);
     }
 
+    /**
+     * 六个点乱序的
+     */
     public static AnimationEvent.TimeStampedEvent spawnDynamicHexagram(float time, Supplier<ParticleOptions> particleOptions, int count, ScreenSwordArmature armature) {
         return AnimationEvent.TimeStampedEvent.create(time, ((livingEntityPatch, staticAnimation, objects) -> {
             ParticleVFX.createLineBetweenJoint(livingEntityPatch, armature.W4, armature.W3, particleOptions.get(), count);
