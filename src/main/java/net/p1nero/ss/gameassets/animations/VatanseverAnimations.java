@@ -151,7 +151,9 @@ public class VatanseverAnimations {
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F)),
                 new ArtifactSpiritMultiPhaseAttackAnimation.MultiAttackPhase(0.0F, 0.7F, 1.0F, 1.60F, Float.MAX_VALUE, vatanseverArmature.L3, SwordSoaringColliders.VATANSEVER)
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F)));
-        VATANSEVER_AUTO3 = new VatanseverAttackAnimation(0.01F, "biped/vatansever/vatansever_auto3", vatanseverArmature);
+        VATANSEVER_AUTO3 = new VatanseverAttackAnimation(0.01F, "biped/vatansever/vatansever_auto3", vatanseverArmature,
+                new ArtifactSpiritMultiPhaseAttackAnimation.MultiAttackPhase(0.0F, 0.01F, 0.01F, 0.01F, Float.MAX_VALUE, vatanseverArmature.L1, SwordSoaringColliders.VATANSEVER)
+                        .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F)));
 
         VATANSEVER_AUTO3_B = new AttackAnimation(0.01F, "biped/vatansever/vatansever_auto3_b", vatanseverArmature,
                 new AttackAnimation.Phase(0.0F, 1.75F, 1.75F, 4.0F, 4.0F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, right)
