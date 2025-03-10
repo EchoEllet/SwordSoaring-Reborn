@@ -1,5 +1,6 @@
 package net.p1nero.ss.entity.sword.fly_sword;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
@@ -35,6 +36,9 @@ public class FlySwordPatch extends AbstractArtifactSpiritPatch<FlySwordEntity> {
         super.clientTick(event);
         if (!played) {
             if (this.isLogicalClient() && this.getOwnerPatch() != null) {
+                if(!this.getOwnerPatch().getOriginal().equals(Minecraft.getInstance().player)){
+                    return;
+                }
                 StaticAnimation toPlay = getInitAnimation(this.getOwnerPatch());
                 this.animator.playAnimation(toPlay, 0.0001F);
                 PacketRelay.sendToServer(PacketHandler.INSTANCE, new RequestEntityPlayAnimationPacket(this.getOriginal().getId(), toPlay.getNamespaceId(), toPlay.getId(), 0.0001F));

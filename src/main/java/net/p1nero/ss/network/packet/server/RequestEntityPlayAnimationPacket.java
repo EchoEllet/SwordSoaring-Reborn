@@ -1,10 +1,11 @@
 package net.p1nero.ss.network.packet.server;
 
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.p1nero.ss.network.packet.BasePacket;
 import org.jetbrains.annotations.Nullable;
+import yesman.epicfight.main.EpicFightMod;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 
@@ -21,12 +22,12 @@ public record RequestEntityPlayAnimationPacket(int entityId, int namespaceId, in
     }
 
     @Override
-    public void execute(@Nullable Player player) {
-        if(player != null && !player.level.isClientSide){
+    public void execute(@Nullable ServerPlayer player) {
+        if(player != null){
             Entity entity = player.level.getEntity(entityId);
             LivingEntityPatch<?> entityPatch = EpicFightCapabilities.getEntityPatch(entity, LivingEntityPatch.class);
             if(entityPatch != null){
-                entityPatch.getAnimator().playAnimation(namespaceId, animationId, modifyTime);
+                entityPatch.playAnimationSynchronized(EpicFightMod.getInstance().animationManager.findAnimationById(namespaceId, animationId), modifyTime);
             }
         }
     }

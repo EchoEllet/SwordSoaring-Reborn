@@ -8,6 +8,7 @@ import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -37,11 +38,11 @@ import java.util.Random;
 import java.util.UUID;
 
 public class WanJianGuiZongSkill extends Skill {
-    public static SkillDataManager.SkillDataKey<Integer> COOLDOWN_TIMER = SkillDataManager.SkillDataKey.createDataKey(SkillDataManager.ValueType.INTEGER);
+    public static SkillDataManager.SkillDataKey<Integer> COOLDOWN_TIMER;
     public static SkillDataManager.SkillDataKey<Boolean> IS_PRESSING = SkillDataManager.SkillDataKey.createDataKey(SkillDataManager.ValueType.BOOLEAN);
     public static SkillDataManager.SkillDataKey<Boolean> IS_CHARGING;
     private static final UUID EVENT_UUID = UUID.fromString("d2d810cc-f30f-11ed-a05b-0242ac114581");
-    private int cooldown;
+    private static int cooldown;
 
     public WanJianGuiZongSkill(Builder<? extends Skill> builder) {
         super(builder);
@@ -53,7 +54,7 @@ public class WanJianGuiZongSkill extends Skill {
         cooldown = parameters.getInt("cooldown");
     }
 
-    public int getMaxCooldown() {
+    public static int getMaxCooldown() {
         return cooldown;
     }
 
@@ -130,8 +131,8 @@ public class WanJianGuiZongSkill extends Skill {
             }
         }
         int currentCooldown = container.getDataManager().getDataValue(COOLDOWN_TIMER);
-        if (currentCooldown > 0) {
-            container.getDataManager().setData(COOLDOWN_TIMER, currentCooldown - 1);
+        if (currentCooldown > 0 && !container.getExecuter().isLogicalClient()) {
+            container.getDataManager().setDataSync(COOLDOWN_TIMER, currentCooldown - 1, ((ServerPlayer) container.getExecuter().getOriginal()));
         }
         if(!container.getExecuter().isLogicalClient() && this.cooldown - currentCooldown <= 128){
             for(int i = 0; i < Config.SWORD_EFFECT_PER_TICK.get(); i++){

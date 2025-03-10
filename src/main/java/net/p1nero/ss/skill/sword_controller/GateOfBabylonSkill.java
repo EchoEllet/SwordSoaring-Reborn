@@ -2,6 +2,7 @@ package net.p1nero.ss.skill.sword_controller;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -29,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GateOfBabylonSkill extends Skill {
-    public static SkillDataManager.SkillDataKey<Integer> COOLDOWN_TIMER = SkillDataManager.SkillDataKey.createDataKey(SkillDataManager.ValueType.INTEGER);
+    public static SkillDataManager.SkillDataKey<Integer> COOLDOWN_TIMER;
     public static SkillDataManager.SkillDataKey<Integer> CAMERA_TIMER = SkillDataManager.SkillDataKey.createDataKey(SkillDataManager.ValueType.INTEGER);
     private int cooldown, interval;
     private int count = -1;
@@ -102,7 +103,9 @@ public class GateOfBabylonSkill extends Skill {
             }
         } else {
             if(currentCameraTimer > 0){
-                CameraAnim.zoomIn(new Vec3f(0, -3 ,-6), 200);
+                if(container.getExecuter().getOriginal().equals(Minecraft.getInstance().player)){
+                    CameraAnim.zoomIn(new Vec3f(0, -3 ,-6), 200);
+                }
             }
         }
     }

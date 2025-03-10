@@ -1,6 +1,7 @@
 package net.p1nero.ss.gameassets.animations;
 
 import com.p1nero.invincible.api.animation.StaticAnimationProvider;
+import net.minecraft.client.Minecraft;
 import net.p1nero.ss.animation.BabylonMultiPhaseAttackAnimation;
 import net.p1nero.ss.client.CameraAnim;
 import net.p1nero.ss.entity.sword.sword_convergence.SwordConvergenceEntity;
@@ -59,7 +60,13 @@ public class SwordConvergenceAnimations {
         HumanoidArmature biped = Armatures.BIPED;
         WAN1_PLAYER = new ActionAnimation(0.15F, "wan/wan_owner_1", biped)
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_BEGIN_EVENTS,
-                        AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> CameraAnim.zoomIn(new Vec3f(0, -3, -6), 450), AnimationEvent.Side.CLIENT),
+                        AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> {
+                            if(livingEntityPatch.isLogicalClient()){
+                                if(livingEntityPatch.getOriginal() == Minecraft.getInstance().player){
+                                    CameraAnim.zoomIn(new Vec3f(0, -3, -6), 450);
+                                }
+                            }
+                        }, AnimationEvent.Side.CLIENT),
                         AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> {
                             if(livingEntityPatch instanceof ServerPlayerPatch serverPlayerPatch){
                                 serverPlayerPatch.getSkill(SwordSoaringSkillSlots.SWORD_CONTROLLER).getDataManager().setDataSync(WanJianGuiZongSkill.IS_CHARGING, true, serverPlayerPatch.getOriginal());
@@ -71,7 +78,11 @@ public class SwordConvergenceAnimations {
                 .addStateRemoveOld(EntityState.TURNING_LOCKED, false)
                 .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 0.5F));
         WAN2_PLAYER = new ActionAnimation(0.0001F, "wan/wan_owner_2", biped)
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_BEGIN_EVENTS, AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> CameraAnim.zoomIn(new Vec3f(0, -3, -6), 450), AnimationEvent.Side.CLIENT))
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_BEGIN_EVENTS, AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> {
+                    if(livingEntityPatch.getOriginal() == Minecraft.getInstance().player){
+                        CameraAnim.zoomIn(new Vec3f(0, -3, -6), 450);
+                    }
+                }, AnimationEvent.Side.CLIENT))
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> {
                     if (livingEntityPatch instanceof ServerPlayerPatch serverPlayerPatch) {
                         SkillDataManager manager = serverPlayerPatch.getSkill(SwordSoaringSkillSlots.SWORD_CONTROLLER).getDataManager();
@@ -86,7 +97,11 @@ public class SwordConvergenceAnimations {
                 .addStateRemoveOld(EntityState.TURNING_LOCKED, false);
         WAN3_PLAYER = new ActionAnimation(0.0001F, "wan/wan_owner_3", biped)
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_BEGIN_EVENTS,
-                        AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> CameraAnim.zoomIn(new Vec3f(0, -3, -6), 200), AnimationEvent.Side.CLIENT),
+                        AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> {
+                            if(livingEntityPatch.getOriginal() == Minecraft.getInstance().player){
+                                CameraAnim.zoomIn(new Vec3f(0, -3, -6), 200);
+                            }
+                        }, AnimationEvent.Side.CLIENT),
                         AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> {
                             if(livingEntityPatch instanceof ServerPlayerPatch serverPlayerPatch){
                                 serverPlayerPatch.getSkill(SwordSoaringSkillSlots.SWORD_CONTROLLER).getDataManager().setDataSync(WanJianGuiZongSkill.IS_CHARGING, false, serverPlayerPatch.getOriginal());

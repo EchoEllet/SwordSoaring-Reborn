@@ -53,14 +53,12 @@ public class PatchedSwordConvergenceRandomReplaceableLayer<E extends SwordConver
 
             int lifeTime = 0;
             if(entity.getOwnerPatch() instanceof PlayerPatch<?> playerPatch){
-                SkillContainer container = playerPatch.getSkill(SwordSoaringSkillSlots.SWORD_CONTROLLER);
-                SkillDataManager manager = container.getDataManager();
-                if(manager.hasData(WanJianGuiZongSkill.COOLDOWN_TIMER) && container.getSkill() instanceof WanJianGuiZongSkill wanJianGuiZongSkill){
+                SkillDataManager manager = playerPatch.getSkill(SwordSoaringSkillSlots.SWORD_CONTROLLER).getDataManager();
+                if(manager.hasData(WanJianGuiZongSkill.COOLDOWN_TIMER)){
                     int cooldown = manager.getDataValue(WanJianGuiZongSkill.COOLDOWN_TIMER);
-                    lifeTime = wanJianGuiZongSkill.getMaxCooldown() - cooldown;
+                    lifeTime = WanJianGuiZongSkill.getMaxCooldown() - cooldown;
                 }
             }
-
             List<Joint> jointList = armature.getJoints(artifactSpiritPatch);
             Random random = new Random(entity.getSeed());
             //慢慢出现，1tick解放2根

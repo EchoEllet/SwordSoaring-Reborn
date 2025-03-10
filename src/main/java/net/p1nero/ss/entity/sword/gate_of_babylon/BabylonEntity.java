@@ -1,5 +1,6 @@
 package net.p1nero.ss.entity.sword.gate_of_babylon;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -24,7 +25,9 @@ import net.p1nero.ss.network.PacketRelay;
 import net.p1nero.ss.network.packet.server.RequestBabylonSyncPacket;
 import net.p1nero.ss.util.AnimationUtils;
 import net.p1nero.ss.util.ItemUtils;
+import org.jetbrains.annotations.NotNull;
 import yesman.epicfight.api.animation.Joint;
+import yesman.epicfight.api.animation.types.StateSpectrum;
 import yesman.epicfight.api.animation.types.StaticAnimation;
 import yesman.epicfight.api.utils.LevelUtil;
 import yesman.epicfight.api.utils.math.OpenMatrix4f;
@@ -38,7 +41,7 @@ public class BabylonEntity extends AbstractSwordEntity {
     private final Map<Integer, OpenMatrix4f> startJointTransformMap = new HashMap<>();
     private final Map<Integer, Double> jointDamageMap = new HashMap<>();
     private final Map<Integer, Boolean> jointsHittenGroundMap = new HashMap<>();
-    private static final EntityDataAccessor<Boolean> CLIENT_INIT = SynchedEntityData.defineId(BabylonEntity.class, EntityDataSerializers.BOOLEAN);
+    private boolean clientInit;
 
     public BabylonEntity(EntityType<? extends AbstractArtifactSpiritEntity> entityType, Level level) {
         super(entityType, level);
@@ -61,12 +64,6 @@ public class BabylonEntity extends AbstractSwordEntity {
 
     public BabylonEntity(LivingEntity owner, Vec3 startPos, float yRot) {
         this(SwordSoaringEntities.BABYLON.get(), owner, startPos, yRot);
-    }
-
-    @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        getEntityData().define(CLIENT_INIT, false);
     }
 
     public void bindStartTransform(int jointId, OpenMatrix4f startTransform) {
@@ -95,10 +92,12 @@ public class BabylonEntity extends AbstractSwordEntity {
      */
     public void initBabylonItems(ArrayList<ItemStack> babylonItems, boolean shuffle){
         validBabylonItems = babylonItems;
-        Collections.shuffle(validBabylonItems);
+        if(shuffle){
+            Collections.shuffle(validBabylonItems);
+        }
         //记录Joint和伤害的关系
         if (!level.isClientSide) {
-            List<Joint> joints = SwordSoaringArmatures.babylonArmature.getJoints(getPatch());
+            List<Joint> joints = getArmature().getJoints(getPatch());
             for (int i = 0; i < joints.size() && i < validBabylonItems.size(); i++) {
                 Joint joint = joints.get(i);
                 ItemStack itemStack = validBabylonItems.get(i);
@@ -110,9 +109,11 @@ public class BabylonEntity extends AbstractSwordEntity {
     @Override
     public void tick() {
         super.tick();
-        if(getOwner() != null && level.isClientSide && !getEntityData().get(CLIENT_INIT)){
-            getEntityData().set(CLIENT_INIT, true);
-            PacketRelay.sendToServer(PacketHandler.INSTANCE, new RequestBabylonSyncPacket(getId()));
+        if(getOwner() != null && level.isClientSide && !clientInit){
+            if(getOwner().equals(Minecraft.getInstance().player)){
+                PacketRelay.sendToServer(PacketHandler.INSTANCE, new RequestBabylonSyncPacket(getId()));
+                clientInit = true;
+            }
         }
         if(!level.isClientSide && !jointDamageMap.isEmpty() && getPatch() != null && shouldGroundSlam()){
             if(getPatch().getAnimator().getPlayerFor(null).getElapsedTime() > 1.33F){
@@ -135,6 +136,11 @@ public class BabylonEntity extends AbstractSwordEntity {
         }
     }
 
+    @Override
+    protected boolean shouldRemoveWhenOwnerLost() {
+        return false;
+    }
+
     public boolean shouldGroundSlam(){
         return true;
     }
@@ -144,9 +150,6 @@ public class BabylonEntity extends AbstractSwordEntity {
      */
     public void updateBabylonItems(ArrayList<ItemStack> items) {
         validBabylonItems = items;
-        if(level.isClientSide){
-
-        }
     }
 
     public ArrayList<ItemStack> getValidBabylonItems() {

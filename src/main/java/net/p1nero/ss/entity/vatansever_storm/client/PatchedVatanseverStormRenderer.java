@@ -85,4 +85,11 @@ public class PatchedVatanseverStormRenderer extends PatchedLivingEntityRenderer<
         return SwordSoaringMeshes.vatanseverStormMesh;
     }
 
+//    /**
+//     * 做渐隐
+//     */
+//    @Override
+//    public RenderType getRenderType(VatanseverStormEntity entityIn, VatanseverStormEntityPatch entitypatch, LivingEntityRenderer<VatanseverStormEntity, EmptyEntityModel<VatanseverStormEntity>> renderer, boolean isVisible, boolean isVisibleToPlayer, boolean isGlowing) {
+//        return RenderType.entityTranslucent(renderer.getTextureLocation(entityIn));
+//    }
 }

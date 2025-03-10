@@ -1,5 +1,6 @@
 package net.p1nero.ss.entity.sword.gate_of_babylon;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.world.InteractionHand;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -27,10 +28,16 @@ public abstract class AbstractBabylonPatch<T extends BabylonEntity> extends Abst
         super.clientTick(event);
         if(!played){
             if(this.isLogicalClient() && this.getOwnerPatch() != null){
+                //排除其他玩家干扰
+                if(!this.getOwnerPatch().getOriginal().equals(Minecraft.getInstance().player)){
+                    return;
+                }
                 StaticAnimation toPlay = getOriginal().getAnimationToPlay();
-                this.animator.playAnimation(toPlay, 0.0001F);
-                PacketRelay.sendToServer(PacketHandler.INSTANCE, new RequestEntityPlayAnimationPacket(this.getOriginal().getId(), toPlay.getNamespaceId(), toPlay.getId(), 0.0001F));
-                played = true;
+                if(toPlay != null){
+                    this.animator.playAnimation(toPlay, 0.0001F);
+                    PacketRelay.sendToServer(PacketHandler.INSTANCE, new RequestEntityPlayAnimationPacket(this.getOriginal().getId(), toPlay.getNamespaceId(), toPlay.getId(), 0.0001F));
+                    played = true;
+                }
             }
         }
     }

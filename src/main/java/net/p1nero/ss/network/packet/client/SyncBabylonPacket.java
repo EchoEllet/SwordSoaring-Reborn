@@ -2,6 +2,7 @@ package net.p1nero.ss.network.packet.client;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -30,7 +31,7 @@ public record SyncBabylonPacket(int id, int size, ArrayList<ItemStack> itemStack
     }
 
     @Override
-    public void execute(@Nullable Player player) {
+    public void execute(@Nullable ServerPlayer player) {
         if(Minecraft.getInstance().player != null && Minecraft.getInstance().level != null){
             Entity entity = Minecraft.getInstance().level.getEntity(id);
             if(entity instanceof Player localPlayer){

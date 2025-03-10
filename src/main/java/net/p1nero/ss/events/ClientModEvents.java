@@ -56,9 +56,9 @@ public class ClientModEvents {
                 } else if (skill.getCategory() == SkillCategories.MOVER) {
                     return 5;
                 } else if (skill.getCategory() == SwordSoaringSkillCategories.SWORD_SOARING) {
-                    return 7;
+                    return 6;
                 } else if (skill.getCategory() == SwordSoaringSkillCategories.SWORD_CONTROLLER) {
-                    return 8;
+                    return 7;
                 }
             }
 

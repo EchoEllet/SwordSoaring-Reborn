@@ -1,5 +1,6 @@
 package net.p1nero.ss.entity.sword.screen_sword;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.world.InteractionHand;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -30,6 +31,9 @@ public class ScreenSwordPatch extends AbstractArtifactSpiritPatch<ScreenSwordEnt
         super.clientTick(event);
         if(!played){
             if(this.isLogicalClient() && this.getOwnerPatch() != null){
+                if(!this.getOwnerPatch().getOriginal().equals(Minecraft.getInstance().player)){
+                    return;
+                }
                 SkillContainer container = this.getOwnerPatch().getSkill(SwordSoaringSkillSlots.SWORD_CONTROLLER);
                 if(container.getSkill() instanceof KillAuraSkill killAuraSkill){
                     StaticAnimation toPlay = killAuraSkill.getSwordSummonAnim().get();

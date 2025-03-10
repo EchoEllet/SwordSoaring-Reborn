@@ -15,6 +15,7 @@ import net.p1nero.ss.entity.sword.sword_convergence.SwordConvergencePatch;
 import net.p1nero.ss.entity.vatansever.VatanseverEntityPatch;
 import net.p1nero.ss.entity.vatansever_storm.VatanseverStormEntityPatch;
 import net.p1nero.ss.network.PacketHandler;
+import net.p1nero.ss.skill.sword_controller.GateOfBabylonSkill;
 import net.p1nero.ss.skill.sword_controller.ScreenSwordSkill;
 import net.p1nero.ss.skill.sword_controller.WanJianGuiZongSkill;
 import net.p1nero.ss.skill.weapon_passive.VatanseverPassive;
@@ -51,7 +52,9 @@ public class ModEvents{
         event.enqueueWork(() -> {
             ScreenSwordSkill.PROTECT_COUNT = SkillDataManager.SkillDataKey.createDataKey(SkillDataManager.ValueType.INTEGER, true);
             VatanseverPassive.SWORD_COUNT = SkillDataManager.SkillDataKey.createDataKey(SkillDataManager.ValueType.INTEGER, true);
+            WanJianGuiZongSkill.COOLDOWN_TIMER = SkillDataManager.SkillDataKey.createDataKey(SkillDataManager.ValueType.INTEGER, true);
             WanJianGuiZongSkill.IS_CHARGING = SkillDataManager.SkillDataKey.createDataKey(SkillDataManager.ValueType.BOOLEAN, true);
+            GateOfBabylonSkill.COOLDOWN_TIMER = SkillDataManager.SkillDataKey.createDataKey(SkillDataManager.ValueType.INTEGER, true);
         });
     }
 }
