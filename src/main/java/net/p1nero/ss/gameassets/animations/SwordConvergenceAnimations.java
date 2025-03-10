@@ -1,8 +1,12 @@
 package net.p1nero.ss.gameassets.animations;
 
 import com.p1nero.invincible.api.animation.StaticAnimationProvider;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.p1nero.ss.animation.BabylonMultiPhaseAttackAnimation;
 import net.p1nero.ss.client.CameraAnim;
+import net.p1nero.ss.client.sound.SwordFlyingSoundInstance;
+import net.p1nero.ss.client.sound.WanSoundInstance;
 import net.p1nero.ss.entity.sword.sword_convergence.SwordConvergenceEntity;
 import net.p1nero.ss.entity.sword.sword_convergence.WanArmature;
 import net.p1nero.ss.gameassets.SwordSoaringArmatures;
@@ -58,7 +62,11 @@ public class SwordConvergenceAnimations {
     public static void buildSwordConvergenceAnim() {
         HumanoidArmature biped = Armatures.BIPED;
         WAN1_PLAYER = new ActionAnimation(0.15F, "wan/wan_owner_1", biped)
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_BEGIN_EVENTS, AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> CameraAnim.zoomIn(new Vec3f(0, -3, -6), 200), AnimationEvent.Side.CLIENT))
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_BEGIN_EVENTS, AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> {
+                    LocalPlayer player = Minecraft.getInstance().player;
+                    CameraAnim.zoomIn(new Vec3f(0, -3, -6), 200);
+                    Minecraft.getInstance().getSoundManager().play(new WanSoundInstance(player));
+                    }, AnimationEvent.Side.CLIENT))
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, nextPlay(() -> WAN2_PLAYER));
         WAN2_PLAYER = new ActionAnimation(0.0001F, "wan/wan_owner_2", biped)
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_BEGIN_EVENTS, AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> CameraAnim.zoomIn(new Vec3f(0, -3, -6), 200), AnimationEvent.Side.CLIENT))

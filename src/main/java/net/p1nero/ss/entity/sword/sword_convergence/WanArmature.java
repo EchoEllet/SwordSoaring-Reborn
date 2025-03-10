@@ -14,10 +14,14 @@ public class WanArmature extends ReplaceableArmature {
         super(jointNumber, rootJoint, jointMap);
         wanJoints.add(getOrLogException(jointMap, "root_1"));
         for(int i = 1; i <= 255; i++){
-            if(i <= 7){
+            if(i <= 15){
                 wanJoints.add(getOrLogException(jointMap, "root_1." + String.format("%03d", i)));
             }
-            joints.add(getOrLogException(jointMap, "s." + String.format("%03d", i)));
+            String name = "s." + String.format("%03d", i);
+            if(jointMap.containsKey(name)){
+                joints.add(getOrLogException(jointMap, name));
+            }
+
         }
     }
 
