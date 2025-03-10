@@ -14,10 +14,12 @@ import net.p1nero.ss.gameassets.SwordSoaringArmatures;
 import net.p1nero.ss.gameassets.SwordSoaringSkillSlots;
 import net.p1nero.ss.gameassets.animations.SwordConvergenceAnimations;
 import net.p1nero.ss.skill.sword_controller.WanJianGuiZongSkill;
+import yesman.epicfight.api.animation.Joint;
 import yesman.epicfight.api.animation.types.DynamicAnimation;
-import yesman.epicfight.api.animation.types.StaticAnimation;
 import yesman.epicfight.skill.SkillDataManager;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
+
+import java.util.List;
 
 public class SwordConvergenceEntity extends BabylonEntity {
     private static final EntityDataAccessor<Integer> SEED = SynchedEntityData.defineId(SwordConvergenceEntity.class, EntityDataSerializers.INT);//双端打乱顺序需要同步
@@ -77,4 +79,17 @@ public class SwordConvergenceEntity extends BabylonEntity {
         return SwordSoaringArmatures.wanArmature;
     }
 
+    @Override
+    public boolean hasJoint(Joint joint) {
+        List<Joint> joints = getArmature().joints;
+        if(tickCount > joints.size()) {
+            return true;
+        }
+        for(int i = 0; i < tickCount; i++){
+            if(joints.get(i).getId() == joint.getId()){
+                return true;
+            }
+        }
+        return false;
+    }
 }

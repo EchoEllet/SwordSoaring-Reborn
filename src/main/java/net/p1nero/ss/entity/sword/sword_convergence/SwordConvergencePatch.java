@@ -13,4 +13,9 @@ public class SwordConvergencePatch extends AbstractBabylonPatch<SwordConvergence
         animator.setCurrentMotionsAsDefault();
     }
 
+    @Override
+    public boolean shouldUseOwnerAttack() {
+        return true;
+    }
+
 }

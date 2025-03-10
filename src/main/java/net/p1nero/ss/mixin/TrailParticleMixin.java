@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Camera;
 import net.p1nero.ss.entity.sword.gate_of_babylon.BabylonEntity;
 import net.p1nero.ss.entity.sword.gate_of_babylon.BabylonPatch;
+import net.p1nero.ss.entity.sword.sword_convergence.SwordConvergenceEntity;
 import net.p1nero.ss.entity.vatansever.VatanseverArmature;
 import net.p1nero.ss.entity.vatansever.VatanseverEntityPatch;
 import org.spongepowered.asm.mixin.Final;
@@ -33,6 +34,11 @@ public class TrailParticleMixin {
         }
         if(this.entitypatch.getOriginal() instanceof BabylonEntity babylonEntity){
             if(!babylonEntity.hasJoint(joint)){
+                ci.cancel();
+            }
+        }
+        if(this.entitypatch.getOriginal() instanceof SwordConvergenceEntity swordConvergenceEntity){
+            if(!swordConvergenceEntity.hasJoint(joint)){
                 ci.cancel();
             }
         }

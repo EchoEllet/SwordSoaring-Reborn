@@ -1,12 +1,8 @@
 package net.p1nero.ss.gameassets.animations;
 
 import com.p1nero.invincible.api.animation.StaticAnimationProvider;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
 import net.p1nero.ss.animation.BabylonMultiPhaseAttackAnimation;
 import net.p1nero.ss.client.CameraAnim;
-import net.p1nero.ss.client.sound.SwordFlyingSoundInstance;
-import net.p1nero.ss.client.sound.WanSoundInstance;
 import net.p1nero.ss.entity.sword.sword_convergence.SwordConvergenceEntity;
 import net.p1nero.ss.entity.sword.sword_convergence.WanArmature;
 import net.p1nero.ss.gameassets.SwordSoaringArmatures;
@@ -22,7 +18,6 @@ import yesman.epicfight.api.utils.math.Vec3f;
 import yesman.epicfight.gameasset.Armatures;
 import yesman.epicfight.model.armature.HumanoidArmature;
 import yesman.epicfight.skill.SkillDataManager;
-import yesman.epicfight.skill.SkillSlots;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 
 public class SwordConvergenceAnimations {

@@ -11,7 +11,7 @@ import net.p1nero.ss.entity.SwordSoaringEntities;
 import net.p1nero.ss.item.SwordSoaringItems;
 
 public class VatanseverStormEntity extends AbstractArtifactSpiritEntity {
-    public static final int MAX_LIFE_TIME = 400;
+    public static final int MAX_LIFE_TIME = 460;
     public VatanseverStormEntity(EntityType<? extends VatanseverStormEntity> entityType, Level level) {
         super(entityType, level);
     }
