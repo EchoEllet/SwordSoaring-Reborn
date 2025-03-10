@@ -66,6 +66,7 @@ public class SwordConvergenceAnimations {
                     LocalPlayer player = Minecraft.getInstance().player;
                     CameraAnim.zoomIn(new Vec3f(0, -3, -6), 200);
                     Minecraft.getInstance().getSoundManager().play(new WanSoundInstance(player));
+
                     }, AnimationEvent.Side.CLIENT))
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, nextPlay(() -> WAN2_PLAYER));
         WAN2_PLAYER = new ActionAnimation(0.0001F, "wan/wan_owner_2", biped)
