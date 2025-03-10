@@ -39,6 +39,7 @@ import java.util.UUID;
 public class WanJianGuiZongSkill extends Skill {
     public static SkillDataManager.SkillDataKey<Integer> COOLDOWN_TIMER = SkillDataManager.SkillDataKey.createDataKey(SkillDataManager.ValueType.INTEGER);
     public static SkillDataManager.SkillDataKey<Boolean> IS_PRESSING = SkillDataManager.SkillDataKey.createDataKey(SkillDataManager.ValueType.BOOLEAN);
+    public static SkillDataManager.SkillDataKey<Boolean> IS_CHARGING;
     private static final UUID EVENT_UUID = UUID.fromString("d2d810cc-f30f-11ed-a05b-0242ac114581");
     private int cooldown;
 
@@ -61,6 +62,7 @@ public class WanJianGuiZongSkill extends Skill {
         super.onInitiate(container);
         container.getDataManager().registerData(COOLDOWN_TIMER);
         container.getDataManager().registerData(IS_PRESSING);
+        container.getDataManager().registerData(IS_CHARGING);
         //蓄力禁移动
         container.getExecuter().getEventListener().addEventListener(PlayerEventListener.EventType.MOVEMENT_INPUT_EVENT, EVENT_UUID, (event -> {
             if (event.getPlayerPatch().isBattleMode() && SwordSoaringKeyMappings.SWORD_SKILL.isDown()) {

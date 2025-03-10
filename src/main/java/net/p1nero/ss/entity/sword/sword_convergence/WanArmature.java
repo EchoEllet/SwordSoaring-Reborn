@@ -4,6 +4,7 @@ import net.p1nero.ss.entity.ReplaceableArmature;
 import yesman.epicfight.api.animation.Joint;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -21,8 +22,8 @@ public class WanArmature extends ReplaceableArmature {
             if(jointMap.containsKey(name)){
                 joints.add(getOrLogException(jointMap, name));
             }
-
         }
+        Collections.shuffle(joints);
     }
 
 }
