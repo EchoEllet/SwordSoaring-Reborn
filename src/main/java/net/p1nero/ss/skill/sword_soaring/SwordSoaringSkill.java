@@ -97,7 +97,7 @@ public class SwordSoaringSkill extends Skill {
     @Override
     @OnlyIn(Dist.CLIENT)
     public void executeOnClient(LocalPlayerPatch executer, FriendlyByteBuf args) {
-        Minecraft.getInstance().getSoundManager().play(new SwordFlyingSoundInstance(executer.getOriginal()));
+        Minecraft.getInstance().getSoundManager().play(new SwordFlyingSoundInstance(executer));
     }
 
     @Override

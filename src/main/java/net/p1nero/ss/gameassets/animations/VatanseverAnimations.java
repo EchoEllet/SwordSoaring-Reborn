@@ -349,6 +349,7 @@ public class VatanseverAnimations {
                         //确保没有多余的剑
                         if (ssPlayer.getVatanseverShootEntities().size() == 6 - vatanseverEntityPatch.getLeftSwordCount()) {
                             FlySwordEntity flySwordEntity = new FlySwordEntity(vatanseverEntityPatch.getOwnerPatch().getOriginal(), 500, vatanseverEntityPatch.getTarget());
+                            flySwordEntity.setAnimationToPlay(vatanseverEntityPatch.getOriginal().getRandom().nextBoolean() ? FlySwordAnimations.FLY_SWORD_ATK_1 : FlySwordAnimations.FLY_SWORD_ATK_2);
                             if (vatanseverEntityPatch.getOriginal().level.addFreshEntity(flySwordEntity)) {
                                 ssPlayer.addVatanseverShootEntity(flySwordEntity);
                                 SkillDataManager manager = serverPlayerPatch.getSkill(SkillSlots.WEAPON_PASSIVE).getDataManager();

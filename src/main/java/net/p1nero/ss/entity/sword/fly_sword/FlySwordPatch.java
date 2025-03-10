@@ -44,17 +44,12 @@ public class FlySwordPatch extends AbstractArtifactSpiritPatch<FlySwordEntity> {
     }
 
     public StaticAnimation getInitAnimation(PlayerPatch<?> ownerPatch){
-        StaticAnimation toPlay;
-        if (this.getOriginal().getItemStack(this).getItem() instanceof VatanseverItem) {
-            if (getOriginal().getRandom().nextBoolean()) {
-                toPlay = FlySwordAnimations.FLY_SWORD_ATK_1;
-            } else {
-                toPlay = FlySwordAnimations.FLY_SWORD_ATK_2;
-            }
+        StaticAnimation toPlay = this.getOriginal().getAnimationToPlay();
+        if (toPlay != null) {
+            return toPlay;
         } else {
-            toPlay = list.get(getOriginal().getRandom().nextInt(list.size()));
+            return list.get(getOriginal().getRandom().nextInt(list.size()));
         }
-        return toPlay;
     }
 
     @Override

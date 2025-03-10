@@ -79,6 +79,16 @@ public class SSPlayer {
         return validBabylonItems;
     }
 
+    private ArrayList<ItemStack> wanSwordList;
+
+    public void setWanSwordList(ArrayList<ItemStack> wanSwordList) {
+        this.wanSwordList = wanSwordList;
+    }
+
+    public ArrayList<ItemStack> getWanSwordList() {
+        return wanSwordList;
+    }
+
     public void saveNBTData(CompoundTag tag){
 
     }

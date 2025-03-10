@@ -5,7 +5,6 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.p1nero.ss.entity.AbstractArtifactSpiritEntity;
 import net.p1nero.ss.entity.ReplaceableArmature;
@@ -15,6 +14,8 @@ import net.p1nero.ss.gameassets.SwordSoaringArmatures;
 import net.p1nero.ss.gameassets.SwordSoaringSkillSlots;
 import net.p1nero.ss.gameassets.animations.SwordConvergenceAnimations;
 import net.p1nero.ss.skill.sword_controller.WanJianGuiZongSkill;
+import yesman.epicfight.api.animation.types.DynamicAnimation;
+import yesman.epicfight.api.animation.types.StaticAnimation;
 import yesman.epicfight.skill.SkillDataManager;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 
@@ -47,9 +48,10 @@ public class SwordConvergenceEntity extends BabylonEntity {
         return false;
     }
 
-    public boolean isOwnerLooping(){
+    public boolean isOwnerCharging(){
         if(getOwnerPatch() instanceof ServerPlayerPatch serverPlayerPatch){
-            return serverPlayerPatch.getAnimator().getPlayerFor(null).getAnimation().equals(SwordConvergenceAnimations.WAN3_PLAYER);
+            DynamicAnimation currentOwnerAnim = serverPlayerPatch.getAnimator().getPlayerFor(null).getAnimation();
+            return currentOwnerAnim.equals(SwordConvergenceAnimations.WAN1_PLAYER) || currentOwnerAnim.equals(SwordConvergenceAnimations.WAN2_PLAYER);
         }
         return false;
     }
@@ -64,7 +66,7 @@ public class SwordConvergenceEntity extends BabylonEntity {
 
     @Override
     protected void moveToOwner(LivingEntity owner) {
-        if(isOwnerKeyPressing() || isOwnerLooping()){
+        if(isOwnerKeyPressing() || isOwnerCharging()){
             setYRot(owner.getYRot());
             setYBodyRot(owner.getYRot());
             setYHeadRot(owner.getYRot());

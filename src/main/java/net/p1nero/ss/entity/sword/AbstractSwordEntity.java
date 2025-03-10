@@ -12,12 +12,17 @@ import net.minecraft.world.level.Level;
 import net.p1nero.ss.SwordSoaring;
 import net.p1nero.ss.compat.ArmourersWorkshopCompat;
 import net.p1nero.ss.entity.AbstractArtifactSpiritEntity;
+import net.p1nero.ss.entity.sword.gate_of_babylon.BabylonEntity;
+import net.p1nero.ss.gameassets.animations.BabylonAnimations;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import yesman.epicfight.api.animation.types.StaticAnimation;
+import yesman.epicfight.main.EpicFightMod;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 
 public abstract class AbstractSwordEntity extends AbstractArtifactSpiritEntity implements IPatchedItemSupplier {
     private static final EntityDataAccessor<ItemStack> ITEM_STACK = SynchedEntityData.defineId(AbstractSwordEntity.class, EntityDataSerializers.ITEM_STACK);
+    protected static final EntityDataAccessor<String> ANIMATION_TO_PLAY = SynchedEntityData.defineId(AbstractSwordEntity.class, EntityDataSerializers.STRING);
 
     public AbstractSwordEntity(EntityType<? extends AbstractArtifactSpiritEntity> entityType, Level level) {
         super(entityType, level);
@@ -36,6 +41,23 @@ public abstract class AbstractSwordEntity extends AbstractArtifactSpiritEntity i
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.getEntityData().define(ITEM_STACK, ItemStack.EMPTY);
+        getEntityData().define(ANIMATION_TO_PLAY, "");
+    }
+
+    public void setAnimationToPlay(StaticAnimation staticAnimation) {
+        getEntityData().set(ANIMATION_TO_PLAY, staticAnimation.getRegistryName().toString());
+    }
+
+    /**
+     * @return 存的动画。若没存则返回null
+     */
+    @Nullable
+    public StaticAnimation getAnimationToPlay() {
+        String animation = this.getEntityData().get(ANIMATION_TO_PLAY);
+        if(animation.isEmpty()){
+            return null;
+        }
+        return EpicFightMod.getInstance().animationManager.findAnimationByPath(animation);
     }
 
     @Override

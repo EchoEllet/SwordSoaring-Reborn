@@ -10,19 +10,18 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.p1nero.ss.gameassets.SwordSoaringSkillSlots;
 import net.p1nero.ss.skill.sword_soaring.SwordSoaringSkill;
 import net.p1nero.ss.skill.sword_soaring.SwordSoaringSkillElytra;
-import yesman.epicfight.client.ClientEngine;
 import yesman.epicfight.client.world.capabilites.entitypatch.player.LocalPlayerPatch;
-import yesman.epicfight.gameasset.EpicFightSounds;
-import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 
 @OnlyIn(Dist.CLIENT)
 public class SwordFlyingSoundInstance extends AbstractTickableSoundInstance {
     private final LocalPlayer player;
+    private final LocalPlayerPatch playerPatch;
     private int time;
 
-    public SwordFlyingSoundInstance(LocalPlayer pPlayer) {
+    public SwordFlyingSoundInstance(LocalPlayerPatch playerPatch) {
         super(SoundEvents.ELYTRA_FLYING, SoundSource.PLAYERS);
-        this.player = pPlayer;
+        this.playerPatch = playerPatch;
+        this.player = playerPatch.getOriginal();
         this.looping = true;
         this.delay = 0;
         this.volume = 0.1F;
@@ -30,12 +29,11 @@ public class SwordFlyingSoundInstance extends AbstractTickableSoundInstance {
 
     public void tick() {
         ++this.time;
-        LocalPlayerPatch localPlayerPatch = EpicFightCapabilities.getEntityPatch(player, LocalPlayerPatch.class);
-        if(localPlayerPatch == null || localPlayerPatch.getSkill(SwordSoaringSkillSlots.SWORD_SOARING).getSkill() instanceof SwordSoaringSkillElytra){
+        if(playerPatch.getSkill(SwordSoaringSkillSlots.SWORD_SOARING).getSkill() instanceof SwordSoaringSkillElytra){
             this.stop();
             return;
         }
-        if (!this.player.isRemoved() && (this.time <= 20 || localPlayerPatch.getSkill(SwordSoaringSkillSlots.SWORD_SOARING).getDataManager().getDataValue(SwordSoaringSkill.FLYING))) {
+        if (!this.player.isRemoved() && (this.time <= 20 || playerPatch.getSkill(SwordSoaringSkillSlots.SWORD_SOARING).getDataManager().getDataValue(SwordSoaringSkill.FLYING))) {
             this.x = (float)this.player.getX();
             this.y = (float)this.player.getY();
             this.z = (float)this.player.getZ();

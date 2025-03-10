@@ -62,15 +62,11 @@ public class SwordConvergenceAnimations {
     public static void buildSwordConvergenceAnim() {
         HumanoidArmature biped = Armatures.BIPED;
         WAN1_PLAYER = new ActionAnimation(0.15F, "wan/wan_owner_1", biped)
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_BEGIN_EVENTS, AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> {
-                    LocalPlayer player = Minecraft.getInstance().player;
-                    CameraAnim.zoomIn(new Vec3f(0, -3, -6), 200);
-                    Minecraft.getInstance().getSoundManager().play(new WanSoundInstance(player));
-
-                    }, AnimationEvent.Side.CLIENT))
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, nextPlay(() -> WAN2_PLAYER));
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_BEGIN_EVENTS, AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> CameraAnim.zoomIn(new Vec3f(0, -3, -6), 400), AnimationEvent.Side.CLIENT))
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, nextPlay(() -> WAN2_PLAYER))
+                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 0.5F));
         WAN2_PLAYER = new ActionAnimation(0.0001F, "wan/wan_owner_2", biped)
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_BEGIN_EVENTS, AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> CameraAnim.zoomIn(new Vec3f(0, -3, -6), 200), AnimationEvent.Side.CLIENT))
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_BEGIN_EVENTS, AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> CameraAnim.zoomIn(new Vec3f(0, -3, -6), 400), AnimationEvent.Side.CLIENT))
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> {
                     if (livingEntityPatch instanceof ServerPlayerPatch serverPlayerPatch) {
                         SkillDataManager manager = serverPlayerPatch.getSkill(SwordSoaringSkillSlots.SWORD_CONTROLLER).getDataManager();
@@ -90,7 +86,8 @@ public class SwordConvergenceAnimations {
         WanArmature wanArmature = SwordSoaringArmatures.wanArmature;
         WAN1_L = new BabylonMultiPhaseAttackAnimation(0.15F, "wan/wan_l_1", wanArmature, AnimationUtils.getPhases(wanArmature.wanJoints, 0, 2.667F))
                 .addEvents(summonAndPlay(2.30F, () -> WAN2_L))
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF);
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF)
+                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 0.5F));
         WAN2_L = new BabylonMultiPhaseAttackAnimation(0.0001F, "wan/wan_l_2", wanArmature, AnimationUtils.getPhases(wanArmature.wanJoints, 0, 2.667F))
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> {
                     if (livingEntityPatch.getOriginal() instanceof SwordConvergenceEntity swordConvergenceEntity) {
@@ -113,7 +110,8 @@ public class SwordConvergenceAnimations {
 
         WAN1_R = new BabylonMultiPhaseAttackAnimation(0.15F, "wan/wan_r_1", wanArmature, AnimationUtils.getPhases(wanArmature.wanJoints, 0, 2.667F))
                 .addEvents( summonAndPlay(2.30F, () -> WAN2_R))
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF);
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF)
+                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 0.5F));
         WAN2_R = new BabylonMultiPhaseAttackAnimation(0.0001F, "wan/wan_r_2", wanArmature, AnimationUtils.getPhases(wanArmature.wanJoints, 0, 2.667F))
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> {
                     if (livingEntityPatch.getOriginal() instanceof SwordConvergenceEntity swordConvergenceEntity) {

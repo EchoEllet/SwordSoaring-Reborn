@@ -8,17 +8,22 @@ import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.p1nero.ss.Config;
 import net.p1nero.ss.SwordSoaring;
+import net.p1nero.ss.capability.SSCapabilityProvider;
 import net.p1nero.ss.client.keymapping.SwordSoaringKeyMappings;
+import net.p1nero.ss.client.sound.WanSoundInstance;
+import net.p1nero.ss.entity.sword.fly_sword.FlySwordEntity;
 import net.p1nero.ss.entity.sword.sword_convergence.SwordConvergenceEntity;
+import net.p1nero.ss.gameassets.animations.FlySwordAnimations;
 import net.p1nero.ss.gameassets.animations.SwordConvergenceAnimations;
 import net.p1nero.ss.util.ItemUtils;
 import yesman.epicfight.client.ClientEngine;
 import yesman.epicfight.client.gui.BattleModeGui;
+import yesman.epicfight.client.world.capabilites.entitypatch.player.LocalPlayerPatch;
 import yesman.epicfight.skill.Skill;
 import yesman.epicfight.skill.SkillContainer;
 import yesman.epicfight.skill.SkillDataManager;
@@ -28,6 +33,7 @@ import yesman.epicfight.world.entity.eventlistener.PlayerEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 public class WanJianGuiZongSkill extends Skill {
@@ -44,6 +50,10 @@ public class WanJianGuiZongSkill extends Skill {
     public void setParams(CompoundTag parameters) {
         super.setParams(parameters);
         cooldown = parameters.getInt("cooldown");
+    }
+
+    public int getMaxCooldown() {
+        return cooldown;
     }
 
     @Override
@@ -83,6 +93,7 @@ public class WanJianGuiZongSkill extends Skill {
         executer.getSkill(this).getDataManager().setDataSync(COOLDOWN_TIMER, cooldown, executer.getOriginal());
         executer.playAnimationSynchronized(SwordConvergenceAnimations.WAN1_PLAYER, 0.15F);
         ArrayList<ItemStack> list = ItemUtils.calculateValidBabylonItems(executer.getOriginal(), false, (SwordSoaring::isValidSword));
+        executer.getOriginal().getCapability(SSCapabilityProvider.SS_PLAYER).ifPresent(ssPlayer -> ssPlayer.setWanSwordList(list));
         ArrayList<ItemStack> firstHalf;
         ArrayList<ItemStack> secondHalf;
         if(list.size() <= 1){
@@ -102,6 +113,12 @@ public class WanJianGuiZongSkill extends Skill {
     }
 
     @Override
+    @OnlyIn(Dist.CLIENT)
+    public void executeOnClient(LocalPlayerPatch executer, FriendlyByteBuf args) {
+        Minecraft.getInstance().getSoundManager().play(new WanSoundInstance(executer));
+    }
+
+    @Override
     public void updateContainer(SkillContainer container) {
         super.updateContainer(container);
         if(container.getExecuter().isLogicalClient()){
@@ -113,6 +130,19 @@ public class WanJianGuiZongSkill extends Skill {
         int currentCooldown = container.getDataManager().getDataValue(COOLDOWN_TIMER);
         if (currentCooldown > 0) {
             container.getDataManager().setData(COOLDOWN_TIMER, currentCooldown - 1);
+        }
+        if(!container.getExecuter().isLogicalClient() && this.cooldown - currentCooldown <= 128){
+            for(int i = 0; i < Config.SWORD_EFFECT_PER_TICK.get(); i++){
+                FlySwordEntity flySwordEntity = new FlySwordEntity(container.getExecuter().getOriginal(), 200, container.getExecuter().getOriginal());
+                flySwordEntity.setAnimationToPlay(FlySwordAnimations.WAN_ANIMATIONS.get(currentCooldown % FlySwordAnimations.WAN_ANIMATIONS.size()));
+                flySwordEntity.setRotationLock(false);
+                float randomRot = (new Random().nextFloat() * 360);
+                flySwordEntity.setYRot(randomRot);
+                flySwordEntity.setYBodyRot(randomRot);
+                flySwordEntity.setYHeadRot(randomRot);
+                container.getExecuter().getOriginal().getCapability(SSCapabilityProvider.SS_PLAYER).ifPresent(ssPlayer -> flySwordEntity.setItemStack(ssPlayer.getWanSwordList().get(currentCooldown % ssPlayer.getWanSwordList().size())));
+                container.getExecuter().getOriginal().level.addFreshEntity(flySwordEntity);
+            }
         }
     }
 

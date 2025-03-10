@@ -10,6 +10,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.p1nero.ss.animation.AutoDiscardActionAnimation;
 import net.p1nero.ss.animation.AutoDiscardAttackAnimation;
 import net.p1nero.ss.entity.AbstractArtifactSpiritEntity;
 import net.p1nero.ss.entity.sword.fly_sword.FlySwordArmature;
@@ -38,6 +39,13 @@ public class FlySwordAnimations {
     public static StaticAnimation FLY_SWORD_ATK_IDLE;
     public static StaticAnimation FLY_SWORD_ATK_FLY;
     public static StaticAnimation FLY_SWORD_ATK_FLY_BACK;
+    public static StaticAnimation FLY_SWORD_WAN_1;
+    public static StaticAnimation FLY_SWORD_WAN_2;
+    public static StaticAnimation FLY_SWORD_WAN_3;
+    public static StaticAnimation FLY_SWORD_WAN_4;
+    public static StaticAnimation FLY_SWORD_WAN_5;
+    public static StaticAnimation FLY_SWORD_WAN_6;
+    public static List<StaticAnimation> WAN_ANIMATIONS;
     public static AnimationEvent SET_ANIMATION_END = AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> {
         if (livingEntityPatch.getOriginal() instanceof FlySwordEntity flySwordEntity) {
             flySwordEntity.setAnimationEnd(true);
@@ -108,6 +116,15 @@ public class FlySwordAnimations {
                         flySwordEntity.setFlyingBack(true);
                     }
                 }, AnimationEvent.Side.SERVER));
+
+        FLY_SWORD_WAN_1 = new AutoDiscardActionAnimation(0.15F, "fly_sword/fly_sword_wan_1", flySwordArmature);
+        FLY_SWORD_WAN_2 = new AutoDiscardActionAnimation(0.15F, "fly_sword/fly_sword_wan_2", flySwordArmature);
+        FLY_SWORD_WAN_3 = new AutoDiscardActionAnimation(0.15F, "fly_sword/fly_sword_wan_3", flySwordArmature);
+        FLY_SWORD_WAN_4 = new AutoDiscardActionAnimation(0.15F, "fly_sword/fly_sword_wan_4", flySwordArmature);
+        FLY_SWORD_WAN_5 = new AutoDiscardActionAnimation(0.15F, "fly_sword/fly_sword_wan_5", flySwordArmature);
+        FLY_SWORD_WAN_6 = new AutoDiscardActionAnimation(0.15F, "fly_sword/fly_sword_wan_6", flySwordArmature);
+        WAN_ANIMATIONS = List.of(FLY_SWORD_WAN_1, FLY_SWORD_WAN_2, FLY_SWORD_WAN_3, FLY_SWORD_WAN_4, FLY_SWORD_WAN_5, FLY_SWORD_WAN_6);
+
     }
 
 }

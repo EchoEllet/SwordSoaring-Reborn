@@ -14,11 +14,16 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.p1nero.ss.entity.AbstractArtifactSpiritPatch;
 import net.p1nero.ss.entity.ReplaceableArmature;
 import net.p1nero.ss.entity.sword.sword_convergence.SwordConvergenceEntity;
+import net.p1nero.ss.gameassets.SwordSoaringSkillSlots;
+import net.p1nero.ss.skill.sword_controller.WanJianGuiZongSkill;
 import net.p1nero.ss.util.MathUtils;
 import yesman.epicfight.api.animation.Joint;
 import yesman.epicfight.api.client.model.AnimatedMesh;
 import yesman.epicfight.api.utils.math.OpenMatrix4f;
 import yesman.epicfight.client.renderer.patched.layer.PatchedLayer;
+import yesman.epicfight.skill.SkillContainer;
+import yesman.epicfight.skill.SkillDataManager;
+import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 
 import java.util.List;
 import java.util.Random;
@@ -45,9 +50,21 @@ public class PatchedSwordConvergenceRandomReplaceableLayer<E extends SwordConver
             if (babylons.isEmpty()) {
                 return;
             }
+
+            int lifeTime = 0;
+            if(entity.getOwnerPatch() instanceof PlayerPatch<?> playerPatch){
+                SkillContainer container = playerPatch.getSkill(SwordSoaringSkillSlots.SWORD_CONTROLLER);
+                SkillDataManager manager = container.getDataManager();
+                if(manager.hasData(WanJianGuiZongSkill.COOLDOWN_TIMER) && container.getSkill() instanceof WanJianGuiZongSkill wanJianGuiZongSkill){
+                    int cooldown = manager.getDataValue(WanJianGuiZongSkill.COOLDOWN_TIMER);
+                    lifeTime = wanJianGuiZongSkill.getMaxCooldown() - cooldown;
+                }
+            }
+
             List<Joint> jointList = armature.getJoints(artifactSpiritPatch);
             Random random = new Random(entity.getSeed());
-            for (int i = 0; i < jointList.size(); i++) {
+            //慢慢出现，1tick解放2根
+            for (int i = 0; i < jointList.size() && i < lifeTime / 2; i++) {
                 Joint joint = jointList.get(i);
                 ItemStack itemStack;
                 if (i < babylons.size()) {

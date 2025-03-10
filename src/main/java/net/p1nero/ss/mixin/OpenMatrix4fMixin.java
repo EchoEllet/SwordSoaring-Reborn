@@ -11,7 +11,7 @@ import yesman.epicfight.api.utils.math.OpenMatrix4f;
 import yesman.epicfight.api.utils.math.Vec3f;
 
 /**
- * 修复缩放导致的旋转bug
+ * 修复缩放导致的旋转bug， 迁移1.20的时候记得删
  */
 @Mixin(value = OpenMatrix4f.class)
 public class OpenMatrix4fMixin {

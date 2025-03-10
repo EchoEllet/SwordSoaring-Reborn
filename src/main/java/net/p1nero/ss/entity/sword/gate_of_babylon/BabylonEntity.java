@@ -38,7 +38,6 @@ public class BabylonEntity extends AbstractSwordEntity {
     private final Map<Integer, OpenMatrix4f> startJointTransformMap = new HashMap<>();
     private final Map<Integer, Double> jointDamageMap = new HashMap<>();
     private final Map<Integer, Boolean> jointsHittenGroundMap = new HashMap<>();
-    private static final EntityDataAccessor<String> ANIMATION_TO_PLAY = SynchedEntityData.defineId(BabylonEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<Boolean> CLIENT_INIT = SynchedEntityData.defineId(BabylonEntity.class, EntityDataSerializers.BOOLEAN);
 
     public BabylonEntity(EntityType<? extends AbstractArtifactSpiritEntity> entityType, Level level) {
@@ -67,16 +66,7 @@ public class BabylonEntity extends AbstractSwordEntity {
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        getEntityData().define(ANIMATION_TO_PLAY, BabylonAnimations.BABYLON_SHOOT_START.getRegistryName().toString());
         getEntityData().define(CLIENT_INIT, false);
-    }
-
-    public StaticAnimation getAnimationToPlay() {
-        return EpicFightMod.getInstance().animationManager.findAnimationByPath(this.getEntityData().get(ANIMATION_TO_PLAY));
-    }
-
-    public void setAnimationToPlay(StaticAnimation staticAnimation) {
-        getEntityData().set(ANIMATION_TO_PLAY, staticAnimation.getRegistryName().toString());
     }
 
     public void bindStartTransform(int jointId, OpenMatrix4f startTransform) {
