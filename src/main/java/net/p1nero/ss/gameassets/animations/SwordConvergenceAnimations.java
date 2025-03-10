@@ -64,7 +64,7 @@ public class SwordConvergenceAnimations {
         HumanoidArmature biped = Armatures.BIPED;
         WAN1_PLAYER = new ActionAnimation(0.15F, "wan/wan_owner_1", biped)
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_BEGIN_EVENTS,
-                        AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> CameraAnim.zoomIn(new Vec3f(0, -3, -6), 400), AnimationEvent.Side.CLIENT),
+                        AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> CameraAnim.zoomIn(new Vec3f(0, -3, -6), 450), AnimationEvent.Side.CLIENT),
                         AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> {
                             if(livingEntityPatch instanceof ServerPlayerPatch serverPlayerPatch){
                                 serverPlayerPatch.getSkill(SwordSoaringSkillSlots.SWORD_CONTROLLER).getDataManager().setDataSync(WanJianGuiZongSkill.IS_CHARGING, true, serverPlayerPatch.getOriginal());
@@ -76,7 +76,7 @@ public class SwordConvergenceAnimations {
                 .addStateRemoveOld(EntityState.TURNING_LOCKED, false)
                 .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 0.5F));
         WAN2_PLAYER = new ActionAnimation(0.0001F, "wan/wan_owner_2", biped)
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_BEGIN_EVENTS, AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> CameraAnim.zoomIn(new Vec3f(0, -3, -6), 400), AnimationEvent.Side.CLIENT))
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_BEGIN_EVENTS, AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> CameraAnim.zoomIn(new Vec3f(0, -3, -6), 450), AnimationEvent.Side.CLIENT))
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> {
                     if (livingEntityPatch instanceof ServerPlayerPatch serverPlayerPatch) {
                         SkillDataManager manager = serverPlayerPatch.getSkill(SwordSoaringSkillSlots.SWORD_CONTROLLER).getDataManager();
@@ -116,7 +116,7 @@ public class SwordConvergenceAnimations {
                     }
                 }, AnimationEvent.Side.SERVER));
         WAN3_L = new BabylonMultiPhaseAttackAnimation(0.0001F, "wan/wan_l_3", wanArmature, AnimationUtils.getPhases(wanArmature.wanJoints, 0, 2.667F))
-                .addEvents(summonAndPlay(1.33F, () -> WAN4_L))
+                .addEvents(summonAndPlay(1.13F, () -> WAN4_L))
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF);
         WAN4_L = new BabylonMultiPhaseAttackAnimation(0.15F, "wan/wan_l_4", wanArmature, AnimationUtils.getPhases(wanArmature.wanJoints, 0, 2.667F))
                 .addEvents(summonAndPlay(1.13F, () -> WAN_SHOOT_L))
@@ -140,7 +140,7 @@ public class SwordConvergenceAnimations {
                     }
                 }, AnimationEvent.Side.SERVER));
         WAN3_R = new BabylonMultiPhaseAttackAnimation(0.0001F, "wan/wan_r_3", wanArmature, AnimationUtils.getPhases(wanArmature.wanJoints, 0, 2.667F))
-                .addEvents(summonAndPlay(1.33F, () -> WAN4_R))
+                .addEvents(summonAndPlay(1.13F, () -> WAN4_R))
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF);
         WAN4_R = new BabylonMultiPhaseAttackAnimation(0.15F, "wan/wan_r_4", wanArmature, AnimationUtils.getPhases(wanArmature.wanJoints, 0, 2.667F))
                 .addEvents(summonAndPlay(1.13F, () -> WAN_SHOOT_R))

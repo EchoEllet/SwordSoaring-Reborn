@@ -24,13 +24,13 @@ public class WanSoundInstance extends AbstractTickableSoundInstance {
     public void tick() {
         ++this.time;
         if(playerPatch.getSkill(SwordSoaringSkillSlots.SWORD_CONTROLLER).getDataManager().getDataValue(WanJianGuiZongSkill.IS_CHARGING)){
-            this.time = 100;
+            this.time = 120;
         }
         if(this.time > 140 && this.time < 160){
-            this.volume = 0.5F + (this.time - 140) / 20.0F;
+            this.volume = 0.5F + (this.time - 140) / 10.0F;
         }
         if(this.time >= 160) {
-            this.volume = 1.5F - (this.time - 160) / 40.0F;
+            this.volume = 2.5F - (this.time - 160) / 20.0F;
             if(this.volume < 0){
                 stop();
             }

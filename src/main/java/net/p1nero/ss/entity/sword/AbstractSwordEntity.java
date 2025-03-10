@@ -4,7 +4,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -32,9 +34,16 @@ public abstract class AbstractSwordEntity extends AbstractArtifactSpiritEntity i
         this.setItemStack(itemStack);
         this.tame(owner);
         setPos(owner.position());
-
         //时装工坊联动，拷贝时装栏
         SwordSoaring.runInArmourersWorkshopLoaded(() -> () -> ArmourersWorkshopCompat.copyArmourers(owner, this));
+    }
+
+    /**
+     * 以防需要刀光的情况等
+     */
+    @Override
+    public @NotNull ItemStack getItemBySlot(@NotNull EquipmentSlot pSlot) {
+        return getEntityData().get(ITEM_STACK);
     }
 
     @Override
