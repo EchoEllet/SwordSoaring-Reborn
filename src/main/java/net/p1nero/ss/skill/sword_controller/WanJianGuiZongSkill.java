@@ -134,7 +134,7 @@ public class WanJianGuiZongSkill extends Skill {
         if (currentCooldown > 0 && !container.getExecuter().isLogicalClient()) {
             container.getDataManager().setDataSync(COOLDOWN_TIMER, currentCooldown - 1, ((ServerPlayer) container.getExecuter().getOriginal()));
         }
-        if(!container.getExecuter().isLogicalClient() && this.cooldown - currentCooldown <= 128){
+        if(!container.getExecuter().isLogicalClient() && cooldown - currentCooldown <= 128){
             for(int i = 0; i < Config.SWORD_EFFECT_PER_TICK.get(); i++){
                 FlySwordEntity flySwordEntity = new FlySwordEntity(container.getExecuter().getOriginal(), 200, container.getExecuter().getOriginal());
                 flySwordEntity.setAnimationToPlay(FlySwordAnimations.WAN_ANIMATIONS.get(currentCooldown % FlySwordAnimations.WAN_ANIMATIONS.size()));

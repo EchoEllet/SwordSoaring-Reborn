@@ -7,6 +7,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.p1nero.ss.gameassets.SwordSoaringSkillSlots;
 import net.p1nero.ss.skill.sword_controller.WanJianGuiZongSkill;
 import yesman.epicfight.client.world.capabilites.entitypatch.player.LocalPlayerPatch;
+import yesman.epicfight.skill.SkillDataManager;
 
 @OnlyIn(Dist.CLIENT)
 public class WanSoundInstance extends AbstractTickableSoundInstance {
@@ -23,7 +24,15 @@ public class WanSoundInstance extends AbstractTickableSoundInstance {
 
     public void tick() {
         ++this.time;
-        if(playerPatch.getSkill(SwordSoaringSkillSlots.SWORD_CONTROLLER).getDataManager().getDataValue(WanJianGuiZongSkill.IS_CHARGING)){
+        if(playerPatch == null){
+            stop();
+            return;
+        }
+        SkillDataManager manager = playerPatch.getSkill(SwordSoaringSkillSlots.SWORD_CONTROLLER).getDataManager();
+        if(!manager.hasData(WanJianGuiZongSkill.IS_CHARGING)){
+            stop();
+        }
+        if(manager.getDataValue(WanJianGuiZongSkill.IS_CHARGING)){
             this.time = 120;
         }
         if(this.time > 140 && this.time < 160){

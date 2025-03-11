@@ -34,7 +34,6 @@ public abstract class AbstractBabylonPatch<T extends BabylonEntity> extends Abst
                 }
                 StaticAnimation toPlay = getOriginal().getAnimationToPlay();
                 if(toPlay != null){
-                    this.animator.playAnimation(toPlay, 0.0001F);
                     PacketRelay.sendToServer(PacketHandler.INSTANCE, new RequestEntityPlayAnimationPacket(this.getOriginal().getId(), toPlay.getNamespaceId(), toPlay.getId(), 0.0001F));
                     played = true;
                 }

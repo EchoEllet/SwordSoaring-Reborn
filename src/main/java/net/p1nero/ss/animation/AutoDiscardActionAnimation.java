@@ -21,6 +21,8 @@ public class AutoDiscardActionAnimation extends ActionAnimation {
     @Override
     public void end(LivingEntityPatch<?> entityPatch, DynamicAnimation nextAnimation, boolean isEnd) {
         super.end(entityPatch, nextAnimation, isEnd);
-        entityPatch.getOriginal().discard();
+        if(!entityPatch.isLogicalClient()){
+            entityPatch.getOriginal().discard();
+        }
     }
 }
