@@ -22,21 +22,21 @@ public class VatanseverSkills {
 
     public static void buildVatanseverSkills(SkillBuildEvent event) {
         ComboNode root = ComboNode.create();
-        ComboNode a = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_AUTO1).addCondition(checkSwordCount(1, 6));
-        ComboNode aa = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_AUTO2).addCondition(checkSwordCount(2, 6));
-        ComboNode aaa = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_AUTO3).addCondition(checkSwordCount(1, 6));
-        ComboNode aab = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_AUTO3_B).addCondition(checkSwordCount(5, 6));
-        ComboNode aaaa = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_AUTO4).addCondition(checkSwordCount(6));
-        ComboNode aaab = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_AUTO4_B).addCondition(checkSwordCount(6));
+        ComboNode a = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_AUTO1).addCondition(checkSwordCount(1, 6)).setCanBeInterrupt(false);
+        ComboNode aa = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_AUTO2).addCondition(checkSwordCount(2, 6)).setCanBeInterrupt(false);
+        ComboNode aaa = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_AUTO3).addCondition(checkSwordCount(1, 6)).setCanBeInterrupt(false);
+        ComboNode aab = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_AUTO3_B).addCondition(checkSwordCount(5, 6)).setCanBeInterrupt(false);
+        ComboNode aaaa = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_AUTO4).addCondition(checkSwordCount(6)).setCanBeInterrupt(false);
+        ComboNode aaab = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_AUTO4_B).addCondition(checkSwordCount(6)).setCanBeInterrupt(false);
         ComboNode storm = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_STORM_START).addCondition(checkSwordCount(6))
                 .setCooldown(800)
-                .addCondition(new CooldownCondition(false));
-        ComboNode shootL3 = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_SHOOT_L3).addCondition(checkSwordCount(6)).setPriority(6);
-        ComboNode shootR3 = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_SHOOT_R3).addCondition(checkSwordCount(5)).setPriority(5);
-        ComboNode shootL2 = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_SHOOT_L2).addCondition(checkSwordCount(4)).setPriority(4);
-        ComboNode shootR2 = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_SHOOT_R2).addCondition(checkSwordCount(3)).setPriority(3);
-        ComboNode shootL1 = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_SHOOT_L1).addCondition(checkSwordCount(2)).setPriority(2);
-        ComboNode shootR1 = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_SHOOT_R1).addCondition(checkSwordCount(1)).setPriority(1);
+                .addCondition(new CooldownCondition(false)).setCanBeInterrupt(false);
+        ComboNode shootL3 = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_SHOOT_L3).addCondition(checkSwordCount(6)).setPriority(6).setCanBeInterrupt(false);
+        ComboNode shootR3 = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_SHOOT_R3).addCondition(checkSwordCount(5)).setPriority(5).setCanBeInterrupt(false);
+        ComboNode shootL2 = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_SHOOT_L2).addCondition(checkSwordCount(4)).setPriority(4).setCanBeInterrupt(false);
+        ComboNode shootR2 = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_SHOOT_R2).addCondition(checkSwordCount(3)).setPriority(3).setCanBeInterrupt(false);
+        ComboNode shootL1 = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_SHOOT_L1).addCondition(checkSwordCount(2)).setPriority(2).setCanBeInterrupt(false);
+        ComboNode shootR1 = ComboNode.createNode(() -> VatanseverAnimations.PLAYER_SHOOT_R1).addCondition(checkSwordCount(1)).setPriority(1).setCanBeInterrupt(false);
         ComboNode shoot = ComboNode.create().addConditionAnimation(shootL1)
                 .addConditionAnimation(shootL2)
                 .addConditionAnimation(shootL3)
@@ -57,7 +57,6 @@ public class VatanseverSkills {
         aaaa.key3(shoot);
         shoot.key1(a);
         shoot.key3(shoot);
-        shoot.addChild(SwordSoaringComboTypes.KEY_SWORD_SKILL, storm);
         root.addChild(SwordSoaringComboTypes.KEY_SWORD_SKILL, storm);
         VATANSEVER_INNATE = SwordSoaringSkills.build(event, VatanseverWeaponInnateSkill::new, ComboBasicAttack.createComboBasicAttack().setCombo(root).setShouldDrawGui(true), "vatansever_innate");
         VATANSEVER_PASSIVE = SwordSoaringSkills.build(event, VatanseverPassive::new, Skill.createBuilder().setCategory(SkillCategories.WEAPON_PASSIVE).setResource(Skill.Resource.NONE), "vatansever_passive");
