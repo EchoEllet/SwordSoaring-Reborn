@@ -17,7 +17,7 @@ public class SwordSoaringSounds {
     public static RegistryObject<SoundEvent> SWORD_CONVERGENCE = registerSoundEvent("sword_convergence");
 
     private static RegistryObject<SoundEvent> registerSoundEvent(String name) {
-        return SOUND_EVENTS.register(name, () -> new SoundEvent(new ResourceLocation(SwordSoaringMod.MOD_ID, name)));
+        return SOUND_EVENTS.register(name, () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(SwordSoaringMod.MOD_ID, name)));
     }
 
 }

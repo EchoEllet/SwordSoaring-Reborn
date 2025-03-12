@@ -14,6 +14,7 @@ import net.p1nero.ss.entity.sword.screen_sword.ScreenSwordPatch;
 import net.p1nero.ss.entity.sword.sword_convergence.SwordConvergencePatch;
 import net.p1nero.ss.entity.vatansever.VatanseverEntityPatch;
 import net.p1nero.ss.entity.vatansever_storm.VatanseverStormEntityPatch;
+import net.p1nero.ss.gameassets.SwordSoaringArmatures;
 import net.p1nero.ss.network.PacketHandler;
 import net.p1nero.ss.skill.sword_controller.GateOfBabylonSkill;
 import net.p1nero.ss.skill.sword_controller.ScreenSwordSkill;
@@ -46,8 +47,11 @@ public class ModEvents{
     }
 
     @SubscribeEvent
-    public static void commonSetup(FMLCommonSetupEvent event) {
+    public static void commonSetup(final FMLCommonSetupEvent event) {
         PacketHandler.register();
+
+        event.enqueueWork(SwordSoaringArmatures::registerArmatures);
+
         SwordSoaringMod.runInArmourersWorkshopLoaded(() -> ArmourersWorkshopCompat::registerSwordSoaringItemProvider);
     }
 }

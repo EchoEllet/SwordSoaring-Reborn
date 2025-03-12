@@ -2,11 +2,13 @@ package net.p1nero.ss.client.sound;
 
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
+import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.p1nero.ss.gameassets.SwordSoaringDatakeys;
 import net.p1nero.ss.gameassets.SwordSoaringSkillSlots;
 import net.p1nero.ss.skill.sword_soaring.SwordSoaringSkill;
 import net.p1nero.ss.skill.sword_soaring.SwordSoaringSkillElytra;
@@ -19,7 +21,7 @@ public class SwordFlyingSoundInstance extends AbstractTickableSoundInstance {
     private int time;
 
     public SwordFlyingSoundInstance(LocalPlayerPatch playerPatch) {
-        super(SoundEvents.ELYTRA_FLYING, SoundSource.PLAYERS);
+        super(SoundEvents.ELYTRA_FLYING, SoundSource.PLAYERS, SoundInstance.createUnseededRandom());
         this.playerPatch = playerPatch;
         this.player = playerPatch.getOriginal();
         this.looping = true;
@@ -33,7 +35,7 @@ public class SwordFlyingSoundInstance extends AbstractTickableSoundInstance {
             this.stop();
             return;
         }
-        if (!this.player.isRemoved() && (this.time <= 20 || playerPatch.getSkill(SwordSoaringSkillSlots.SWORD_SOARING).getDataManager().getDataValue(SwordSoaringSkill.FLYING))) {
+        if (!this.player.isRemoved() && (this.time <= 20 || playerPatch.getSkill(SwordSoaringSkillSlots.SWORD_SOARING).getDataManager().getDataValue(SwordSoaringDatakeys.FLYING.get()))) {
             this.x = (float)this.player.getX();
             this.y = (float)this.player.getY();
             this.z = (float)this.player.getZ();

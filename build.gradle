@@ -89,9 +89,10 @@ dependencies {
     implementation fg.deobf("libs:EpicFight:20.10.1.1")
     implementation fg.deobf("libs:invincible:20.10.0")
     implementation fg.deobf("curse.maven:mmmmmmmmmmmm-225738:6237015")
+    implementation fg.deobf("curse.maven:selene-499980:6283242")
     implementation fg.deobf("curse.maven:sophisticated-core-618298:6266807")
     implementation fg.deobf("curse.maven:sophisticated-backpacks-422301:6246607")
-    implementation fg.deobf("curse.maven:armourers-workshop-229523:6232905")
+//    implementation fg.deobf("curse.maven:armourers-workshop-229523:6232905")
 }
 
 tasks.named('processResources', ProcessResources).configure {

@@ -1,6 +1,5 @@
 package net.p1nero.ss.animation;
 
-import com.mojang.datafixers.util.Pair;
 import net.minecraft.world.InteractionHand;
 import net.p1nero.ss.entity.vatansever.VatanseverArmature;
 import net.p1nero.ss.entity.vatansever.VatanseverEntityPatch;
@@ -30,10 +29,6 @@ public class VatanseverAttackAnimation extends ArtifactSpiritMultiPhaseAttackAni
 
     public VatanseverAttackAnimation(float convertTime, float antic, float preDelay, float contact, float recovery, InteractionHand hand, @Nullable Collider collider, Joint colliderJoint, String path, AssetAccessor<? extends Armature> armature) {
         super(convertTime, antic, preDelay, contact, recovery, hand, collider, colliderJoint, path, armature);
-    }
-
-    public VatanseverAttackAnimation(float convertTime, String path, AssetAccessor<? extends Armature> armature, Phase... phases) {
-        super(convertTime, path, armature, phases);
     }
 
     @Override

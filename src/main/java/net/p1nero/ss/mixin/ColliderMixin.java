@@ -53,7 +53,7 @@ public abstract class ColliderMixin {
             transformMatrix = armature.getBindedTransformFor(attackAnimation.getPoseByTime(entityPatch, elapsedTime, 1.0F), joint);
         }
 
-        OpenMatrix4f toWorldCoord = OpenMatrix4f.createTranslation(-((float)((LivingEntity)entityPatch.getOriginal()).getX()), (float)((LivingEntity)entityPatch.getOriginal()).getY(), -((float)((LivingEntity)entityPatch.getOriginal()).getZ()));
+        OpenMatrix4f toWorldCoord = OpenMatrix4f.createTranslation(-((float) entityPatch.getOriginal().getX()), (float) entityPatch.getOriginal().getY(), -((float) entityPatch.getOriginal().getZ()));
         transformMatrix.mulFront(toWorldCoord.mulBack(entityPatch.getModelMatrix(1.0F)));
 
         //校正旋转
@@ -66,9 +66,6 @@ public abstract class ColliderMixin {
         cir.setReturnValue(this.getCollideEntities(entityPatch.getOriginal()));
     }
 
-    /**
-     * TODO 优化，仅矫正旋转就好了，longArmature过时
-     */
     @Inject(method = "draw", at = @At("HEAD"), cancellable = true)
     @OnlyIn(Dist.CLIENT)
     private void sword_soaring$draw(PoseStack poseStack, MultiBufferSource buffer, LivingEntityPatch<?> entityPatch, AttackAnimation animation, Joint joint, float prevElapsedTime, float elapsedTime, float partialTicks, float attackSpeed, CallbackInfo ci){

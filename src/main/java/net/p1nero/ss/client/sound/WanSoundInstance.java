@@ -1,9 +1,11 @@
 package net.p1nero.ss.client.sound;
 
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
+import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.sounds.SoundSource;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.p1nero.ss.gameassets.SwordSoaringDatakeys;
 import net.p1nero.ss.gameassets.SwordSoaringSkillSlots;
 import net.p1nero.ss.skill.sword_controller.WanJianGuiZongSkill;
 import yesman.epicfight.client.world.capabilites.entitypatch.player.LocalPlayerPatch;
@@ -15,7 +17,7 @@ public class WanSoundInstance extends AbstractTickableSoundInstance {
     private int time = 0;
 
     public WanSoundInstance(LocalPlayerPatch pPlayer) {
-        super(SwordSoaringSounds.SWORD_CONVERGENCE.get(), SoundSource.PLAYERS);
+        super(SwordSoaringSounds.SWORD_CONVERGENCE.get(), SoundSource.PLAYERS, SoundInstance.createUnseededRandom());
         this.playerPatch = pPlayer;
         this.looping = true;
         this.delay = 0;
@@ -29,10 +31,10 @@ public class WanSoundInstance extends AbstractTickableSoundInstance {
             return;
         }
         SkillDataManager manager = playerPatch.getSkill(SwordSoaringSkillSlots.SWORD_CONTROLLER).getDataManager();
-        if(!manager.hasData(WanJianGuiZongSkill.IS_CHARGING)){
+        if(!manager.hasData(SwordSoaringDatakeys.IS_CHARGING.get())){
             stop();
         }
-        if(manager.getDataValue(WanJianGuiZongSkill.IS_CHARGING)){
+        if(manager.getDataValue(SwordSoaringDatakeys.IS_CHARGING.get())){
             this.time = 120;
         }
         if(this.time > 140 && this.time < 160){

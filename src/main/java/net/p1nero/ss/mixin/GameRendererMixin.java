@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(GameRenderer.class)
 public class GameRendererMixin {
     @Inject(method = "bobView", at = @At("HEAD"), cancellable = true)
-    private void sword_soaring$bobView(PoseStack pMatrixStack, float pPartialTicks, CallbackInfo ci){
+    private void sword_soaring$bobView(PoseStack pPoseStack, float pPartialTicks, CallbackInfo ci){
         if(Minecraft.getInstance().player != null){
             if(Minecraft.getInstance().player.getMainHandItem().getItem() instanceof VatanseverItem){
                 ci.cancel();

@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Player.class)
 public abstract class PlayerMixin extends LivingEntity {
+
     @Shadow public abstract void startFallFlying();
 
     protected PlayerMixin(EntityType<? extends LivingEntity> pEntityType, Level pLevel) {
