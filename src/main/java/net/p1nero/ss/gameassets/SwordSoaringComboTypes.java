@@ -1,6 +1,6 @@
 package net.p1nero.ss.gameassets;
 
-import com.p1nero.invincible.skill.api.ComboType;
+import com.p1nero.invincible.api.skill.ComboType;
 
 import java.util.ArrayList;
 import java.util.List;

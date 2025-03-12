@@ -2,12 +2,12 @@ package net.p1nero.ss.client;
 
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.p1nero.ss.SwordSoaring;
+import net.p1nero.ss.SwordSoaringMod;
 import net.p1nero.ss.client.keymapping.SwordSoaringKeyMappings;
 import net.p1nero.ss.gameassets.SwordSoaringSkillCategories;
 import net.p1nero.ss.gameassets.SwordSoaringSkillSlots;
@@ -25,11 +25,11 @@ import yesman.epicfight.skill.SkillSlot;
 
 import java.util.List;
 
-@Mod.EventBusSubscriber(modid = SwordSoaring.MOD_ID, value = {Dist.CLIENT})
+@Mod.EventBusSubscriber(modid = SwordSoaringMod.MOD_ID, value = {Dist.CLIENT})
 public class ClientInputManager {
 
     @SubscribeEvent
-    public static void onMouseInput(InputEvent.MouseInputEvent event) {
+    public static void onMouseInput(InputEvent.MouseButton event) {
 
         if(Minecraft.getInstance().player != null && Minecraft.getInstance().screen == null){
             if(event.getButton() == SwordSoaringKeyMappings.TAKE_OFF.getKey().getValue()){
@@ -48,7 +48,7 @@ public class ClientInputManager {
     }
 
     @SubscribeEvent
-    public static void onKeyInput(InputEvent.KeyInputEvent event){
+    public static void onKeyInput(InputEvent.Key event){
         if(Minecraft.getInstance().player != null && Minecraft.getInstance().screen == null){
             if(event.getKey() == SwordSoaringKeyMappings.TAKE_OFF.getKey().getValue()){
                 takeOffKeyPressed(event.getAction());
@@ -97,7 +97,7 @@ public class ClientInputManager {
                 Skill nextSkill = learnedSkills.get(next);
                 skillContainer.setSkill(nextSkill);
                 EpicFightNetworkManager.sendToServer(new CPChangeSkill(SwordSoaringSkillSlots.SWORD_SOARING.universalOrdinal(), -1, nextSkill.toString(), false));
-                localPlayerPatch.getOriginal().displayClientMessage(new TranslatableComponent("tips.sword_soaring.style_change").append(nextSkill.getDisplayName()), true);
+                localPlayerPatch.getOriginal().displayClientMessage(Component.translatable("tips.sword_soaring.style_change").append(nextSkill.getDisplayName()), true);
             }
         }
     }

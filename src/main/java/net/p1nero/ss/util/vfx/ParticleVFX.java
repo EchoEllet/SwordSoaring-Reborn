@@ -1,6 +1,7 @@
 package net.p1nero.ss.util.vfx;
 
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -240,12 +241,12 @@ public class ParticleVFX {
         Vec3 pos1 = AnimationUtils.getJointWorldPos(entityPatch, joint1);
         Vec3 pos2 = AnimationUtils.getJointWorldPos(entityPatch, joint2);
         LivingEntity livingEntity = entityPatch.getOriginal();
-        createLineSegmentParticles(livingEntity.level, pos1, pos2, particleOptions, count, livingEntity.getDeltaMovement());
+        createLineSegmentParticles(livingEntity.level(), pos1, pos2, particleOptions, count, livingEntity.getDeltaMovement());
     }
 
 
     public static void createRandomLine(Level level, Vec3 center, ParticleOptions particleOptions, double minSpeed, double maxSpeed, int particleCount) {
-        Random random1 = level.random;
+        RandomSource random1 = level.random;
 
         for (int i = 0; i < particleCount; i++) {
             double t = (double) i / (particleCount - 1);
@@ -271,9 +272,9 @@ public class ParticleVFX {
 
     public static void createJointRandomLine(LivingEntityPatch<?> entityPatch, Joint joint, ParticleOptions particleOptions, double minSpeed, double maxSpeed, int particleCount) {
         LivingEntity entity = entityPatch.getOriginal();
-        Level level = entity.level;
+        Level level = entity.level();
         Vec3 vec3 = AnimationUtils.getJointWorldPos(entityPatch, joint);
-        Random random = level.random;
+        RandomSource random = level.random;
         for (int i = 0; i < particleCount; i++) {
             double t = (double) i / (particleCount - 1);
             double distance = t * 5.0;
@@ -298,7 +299,7 @@ public class ParticleVFX {
     }
 
     public static void createSphereParticles(Level level, Vec3 center, ParticleOptions particleOptions, double radius, double minSpeed, double maxSpeed, int particleCount) {
-        Random random = level.random;
+        RandomSource random = level.random;
         for (int i = 0; i < particleCount; i++) {
             double angle = random.nextDouble() * 2 * Math.PI;
             double pitch = Math.acos(2 * random.nextDouble() - 1) - Math.PI / 2;
@@ -318,9 +319,9 @@ public class ParticleVFX {
 
     public static void createJointSphereParticles(LivingEntityPatch<?> entityPatch, Joint joint, ParticleOptions particleOptions, double radius, double minSpeed, double maxSpeed, int particleCount) {
         LivingEntity entity = entityPatch.getOriginal();
-        Level level = entity.level;
+        Level level = entity.level();
         Vec3 vec3 = AnimationUtils.getJointWorldPos(entityPatch, joint);
-        Random random = level.random;
+        RandomSource random = level.random;
         for (int i = 0; i < particleCount; i++) {
             double angle = random.nextDouble() * 2 * Math.PI;
             double pitch = Math.acos(2 * random.nextDouble() - 1) - Math.PI / 2;
@@ -340,7 +341,7 @@ public class ParticleVFX {
     }
 
     public static void createRingParticles(Level level, Vec3 center, ParticleOptions particleOptions, double radius, double minSpeed, double maxSpeed, int particleCount) {
-        Random random = level.random;
+        RandomSource random = level.random;
         for (int i = 0; i < particleCount; i++) {
             double angle = random.nextDouble() * 2 * Math.PI;
 
@@ -359,9 +360,9 @@ public class ParticleVFX {
 
     public static void createJointRingParticles(LivingEntityPatch<?> entityPatch, Joint joint, ParticleOptions particleOptions, double radius, double minSpeed, double maxSpeed, int particleCount) {
         LivingEntity entity = entityPatch.getOriginal();
-        Level level = entity.level;
+        Level level = entity.level();
         Vec3 vec3 = AnimationUtils.getJointWorldPos(entityPatch, joint);
-        Random random = level.random;
+        RandomSource random = level.random;
         for (int i = 0; i < particleCount; i++) {
             double angle = random.nextDouble() * 2 * Math.PI;
 
@@ -379,7 +380,7 @@ public class ParticleVFX {
     }
 
     public static void createRandomInSphereParticles(Level level, Vec3 center, ParticleOptions particleOptions, double radius, double minSpeed, double maxSpeed, int particleCount) {
-        Random random = level.random;
+        RandomSource random = level.random;
         for (int i = 0; i < particleCount; i++) {
 
             double r = radius * Math.cbrt(random.nextDouble());
@@ -403,9 +404,9 @@ public class ParticleVFX {
 
     public static void createJointRandomInSphereParticles(LivingEntityPatch<?> entityPatch, Joint joint, ParticleOptions particleOptions, double radius, double minSpeed, double maxSpeed, int particleCount) {
         LivingEntity entity = entityPatch.getOriginal();
-        Level level = entity.level;
+        Level level = entity.level();
         Vec3 vec3 = AnimationUtils.getJointWorldPos(entityPatch, joint);
-        Random random = level.random;
+        RandomSource random = level.random;
         for (int i = 0; i < particleCount; i++) {
 
             double r = radius * Math.cbrt(random.nextDouble());
@@ -438,7 +439,7 @@ public class ParticleVFX {
     }
 
     public static void createLineSegmentParticles(Level level, Vec3 start, Vec3 end, ParticleOptions particleOptions, double minSpeed, double maxSpeed, int particleCount) {
-        Random random = level.random;
+        RandomSource random = level.random;
         Vec3 direction = end.subtract(start);
         for (int i = 0; i < particleCount; i++) {
             double t = (double) i / (particleCount - 1);
@@ -454,7 +455,7 @@ public class ParticleVFX {
     }
 
     public static void createMovingParticles(Level level, Vec3 start, Vec3 end, ParticleOptions particleOptions, double minSpeed, double maxSpeed, int particleCount) {
-        Random random = level.random;
+        RandomSource random = level.random;
         Vec3 direction = end.subtract(start).normalize();
         for (int i = 0; i < particleCount; i++) {
             double speed = minSpeed + random.nextDouble() * (maxSpeed - minSpeed);

@@ -7,7 +7,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.inventory.PlayerEnderChestContainer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
@@ -44,9 +44,9 @@ public class ItemUtils {
         player.getInventory().items.forEach(itemStack -> {
 
             //包括背包，潜影贝等
-            boolean isItemHandler = itemStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent();
+            boolean isItemHandler = itemStack.getCapability(ForgeCapabilities.ITEM_HANDLER).isPresent();
             if (isItemHandler) {
-                itemStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(iItemHandler -> {
+                itemStack.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(iItemHandler -> {
                     for (int i = 0; i < iItemHandler.getSlots(); i++) {
                         ItemStack inSideItem = iItemHandler.getStackInSlot(i);
                         if (!inSideItem.isEmpty() && predicate.test(inSideItem)) {

@@ -6,7 +6,6 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
@@ -21,8 +20,8 @@ import net.p1nero.ss.entity.AbstractArtifactSpiritEntity;
 import net.p1nero.ss.entity.SwordSoaringEntities;
 import net.p1nero.ss.entity.sword.AbstractSwordEntity;
 import net.p1nero.ss.gameassets.SwordSoaringArmatures;
+import net.p1nero.ss.gameassets.SwordSoaringDatakeys;
 import net.p1nero.ss.gameassets.animations.FlySwordAnimations;
-import net.p1nero.ss.skill.weapon_passive.VatanseverPassive;
 import net.p1nero.ss.util.AnimationUtils;
 import net.p1nero.ss.util.vfx.ParticleVFX;
 import yesman.epicfight.skill.SkillDataManager;
@@ -126,13 +125,13 @@ public class FlySwordEntity extends AbstractSwordEntity {
     protected void moveToOwner(LivingEntity owner) {
         noPhysics = true;
         if (isFlyingBack()) {
-            Vec3 vec3 = AnimationUtils.getJointWorldPos(getPatch(), SwordSoaringArmatures.flySwordArmature.body);
-            ParticleVFX.createSphereParticles(level, vec3, ParticleTypes.SMOKE, 0.2, 0.01, 0.05, 100);
+            Vec3 vec3 = AnimationUtils.getJointWorldPos(getPatch(), SwordSoaringArmatures.FLY_SWORD_ARMATURE.get().body);
+            ParticleVFX.createSphereParticles(level(), vec3, ParticleTypes.SMOKE, 0.2, 0.01, 0.05, 100);
             flySwordDamage(2, 2.5F);
-            if (!level.isClientSide) {
+            if (!level().isClientSide) {
                 if (this.position().distanceTo(owner.getEyePosition()) < 1.5) {
-                    ((ServerLevel) level).sendParticles(ParticleTypes.SMOKE, getX(), getY(), getZ(), 300, 0.5, 0.5, 0.5, 0.5);
-                    level.playSound(null, getX(), getY(), getZ(), SoundEvents.FIRE_EXTINGUISH, owner.getSoundSource(), 1.0F, 1.0F);
+                    ((ServerLevel) level()).sendParticles(ParticleTypes.SMOKE, getX(), getY(), getZ(), 300, 0.5, 0.5, 0.5, 0.5);
+                    level().playSound(null, getX(), getY(), getZ(), SoundEvents.FIRE_EXTINGUISH, owner.getSoundSource(), 1.0F, 1.0F);
                     addOwnerSwordCount();
                     this.discard();
                     return;
@@ -148,7 +147,7 @@ public class FlySwordEntity extends AbstractSwordEntity {
                 setYBodyRot(0);
                 setYHeadRot(0);
             }
-            if (!level.isClientSide) {
+            if (!level().isClientSide) {
                 if (target != null && target.isAlive() && !isAnimationEnd()) {
                     this.setPos(target.position());
                 }
@@ -164,9 +163,9 @@ public class FlySwordEntity extends AbstractSwordEntity {
     public void addOwnerSwordCount() {
         if (getOwnerPatch() instanceof ServerPlayerPatch serverPlayerPatch) {
             SkillDataManager manager = serverPlayerPatch.getSkill(SkillSlots.WEAPON_PASSIVE).getDataManager();
-            if (manager.hasData(VatanseverPassive.SWORD_COUNT)) {
-                int currentCnt = manager.getDataValue(VatanseverPassive.SWORD_COUNT);
-                manager.setDataSync(VatanseverPassive.SWORD_COUNT, Math.min(currentCnt + 1, 6), serverPlayerPatch.getOriginal());
+            if (manager.hasData(SwordSoaringDatakeys.SWORD_COUNT.get())) {
+                int currentCnt = manager.getDataValue(SwordSoaringDatakeys.SWORD_COUNT.get());
+                manager.setDataSync(SwordSoaringDatakeys.SWORD_COUNT.get(), Math.min(currentCnt + 1, 6), serverPlayerPatch.getOriginal());
             }
         }
     }
@@ -178,11 +177,11 @@ public class FlySwordEntity extends AbstractSwordEntity {
         double baseDamage = getOwner().getAttributeValue(Attributes.ATTACK_DAMAGE) * 3;
 
         Vec3 pos = this.position();
-        if (this.level instanceof ServerLevel) {
+        if (this.level() instanceof ServerLevel) {
             AABB damageArea = new AABB(pos.x() - damageRadius, pos.y() - damageRadius, pos.z() - damageRadius,
                     pos.x() + damageRadius, pos.y() + damageRadius, pos.z() + damageRadius);
             //来源实体过滤
-            List<LivingEntity> entities = level.getEntitiesOfClass(LivingEntity.class, damageArea, entity ->
+            List<LivingEntity> entities = level().getEntitiesOfClass(LivingEntity.class, damageArea, entity ->
                     entity.isAlive() && entity.distanceToSqr(pos) <= damageRadius * damageRadius && !(entity instanceof Player player && (player.isCreative() || player.isSpectator())) && entity != getOwner() && !(entity instanceof AbstractArtifactSpiritEntity));
             for (LivingEntity entity : new ArrayList<>(entities)) {
 
@@ -203,9 +202,9 @@ public class FlySwordEntity extends AbstractSwordEntity {
                 }
 
                 if (entity.invulnerableTime == 0) {
-                    entity.hurt(DamageSource.indirectMagic(getOwner(), getOwner()), (float) baseDamage);
+                    entity.hurt(damageSources().indirectMagic(getOwner(), getOwner()), (float) baseDamage);
                     entity.invulnerableTime = 10;
-                    if (!entity.level.isClientSide) {
+                    if (!entity.level().isClientSide) {
                         entity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 200, 0));
                         entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 200, 1));
                     }

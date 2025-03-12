@@ -5,11 +5,11 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-import net.p1nero.ss.SwordSoaring;
+import net.p1nero.ss.SwordSoaringMod;
 
 public class SwordSoaringSounds {
     public static final DeferredRegister<SoundEvent> SOUND_EVENTS =
-            DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, SwordSoaring.MOD_ID);
+            DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, SwordSoaringMod.MOD_ID);
 
     public static RegistryObject<SoundEvent> VATANSEVER_WHOOSH = registerSoundEvent("vatansever_whoosh");
     public static RegistryObject<SoundEvent> VATANSEVER_WHOOSH_BIG = registerSoundEvent("vatansever_whoosh_big");
@@ -17,7 +17,7 @@ public class SwordSoaringSounds {
     public static RegistryObject<SoundEvent> SWORD_CONVERGENCE = registerSoundEvent("sword_convergence");
 
     private static RegistryObject<SoundEvent> registerSoundEvent(String name) {
-        return SOUND_EVENTS.register(name, () -> new SoundEvent(new ResourceLocation(SwordSoaring.MOD_ID, name)));
+        return SOUND_EVENTS.register(name, () -> new SoundEvent(new ResourceLocation(SwordSoaringMod.MOD_ID, name)));
     }
 
 }

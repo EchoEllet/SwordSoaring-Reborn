@@ -19,9 +19,11 @@ import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 
 @Mixin(value = TrailParticle.class)
 public class TrailParticleMixin {
-    @Shadow(remap = false) @Final private LivingEntityPatch<?> entitypatch;
+    @Shadow(remap = false) @Final
+    protected LivingEntityPatch<?> entitypatch;
 
-    @Shadow(remap = false) @Final private Joint joint;
+    @Shadow(remap = false) @Final
+    protected Joint joint;
 
     @Inject(method = "render", at = @At("HEAD"), cancellable = true)
     private void sword_soaring$render(VertexConsumer vertexConsumer, Camera camera, float partialTick, CallbackInfo ci){

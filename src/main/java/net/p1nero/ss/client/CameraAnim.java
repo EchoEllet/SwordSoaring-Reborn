@@ -10,10 +10,10 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.EntityViewRenderEvent;
+import net.minecraftforge.client.event.ViewportEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.p1nero.ss.SwordSoaring;
+import net.p1nero.ss.SwordSoaringMod;
 import yesman.epicfight.api.utils.math.OpenMatrix4f;
 import yesman.epicfight.api.utils.math.Vec3f;
 import yesman.epicfight.client.ClientEngine;
@@ -21,7 +21,7 @@ import yesman.epicfight.client.ClientEngine;
 /**
  * 抄ef原版的调视角，改了个方向，注意要取消动画的turning lock才不会被打断
  */
-@Mod.EventBusSubscriber(modid = SwordSoaring.MOD_ID, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = SwordSoaringMod.MOD_ID, value = Dist.CLIENT)
 public class CameraAnim {
     public static final Vec3f DEFAULT_AIMING_CORRECTION = new Vec3f(1.5F, 0.0F, 1.25F);
     private static Vec3f aimingCorrection = DEFAULT_AIMING_CORRECTION;
@@ -60,9 +60,9 @@ public class CameraAnim {
      * 实现过渡
      */
     @SubscribeEvent
-    public static void cameraSetupEvent(EntityViewRenderEvent.CameraSetup event) {
+    public static void cameraSetupEvent(ViewportEvent.ComputeCameraAngles event) {
         if (zoomCount > 0) {
-            setCameraAnimThirdPerson(event, Minecraft.getInstance().options.getCameraType(), event.getPartialTicks());
+            setCameraAnimThirdPerson(event, Minecraft.getInstance().options.getCameraType(), event.getPartialTick());
             if(!Minecraft.getInstance().isPaused()) {
                 zoomCount = aiming ? zoomCount + 1 : zoomCount - 1;
                 zoomCount = Math.min(ZOOM_MAX_COUNT, zoomCount);
@@ -74,7 +74,7 @@ public class CameraAnim {
         }
     }
 
-    private static void setCameraAnimThirdPerson(EntityViewRenderEvent.CameraSetup event, CameraType pov, double partialTicks) {
+    private static void setCameraAnimThirdPerson(ViewportEvent.ComputeCameraAngles event, CameraType pov, double partialTicks) {
         if (ClientEngine.getInstance().getPlayerPatch() == null || Minecraft.getInstance().level == null) {
             return;
         }
@@ -127,7 +127,7 @@ public class CameraAnim {
             totalZ += rotateVec.z * dist;
         }
 
-        BlockPos cameraPos= new BlockPos(totalX, totalY, totalZ);
+        BlockPos cameraPos= new BlockPos((int) totalX, (int) totalY, (int) totalZ);
         //防止视角卡墙里
         if(Minecraft.getInstance().level.getBlockState(cameraPos).is(Blocks.AIR)){
             camera.setPosition(totalX, totalY, totalZ);

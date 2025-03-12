@@ -5,20 +5,18 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.entity.PartEntity;
-import net.p1nero.ss.entity.vatansever.VatanseverEntityPatch;
-import net.p1nero.ss.skill.weapon_passive.VatanseverPassive;
 import org.jetbrains.annotations.Nullable;
+import yesman.epicfight.api.animation.AnimationManager;
 import yesman.epicfight.api.animation.AnimationPlayer;
 import yesman.epicfight.api.animation.Joint;
 import yesman.epicfight.api.animation.types.AttackAnimation;
+import yesman.epicfight.api.animation.types.DynamicAnimation;
 import yesman.epicfight.api.animation.types.EntityState;
 import yesman.epicfight.api.animation.types.StaticAnimation;
+import yesman.epicfight.api.asset.AssetAccessor;
 import yesman.epicfight.api.collider.Collider;
 import yesman.epicfight.api.model.Armature;
 import yesman.epicfight.api.utils.math.MathUtils;
-import yesman.epicfight.skill.SkillDataManager;
-import yesman.epicfight.skill.SkillSlots;
-import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 import yesman.epicfight.world.capabilities.entitypatch.MobPatch;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
@@ -30,24 +28,29 @@ import java.util.List;
  * 扫描时间范围内的目标，转向目标，并set最近的为Target
  */
 public class PlayerScanAnimation extends AttackAnimation implements ILinkArtifactSpiritAnimation{
-    private StaticAnimation artifactSpiritAnimation;
-    public PlayerScanAnimation(float convertTime, float scanStartTime, float scanEndTime, String path, Armature armature, @Nullable Collider collider, Joint colliderJoint) {
-        super(convertTime, scanStartTime, scanStartTime, scanEndTime, scanEndTime, collider, colliderJoint, path, armature);
+    private AnimationManager.AnimationAccessor<? extends StaticAnimation> artifactSpiritAnimation;
+
+    public PlayerScanAnimation(float transitionTime, float antic, float preDelay, float contact, float recovery, @Nullable Collider collider, Joint colliderJoint, AnimationManager.AnimationAccessor<? extends AttackAnimation> accessor, AssetAccessor<? extends Armature> armature) {
+        super(transitionTime, antic, preDelay, contact, recovery, collider, colliderJoint, accessor, armature);
     }
 
-    public PlayerScanAnimation(float convertTime, float antic, float preDelay, float contact, float recovery, @Nullable Collider collider, Joint colliderJoint, String path, Armature armature) {
-        super(convertTime, antic, preDelay, contact, recovery, collider, colliderJoint, path, armature);
+    public PlayerScanAnimation(float transitionTime, float antic, float preDelay, float contact, float recovery, InteractionHand hand, @Nullable Collider collider, Joint colliderJoint, AnimationManager.AnimationAccessor<? extends AttackAnimation> accessor, AssetAccessor<? extends Armature> armature) {
+        super(transitionTime, antic, preDelay, contact, recovery, hand, collider, colliderJoint, accessor, armature);
     }
 
-    public PlayerScanAnimation(float convertTime, float antic, float preDelay, float contact, float recovery, InteractionHand hand, @Nullable Collider collider, Joint colliderJoint, String path, Armature armature) {
+    public PlayerScanAnimation(float transitionTime, AnimationManager.AnimationAccessor<? extends AttackAnimation> accessor, AssetAccessor<? extends Armature> armature, Phase... phases) {
+        super(transitionTime, accessor, armature, phases);
+    }
+
+    public PlayerScanAnimation(float convertTime, float antic, float preDelay, float contact, float recovery, InteractionHand hand, @Nullable Collider collider, Joint colliderJoint, String path, AssetAccessor<? extends Armature> armature) {
         super(convertTime, antic, preDelay, contact, recovery, hand, collider, colliderJoint, path, armature);
     }
 
-    public PlayerScanAnimation(float convertTime, String path, Armature armature, Phase... phases) {
+    public PlayerScanAnimation(float convertTime, String path, AssetAccessor<? extends Armature> armature, Phase... phases) {
         super(convertTime, path, armature, phases);
     }
 
-    public PlayerScanAnimation setArtifactSpiritAnimation(StaticAnimation artifactSpiritAnimation) {
+    public PlayerScanAnimation setArtifactSpiritAnimation(AnimationManager.AnimationAccessor<? extends StaticAnimation> artifactSpiritAnimation) {
         this.artifactSpiritAnimation = artifactSpiritAnimation;
         return this;
     }
@@ -61,8 +64,9 @@ public class PlayerScanAnimation extends AttackAnimation implements ILinkArtifac
         this.callArtifactSpiritAnimation(entityPatch);
     }
 
-    protected void attackTick(LivingEntityPatch<?> entityPatch) {
-        AnimationPlayer player = entityPatch.getAnimator().getPlayerFor(this);
+    @Override
+    protected void attackTick(LivingEntityPatch<?> entityPatch, AssetAccessor<? extends DynamicAnimation> animation) {
+        AnimationPlayer player = entityPatch.getAnimator().getPlayerFor(this.getAccessor());
         float elapsedTime = player.getElapsedTime();
         float prevElapsedTime = player.getPrevElapsedTime();
         EntityState state = this.getState(entityPatch, elapsedTime);
@@ -100,10 +104,9 @@ public class PlayerScanAnimation extends AttackAnimation implements ILinkArtifac
      * 搜索框内实体并按距离设为目标
      */
     protected void searchAndSetTarget(LivingEntityPatch<?> entityPatch, float prevElapsedTime, float elapsedTime, EntityState prevState, EntityState state, Phase phase) {
-        entityPatch.getArmature().initializeTransform();
         float prevPoseTime = prevState.attacking() ? prevElapsedTime : phase.preDelay;
         float poseTime = state.attacking() ? elapsedTime : phase.contact;
-        List<Entity> list = this.getPhaseByTime(elapsedTime).getCollidingEntities(entityPatch, this, prevPoseTime, poseTime, this.getPlaySpeed(entityPatch));
+        List<Entity> list = this.getPhaseByTime(elapsedTime).getCollidingEntities(entityPatch, this, prevPoseTime, poseTime, this.getPlaySpeed(entityPatch, this));
         if (list.contains(entityPatch.getTarget())) {
             return;
         }
@@ -122,7 +125,12 @@ public class PlayerScanAnimation extends AttackAnimation implements ILinkArtifac
     }
 
     @Override
-    public StaticAnimation getArtifactSpiritAnimation() {
+    public AnimationManager.AnimationAccessor<? extends StaticAnimation> getArtifactSpiritAnimation() {
         return artifactSpiritAnimation;
+    }
+
+    @Override
+    public float getConvertTime() {
+        return this.transitionTime;
     }
 }

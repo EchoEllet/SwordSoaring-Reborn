@@ -10,8 +10,8 @@ import yesman.epicfight.model.armature.HumanoidArmature;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 
 public class RenderVatansever extends RenderItemBase {
-    @Override
-    public void renderItemInHand(ItemStack stack, LivingEntityPatch<?> entityPatch, InteractionHand hand, HumanoidArmature armature, OpenMatrix4f[] poses, MultiBufferSource buffer, PoseStack poseStack, int packedLight) {
 
-    }
+    @Override
+    public void renderItemInHand(ItemStack stack, LivingEntityPatch<?> entitypatch, InteractionHand hand, HumanoidArmature armature, OpenMatrix4f[] poses, MultiBufferSource buffer, PoseStack poseStack, int packedLight, float partialTicks) {}
+
 }

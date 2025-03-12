@@ -8,6 +8,7 @@ import net.minecraft.world.level.Level;
 import net.p1nero.ss.entity.AbstractArtifactSpiritEntity;
 import net.p1nero.ss.entity.SwordSoaringEntities;
 import net.p1nero.ss.entity.sword.AbstractSwordEntity;
+import net.p1nero.ss.gameassets.SwordSoaringDatakeys;
 import net.p1nero.ss.gameassets.SwordSoaringSkillSlots;
 import net.p1nero.ss.skill.sword_controller.ScreenSwordSkill;
 import yesman.epicfight.skill.SkillDataManager;
@@ -28,14 +29,14 @@ public class ScreenSwordEntity extends AbstractSwordEntity {
     @Override
     public void tick() {
         super.tick();
-        if(!level.isClientSide){
+        if(!level().isClientSide){
             ServerPlayerPatch serverPlayerPatch = EpicFightCapabilities.getEntityPatch(getOwner(), ServerPlayerPatch.class);
             if(serverPlayerPatch != null){
                 SkillDataManager dataManager = serverPlayerPatch.getSkill(SwordSoaringSkillSlots.SWORD_CONTROLLER).getDataManager();
                 //时间到了或次数用尽就紫砂
-                if(dataManager.hasData(ScreenSwordSkill.PROTECT_COUNT)){
-                    if(dataManager.getDataValue(ScreenSwordSkill.PROTECT_COUNT) <= 0){
-                        dataManager.setDataSync(ScreenSwordSkill.PROTECT_COUNT, 0, serverPlayerPatch.getOriginal());
+                if(dataManager.hasData(SwordSoaringDatakeys.PROTECT_COUNT.get())){
+                    if(dataManager.getDataValue(SwordSoaringDatakeys.PROTECT_COUNT.get()) <= 0){
+                        dataManager.setDataSync(SwordSoaringDatakeys.PROTECT_COUNT.get(), 0, serverPlayerPatch.getOriginal());
                         if(getOwner().isCurrentlyGlowing()){
                             getOwner().setGlowingTag(false);
                         }

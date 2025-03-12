@@ -26,7 +26,7 @@ public class VatanseverEntity extends AbstractArtifactSpiritEntity {
 
     @Override
     protected void moveToOwner(LivingEntity owner) {
-        if(level.isClientSide && owner.isFallFlying()){
+        if(level().isClientSide && owner.isFallFlying()){
             //仅客户端同步位置，防止双端不同步导致的乱转，旋转在Patch里同步matrix
             setPos(owner.position());
         } else {

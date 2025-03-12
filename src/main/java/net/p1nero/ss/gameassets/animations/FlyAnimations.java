@@ -1,5 +1,6 @@
 package net.p1nero.ss.gameassets.animations;
 
+import yesman.epicfight.api.animation.AnimationManager;
 import yesman.epicfight.api.animation.property.AnimationEvent;
 import yesman.epicfight.api.animation.property.AnimationProperty;
 import yesman.epicfight.api.animation.types.ActionAnimation;
@@ -8,33 +9,38 @@ import yesman.epicfight.gameasset.Armatures;
 import yesman.epicfight.model.armature.HumanoidArmature;
 
 public class FlyAnimations {
-    public static StaticAnimation APPRENTICE_INIT;
-    public static StaticAnimation APPRENTICE_FLYING;
-    public static StaticAnimation APPRENTICE_ACCELERATION;
-    public static StaticAnimation EXPERT_INIT;
-    public static StaticAnimation EXPERT_FLYING;
-    public static StaticAnimation EXPERT_ACCELERATION;
-    public static StaticAnimation MASTER_INIT;
-    public static StaticAnimation MASTER_FLYING;
-    public static StaticAnimation MASTER_ACCELERATION;
+    public static AnimationManager.AnimationAccessor<ActionAnimation> APPRENTICE_INIT;
+    public static AnimationManager.AnimationAccessor<StaticAnimation> APPRENTICE_FLYING;
+    public static AnimationManager.AnimationAccessor<StaticAnimation> APPRENTICE_ACCELERATION;
+    public static AnimationManager.AnimationAccessor<ActionAnimation> EXPERT_INIT;
+    public static AnimationManager.AnimationAccessor<StaticAnimation> EXPERT_FLYING;
+    public static AnimationManager.AnimationAccessor<StaticAnimation> EXPERT_ACCELERATION;
+    public static AnimationManager.AnimationAccessor<ActionAnimation> MASTER_INIT;
+    public static AnimationManager.AnimationAccessor<StaticAnimation> MASTER_FLYING;
+    public static AnimationManager.AnimationAccessor<StaticAnimation> MASTER_ACCELERATION;
 
-    public static void buildFlyAnim() {
-        HumanoidArmature biped = Armatures.BIPED;
+    public static void buildFlyAnim(AnimationManager.AnimationBuilder builder) {
+        Armatures.ArmatureAccessor<HumanoidArmature> biped = Armatures.BIPED;
 
-        APPRENTICE_INIT = new ActionAnimation(0.15F, "biped/fly_anim/fly_on_sword_apprentice_initiation", biped)
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.create(((livingEntityPatch, staticAnimation, objects) -> livingEntityPatch.reserveAnimation(APPRENTICE_FLYING)), AnimationEvent.Side.SERVER));
-        APPRENTICE_FLYING = new StaticAnimation(true, "biped/fly_anim/fly_on_sword_apprentice_flying", biped);
-        APPRENTICE_ACCELERATION = new StaticAnimation(true, "biped/fly_anim/fly_on_sword_apprentice_acceleration", biped);
+        APPRENTICE_INIT = builder.nextAccessor("biped/fly_anim/fly_on_sword_apprentice_initiation", accessor -> new ActionAnimation(0.15F, accessor, biped)
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.SimpleEvent.create(((livingEntityPatch, staticAnimation, objects) -> livingEntityPatch.reserveAnimation(APPRENTICE_FLYING)), AnimationEvent.Side.SERVER)));
+        APPRENTICE_FLYING = builder.nextAccessor("biped/fly_anim/fly_on_sword_apprentice_flying", accessor -> new StaticAnimation(true, accessor, biped));
 
-        EXPERT_INIT = new ActionAnimation(0.15F, "biped/fly_anim/fly_on_sword_expert_initiation", biped)
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.create(((livingEntityPatch, staticAnimation, objects) -> livingEntityPatch.reserveAnimation(EXPERT_FLYING)), AnimationEvent.Side.SERVER));
-        EXPERT_FLYING = new StaticAnimation(true, "biped/fly_anim/fly_on_sword_expert_flying", biped);
-        EXPERT_ACCELERATION = new StaticAnimation(true, "biped/fly_anim/fly_on_sword_expert_acceleration", biped);
+        APPRENTICE_ACCELERATION = builder.nextAccessor("biped/fly_anim/fly_on_sword_apprentice_acceleration", accessor -> new StaticAnimation(true, accessor, biped));
 
-        MASTER_INIT = new ActionAnimation(0.15F, "biped/fly_anim/fly_on_sword_master_initiation", biped)
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.create(((livingEntityPatch, staticAnimation, objects) -> livingEntityPatch.reserveAnimation(MASTER_FLYING)), AnimationEvent.Side.SERVER));
-        MASTER_FLYING = new StaticAnimation(true, "biped/fly_anim/fly_on_sword_master_flying", biped);
-        MASTER_ACCELERATION = new StaticAnimation(true, "biped/fly_anim/fly_on_sword_master_acceleration", biped);
+        EXPERT_INIT = builder.nextAccessor("biped/fly_anim/fly_on_sword_expert_initiation", accessor -> new ActionAnimation(0.15F, accessor, biped)
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.SimpleEvent.create(((livingEntityPatch, staticAnimation, objects) -> livingEntityPatch.reserveAnimation(EXPERT_FLYING)), AnimationEvent.Side.SERVER)));
+
+        EXPERT_FLYING = builder.nextAccessor("biped/fly_anim/fly_on_sword_expert_flying", accessor ->  new StaticAnimation(true, accessor, biped));
+
+        EXPERT_ACCELERATION = builder.nextAccessor("biped/fly_anim/fly_on_sword_expert_acceleration", accessor ->  new StaticAnimation(true, accessor, biped));
+
+        MASTER_INIT = builder.nextAccessor("biped/fly_anim/fly_on_sword_master_initiation", accessor -> new ActionAnimation(0.15F, accessor, biped)
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.SimpleEvent.create(((livingEntityPatch, staticAnimation, objects) -> livingEntityPatch.reserveAnimation(MASTER_FLYING)), AnimationEvent.Side.SERVER)));
+
+        MASTER_FLYING = builder.nextAccessor("biped/fly_anim/fly_on_sword_master_flying", accessor -> new StaticAnimation(true, accessor, biped));
+
+        MASTER_ACCELERATION = builder.nextAccessor("biped/fly_anim/fly_on_sword_master_acceleration", accessor ->  new StaticAnimation(true, accessor, biped));
 
     }
 }

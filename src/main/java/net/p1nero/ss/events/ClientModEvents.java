@@ -7,7 +7,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.p1nero.ss.SwordSoaring;
+import net.p1nero.ss.SwordSoaringMod;
 import net.p1nero.ss.entity.SwordSoaringEntities;
 import net.p1nero.ss.entity.sword.fly_sword.client.FlySwordRenderer;
 import net.p1nero.ss.entity.sword.fly_sword.client.PatchedFlySwordRenderer;
@@ -30,7 +30,7 @@ import yesman.epicfight.skill.SkillCategories;
 import yesman.epicfight.world.item.EpicFightItems;
 import yesman.epicfight.world.item.SkillBookItem;
 
-@Mod.EventBusSubscriber(modid = SwordSoaring.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = SwordSoaringMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientModEvents {
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
@@ -41,7 +41,7 @@ public class ClientModEvents {
         EntityRenderers.register(SwordSoaringEntities.VATANSEVER.get(), VatanseverRenderer::new);
         EntityRenderers.register(SwordSoaringEntities.VATANSEVER_STORM.get(), VatanseverStormRenderer::new);
 
-        ItemProperties.register(EpicFightItems.SKILLBOOK.get(), new ResourceLocation(SwordSoaring.MOD_ID,"skill"), (pStack, pLevel, pEntity, pSeed) -> {
+        ItemProperties.register(EpicFightItems.SKILLBOOK.get(), new ResourceLocation(SwordSoaringMod.MOD_ID,"skill"), (pStack, pLevel, pEntity, pSeed) -> {
             Skill skill = SkillBookItem.getContainSkill(pStack);
 
             if (skill != null) {
@@ -73,12 +73,12 @@ public class ClientModEvents {
 
     @SubscribeEvent
     public static void onPatchedRenderer(PatchedRenderersEvent.Add event){
-        event.addPatchedEntityRenderer(SwordSoaringEntities.SWORD_CONVERGENCE_ENTITY.get(), PatchedSwordConvergenceRenderer::new);
-        event.addPatchedEntityRenderer(SwordSoaringEntities.BABYLON.get(), PatchedBabylonRenderer::new);
-        event.addPatchedEntityRenderer(SwordSoaringEntities.FLY_SWORD.get(), PatchedFlySwordRenderer::new);
-        event.addPatchedEntityRenderer(SwordSoaringEntities.SCREEN_SWORD.get(), PatchedScreenSwordRenderer::new);
-        event.addPatchedEntityRenderer(SwordSoaringEntities.VATANSEVER.get(), PatchedVatanseverRenderer::new);
-        event.addPatchedEntityRenderer(SwordSoaringEntities.VATANSEVER_STORM.get(), PatchedVatanseverStormRenderer::new);
+        event.addPatchedEntityRenderer(SwordSoaringEntities.SWORD_CONVERGENCE_ENTITY.get(), entityType -> new PatchedSwordConvergenceRenderer(event.getContext(), entityType).initLayerLast(event.getContext(), entityType));
+        event.addPatchedEntityRenderer(SwordSoaringEntities.BABYLON.get(), entityType -> new PatchedBabylonRenderer<>(event.getContext(), entityType).initLayerLast(event.getContext(), entityType));
+        event.addPatchedEntityRenderer(SwordSoaringEntities.FLY_SWORD.get(), entityType -> new PatchedFlySwordRenderer<>(event.getContext(), entityType).initLayerLast(event.getContext(), entityType));
+        event.addPatchedEntityRenderer(SwordSoaringEntities.SCREEN_SWORD.get(),entityType -> new PatchedScreenSwordRenderer<>(event.getContext(), entityType).initLayerLast(event.getContext(), entityType));
+        event.addPatchedEntityRenderer(SwordSoaringEntities.VATANSEVER.get(), entityType -> new PatchedVatanseverRenderer(event.getContext(), entityType).initLayerLast(event.getContext(), entityType));
+        event.addPatchedEntityRenderer(SwordSoaringEntities.VATANSEVER_STORM.get(), entityType -> new PatchedVatanseverStormRenderer(event.getContext(), entityType).initLayerLast(event.getContext(), entityType));
     }
 
 }

@@ -6,13 +6,13 @@ import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
-import net.p1nero.ss.SwordSoaring;
+import net.p1nero.ss.SwordSoaringMod;
 import net.p1nero.ss.entity.client.model.EmptyEntityModel;
 import net.p1nero.ss.entity.vatansever.VatanseverEntity;
 import org.jetbrains.annotations.NotNull;
 
 public class VatanseverRenderer extends MobRenderer<VatanseverEntity, EmptyEntityModel<VatanseverEntity>> {
-    public static final ResourceLocation TEXTURE = new ResourceLocation(SwordSoaring.MOD_ID, "textures/entity/vatansever.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(SwordSoaringMod.MOD_ID, "textures/entity/vatansever.png");
     public VatanseverRenderer(EntityRendererProvider.Context context) {
         super(context, new EmptyEntityModel<>(), 1);
     }

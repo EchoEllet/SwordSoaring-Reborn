@@ -4,10 +4,9 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.p1nero.invincible.client.events.InputManager;
 import net.minecraft.client.KeyMapping;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.ClientRegistry;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.p1nero.ss.gameassets.SwordSoaringComboTypes;
 import org.lwjgl.glfw.GLFW;
 import yesman.epicfight.client.input.CombatKeyMapping;
@@ -21,12 +20,12 @@ public class SwordSoaringKeyMappings {
     public static final KeyMapping SWORD_BACK = new CombatKeyMapping("key.sword_soaring.sword_back", InputConstants.Type.MOUSE, GLFW.GLFW_MOUSE_BUTTON_5, "key.sword_soaring.common");
 
     @SubscribeEvent
-    public static void registerKeys(FMLClientSetupEvent event) {
-        ClientRegistry.registerKeyBinding(TAKE_OFF);
-        ClientRegistry.registerKeyBinding(SWITCH_MODE);
-        ClientRegistry.registerKeyBinding(ACCELERATION);
-        ClientRegistry.registerKeyBinding(SWORD_SKILL);
-        ClientRegistry.registerKeyBinding(SWORD_BACK);
+    public static void registerKeys(RegisterKeyMappingsEvent event) {
+        event.register(TAKE_OFF);
+        event.register(SWITCH_MODE);
+        event.register(ACCELERATION);
+        event.register(SWORD_SKILL);
+        event.register(SWORD_BACK);
 
         InputManager.register(SwordSoaringComboTypes.KEY_SWORD_SKILL, SWORD_SKILL);
         InputManager.register(SwordSoaringComboTypes.KEY_TAKE_OFF, TAKE_OFF);

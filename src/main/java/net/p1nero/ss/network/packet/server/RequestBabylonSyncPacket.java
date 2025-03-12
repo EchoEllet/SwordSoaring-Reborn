@@ -23,7 +23,7 @@ public record RequestBabylonSyncPacket(int entityId) implements BasePacket {
     @Override
     public void execute(@Nullable ServerPlayer player) {
         if(player != null){
-            Entity entity = player.level.getEntity(entityId);
+            Entity entity = player.level().getEntity(entityId);
             if(entity instanceof BabylonEntity babylonEntity){
                 PacketRelay.sendToAll(PacketHandler.INSTANCE, new SyncBabylonPacket(babylonEntity.getId(), babylonEntity.getValidBabylonItems().size(), babylonEntity.getValidBabylonItems()));
             }

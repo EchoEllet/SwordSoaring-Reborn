@@ -19,7 +19,7 @@ public abstract class LocalPlayerPatchMixin extends AbstractClientPlayerPatch<Lo
     @Shadow
     private LivingEntity rayTarget;
     @Inject(method = "clientTick",at = @At(value = "INVOKE", target = "Lyesman/epicfight/network/EpicFightNetworkManager;sendToServer(Ljava/lang/Object;)V"), cancellable = true)
-    public void tick(LivingEvent.LivingUpdateEvent event, CallbackInfo ci) {
+    public void tick(LivingEvent.LivingTickEvent event, CallbackInfo ci) {
         if(this.getOriginal().getMainHandItem().getItem() instanceof VatanseverItem){
             if(rayTarget instanceof AbstractArtifactSpiritEntity){
                 rayTarget = null;

@@ -11,11 +11,15 @@ import net.p1nero.ss.entity.ReplaceableArmature;
 import net.p1nero.ss.entity.SwordSoaringEntities;
 import net.p1nero.ss.entity.sword.gate_of_babylon.BabylonEntity;
 import net.p1nero.ss.gameassets.SwordSoaringArmatures;
+import net.p1nero.ss.gameassets.SwordSoaringDatakeys;
 import net.p1nero.ss.gameassets.SwordSoaringSkillSlots;
 import net.p1nero.ss.gameassets.animations.SwordConvergenceAnimations;
 import net.p1nero.ss.skill.sword_controller.WanJianGuiZongSkill;
+import yesman.epicfight.api.animation.AnimationManager;
 import yesman.epicfight.api.animation.Joint;
 import yesman.epicfight.api.animation.types.DynamicAnimation;
+import yesman.epicfight.api.animation.types.StaticAnimation;
+import yesman.epicfight.api.asset.AssetAccessor;
 import yesman.epicfight.skill.SkillDataManager;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 
@@ -30,7 +34,7 @@ public class SwordConvergenceEntity extends BabylonEntity {
 
     public SwordConvergenceEntity(LivingEntity owner) {
         super(SwordSoaringEntities.SWORD_CONVERGENCE_ENTITY.get(), owner, owner.position(), owner.getYRot());
-        if (!level.isClientSide) {
+        if (!level().isClientSide) {
             getEntityData().set(SEED, random.nextInt());
         }
     }
@@ -52,7 +56,7 @@ public class SwordConvergenceEntity extends BabylonEntity {
 
     public boolean isOwnerCharging(){
         if(getOwnerPatch() instanceof ServerPlayerPatch serverPlayerPatch){
-            DynamicAnimation currentOwnerAnim = serverPlayerPatch.getAnimator().getPlayerFor(null).getAnimation();
+            AssetAccessor<? extends DynamicAnimation> currentOwnerAnim = serverPlayerPatch.getAnimator().getPlayerFor(null).getAnimation();
             return currentOwnerAnim.equals(SwordConvergenceAnimations.WAN1_PLAYER) || currentOwnerAnim.equals(SwordConvergenceAnimations.WAN2_PLAYER);
         }
         return false;
@@ -61,7 +65,7 @@ public class SwordConvergenceEntity extends BabylonEntity {
     public boolean isOwnerKeyPressing(){
         if(getOwnerPatch() instanceof ServerPlayerPatch serverPlayerPatch){
             SkillDataManager manager = serverPlayerPatch.getSkill(SwordSoaringSkillSlots.SWORD_CONTROLLER).getDataManager();
-            return manager.hasData(WanJianGuiZongSkill.IS_PRESSING) && manager.getDataValue(WanJianGuiZongSkill.IS_PRESSING);
+            return manager.hasData(SwordSoaringDatakeys.IS_PRESSING.get()) && manager.getDataValue(SwordSoaringDatakeys.IS_PRESSING.get());
         }
         return false;
     }
@@ -76,7 +80,7 @@ public class SwordConvergenceEntity extends BabylonEntity {
     }
 
     public ReplaceableArmature getArmature(){
-        return SwordSoaringArmatures.wanArmature;
+        return SwordSoaringArmatures.WAN_ARMATURE.get();
     }
 
     @Override

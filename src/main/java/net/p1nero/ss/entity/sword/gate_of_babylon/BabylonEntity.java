@@ -1,9 +1,6 @@
 package net.p1nero.ss.entity.sword.gate_of_babylon;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -19,19 +16,14 @@ import net.p1nero.ss.entity.ReplaceableArmature;
 import net.p1nero.ss.entity.SwordSoaringEntities;
 import net.p1nero.ss.entity.sword.AbstractSwordEntity;
 import net.p1nero.ss.gameassets.SwordSoaringArmatures;
-import net.p1nero.ss.gameassets.animations.BabylonAnimations;
 import net.p1nero.ss.network.PacketHandler;
 import net.p1nero.ss.network.PacketRelay;
 import net.p1nero.ss.network.packet.server.RequestBabylonSyncPacket;
 import net.p1nero.ss.util.AnimationUtils;
 import net.p1nero.ss.util.ItemUtils;
-import org.jetbrains.annotations.NotNull;
 import yesman.epicfight.api.animation.Joint;
-import yesman.epicfight.api.animation.types.StateSpectrum;
-import yesman.epicfight.api.animation.types.StaticAnimation;
 import yesman.epicfight.api.utils.LevelUtil;
 import yesman.epicfight.api.utils.math.OpenMatrix4f;
-import yesman.epicfight.main.EpicFightMod;
 
 import java.util.*;
 
@@ -55,7 +47,7 @@ public class BabylonEntity extends AbstractSwordEntity {
         setYBodyRot(yRot);
         setYRot(yRot);
         setYHeadRot(yRot);
-        if (!level.isClientSide) {
+        if (!level().isClientSide) {
             startYRot = yRot;
         }
         setNoGravity(true);
@@ -96,7 +88,7 @@ public class BabylonEntity extends AbstractSwordEntity {
             Collections.shuffle(validBabylonItems);
         }
         //记录Joint和伤害的关系
-        if (!level.isClientSide) {
+        if (!level().isClientSide) {
             List<Joint> joints = getArmature().getJoints(getPatch());
             for (int i = 0; i < joints.size() && i < validBabylonItems.size(); i++) {
                 Joint joint = joints.get(i);
@@ -109,13 +101,13 @@ public class BabylonEntity extends AbstractSwordEntity {
     @Override
     public void tick() {
         super.tick();
-        if(getOwner() != null && level.isClientSide && !clientInit){
+        if(getOwner() != null && level().isClientSide && !clientInit){
             if(getOwner().equals(Minecraft.getInstance().player)){
                 PacketRelay.sendToServer(PacketHandler.INSTANCE, new RequestBabylonSyncPacket(getId()));
                 clientInit = true;
             }
         }
-        if(!level.isClientSide && !jointDamageMap.isEmpty() && getPatch() != null && shouldGroundSlam()){
+        if(!level().isClientSide && !jointDamageMap.isEmpty() && getPatch() != null && shouldGroundSlam()){
             if(getPatch().getAnimator().getPlayerFor(null).getElapsedTime() > 1.33F){
                 for(int id : jointDamageMap.keySet()){
                     if(jointsHittenGroundMap.getOrDefault(id, false)) {
@@ -124,11 +116,11 @@ public class BabylonEntity extends AbstractSwordEntity {
                     Joint joint = getArmature().searchJointById(id);
                     Vec3 jointPos = AnimationUtils.getJointWorldPos(getPatch(), joint);
                     if(jointPos.y() <= getY() + 0.5F){
-                        LevelUtil.circleSlamFracture(getOwner(), level, jointPos.add(0, -1, 0), 2.5, false);
+                        LevelUtil.circleSlamFracture(getOwner(), level(), jointPos.add(0, -1, 0), 2.5, false);
                         jointsHittenGroundMap.put(id, true);
                         if(Config.REMOVE_ITEM.get()){
-                            ItemEntity itemEntity = new ItemEntity(level, jointPos.x, jointPos.y, jointPos.z, validBabylonItems.get(getArmature().joints.indexOf(joint)));
-                            level.addFreshEntity(itemEntity);
+                            ItemEntity itemEntity = new ItemEntity(level(), jointPos.x, jointPos.y, jointPos.z, validBabylonItems.get(getArmature().joints.indexOf(joint)));
+                            level().addFreshEntity(itemEntity);
                         }
                     }
                 }
@@ -166,7 +158,7 @@ public class BabylonEntity extends AbstractSwordEntity {
 
     @Override
     protected void moveToOwner(LivingEntity owner) {
-        if (!level.isClientSide) {
+        if (!level().isClientSide) {
             setYRot(startYRot);
             setYBodyRot(startYRot);
             setYHeadRot(startYRot);
@@ -179,7 +171,7 @@ public class BabylonEntity extends AbstractSwordEntity {
     }
 
     public ReplaceableArmature getArmature(){
-        return SwordSoaringArmatures.babylonArmature;
+        return SwordSoaringArmatures.BABYLON_ARMATURE.get();
     }
 
     public boolean hasJoint(Joint joint){

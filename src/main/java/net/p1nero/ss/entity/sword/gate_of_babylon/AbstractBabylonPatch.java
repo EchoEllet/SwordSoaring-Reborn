@@ -10,6 +10,7 @@ import net.p1nero.ss.gameassets.SwordSoaringColliders;
 import net.p1nero.ss.network.PacketHandler;
 import net.p1nero.ss.network.PacketRelay;
 import net.p1nero.ss.network.packet.server.RequestEntityPlayAnimationPacket;
+import yesman.epicfight.api.animation.AnimationManager;
 import yesman.epicfight.api.animation.types.StaticAnimation;
 import yesman.epicfight.api.collider.Collider;
 
@@ -24,7 +25,7 @@ public abstract class AbstractBabylonPatch<T extends BabylonEntity> extends Abst
      */
     @Override
     @OnlyIn(Dist.CLIENT)
-    protected void clientTick(LivingEvent.LivingUpdateEvent event) {
+    protected void clientTick(LivingEvent.LivingTickEvent event) {
         super.clientTick(event);
         if(!played){
             if(this.isLogicalClient() && this.getOwnerPatch() != null){
@@ -32,9 +33,10 @@ public abstract class AbstractBabylonPatch<T extends BabylonEntity> extends Abst
                 if(!this.getOwnerPatch().getOriginal().equals(Minecraft.getInstance().player)){
                     return;
                 }
-                StaticAnimation toPlay = getOriginal().getAnimationToPlay();
+
+                AnimationManager.AnimationAccessor<? extends StaticAnimation> toPlay = getOriginal().getAnimationToPlay();
                 if(toPlay != null){
-                    PacketRelay.sendToServer(PacketHandler.INSTANCE, new RequestEntityPlayAnimationPacket(this.getOriginal().getId(), toPlay.getNamespaceId(), toPlay.getId(), 0.0001F));
+                    PacketRelay.sendToServer(PacketHandler.INSTANCE, new RequestEntityPlayAnimationPacket(this.getOriginal().getId(), toPlay.id(), 0.0001F));
                     played = true;
                 }
             }

@@ -1,15 +1,14 @@
 package net.p1nero.ss.skill.sword_soaring;
 
-import com.p1nero.invincible.api.animation.StaticAnimationProvider;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.p1nero.ss.SwordSoaring;
+import net.p1nero.ss.SwordSoaringMod;
 import net.p1nero.ss.client.keymapping.SwordSoaringKeyMappings;
-import yesman.epicfight.client.world.capabilites.entitypatch.player.LocalPlayerPatch;
+import net.p1nero.ss.gameassets.SwordSoaringDatakeys;
+import yesman.epicfight.api.animation.AnimationManager;
+import yesman.epicfight.api.animation.types.StaticAnimation;
 import yesman.epicfight.skill.SkillContainer;
 import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
@@ -21,70 +20,65 @@ public class SwordSoaringSkillElytra extends SwordSoaringSkill {
     }
 
     @Override
-    public boolean canExecute(PlayerPatch<?> executer) {
-        return super.canExecute(executer) && !executer.getOriginal().isOnGround();
+    public boolean canExecute(SkillContainer container) {
+        PlayerPatch<?> executor = container.getExecutor();
+        return super.canExecute(container) && !executor.getOriginal().onGround();
     }
 
     @Override
-    public void executeOnServer(ServerPlayerPatch executer, FriendlyByteBuf args) {
-        super.executeOnServer(executer, args);
-        executer.getOriginal().startFallFlying();
+    public void executeOnServer(SkillContainer container, FriendlyByteBuf args) {
+        super.executeOnServer(container, args);
+        ServerPlayerPatch executor = container.getServerExecutor();
+        executor.getOriginal().startFallFlying();
     }
 
-    public StaticAnimationProvider getFlyingAnim(){
+    public AnimationManager.AnimationAccessor<? extends StaticAnimation> getFlyingAnim(){
         return flying;
-    }
-
-    /**
-     * 取消鞘翅音效播放，不需要
-     */
-    @Override
-    @OnlyIn(Dist.CLIENT)
-    public void executeOnClient(LocalPlayerPatch executer, FriendlyByteBuf args) {
     }
 
     @Override
     public void flyingTick(SkillContainer container) {
-        if (container.getExecuter().isLogicalClient()) {
-            if (container.getDataManager().getDataValue(FLYING) && container.getExecuter().hasStamina(consumption + 0.1F) && SwordSoaring.isValidSword(container.getExecuter().getOriginal().getMainHandItem())) {
-                LocalPlayer localPlayer = ((LocalPlayer) container.getExecuter().getOriginal());
+        if (container.getExecutor().isLogicalClient()) {
+            if (container.getDataManager().getDataValue(SwordSoaringDatakeys.FLYING.get()) && container.getExecutor().hasStamina(consumption + 0.1F) && SwordSoaringMod.isValidSword(container.getExecutor().getOriginal().getMainHandItem())) {
+                LocalPlayer localPlayer = ((LocalPlayer) container.getExecutor().getOriginal());
                 boolean accelerating = SwordSoaringKeyMappings.ACCELERATION.isDown();
-                if (accelerating != container.getDataManager().getDataValue(ACCELERATING)) {
+                
+                if (accelerating != container.getDataManager().getDataValue(SwordSoaringDatakeys.ACCELERATING.get())) {
                     if (accelerating) {
-                        container.getExecuter().playAnimationSynchronized(acceleration.get(), 0.0F);
+                        container.getExecutor().playAnimationSynchronized(acceleration, 0.0F);
                     } else {
-                        container.getExecuter().playAnimationSynchronized(flying.get(), 0.0F);
+                        container.getExecutor().playAnimationSynchronized(flying, 0.0F);
                     }
-                    container.getDataManager().setDataSync(ACCELERATING, accelerating, localPlayer);
+                    container.getDataManager().setDataSync(SwordSoaringDatakeys.ACCELERATING.get(), accelerating, localPlayer);
                 }
             }
         } else {
-            if (container.getDataManager().getDataValue(FLYING)) {
-                container.getExecuter().resetActionTick();
-                if (container.getDataManager().getDataValue(ACCELERATING)) {
-                    container.getExecuter().consumeStamina(consumption);
+            if (container.getDataManager().getDataValue(SwordSoaringDatakeys.FLYING.get())) {
+                container.getExecutor().resetActionTick();
+                if (container.getDataManager().getDataValue(SwordSoaringDatakeys.ACCELERATING.get())) {
+                    container.getExecutor().setStamina(container.getExecutor().getStamina() - consumption);
                 }
-                if(container.getExecuter().getOriginal().isUnderWater()){
-                    stopFlying(container, ((ServerPlayer) container.getExecuter().getOriginal()));
+                if(container.getExecutor().getOriginal().isUnderWater()){
+                    stopFlying(container, ((ServerPlayer) container.getExecutor().getOriginal()));
                 }
             }
         }
-        if(container.getDataManager().getDataValue(ACCELERATING)){
+        if(container.getDataManager().getDataValue(SwordSoaringDatakeys.ACCELERATING.get())){
             //移速控制，只加速不匀速
-            Vec3 accelerationSpeed = container.getExecuter().getOriginal().getViewVector(1.0F).normalize().scale(speed);
-            Vec3 currentDeltaMovement = container.getExecuter().getOriginal().getDeltaMovement();
+            Vec3 accelerationSpeed = container.getExecutor().getOriginal().getViewVector(1.0F).normalize().scale(speed);
+            Vec3 currentDeltaMovement = container.getExecutor().getOriginal().getDeltaMovement();
             double currentLength = currentDeltaMovement.length();
             double speedLength = accelerationSpeed.length();
             if (currentLength < speedLength) {
-                container.getExecuter().getOriginal().setDeltaMovement(currentDeltaMovement.add(accelerationSpeed.scale((speedLength - currentLength) * 0.1)));
+                container.getExecutor().getOriginal().setDeltaMovement(currentDeltaMovement.add(accelerationSpeed.scale((speedLength - currentLength) * 0.1)));
             }
         }
     }
     
     public void stopFlying(SkillContainer container, ServerPlayer serverPlayer){
-        container.getDataManager().setDataSync(FLYING, false, serverPlayer);
-        container.getDataManager().setDataSync(ACCELERATING, false, serverPlayer);
-        container.getDataManager().setDataSync(COOL_DOWN_TIMER, cooldown, serverPlayer);
+        container.getDataManager().setDataSync(SwordSoaringDatakeys.FLYING.get(), false, serverPlayer);
+        container.getDataManager().setDataSync(SwordSoaringDatakeys.ACCELERATING.get(), false, serverPlayer);
+        container.getDataManager().setDataSync(SwordSoaringDatakeys.COOLDOWN_TIMER.get(), cooldown, serverPlayer);
         serverPlayer.stopFallFlying();
     }
 

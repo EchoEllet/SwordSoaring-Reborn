@@ -11,8 +11,9 @@ import java.util.Map;
 public abstract class ReplaceableArmature extends Armature {
 
     public final ArrayList<Joint> joints = new ArrayList<>();
-    public ReplaceableArmature(int jointNumber, Joint rootJoint, Map<String, Joint> jointMap) {
-        super(jointNumber, rootJoint, jointMap);
+
+    public ReplaceableArmature(String name, int jointNumber, Joint rootJoint, Map<String, Joint> jointMap) {
+        super(name, jointNumber, rootJoint, jointMap);
     }
 
     public List<Joint> getJoints(LivingEntityPatch<?> livingEntityPatch){

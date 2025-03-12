@@ -1,7 +1,6 @@
 package net.p1nero.ss.item;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffects;
@@ -13,12 +12,10 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
+import net.p1nero.ss.gameassets.SwordSoaringDatakeys;
 import net.p1nero.ss.gameassets.animations.VatanseverAnimations;
-import net.p1nero.ss.skill.weapon_passive.VatanseverPassive;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import yesman.epicfight.gameasset.EpicFightSounds;
-import yesman.epicfight.skill.Skill;
 import yesman.epicfight.skill.SkillDataManager;
 import yesman.epicfight.skill.SkillSlots;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
@@ -39,7 +36,7 @@ public class VatanseverItem extends WeaponItem {
                 ServerPlayerPatch serverPlayerPatch = EpicFightCapabilities.getEntityPatch(pPlayer, ServerPlayerPatch.class);
                 if(serverPlayerPatch.isBattleMode() && !serverPlayerPatch.getEntityState().inaction()){
                     SkillDataManager manager = serverPlayerPatch.getSkill(SkillSlots.WEAPON_PASSIVE).getDataManager();
-                    if(manager.hasData(VatanseverPassive.SWORD_COUNT) && manager.getDataValue(VatanseverPassive.SWORD_COUNT) >= 4){
+                    if(manager.hasData(SwordSoaringDatakeys.SWORD_COUNT.get()) && manager.getDataValue(SwordSoaringDatakeys.SWORD_COUNT.get()) >= 4){
                         serverPlayerPatch.playAnimationSynchronized(VatanseverAnimations.PLAYER_FLY_BEGIN, 0.15F);
                     }
                 }
@@ -53,10 +50,10 @@ public class VatanseverItem extends WeaponItem {
 
     @Override
     public boolean elytraFlightTick(ItemStack stack, LivingEntity entity, int flightTicks) {
-        if (!entity.level.isClientSide) {
+        if (!entity.level().isClientSide) {
             int nextFlightTick = flightTicks + 1;
             if (nextFlightTick % 10 == 0) {
-                entity.gameEvent(GameEvent.ELYTRA_FREE_FALL);
+                entity.gameEvent(GameEvent.ELYTRA_GLIDE);
             }
         }
         return true;
@@ -64,7 +61,7 @@ public class VatanseverItem extends WeaponItem {
 
     @Override
     public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, @NotNull List<Component> pTooltipComponents, @NotNull TooltipFlag pIsAdvanced) {
-        pTooltipComponents.add(new TranslatableComponent("item.sword_soaring.vatansever.description1"));
-        pTooltipComponents.add(new TranslatableComponent("item.sword_soaring.vatansever.description2"));
+        pTooltipComponents.add(Component.literal("item.sword_soaring.vatansever.description1"));
+        pTooltipComponents.add(Component.literal("item.sword_soaring.vatansever.description2"));
     }
 }

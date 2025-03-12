@@ -1,39 +1,35 @@
 package net.p1nero.ss.entity.sword.gate_of_babylon.client.layer;
 
 import com.mojang.blaze3d.vertex.*;
-import com.mojang.math.Matrix3f;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.p1nero.ss.SwordSoaring;
+import net.p1nero.ss.SwordSoaringMod;
 import net.p1nero.ss.entity.AbstractArtifactSpiritPatch;
 import net.p1nero.ss.entity.ReplaceableArmature;
 import net.p1nero.ss.entity.sword.gate_of_babylon.BabylonEntity;
-import net.p1nero.ss.util.MathUtils;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
 import yesman.epicfight.api.animation.Joint;
-import yesman.epicfight.api.client.model.AnimatedMesh;
+import yesman.epicfight.api.utils.math.MathUtils;
 import yesman.epicfight.api.utils.math.OpenMatrix4f;
+import yesman.epicfight.api.utils.math.QuaternionUtils;
 import yesman.epicfight.client.renderer.patched.layer.PatchedLayer;
 
 import java.util.List;
 
 @OnlyIn(Dist.CLIENT)
-public class PatchedBabylonRandomReplaceableLayer<E extends BabylonEntity, T extends AbstractArtifactSpiritPatch<E>, M extends EntityModel<E>, AM extends AnimatedMesh> extends PatchedLayer<E, T, M, RenderLayer<E, M>, AM> {
-    public PatchedBabylonRandomReplaceableLayer() {
-        super(null);
-    }
+public class PatchedBabylonRandomReplaceableLayer<E extends BabylonEntity, T extends AbstractArtifactSpiritPatch<E>, M extends EntityModel<E>> extends PatchedLayer<E, T, M, RenderLayer<E, M>> {
     public static final int FADE_TIME = 20, LIFE_TIME = 130;
-    public static final ResourceLocation LIGHT_TEXTURE = new ResourceLocation(SwordSoaring.MOD_ID, "textures/entity/light.png");
-    public static final ResourceLocation PORTAL_TEXTURE = new ResourceLocation(SwordSoaring.MOD_ID, "textures/entity/portal.png");
+    public static final ResourceLocation LIGHT_TEXTURE = new ResourceLocation(SwordSoaringMod.MOD_ID, "textures/entity/light.png");
+    public static final ResourceLocation PORTAL_TEXTURE = new ResourceLocation(SwordSoaringMod.MOD_ID, "textures/entity/portal.png");
 
     @Override
     protected void renderLayer(T entityPatch, E entity, RenderLayer<E, M> vanillaLayer, PoseStack postStack, MultiBufferSource buffer, int packedLightIn, OpenMatrix4f[] poses, float bob, float yRot, float xRot, float partialTicks) {
@@ -57,16 +53,17 @@ public class PatchedBabylonRandomReplaceableLayer<E extends BabylonEntity, T ext
                 ItemStack itemStack = babylons.get(i);//有多少射多少，穷鬼莫玩
                 if (itemStack != null) {
                     OpenMatrix4f jointTransform = poses[joint.getId()];
+                    jointTransform.removeScale();
                     if (entity.getStartTransform(joint.getId()) == null && jointTransform.toScaleVector().length() > 0) {
-                        entity.bindStartTransform(joint.getId(), MathUtils.removeScale(jointTransform));
+                        entity.bindStartTransform(joint.getId(), jointTransform);
                     }
 
                     //画传送门
                     poseStack.pushPose();
 
                     OpenMatrix4f startMatrix = entity.getStartTransform(joint.getId());
-                    MathUtils.mulPoseStack(poseStack, startMatrix == null ? jointTransform : startMatrix);
-                    poseStack.mulPose(Vector3f.XP.rotationDegrees(90));
+                    MathUtils.mulStack(poseStack, startMatrix == null ? jointTransform : startMatrix);
+                    poseStack.mulPose(QuaternionUtils.XP.rotationDegrees(90));
                     float alpha = 1.0F;
                     int currentTickCount = entity.tickCount - 15;
                     if(currentTickCount < FADE_TIME){
@@ -101,10 +98,10 @@ public class PatchedBabylonRandomReplaceableLayer<E extends BabylonEntity, T ext
 
                     //画在Joint上
                     poseStack.pushPose();
-                    MathUtils.mulPoseStack(poseStack, jointTransform);
-                    ItemTransforms.TransformType transformType = ItemTransforms.TransformType.THIRD_PERSON_RIGHT_HAND;
-                    poseStack.mulPose(Vector3f.YP.rotationDegrees(90));
-                    Minecraft.getInstance().getItemInHandRenderer().renderItem(artifactSpiritPatch.getOriginal(), itemStack, transformType, false, poseStack, buffer, packedLight);
+                    MathUtils.mulStack(poseStack, jointTransform);
+                    ItemDisplayContext transformType = ItemDisplayContext.THIRD_PERSON_RIGHT_HAND;
+                    poseStack.mulPose(QuaternionUtils.YP.rotationDegrees(90));
+                    Minecraft.getInstance().gameRenderer.itemInHandRenderer.renderItem(artifactSpiritPatch.getOriginal(), itemStack, transformType, false, poseStack, buffer, packedLight);
                     poseStack.popPose();
                 }
             }

@@ -4,7 +4,7 @@ import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.p1nero.ss.SwordSoaring;
+import net.p1nero.ss.SwordSoaringMod;
 import net.p1nero.ss.compat.ArmourersWorkshopCompat;
 import net.p1nero.ss.entity.AbstractArtifactSpiritEntity;
 import net.p1nero.ss.entity.SwordSoaringEntities;
@@ -22,7 +22,7 @@ import net.p1nero.ss.skill.weapon_passive.VatanseverPassive;
 import yesman.epicfight.api.forgeevent.EntityPatchRegistryEvent;
 import yesman.epicfight.skill.SkillDataManager;
 
-@Mod.EventBusSubscriber(modid = SwordSoaring.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(modid = SwordSoaringMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModEvents{
 
     @SubscribeEvent
@@ -48,13 +48,6 @@ public class ModEvents{
     @SubscribeEvent
     public static void commonSetup(FMLCommonSetupEvent event) {
         PacketHandler.register();
-        SwordSoaring.runInArmourersWorkshopLoaded(() -> ArmourersWorkshopCompat::registerSwordSoaringItemProvider);
-        event.enqueueWork(() -> {
-            ScreenSwordSkill.PROTECT_COUNT = SkillDataManager.SkillDataKey.createDataKey(SkillDataManager.ValueType.INTEGER, true);
-            VatanseverPassive.SWORD_COUNT = SkillDataManager.SkillDataKey.createDataKey(SkillDataManager.ValueType.INTEGER, true);
-            WanJianGuiZongSkill.COOLDOWN_TIMER = SkillDataManager.SkillDataKey.createDataKey(SkillDataManager.ValueType.INTEGER, true);
-            WanJianGuiZongSkill.IS_CHARGING = SkillDataManager.SkillDataKey.createDataKey(SkillDataManager.ValueType.BOOLEAN, true);
-            GateOfBabylonSkill.COOLDOWN_TIMER = SkillDataManager.SkillDataKey.createDataKey(SkillDataManager.ValueType.INTEGER, true);
-        });
+        SwordSoaringMod.runInArmourersWorkshopLoaded(() -> ArmourersWorkshopCompat::registerSwordSoaringItemProvider);
     }
 }

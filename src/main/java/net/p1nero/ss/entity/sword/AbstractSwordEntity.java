@@ -9,29 +9,30 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.p1nero.ss.SwordSoaring;
+import net.p1nero.ss.SwordSoaringMod;
 import net.p1nero.ss.compat.ArmourersWorkshopCompat;
 import net.p1nero.ss.entity.AbstractArtifactSpiritEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import yesman.epicfight.api.animation.AnimationManager;
 import yesman.epicfight.api.animation.types.StaticAnimation;
 import yesman.epicfight.main.EpicFightMod;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 
 public abstract class AbstractSwordEntity extends AbstractArtifactSpiritEntity implements IPatchedItemSupplier {
     private static final EntityDataAccessor<ItemStack> ITEM_STACK = SynchedEntityData.defineId(AbstractSwordEntity.class, EntityDataSerializers.ITEM_STACK);
-    protected static final EntityDataAccessor<String> ANIMATION_TO_PLAY = SynchedEntityData.defineId(AbstractSwordEntity.class, EntityDataSerializers.STRING);
+    protected static final EntityDataAccessor<Integer> ANIMATION_TO_PLAY = SynchedEntityData.defineId(AbstractSwordEntity.class, EntityDataSerializers.INT);
 
     public AbstractSwordEntity(EntityType<? extends AbstractArtifactSpiritEntity> entityType, Level level) {
         super(entityType, level);
     }
     public AbstractSwordEntity(EntityType<? extends AbstractArtifactSpiritEntity> entityType, ItemStack itemStack, LivingEntity owner) {
-        super(entityType, owner.level);
+        super(entityType, owner.level());
         this.setItemStack(itemStack);
         this.tame(owner);
         setPos(owner.position());
         //时装工坊联动，拷贝时装栏
-        SwordSoaring.runInArmourersWorkshopLoaded(() -> () -> ArmourersWorkshopCompat.copyArmourers(owner, this));
+        SwordSoaringMod.runInArmourersWorkshopLoaded(() -> () -> ArmourersWorkshopCompat.copyArmourers(owner, this));
     }
 
     /**
@@ -46,23 +47,23 @@ public abstract class AbstractSwordEntity extends AbstractArtifactSpiritEntity i
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.getEntityData().define(ITEM_STACK, ItemStack.EMPTY);
-        getEntityData().define(ANIMATION_TO_PLAY, "");
+        getEntityData().define(ANIMATION_TO_PLAY, -1);
     }
 
-    public void setAnimationToPlay(StaticAnimation staticAnimation) {
-        getEntityData().set(ANIMATION_TO_PLAY, staticAnimation.getRegistryName().toString());
+    public void setAnimationToPlay(AnimationManager.AnimationAccessor<? extends StaticAnimation> staticAnimation) {
+        getEntityData().set(ANIMATION_TO_PLAY, staticAnimation.id());
     }
 
     /**
      * @return 存的动画。若没存则返回null
      */
     @Nullable
-    public StaticAnimation getAnimationToPlay() {
-        String animation = this.getEntityData().get(ANIMATION_TO_PLAY);
-        if(animation.isEmpty()){
+    public AnimationManager.AnimationAccessor<? extends StaticAnimation> getAnimationToPlay() {
+        int id = this.getEntityData().get(ANIMATION_TO_PLAY);
+        if(id == -1){
             return null;
         }
-        return EpicFightMod.getInstance().animationManager.findAnimationByPath(animation);
+        return AnimationManager.byId(id);
     }
 
     @Override

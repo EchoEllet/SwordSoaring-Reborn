@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Mod.EventBusSubscriber(modid = SwordSoaring.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+@Mod.EventBusSubscriber(modid = SwordSoaringMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class Config {
     private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
     public static final ForgeConfigSpec.BooleanValue ENABLE_LOOT_TABLE;
@@ -51,21 +51,21 @@ public class Config {
     private static ForgeConfigSpec.BooleanValue createBool(String key, boolean defaultValue, String... comment) {
         return BUILDER
                 .comment(comment)
-                .translation("config." + SwordSoaring.MOD_ID + "." + key)
+                .translation("config." + SwordSoaringMod.MOD_ID + "." + key)
                 .define(key, defaultValue);
     }
 
     private static ForgeConfigSpec.DoubleValue createDouble(String key, double defaultValue, String... comment) {
         return BUILDER
                 .comment(comment)
-                .translation("config." + SwordSoaring.MOD_ID + "." + key)
+                .translation("config." + SwordSoaringMod.MOD_ID + "." + key)
                 .defineInRange(key, defaultValue, Double.MIN_VALUE, Double.MAX_VALUE);
     }
 
     private static ForgeConfigSpec.IntValue createInt(String key, int defaultValue, String... comment) {
         return BUILDER
                 .comment(comment)
-                .translation("config." + SwordSoaring.MOD_ID + "." + key)
+                .translation("config." + SwordSoaringMod.MOD_ID + "." + key)
                 .defineInRange(key, defaultValue, Integer.MIN_VALUE, Integer.MAX_VALUE);
     }
 

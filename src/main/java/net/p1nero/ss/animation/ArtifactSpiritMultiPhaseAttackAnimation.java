@@ -5,7 +5,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -19,35 +18,41 @@ import net.p1nero.ss.entity.AbstractArtifactSpiritPatch;
 import net.p1nero.ss.entity.sword.AbstractSwordEntity;
 import net.p1nero.ss.gameassets.animations.ScreenSwordAnimations;
 import org.jetbrains.annotations.Nullable;
+import yesman.epicfight.api.animation.AnimationManager;
 import yesman.epicfight.api.animation.AnimationPlayer;
 import yesman.epicfight.api.animation.Joint;
 import yesman.epicfight.api.animation.property.AnimationProperty;
 import yesman.epicfight.api.animation.types.AttackAnimation;
+import yesman.epicfight.api.animation.types.DynamicAnimation;
 import yesman.epicfight.api.animation.types.EntityState;
+import yesman.epicfight.api.asset.AssetAccessor;
 import yesman.epicfight.api.collider.Collider;
 import yesman.epicfight.api.model.Armature;
 import yesman.epicfight.api.utils.AttackResult;
 import yesman.epicfight.api.utils.HitEntityList;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
-import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 import yesman.epicfight.world.damagesource.EpicFightDamageSource;
-import yesman.epicfight.world.entity.eventlistener.DealtDamageEvent;
-import yesman.epicfight.world.entity.eventlistener.PlayerEventListener;
 
 import java.util.*;
 
 public class ArtifactSpiritMultiPhaseAttackAnimation extends AttackAnimation {
-    public ArtifactSpiritMultiPhaseAttackAnimation(float convertTime, float antic, float preDelay, float contact, float recovery, @Nullable Collider collider, Joint colliderJoint, String path, Armature armature) {
-        super(convertTime, antic, preDelay, contact, recovery, collider, colliderJoint, path, armature);
+
+
+    public ArtifactSpiritMultiPhaseAttackAnimation(float transitionTime, float antic, float preDelay, float contact, float recovery, @Nullable Collider collider, Joint colliderJoint, AnimationManager.AnimationAccessor<? extends AttackAnimation> accessor, AssetAccessor<? extends Armature> armature) {
+        super(transitionTime, antic, preDelay, contact, recovery, collider, colliderJoint, accessor, armature);
     }
 
-    public ArtifactSpiritMultiPhaseAttackAnimation(float convertTime, float antic, float preDelay, float contact, float recovery, InteractionHand hand, @Nullable Collider collider, Joint colliderJoint, String path, Armature armature) {
+    public ArtifactSpiritMultiPhaseAttackAnimation(float transitionTime, float antic, float preDelay, float contact, float recovery, InteractionHand hand, @Nullable Collider collider, Joint colliderJoint, AnimationManager.AnimationAccessor<? extends AttackAnimation> accessor, AssetAccessor<? extends Armature> armature) {
+        super(transitionTime, antic, preDelay, contact, recovery, hand, collider, colliderJoint, accessor, armature);
+    }
+
+    public ArtifactSpiritMultiPhaseAttackAnimation(float transitionTime, AnimationManager.AnimationAccessor<? extends AttackAnimation> accessor, AssetAccessor<? extends Armature> armature, Phase... phases) {
+        super(transitionTime, accessor, armature, phases);
+    }
+
+    public ArtifactSpiritMultiPhaseAttackAnimation(float convertTime, float antic, float preDelay, float contact, float recovery, InteractionHand hand, @Nullable Collider collider, Joint colliderJoint, String path, AssetAccessor<? extends Armature> armature) {
         super(convertTime, antic, preDelay, contact, recovery, hand, collider, colliderJoint, path, armature);
-    }
-
-    public ArtifactSpiritMultiPhaseAttackAnimation(float convertTime, String path, Armature armature, Phase... phases) {
-        super(convertTime, path, armature, phases);
     }
 
     @Override
@@ -69,8 +74,9 @@ public class ArtifactSpiritMultiPhaseAttackAnimation extends AttackAnimation {
      * 全部进行判断
      */
     @Override
-    protected void attackTick(LivingEntityPatch<?> entityPatch) {
-        AnimationPlayer player = entityPatch.getAnimator().getPlayerFor(this);
+    protected void attackTick(LivingEntityPatch<?> entityPatch, AssetAccessor<? extends DynamicAnimation> animation) {
+        super.attackTick(entityPatch, animation);
+        AnimationPlayer player = entityPatch.getAnimator().getPlayerFor(animation);
         float elapsedTime = player.getElapsedTime();
         float prevElapsedTime = player.getPrevElapsedTime();
         EntityState state = this.getState(entityPatch, elapsedTime);
@@ -87,18 +93,14 @@ public class ArtifactSpiritMultiPhaseAttackAnimation extends AttackAnimation {
         }
     }
 
-    /**
-     * 自己在Capability里实现根据phase判断是否攻击过，不同phase独立判断
-     */
-    protected void hurtCollidingEntities(LivingEntityPatch<?> entityPatch, float prevElapsedTime, float elapsedTime, EntityState prevState, EntityState state, MultiAttackPhase phase) {
-        entityPatch.getArmature().initializeTransform();
+    protected void hurtCollidingEntities(LivingEntityPatch<?> entityPatch, float prevElapsedTime, float elapsedTime, EntityState prevState, EntityState state, Phase phase) {
         float prevPoseTime = prevState.attacking() ? prevElapsedTime : phase.preDelay;
         float poseTime = state.attacking() ? elapsedTime : phase.contact;
-        List<Entity> list = phase.getCollidingEntities(entityPatch, this, prevPoseTime, poseTime, this.getPlaySpeed(entityPatch));
+        List<Entity> list = this.getPhaseByTime(elapsedTime).getCollidingEntities(entityPatch, this, prevPoseTime, poseTime, this.getPlaySpeed(entityPatch, this));
+
         if (!list.isEmpty()) {
             HitEntityList hitEntities = new HitEntityList(entityPatch, list, phase.getProperty(AnimationProperty.AttackPhaseProperty.HIT_PRIORITY).orElse(HitEntityList.Priority.DISTANCE));
-
-            if(entityPatch instanceof AbstractArtifactSpiritPatch<?> artifactSpiritPatch && artifactSpiritPatch.getOwnerPatch() != null){
+            if(entityPatch instanceof AbstractArtifactSpiritPatch<?> artifactSpiritPatch && artifactSpiritPatch.getOwnerPatch() != null) {
                 SSPlayer ssPlayer = artifactSpiritPatch.getOwnerPatch().getOriginal().getCapability(SSCapabilityProvider.SS_PLAYER).orElse(new SSPlayer());
                 while (hitEntities.next()) {
                     Entity hit = hitEntities.getEntity();
@@ -113,12 +115,12 @@ public class ArtifactSpiritMultiPhaseAttackAnimation extends AttackAnimation {
                             hit.invulnerableTime = prevInvulTime;
 
                             if (attackResult.resultType.dealtDamage()) {
-                                artifactSpiritPatch.getOwnerPatch().getEventListener().triggerEvents(PlayerEventListener.EventType.DEALT_DAMAGE_EVENT_POST, new DealtDamageEvent(((ServerPlayerPatch) artifactSpiritPatch.getOwnerPatch()), trueEntity, source, attackResult.damage));
+//                                artifactSpiritPatch.getOwnerPatch().getEventListener().triggerEvents(PlayerEventListener.EventType.DEALT_DAMAGE_EVENT_DAMAGE, new DealtDamageEvent.Damage((ServerPlayerPatch) artifactSpiritPatch.getOwnerPatch(), trueEntity, source, event));
                                 if(this.equals(ScreenSwordAnimations.KILL_AURA_2)){
                                     trueEntity.setSecondsOnFire(5);
                                 }
-                                hit.level.playSound(null, hit.getX(), hit.getY(), hit.getZ(), this.getHitSound(entityPatch, phase), hit.getSoundSource(), 1.0F, 1.0F);
-                                this.spawnHitParticle((ServerLevel)hit.getLevel(), entityPatch, hit, phase);
+                                hit.level().playSound(null, hit.getX(), hit.getY(), hit.getZ(), this.getHitSound(entityPatch, phase), hit.getSoundSource(), 1.0F, 1.0F);
+                                this.spawnHitParticle((ServerLevel)hit.level(), entityPatch, hit, phase);
                             }
 
                             ssPlayer.getCurrentlyHurtEntities(phase).add(trueEntity);
@@ -139,7 +141,7 @@ public class ArtifactSpiritMultiPhaseAttackAnimation extends AttackAnimation {
     @Override
     @OnlyIn(Dist.CLIENT)
     public void renderDebugging(PoseStack poseStack, MultiBufferSource buffer, LivingEntityPatch<?> entityPatch, float playbackTime, float partialTicks) {
-        AnimationPlayer animPlayer = entityPatch.getAnimator().getPlayerFor(this);
+        AnimationPlayer animPlayer = entityPatch.getAnimator().getPlayerFor(this.getAccessor());
         float prevElapsedTime = animPlayer.getPrevElapsedTime();
         float elapsedTime = animPlayer.getElapsedTime();
         for(Phase phase : phases){
@@ -149,8 +151,8 @@ public class ArtifactSpiritMultiPhaseAttackAnimation extends AttackAnimation {
             Pair<Joint, Collider> colliderInfo;
             Collider collider;
             boolean flag = false;
-            ArrayList<Pair<Joint, Collider>> newColliders = new ArrayList<>();
-            for(Iterator<Pair<Joint, Collider>> iterator = phase.colliders.iterator(); iterator.hasNext(); collider.draw(poseStack, buffer, entityPatch, this, colliderInfo.getFirst(), prevElapsedTime, elapsedTime, partialTicks, this.getPlaySpeed(entityPatch))) {
+            ArrayList<JointColliderPair> newColliders = new ArrayList<>();
+            for(Iterator<JointColliderPair> iterator = Arrays.stream(phase.colliders).iterator(); iterator.hasNext(); collider.draw(poseStack, buffer, entityPatch, this, colliderInfo.getFirst(), prevElapsedTime, elapsedTime, partialTicks, this.getPlaySpeed(entityPatch, this))) {
                 colliderInfo = iterator.next();
                 collider = colliderInfo.getSecond();
                 if(entityPatch.getOriginal() instanceof AbstractSwordEntity swordEntity){
@@ -160,11 +162,11 @@ public class ArtifactSpiritMultiPhaseAttackAnimation extends AttackAnimation {
                         flag = true;
                         collider = newCollider;
                     }
-                    newColliders.add(new Pair<>(colliderInfo.getFirst(), collider));
+                    newColliders.add(JointColliderPair.of(colliderInfo.getFirst(), collider));
                 }
             }
             if(flag){
-                phase.colliders = newColliders;
+                phase.colliders = newColliders.toArray(new JointColliderPair[0]);
             }
         }
     }
@@ -173,6 +175,7 @@ public class ArtifactSpiritMultiPhaseAttackAnimation extends AttackAnimation {
      * 获取武器对应碰撞箱
      */
     public static class MultiAttackPhase extends AttackAnimation.Phase{
+
         public MultiAttackPhase(float start, float antic, float contact, float recovery, float end, Joint joint, Collider collider) {
             super(start, antic, contact, recovery, end, joint, collider);
         }
@@ -197,7 +200,11 @@ public class ArtifactSpiritMultiPhaseAttackAnimation extends AttackAnimation {
             super(start, antic, preDelay, contact, recovery, end, noStateBind, hand, joint, collider);
         }
 
-        public MultiAttackPhase(float start, float antic, float preDelay, float contact, float recovery, float end, boolean noStateBind, InteractionHand hand, List<Pair<Joint, Collider>> colliders) {
+        public MultiAttackPhase(float start, float antic, float preDelay, float contact, float recovery, float end, InteractionHand hand, JointColliderPair... colliders) {
+            super(start, antic, preDelay, contact, recovery, end, hand, colliders);
+        }
+
+        public MultiAttackPhase(float start, float antic, float preDelay, float contact, float recovery, float end, boolean noStateBind, InteractionHand hand, JointColliderPair... colliders) {
             super(start, antic, preDelay, contact, recovery, end, noStateBind, hand, colliders);
         }
 
@@ -208,8 +215,8 @@ public class ArtifactSpiritMultiPhaseAttackAnimation extends AttackAnimation {
                 Pair<Joint, Collider> colliderInfo;
                 Collider collider;
                 boolean flag = false;
-                ArrayList<Pair<Joint, Collider>> newColliders = new ArrayList<>();
-                for(Iterator<Pair<Joint, Collider>> iterator = this.colliders.iterator(); iterator.hasNext(); entities.addAll(collider.updateAndSelectCollideEntity(entityPatch, animation, prevElapsedTime, elapsedTime, colliderInfo.getFirst(), attackSpeed))) {
+                ArrayList<JointColliderPair> newColliders = new ArrayList<>();
+                for(Iterator<JointColliderPair> iterator = Arrays.stream(this.colliders).iterator(); iterator.hasNext(); entities.addAll(collider.updateAndSelectCollideEntity(entityPatch, animation, prevElapsedTime, elapsedTime, colliderInfo.getFirst(), attackSpeed))) {
                     colliderInfo = iterator.next();
                     collider = colliderInfo.getSecond();
                     ItemStack stack = swordEntity.getItemStack(entityPatch);
@@ -217,11 +224,11 @@ public class ArtifactSpiritMultiPhaseAttackAnimation extends AttackAnimation {
                     if(!newCollider.equals(colliderInfo.getSecond())){
                         flag = true;
                         collider = newCollider;
-                        newColliders.add(new Pair<>(colliderInfo.getFirst(), collider));
+                        newColliders.add(JointColliderPair.of(colliderInfo.getFirst(), collider));
                     }
                 }
                 if(flag){
-                    colliders = newColliders;
+                    colliders = newColliders.toArray(new JointColliderPair[0]);
                 }
                 return entities;
             }

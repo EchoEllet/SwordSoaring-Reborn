@@ -12,9 +12,10 @@ import net.p1nero.ss.network.PacketHandler;
 import net.p1nero.ss.network.PacketRelay;
 import net.p1nero.ss.network.packet.server.RequestEntityPlayAnimationPacket;
 import net.p1nero.ss.skill.sword_controller.KillAuraSkill;
+import yesman.epicfight.api.animation.AnimationManager;
+import yesman.epicfight.api.animation.Animator;
 import yesman.epicfight.api.animation.LivingMotions;
 import yesman.epicfight.api.animation.types.StaticAnimation;
-import yesman.epicfight.api.client.animation.ClientAnimator;
 import yesman.epicfight.api.collider.Collider;
 import yesman.epicfight.skill.SkillContainer;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
@@ -27,7 +28,7 @@ public class ScreenSwordPatch extends AbstractArtifactSpiritPatch<ScreenSwordEnt
      */
     @Override
     @OnlyIn(Dist.CLIENT)
-    protected void clientTick(LivingEvent.LivingUpdateEvent event) {
+    public void clientTick(LivingEvent.LivingTickEvent event) {
         super.clientTick(event);
         if(!played){
             if(this.isLogicalClient() && this.getOwnerPatch() != null){
@@ -36,8 +37,8 @@ public class ScreenSwordPatch extends AbstractArtifactSpiritPatch<ScreenSwordEnt
                 }
                 SkillContainer container = this.getOwnerPatch().getSkill(SwordSoaringSkillSlots.SWORD_CONTROLLER);
                 if(container.getSkill() instanceof KillAuraSkill killAuraSkill){
-                    StaticAnimation toPlay = killAuraSkill.getSwordSummonAnim().get();
-                    PacketRelay.sendToServer(PacketHandler.INSTANCE, new RequestEntityPlayAnimationPacket(this.getOriginal().getId(), toPlay.getNamespaceId(), toPlay.getId(), 0.0001F));
+                    AnimationManager.AnimationAccessor<? extends StaticAnimation> toPlay = killAuraSkill.getSwordSummonAnim();
+                    PacketRelay.sendToServer(PacketHandler.INSTANCE, new RequestEntityPlayAnimationPacket(this.getOriginal().getId(), toPlay.id(), 0.0001F));
                     played = true;
                 }
             }
@@ -45,9 +46,9 @@ public class ScreenSwordPatch extends AbstractArtifactSpiritPatch<ScreenSwordEnt
     }
 
     @Override
-    public void initAnimator(ClientAnimator animator) {
+    protected void initAnimator(Animator animator) {
+        super.initAnimator(animator);
         animator.addLivingAnimation(LivingMotions.IDLE, ScreenSwordAnimations.SCREEN_SWORD_IDLE);
-        animator.setCurrentMotionsAsDefault();
     }
 
     @Override

@@ -9,10 +9,10 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.p1nero.ss.SwordSoaring;
+import net.p1nero.ss.SwordSoaringMod;
+import net.p1nero.ss.gameassets.SwordSoaringDatakeys;
 import net.p1nero.ss.gameassets.SwordSoaringSkillSlots;
 import net.p1nero.ss.item.VatanseverItem;
-import net.p1nero.ss.skill.sword_soaring.SwordSoaringSkill;
 import net.p1nero.ss.skill.sword_soaring.SwordSoaringSkillElytra;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -54,19 +54,19 @@ public abstract class LivingEntityMixin extends Entity {
                 flag = false;
             }
 
-            if (!this.level.isClientSide) {
+            if (!this.level().isClientSide) {
                 this.setSharedFlag(7, flag);
             }
             ci.cancel();
         }
         if ((LivingEntity) (Object) this instanceof ServerPlayer serverPlayer) {
             ServerPlayerPatch serverPlayerPatch = EpicFightCapabilities.getEntityPatch(serverPlayer, ServerPlayerPatch.class);
-            if(serverPlayerPatch == null || !SwordSoaring.isValidSword(serverPlayer.getMainHandItem())){
+            if(serverPlayerPatch == null || !SwordSoaringMod.isValidSword(serverPlayer.getMainHandItem())){
                 return;
             }
             SkillContainer container = serverPlayerPatch.getSkill(SwordSoaringSkillSlots.SWORD_SOARING);
             SkillDataManager manager = container.getDataManager();
-            if(container.getSkill() instanceof SwordSoaringSkillElytra && manager.hasData(SwordSoaringSkillElytra.FLYING) && manager.getDataValue(SwordSoaringSkillElytra.FLYING)){
+            if(container.getSkill() instanceof SwordSoaringSkillElytra && manager.hasData(SwordSoaringDatakeys.FLYING.get()) && manager.getDataValue(SwordSoaringDatakeys.FLYING.get())){
                 this.setSharedFlag(7, true);
             }
             ci.cancel();
@@ -83,7 +83,7 @@ public abstract class LivingEntityMixin extends Entity {
     @Inject(method = "getFallDamageSound", at = @At("HEAD"), cancellable = true)
     private void sword_soaring$getFallDamageSound(int pHeight, CallbackInfoReturnable<SoundEvent> cir) {
         if (this.getMainHandItem().getItem() instanceof VatanseverItem) {
-            cir.setReturnValue(EpicFightSounds.NO_SOUND);
+            cir.setReturnValue(EpicFightSounds.NO_SOUND.get());
         }
     }
 

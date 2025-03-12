@@ -1,23 +1,25 @@
 package net.p1nero.ss.entity.vatansever.client;
 
-import yesman.epicfight.api.client.model.AnimatedMesh;
-import yesman.epicfight.api.client.model.ModelPart;
-import yesman.epicfight.api.client.model.VertexIndicator.AnimatedVertexIndicator;
+import org.jetbrains.annotations.Nullable;
+import yesman.epicfight.api.client.model.MeshPartDefinition;
+import yesman.epicfight.api.client.model.SkinnedMesh;
+import yesman.epicfight.api.client.model.SkinnedMeshVertexBuilder;
 
 import java.util.List;
 import java.util.Map;
 
-public class VatanseverMesh extends AnimatedMesh {
+public class VatanseverMesh extends SkinnedMesh {
 
-    public final ModelPart<AnimatedVertexIndicator> L1;
-    public final ModelPart<AnimatedVertexIndicator> L2;
-    public final ModelPart<AnimatedVertexIndicator> L3;
-    public final ModelPart<AnimatedVertexIndicator> R1;
-    public final ModelPart<AnimatedVertexIndicator> R2;
-    public final ModelPart<AnimatedVertexIndicator> R3;
-    public final List<ModelPart<AnimatedVertexIndicator>> swordLists;
-    public VatanseverMesh(Map<String, float[]> arrayMap, AnimatedMesh parent, RenderProperties properties, Map<String, ModelPart<AnimatedVertexIndicator>> parts) {
-        super(arrayMap, parent, properties, parts);
+    public final SkinnedMesh.SkinnedMeshPart L1;
+    public final SkinnedMesh.SkinnedMeshPart L2;
+    public final SkinnedMesh.SkinnedMeshPart L3;
+    public final SkinnedMesh.SkinnedMeshPart R1;
+    public final SkinnedMesh.SkinnedMeshPart R2;
+    public final SkinnedMesh.SkinnedMeshPart R3;
+    public final List<SkinnedMesh.SkinnedMeshPart> swordLists;
+
+    public VatanseverMesh(@Nullable Map<String, Number[]> arrayMap, @Nullable Map<MeshPartDefinition, List<SkinnedMeshVertexBuilder>> partBuilders, @Nullable SkinnedMesh parent, RenderProperties properties) {
+        super(arrayMap, partBuilders, parent, properties);
         this.L1 = this.getOrLogException(parts, "sss_1_l");
         this.L2 = this.getOrLogException(parts, "sss_2_l");
         this.L3 = this.getOrLogException(parts, "sss_3_l");

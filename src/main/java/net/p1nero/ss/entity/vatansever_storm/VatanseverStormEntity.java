@@ -36,7 +36,7 @@ public class VatanseverStormEntity extends AbstractArtifactSpiritEntity {
     @Override
     public void tick() {
         super.tick();
-        if(!level.isClientSide){
+        if(!level().isClientSide){
             if(tickCount > MAX_LIFE_TIME) {
                 this.discard();
             }

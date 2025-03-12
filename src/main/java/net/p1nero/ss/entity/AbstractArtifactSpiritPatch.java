@@ -3,24 +3,22 @@ package net.p1nero.ss.entity;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
+import yesman.epicfight.api.animation.AnimationManager;
 import yesman.epicfight.api.animation.LivingMotions;
 import yesman.epicfight.api.animation.types.StaticAnimation;
+import yesman.epicfight.api.asset.AssetAccessor;
 import yesman.epicfight.api.utils.AttackResult;
 import yesman.epicfight.client.world.capabilites.entitypatch.player.LocalPlayerPatch;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.Faction;
 import yesman.epicfight.world.capabilities.entitypatch.MobPatch;
 import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
-import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 import yesman.epicfight.world.damagesource.EpicFightDamageSource;
 import yesman.epicfight.world.damagesource.StunType;
-import yesman.epicfight.world.entity.eventlistener.DealtDamageEvent;
-import yesman.epicfight.world.entity.eventlistener.PlayerEventListener;
 
 public abstract class AbstractArtifactSpiritPatch<T extends AbstractArtifactSpiritEntity> extends MobPatch<T> {
 
@@ -62,7 +60,7 @@ public abstract class AbstractArtifactSpiritPatch<T extends AbstractArtifactSpir
     }
 
     @Override
-    public StaticAnimation getHitAnimation(StunType stunType) {
+    public AssetAccessor<? extends StaticAnimation> getHitAnimation(StunType stunType) {
         return null;
     }
 
@@ -84,11 +82,7 @@ public abstract class AbstractArtifactSpiritPatch<T extends AbstractArtifactSpir
     @Override
     public AttackResult attack(EpicFightDamageSource damageSource, Entity target, InteractionHand hand) {
         if (getOwnerPatch() != null && shouldUseOwnerAttack()) {
-            AttackResult result = getOwnerPatch().attack(damageSource, target, hand);
-            if(result.resultType.dealtDamage() && getOwnerPatch() instanceof ServerPlayerPatch serverPlayerPatch){
-                serverPlayerPatch.getEventListener().triggerEvents(PlayerEventListener.EventType.DEALT_DAMAGE_EVENT_POST, new DealtDamageEvent(serverPlayerPatch, target instanceof LivingEntity livingEntity ? livingEntity : null, damageSource, result.damage));
-            }
-            return result;
+            return getOwnerPatch().attack(damageSource, target, hand);
         }
         return super.attack(damageSource, target, hand);
     }
@@ -107,7 +101,7 @@ public abstract class AbstractArtifactSpiritPatch<T extends AbstractArtifactSpir
     }
 
     @Override
-    public EpicFightDamageSource getDamageSource(StaticAnimation animation, InteractionHand hand) {
+    public EpicFightDamageSource getDamageSource(AnimationManager.AnimationAccessor<? extends StaticAnimation> animation, InteractionHand hand) {
         if (getOwnerPatch() != null) {
             return getOwnerPatch().getDamageSource(animation, hand);
         }

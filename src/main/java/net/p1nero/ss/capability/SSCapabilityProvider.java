@@ -4,13 +4,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LightningBolt;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
@@ -18,11 +12,11 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.p1nero.ss.SwordSoaring;
+import net.p1nero.ss.SwordSoaringMod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Mod.EventBusSubscriber(modid = SwordSoaring.MOD_ID)
+@Mod.EventBusSubscriber(modid = SwordSoaringMod.MOD_ID)
 public class SSCapabilityProvider implements ICapabilityProvider, INBTSerializable<CompoundTag> {
 
     public static Capability<SSPlayer> SS_PLAYER = CapabilityManager.get(new CapabilityToken<>() {});
@@ -64,7 +58,7 @@ public class SSCapabilityProvider implements ICapabilityProvider, INBTSerializab
     public static void attachEntityCapabilities(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof Player player) {
             if(!player.getCapability(SSCapabilityProvider.SS_PLAYER).isPresent()){
-                event.addCapability(new ResourceLocation(SwordSoaring.MOD_ID, "ss_player"), new SSCapabilityProvider());
+                event.addCapability(new ResourceLocation(SwordSoaringMod.MOD_ID, "ss_player"), new SSCapabilityProvider());
             }
         }
     }

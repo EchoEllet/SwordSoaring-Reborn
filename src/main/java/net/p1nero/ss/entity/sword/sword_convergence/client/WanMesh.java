@@ -1,13 +1,15 @@
 package net.p1nero.ss.entity.sword.sword_convergence.client;
 
-import yesman.epicfight.api.client.model.AnimatedMesh;
-import yesman.epicfight.api.client.model.ModelPart;
-import yesman.epicfight.api.client.model.VertexIndicator;
+import org.jetbrains.annotations.Nullable;
+import yesman.epicfight.api.client.model.MeshPartDefinition;
+import yesman.epicfight.api.client.model.SkinnedMesh;
+import yesman.epicfight.api.client.model.SkinnedMeshVertexBuilder;
 
+import java.util.List;
 import java.util.Map;
 
-public class WanMesh extends AnimatedMesh {
-    public WanMesh(Map<String, float[]> arrayMap, AnimatedMesh parent, RenderProperties properties, Map<String, ModelPart<VertexIndicator.AnimatedVertexIndicator>> parts) {
-        super(arrayMap, parent, properties, parts);
+public class WanMesh extends SkinnedMesh {
+    public WanMesh(@Nullable Map<String, Number[]> arrayMap, @Nullable Map<MeshPartDefinition, List<SkinnedMeshVertexBuilder>> partBuilders, @Nullable SkinnedMesh parent, RenderProperties properties) {
+        super(arrayMap, partBuilders, parent, properties);
     }
 }

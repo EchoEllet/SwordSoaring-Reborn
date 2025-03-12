@@ -15,8 +15,9 @@ import java.util.Map;
 public class VatanseverArmature extends Armature {
     public final Joint L1, L2, L3, R1, R2, R3;
     public final List<Joint> joints;
-    public VatanseverArmature(int jointNumber, Joint rootJoint, Map<String, Joint> jointMap) {
-        super(jointNumber, rootJoint, jointMap);
+
+    public VatanseverArmature(String name, int jointNumber, Joint rootJoint, Map<String, Joint> jointMap) {
+        super(name, jointNumber, rootJoint, jointMap);
         L1 = getOrLogException(jointMap, "S_1_L");
         L2 = getOrLogException(jointMap, "S_2_L");
         L3 = getOrLogException(jointMap, "S_3_L");

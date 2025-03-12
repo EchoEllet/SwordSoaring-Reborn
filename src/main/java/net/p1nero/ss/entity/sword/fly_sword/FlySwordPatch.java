@@ -8,13 +8,13 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.p1nero.ss.entity.AbstractArtifactSpiritPatch;
 import net.p1nero.ss.gameassets.animations.FlySwordAnimations;
-import net.p1nero.ss.item.VatanseverItem;
 import net.p1nero.ss.network.PacketHandler;
 import net.p1nero.ss.network.PacketRelay;
 import net.p1nero.ss.network.packet.server.RequestEntityPlayAnimationPacket;
+import yesman.epicfight.api.animation.AnimationManager;
+import yesman.epicfight.api.animation.Animator;
 import yesman.epicfight.api.animation.LivingMotions;
 import yesman.epicfight.api.animation.types.StaticAnimation;
-import yesman.epicfight.api.client.animation.ClientAnimator;
 import yesman.epicfight.api.collider.Collider;
 import yesman.epicfight.api.utils.math.MathUtils;
 import yesman.epicfight.api.utils.math.OpenMatrix4f;
@@ -25,29 +25,29 @@ import java.util.List;
 
 public class FlySwordPatch extends AbstractArtifactSpiritPatch<FlySwordEntity> {
     private boolean played;
-    public List<StaticAnimation> list = List.of(FlySwordAnimations.FLY_SWORD_ATK_4_1, FlySwordAnimations.FLY_SWORD_ATK_4_2, FlySwordAnimations.FLY_SWORD_ATK_4_3, FlySwordAnimations.FLY_SWORD_ATK_4_4, FlySwordAnimations.FLY_SWORD_ATK_3);
+    public List<AnimationManager.AnimationAccessor<? extends StaticAnimation>> list = List.of(FlySwordAnimations.FLY_SWORD_ATK_4_1, FlySwordAnimations.FLY_SWORD_ATK_4_2, FlySwordAnimations.FLY_SWORD_ATK_4_3, FlySwordAnimations.FLY_SWORD_ATK_4_4, FlySwordAnimations.FLY_SWORD_ATK_3);
 
     /**
      * 播放初始动画
      */
     @Override
     @OnlyIn(Dist.CLIENT)
-    protected void clientTick(LivingEvent.LivingUpdateEvent event) {
+    protected void clientTick(LivingEvent.LivingTickEvent event) {
         super.clientTick(event);
         if (!played) {
             if (this.isLogicalClient() && this.getOwnerPatch() != null) {
                 if(!this.getOwnerPatch().getOriginal().equals(Minecraft.getInstance().player)){
                     return;
                 }
-                StaticAnimation toPlay = getInitAnimation(this.getOwnerPatch());
-                PacketRelay.sendToServer(PacketHandler.INSTANCE, new RequestEntityPlayAnimationPacket(this.getOriginal().getId(), toPlay.getNamespaceId(), toPlay.getId(), 0.0001F));
+                AnimationManager.AnimationAccessor<? extends StaticAnimation> toPlay = getInitAnimation(this.getOwnerPatch());
+                PacketRelay.sendToServer(PacketHandler.INSTANCE, new RequestEntityPlayAnimationPacket(this.getOriginal().getId(), toPlay.id(), 0.0001F));
                 played = true;
             }
         }
     }
 
-    public StaticAnimation getInitAnimation(PlayerPatch<?> ownerPatch){
-        StaticAnimation toPlay = this.getOriginal().getAnimationToPlay();
+    public AnimationManager.AnimationAccessor<? extends StaticAnimation> getInitAnimation(PlayerPatch<?> ownerPatch){
+        AnimationManager.AnimationAccessor<? extends StaticAnimation> toPlay = this.getOriginal().getAnimationToPlay();
         if (toPlay != null) {
             return toPlay;
         } else {
@@ -56,10 +56,10 @@ public class FlySwordPatch extends AbstractArtifactSpiritPatch<FlySwordEntity> {
     }
 
     @Override
-    public void initAnimator(ClientAnimator animator) {
+    protected void initAnimator(Animator animator) {
+        super.initAnimator(animator);
         animator.addLivingAnimation(LivingMotions.IDLE, FlySwordAnimations.FLY_SWORD_ATK_IDLE);
         animator.addLivingAnimation(LivingMotions.FLY, FlySwordAnimations.FLY_SWORD_ATK_FLY);
-        animator.setCurrentMotionsAsDefault();
     }
 
     @Override

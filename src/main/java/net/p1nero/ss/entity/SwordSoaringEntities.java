@@ -7,7 +7,7 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-import net.p1nero.ss.SwordSoaring;
+import net.p1nero.ss.SwordSoaringMod;
 import net.p1nero.ss.entity.sword.fly_sword.FlySwordEntity;
 import net.p1nero.ss.entity.sword.gate_of_babylon.BabylonEntity;
 import net.p1nero.ss.entity.sword.screen_sword.ScreenSwordEntity;
@@ -16,7 +16,7 @@ import net.p1nero.ss.entity.vatansever.VatanseverEntity;
 import net.p1nero.ss.entity.vatansever_storm.VatanseverStormEntity;
 
 public class SwordSoaringEntities {
-    public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES, SwordSoaring.MOD_ID);
+    public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, SwordSoaringMod.MOD_ID);
     public static final RegistryObject<EntityType<SwordConvergenceEntity>> SWORD_CONVERGENCE_ENTITY = register("sword_convergence_entity",
             EntityType.Builder.<SwordConvergenceEntity>of(SwordConvergenceEntity::new, MobCategory.MISC).sized(0, 0).clientTrackingRange(64).updateInterval(1).noSave());
     public static final RegistryObject<EntityType<BabylonEntity>> BABYLON = register("babylon",
@@ -30,7 +30,7 @@ public class SwordSoaringEntities {
     public static final RegistryObject<EntityType<VatanseverStormEntity>> VATANSEVER_STORM = register("vatansever_storm",
             EntityType.Builder.<VatanseverStormEntity>of(VatanseverStormEntity::new, MobCategory.MISC).sized(0, 0).clientTrackingRange(64).updateInterval(1).noSave());
     private static <T extends Entity> RegistryObject<EntityType<T>> register(String name, EntityType.Builder<T> entityTypeBuilder) {
-        return ENTITIES.register(name, () -> entityTypeBuilder.build(new ResourceLocation(SwordSoaring.MOD_ID, name).toString()));
+        return ENTITIES.register(name, () -> entityTypeBuilder.build(new ResourceLocation(SwordSoaringMod.MOD_ID, name).toString()));
     }
 
 }

@@ -1,18 +1,19 @@
 package net.p1nero.ss.gameassets.animations;
 
-import com.p1nero.invincible.api.animation.StaticAnimationProvider;
 import net.minecraft.client.Minecraft;
 import net.p1nero.ss.animation.BabylonMultiPhaseAttackAnimation;
 import net.p1nero.ss.client.CameraAnim;
 import net.p1nero.ss.entity.sword.sword_convergence.SwordConvergenceEntity;
 import net.p1nero.ss.entity.sword.sword_convergence.WanArmature;
 import net.p1nero.ss.gameassets.SwordSoaringArmatures;
+import net.p1nero.ss.gameassets.SwordSoaringDatakeys;
 import net.p1nero.ss.gameassets.SwordSoaringSkillSlots;
-import net.p1nero.ss.skill.sword_controller.WanJianGuiZongSkill;
 import net.p1nero.ss.util.AnimationUtils;
+import yesman.epicfight.api.animation.AnimationManager;
 import yesman.epicfight.api.animation.property.AnimationEvent;
 import yesman.epicfight.api.animation.property.AnimationProperty;
 import yesman.epicfight.api.animation.types.ActionAnimation;
+import yesman.epicfight.api.animation.types.AttackAnimation;
 import yesman.epicfight.api.animation.types.EntityState;
 import yesman.epicfight.api.animation.types.StaticAnimation;
 import yesman.epicfight.api.utils.math.Vec3f;
@@ -21,72 +22,73 @@ import yesman.epicfight.model.armature.HumanoidArmature;
 import yesman.epicfight.skill.SkillDataManager;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 
+@SuppressWarnings("rawtypes")
 public class SwordConvergenceAnimations {
-    public static StaticAnimation WAN1_L;
-    public static StaticAnimation WAN2_L;
-    public static StaticAnimation WAN3_L;
-    public static StaticAnimation WAN4_L;
-    public static StaticAnimation WAN_SHOOT_L;
+    public static AnimationManager.AnimationAccessor<AttackAnimation> WAN1_L;
+    public static AnimationManager.AnimationAccessor<AttackAnimation> WAN2_L;
+    public static AnimationManager.AnimationAccessor<AttackAnimation> WAN3_L;
+    public static AnimationManager.AnimationAccessor<AttackAnimation> WAN4_L;
+    public static AnimationManager.AnimationAccessor<AttackAnimation> WAN_SHOOT_L;
 
-    public static StaticAnimation WAN1_R;
-    public static StaticAnimation WAN2_R;
-    public static StaticAnimation WAN3_R;
-    public static StaticAnimation WAN4_R;
-    public static StaticAnimation WAN_SHOOT_R;
+    public static AnimationManager.AnimationAccessor<AttackAnimation> WAN1_R;
+    public static AnimationManager.AnimationAccessor<AttackAnimation> WAN2_R;
+    public static AnimationManager.AnimationAccessor<AttackAnimation> WAN3_R;
+    public static AnimationManager.AnimationAccessor<AttackAnimation> WAN4_R;
+    public static AnimationManager.AnimationAccessor<AttackAnimation> WAN_SHOOT_R;
 
-    public static StaticAnimation WAN1_PLAYER;
-    public static StaticAnimation WAN2_PLAYER;
-    public static StaticAnimation WAN3_PLAYER;
+    public static AnimationManager.AnimationAccessor<AttackAnimation> WAN1_PLAYER;
+    public static AnimationManager.AnimationAccessor<AttackAnimation> WAN2_PLAYER;
+    public static AnimationManager.AnimationAccessor<AttackAnimation> WAN3_PLAYER;
 
 
-    public static AnimationEvent.TimeStampedEvent summonAndPlay(float time, StaticAnimationProvider animationToPlay) {
-        return AnimationEvent.TimeStampedEvent.create(time, (livingEntityPatch, staticAnimation, objects) -> {
+    public static AnimationEvent.InTimeEvent summonAndPlay(float time, AnimationManager.AnimationAccessor<? extends StaticAnimation> animationToPlay) {
+        return AnimationEvent.InTimeEvent.create(time, (livingEntityPatch, staticAnimation, objects) -> {
             if (livingEntityPatch.getOriginal() instanceof SwordConvergenceEntity swordConvergenceEntity) {
                 SwordConvergenceEntity newSwords = new SwordConvergenceEntity(swordConvergenceEntity.getOwner());
-                newSwords.setAnimationToPlay(animationToPlay.get());
+                newSwords.setAnimationToPlay(animationToPlay);
                 newSwords.initBabylonItems(swordConvergenceEntity.getValidBabylonItems(), false);
-                swordConvergenceEntity.level.addFreshEntity(newSwords);
+                swordConvergenceEntity.level().addFreshEntity(newSwords);
             }
         }, AnimationEvent.Side.SERVER);
     }
 
-    public static AnimationEvent nextPlay(StaticAnimationProvider animation) {
-        return AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> livingEntityPatch.reserveAnimation(animation.get()), AnimationEvent.Side.SERVER);
+    public static AnimationEvent nextPlay(AnimationManager.AnimationAccessor<? extends StaticAnimation> animation) {
+        return AnimationEvent.SimpleEvent.create((livingEntityPatch, staticAnimation, objects) -> livingEntityPatch.reserveAnimation(animation), AnimationEvent.Side.SERVER);
     }
 
-    public static final AnimationEvent DISCARD_SELF = AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> livingEntityPatch.getOriginal().discard(), AnimationEvent.Side.SERVER);
+    public static final AnimationEvent DISCARD_SELF = AnimationEvent.SimpleEvent.create((livingEntityPatch, staticAnimation, objects) -> livingEntityPatch.getOriginal().discard(), AnimationEvent.Side.SERVER);
 
-    public static void buildSwordConvergenceAnim() {
-        HumanoidArmature biped = Armatures.BIPED;
-        WAN1_PLAYER = new ActionAnimation(0.15F, "wan/wan_owner_1", biped)
+    public static void buildSwordConvergenceAnim(AnimationManager.AnimationBuilder builder) {
+        Armatures.ArmatureAccessor<HumanoidArmature> biped = Armatures.BIPED;
+        WAN1_PLAYER = builder.nextAccessor("wan/wan_owner_1", accessor -> new ActionAnimation(0.15F, accessor, biped)
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_BEGIN_EVENTS,
-                        AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> {
+                        AnimationEvent.SimpleEvent.create((livingEntityPatch, staticAnimation, objects) -> {
                             if(livingEntityPatch.isLogicalClient()){
                                 if(livingEntityPatch.getOriginal() == Minecraft.getInstance().player){
                                     CameraAnim.zoomIn(new Vec3f(0, -3, -6), 450);
                                 }
                             }
                         }, AnimationEvent.Side.CLIENT),
-                        AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> {
+                        AnimationEvent.SimpleEvent.create((livingEntityPatch, staticAnimation, objects) -> {
                             if(livingEntityPatch instanceof ServerPlayerPatch serverPlayerPatch){
-                                serverPlayerPatch.getSkill(SwordSoaringSkillSlots.SWORD_CONTROLLER).getDataManager().setDataSync(WanJianGuiZongSkill.IS_CHARGING, true, serverPlayerPatch.getOriginal());
+                                serverPlayerPatch.getSkill(SwordSoaringSkillSlots.SWORD_CONTROLLER).getDataManager().setDataSync(SwordSoaringDatakeys.IS_CHARGING.get(), true, serverPlayerPatch.getOriginal());
                             }
                         }, AnimationEvent.Side.SERVER)
                 )
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, nextPlay(() -> WAN2_PLAYER))
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, nextPlay(WAN2_PLAYER))
                 .newTimePair(0.0F, Float.MAX_VALUE)
                 .addStateRemoveOld(EntityState.TURNING_LOCKED, false)
-                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 0.5F));
-        WAN2_PLAYER = new ActionAnimation(0.0001F, "wan/wan_owner_2", biped)
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_BEGIN_EVENTS, AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> {
+                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1, v2) -> 0.5F)));
+        WAN2_PLAYER = builder.nextAccessor("wan/wan_owner_2", accessor -> new ActionAnimation(0.0001F, accessor, biped)
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_BEGIN_EVENTS, AnimationEvent.SimpleEvent.create((livingEntityPatch, staticAnimation, objects) -> {
                     if(livingEntityPatch.getOriginal() == Minecraft.getInstance().player){
                         CameraAnim.zoomIn(new Vec3f(0, -3, -6), 450);
                     }
                 }, AnimationEvent.Side.CLIENT))
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> {
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.SimpleEvent.create((livingEntityPatch, staticAnimation, objects) -> {
                     if (livingEntityPatch instanceof ServerPlayerPatch serverPlayerPatch) {
                         SkillDataManager manager = serverPlayerPatch.getSkill(SwordSoaringSkillSlots.SWORD_CONTROLLER).getDataManager();
-                        if (manager.hasData(WanJianGuiZongSkill.IS_PRESSING) && manager.getDataValue(WanJianGuiZongSkill.IS_PRESSING)) {
+                        if (manager.hasData(SwordSoaringDatakeys.IS_PRESSING.get()) && manager.getDataValue(SwordSoaringDatakeys.IS_PRESSING.get())) {
                             serverPlayerPatch.reserveAnimation(WAN2_PLAYER);
                         } else {
                             serverPlayerPatch.reserveAnimation(WAN3_PLAYER);
@@ -94,29 +96,29 @@ public class SwordConvergenceAnimations {
                     }
                 }, AnimationEvent.Side.SERVER))
                 .newTimePair(0.0F, Float.MAX_VALUE)
-                .addStateRemoveOld(EntityState.TURNING_LOCKED, false);
-        WAN3_PLAYER = new ActionAnimation(0.0001F, "wan/wan_owner_3", biped)
+                .addStateRemoveOld(EntityState.TURNING_LOCKED, false));
+        WAN3_PLAYER = builder.nextAccessor("wan/wan_owner_3", accessor ->  new ActionAnimation(0.0001F, accessor, biped)
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_BEGIN_EVENTS,
-                        AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> {
+                        AnimationEvent.SimpleEvent.create((livingEntityPatch, staticAnimation, objects) -> {
                             if(livingEntityPatch.getOriginal() == Minecraft.getInstance().player){
                                 CameraAnim.zoomIn(new Vec3f(0, -3, -6), 200);
                             }
                         }, AnimationEvent.Side.CLIENT),
-                        AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> {
+                        AnimationEvent.SimpleEvent.create((livingEntityPatch, staticAnimation, objects) -> {
                             if(livingEntityPatch instanceof ServerPlayerPatch serverPlayerPatch){
-                                serverPlayerPatch.getSkill(SwordSoaringSkillSlots.SWORD_CONTROLLER).getDataManager().setDataSync(WanJianGuiZongSkill.IS_CHARGING, false, serverPlayerPatch.getOriginal());
+                                serverPlayerPatch.getSkill(SwordSoaringSkillSlots.SWORD_CONTROLLER).getDataManager().setDataSync(SwordSoaringDatakeys.IS_CHARGING.get(), false, serverPlayerPatch.getOriginal());
                             }
                         }, AnimationEvent.Side.SERVER)
                 )
-                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 1.5F));
+                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1, v2) -> 1.5F)));
 
-        WanArmature wanArmature = SwordSoaringArmatures.wanArmature;
-        WAN1_L = new BabylonMultiPhaseAttackAnimation(0.15F, "wan/wan_l_1", wanArmature, AnimationUtils.getPhases(wanArmature.wanJoints, 0, 2.667F))
-                .addEvents(summonAndPlay(2.30F, () -> WAN2_L))
+        Armatures.ArmatureAccessor<WanArmature> wanArmature = SwordSoaringArmatures.WAN_ARMATURE;
+        WAN1_L = builder.nextAccessor("wan/wan_l_1", accessor ->  new BabylonMultiPhaseAttackAnimation(0.15F, accessor, wanArmature, AnimationUtils.getPhases(wanArmature.get().wanJoints, 0, 2.667F))
+                .addEvents(summonAndPlay(2.30F, WAN2_L))
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF)
-                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 0.5F));
-        WAN2_L = new BabylonMultiPhaseAttackAnimation(0.0001F, "wan/wan_l_2", wanArmature, AnimationUtils.getPhases(wanArmature.wanJoints, 0, 2.667F))
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> {
+                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1, v2) -> 0.5F)));
+        WAN2_L = builder.nextAccessor("wan/wan_l_2", accessor ->  new BabylonMultiPhaseAttackAnimation(0.0001F, accessor, wanArmature, AnimationUtils.getPhases(wanArmature.get().wanJoints, 0, 2.667F))
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.SimpleEvent.create((livingEntityPatch, staticAnimation, objects) -> {
                     if (livingEntityPatch.getOriginal() instanceof SwordConvergenceEntity swordConvergenceEntity) {
                         if (swordConvergenceEntity.isOwnerKeyPressing()) {
                             livingEntityPatch.reserveAnimation(WAN2_L);
@@ -124,23 +126,23 @@ public class SwordConvergenceAnimations {
                             livingEntityPatch.reserveAnimation(WAN3_L);
                         }
                     }
-                }, AnimationEvent.Side.SERVER));
-        WAN3_L = new BabylonMultiPhaseAttackAnimation(0.0001F, "wan/wan_l_3", wanArmature, AnimationUtils.getPhases(wanArmature.wanJoints, 0, 2.667F))
-                .addEvents(summonAndPlay(1.13F, () -> WAN4_L))
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF);
-        WAN4_L = new BabylonMultiPhaseAttackAnimation(0.15F, "wan/wan_l_4", wanArmature, AnimationUtils.getPhases(wanArmature.wanJoints, 0, 2.667F))
-                .addEvents(summonAndPlay(1.13F, () -> WAN_SHOOT_L))
-                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 1F))
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF);
-        WAN_SHOOT_L = new BabylonMultiPhaseAttackAnimation(0.0001F, "wan/wan_shoot_l", wanArmature, AnimationUtils.getPhases(wanArmature.wanJoints, 0, 2.667F))
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF);
+                }, AnimationEvent.Side.SERVER)));
+        WAN3_L = builder.nextAccessor( "wan/wan_l_3", accessor ->  new BabylonMultiPhaseAttackAnimation(0.0001F, accessor, wanArmature, AnimationUtils.getPhases(wanArmature.get().wanJoints, 0, 2.667F))
+                .addEvents(summonAndPlay(1.13F, WAN4_L))
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF));
+        WAN4_L = builder.nextAccessor("wan/wan_l_4", accessor ->  new BabylonMultiPhaseAttackAnimation(0.15F, accessor, wanArmature, AnimationUtils.getPhases(wanArmature.get().wanJoints, 0, 2.667F))
+                .addEvents(summonAndPlay(1.13F, WAN_SHOOT_L))
+                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1, v2) -> 1F))
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF));
+        WAN_SHOOT_L = builder.nextAccessor("wan/wan_shoot_l", accessor ->  new BabylonMultiPhaseAttackAnimation(0.0001F, accessor, wanArmature, AnimationUtils.getPhases(wanArmature.get().wanJoints, 0, 2.667F))
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF));
 
-        WAN1_R = new BabylonMultiPhaseAttackAnimation(0.15F, "wan/wan_r_1", wanArmature, AnimationUtils.getPhases(wanArmature.wanJoints, 0, 2.667F))
-                .addEvents( summonAndPlay(2.30F, () -> WAN2_R))
+        WAN1_R = builder.nextAccessor("wan/wan_r_1", accessor ->  new BabylonMultiPhaseAttackAnimation(0.15F, accessor, wanArmature, AnimationUtils.getPhases(wanArmature.get().wanJoints, 0, 2.667F))
+                .addEvents( summonAndPlay(2.30F, WAN2_R))
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF)
-                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 0.5F));
-        WAN2_R = new BabylonMultiPhaseAttackAnimation(0.0001F, "wan/wan_r_2", wanArmature, AnimationUtils.getPhases(wanArmature.wanJoints, 0, 2.667F))
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.create((livingEntityPatch, staticAnimation, objects) -> {
+                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1, v2) -> 0.5F)));
+        WAN2_R = builder.nextAccessor("wan/wan_r_2", accessor ->  new BabylonMultiPhaseAttackAnimation(0.0001F, accessor, wanArmature, AnimationUtils.getPhases(wanArmature.get().wanJoints, 0, 2.667F))
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.SimpleEvent.create((livingEntityPatch, staticAnimation, objects) -> {
                     if (livingEntityPatch.getOriginal() instanceof SwordConvergenceEntity swordConvergenceEntity) {
                         if (swordConvergenceEntity.isOwnerKeyPressing()) {
                             livingEntityPatch.reserveAnimation(WAN2_R);
@@ -148,16 +150,16 @@ public class SwordConvergenceAnimations {
                             livingEntityPatch.reserveAnimation(WAN3_R);
                         }
                     }
-                }, AnimationEvent.Side.SERVER));
-        WAN3_R = new BabylonMultiPhaseAttackAnimation(0.0001F, "wan/wan_r_3", wanArmature, AnimationUtils.getPhases(wanArmature.wanJoints, 0, 2.667F))
-                .addEvents(summonAndPlay(1.13F, () -> WAN4_R))
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF);
-        WAN4_R = new BabylonMultiPhaseAttackAnimation(0.15F, "wan/wan_r_4", wanArmature, AnimationUtils.getPhases(wanArmature.wanJoints, 0, 2.667F))
-                .addEvents(summonAndPlay(1.13F, () -> WAN_SHOOT_R))
-                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1) -> 1F))
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF);
-        WAN_SHOOT_R = new BabylonMultiPhaseAttackAnimation(0.0001F, "wan/wan_shoot_r", wanArmature, AnimationUtils.getPhases(wanArmature.wanJoints, 0, 2.667F))
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF);
+                }, AnimationEvent.Side.SERVER)));
+        WAN3_R = builder.nextAccessor("wan/wan_r_3", accessor ->  new BabylonMultiPhaseAttackAnimation(0.0001F, accessor, wanArmature, AnimationUtils.getPhases(wanArmature.get().wanJoints, 0, 2.667F))
+                .addEvents(summonAndPlay(1.13F, WAN4_R))
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF));
+        WAN4_R = builder.nextAccessor("wan/wan_r_4", accessor ->  new BabylonMultiPhaseAttackAnimation(0.15F, accessor, wanArmature, AnimationUtils.getPhases(wanArmature.get().wanJoints, 0, 2.667F))
+                .addEvents(summonAndPlay(1.13F, WAN_SHOOT_R))
+                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1, v2) -> 1F))
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF));
+        WAN_SHOOT_R = builder.nextAccessor("wan/wan_shoot_r", accessor ->  new BabylonMultiPhaseAttackAnimation(0.0001F, accessor, wanArmature, AnimationUtils.getPhases(wanArmature.get().wanJoints, 0, 2.667F))
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF));
 
     }
 }

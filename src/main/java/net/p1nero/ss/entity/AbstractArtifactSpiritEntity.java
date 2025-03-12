@@ -17,7 +17,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.p1nero.ss.SwordSoaring;
+import net.p1nero.ss.SwordSoaringMod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import yesman.epicfight.client.gui.HealthBarIndicator;
@@ -70,9 +70,9 @@ public abstract class AbstractArtifactSpiritEntity extends PathfinderMob impleme
         try {
             UUID uuid = this.getOwnerUUID();
             if(uuid != null){
-                Player player = this.level.getPlayerByUUID(uuid);
+                Player player = this.level().getPlayerByUUID(uuid);
                 if(player == null){
-                    if(this.level instanceof ServerLevel serverLevel){
+                    if(this.level() instanceof ServerLevel serverLevel){
                         return serverLevel.getEntity(uuid) instanceof LivingEntity livingEntity ? livingEntity : null;
                     }
                 } else {
@@ -81,7 +81,7 @@ public abstract class AbstractArtifactSpiritEntity extends PathfinderMob impleme
             }
             return null;
         } catch (IllegalArgumentException e) {
-            SwordSoaring.LOGGER.error("error in get artifact spirit's owner", e);
+            SwordSoaringMod.LOGGER.error("error in get artifact spirit's owner", e);
             return null;
         }
     }
@@ -108,10 +108,10 @@ public abstract class AbstractArtifactSpiritEntity extends PathfinderMob impleme
             if(getOriginalItem() == null){
                 return;
             }
-            if (!level.isClientSide && !owner.getMainHandItem().is(getOriginalItem()) && shouldRemoveWhenOwnerLost()) {
+            if (!level().isClientSide && !owner.getMainHandItem().is(getOriginalItem()) && shouldRemoveWhenOwnerLost()) {
                 discard();
             }
-        } else if(!level.isClientSide && shouldRemoveWhenOwnerLost()){
+        } else if(!level().isClientSide && shouldRemoveWhenOwnerLost()){
             discard();
         }
     }
