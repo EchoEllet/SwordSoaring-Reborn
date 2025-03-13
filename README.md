@@ -41,7 +41,7 @@
 **《Sword Soaring》** is an add-on mod for [Epic Fight Mod](https://www.curseforge.com/minecraft/mc-mods/epic-fight-mod), featuring:
 - ✅ Multiple sword skills
 - ✅ Custom weapon skins support
-- ✅ New weapon: "Guardian of the Nation"
+- ✅ New weapon: "Vatansever"
 - 🚧 New Epic Fight boss in development...
 
 ### ✨ Key Features
