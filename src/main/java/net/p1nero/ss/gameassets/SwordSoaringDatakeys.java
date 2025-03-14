@@ -19,10 +19,10 @@ public class SwordSoaringDatakeys {
     //Artifact
     //器灵id
     public static final RegistryObject<SkillDataKey<Integer>> ARTIFACT_SPIRIT_ENTITY_ID = DATA_KEYS.register("artifact_spirit_entity_id", () ->
-            SkillDataKey.createSkillDataKey(PacketBufferCodec.INTEGER, 0, false, ArtifactSpiritPassiveSkill.class, VatanseverPassive.class));
+            SkillDataKey.createSkillDataKey(PacketBufferCodec.INTEGER, 0, false, ArtifactSpiritPassiveSkill.class));
     //剩余卫国者剑数
     public static final RegistryObject<SkillDataKey<Integer>> SWORD_COUNT = DATA_KEYS.register("sword_count", () ->
-            SkillDataKey.createSkillDataKey(PacketBufferCodec.INTEGER, 0, true, ArtifactSpiritPassiveSkill.class, VatanseverPassive.class));
+            SkillDataKey.createSkillDataKey(PacketBufferCodec.INTEGER, 0, true, ArtifactSpiritPassiveSkill.class));
 
     //Fly Skill
     //是否处于飞行状态

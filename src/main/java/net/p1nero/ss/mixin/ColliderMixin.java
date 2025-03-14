@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.util.StringUtil;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
@@ -70,13 +71,13 @@ public abstract class ColliderMixin {
     @OnlyIn(Dist.CLIENT)
     private void sword_soaring$draw(PoseStack poseStack, MultiBufferSource buffer, LivingEntityPatch<?> entityPatch, AttackAnimation animation, Joint joint, float prevElapsedTime, float elapsedTime, float partialTicks, float attackSpeed, CallbackInfo ci){
         Armature armature = entityPatch.getArmature();
-        int pathIndex = armature.searchPathIndex(joint.getName());
+        String pathIndex = armature.searchPathIndex(joint.getName());
         EntityState state = animation.getState(entityPatch, elapsedTime);
         EntityState prevState = animation.getState(entityPatch, prevElapsedTime);
         boolean attacking = prevState.attacking() || state.attacking() || prevState.getLevel() < 2 && state.getLevel() > 2;
         Pose prevPose;
         Pose currentPose;
-        if (pathIndex == -1) {
+        if (StringUtil.isNullOrEmpty(pathIndex)) {
             prevPose = new Pose();
             currentPose = new Pose();
             prevPose.putJointData("Root", JointTransform.empty());
@@ -87,13 +88,13 @@ public abstract class ColliderMixin {
             prevPose = animation.getPoseByTime(entityPatch, prevElapsedTime, 0.0F);
             currentPose = animation.getPoseByTime(entityPatch, elapsedTime, 1.0F);
         }
-
         //校正旋转 FIXME 是否重复旋转，存疑，服务端出伤异常
         if(armature instanceof ReplaceableArmature){
             poseStack.mulPose(QuaternionUtils.XP.rotationDegrees(90));
             poseStack.mulPose(QuaternionUtils.ZP.rotationDegrees(90));
         }
         this.drawInternal(poseStack, buffer.getBuffer(this.getRenderType()), armature, joint, prevPose, currentPose, partialTicks, attacking ? -65536 : -1);
+
         ci.cancel();
     }
 

@@ -162,15 +162,15 @@ public class VatanseverAnimations {
                         .addProperty(AnimationProperty.AttackPhaseProperty.SWING_SOUND, EpicFightSounds.NO_SOUND.get())
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F))));
 
-        VATANSEVER_AUTO3_B = builder.nextAccessor("", accessor -> new AttackAnimation(0.01F, "biped/vatansever/vatansever_auto3_b", vatanseverArmature,
+        VATANSEVER_AUTO3_B = builder.nextAccessor("biped/vatansever/vatansever_auto3_b", accessor -> new AttackAnimation(0.01F, accessor, vatanseverArmature,
                 new AttackAnimation.Phase(0.0F, 1.75F, 1.75F, 4.0F, 4.0F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, right)
                         .addProperty(AnimationProperty.AttackPhaseProperty.SWING_SOUND, SwordSoaringSounds.VATANSEVER_WHOOSH_BIG.get())
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F))));
-        VATANSEVER_AUTO4 = builder.nextAccessor("", accessor -> new AttackAnimation(0.01F, "biped/vatansever/vatansever_auto4", vatanseverArmature,
+        VATANSEVER_AUTO4 = builder.nextAccessor("biped/vatansever/vatansever_auto4", accessor -> new AttackAnimation(0.01F, accessor, vatanseverArmature,
                 new AttackAnimation.Phase(0.0F, 1.33F, 1.33F, 1.43F, 4.0F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, all)
                         .addProperty(AnimationProperty.AttackPhaseProperty.SWING_SOUND, SwordSoaringSounds.VATANSEVER_WHOOSH_BIG.get())
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F))));
-        VATANSEVER_AUTO4_B = builder.nextAccessor("", accessor -> new AttackAnimation(0.01F, "biped/vatansever/vatansever_auto4_b", vatanseverArmature,
+        VATANSEVER_AUTO4_B = builder.nextAccessor("biped/vatansever/vatansever_auto4_b", accessor -> new AttackAnimation(0.01F, accessor, vatanseverArmature,
                 new AttackAnimation.Phase(0.0F, 1.33F, 1.33F, 1.43F, 4.0F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, all)
                         .addProperty(AnimationProperty.AttackPhaseProperty.SWING_SOUND, EpicFightSounds.NO_SOUND.get())
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F))));

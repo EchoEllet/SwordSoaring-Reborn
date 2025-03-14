@@ -36,9 +36,9 @@ public class SwordConvergenceAnimations {
     public static AnimationManager.AnimationAccessor<AttackAnimation> WAN4_R;
     public static AnimationManager.AnimationAccessor<AttackAnimation> WAN_SHOOT_R;
 
-    public static AnimationManager.AnimationAccessor<AttackAnimation> WAN1_PLAYER;
-    public static AnimationManager.AnimationAccessor<AttackAnimation> WAN2_PLAYER;
-    public static AnimationManager.AnimationAccessor<AttackAnimation> WAN3_PLAYER;
+    public static AnimationManager.AnimationAccessor<ActionAnimation> WAN1_PLAYER;
+    public static AnimationManager.AnimationAccessor<ActionAnimation> WAN2_PLAYER;
+    public static AnimationManager.AnimationAccessor<ActionAnimation> WAN3_PLAYER;
 
 
     public static AnimationEvent.InTimeEvent summonAndPlay(float time, AnimationManager.AnimationAccessor<? extends StaticAnimation> animationToPlay) {

@@ -14,20 +14,14 @@ import net.p1nero.ss.entity.vatansever_storm.VatanseverStormArmature;
 import yesman.epicfight.gameasset.Armatures;
 
 public class SwordSoaringArmatures {
-    public static Armatures.ArmatureAccessor<WanArmature> WAN_ARMATURE;
-    public static Armatures.ArmatureAccessor<BabylonArmature> BABYLON_ARMATURE;
-    public static Armatures.ArmatureAccessor<FlySwordArmature> FLY_SWORD_ARMATURE;
-    public static Armatures.ArmatureAccessor<ScreenSwordArmature> SCREEN_SWORD_ARMATURE;
-    public static Armatures.ArmatureAccessor<VatanseverArmature> VATANSEVER_ARMATURE;
-    public static Armatures.ArmatureAccessor<VatanseverStormArmature> VATANSEVER_STORM_ARMATURE;
+    public static Armatures.ArmatureAccessor<WanArmature> WAN_ARMATURE = Armatures.ArmatureAccessor.create(SwordSoaringMod.MOD_ID, "entity/wan", WanArmature::new);
+    public static Armatures.ArmatureAccessor<BabylonArmature> BABYLON_ARMATURE = Armatures.ArmatureAccessor.create(SwordSoaringMod.MOD_ID, "entity/babylon", BabylonArmature::new);
+    public static Armatures.ArmatureAccessor<FlySwordArmature> FLY_SWORD_ARMATURE = Armatures.ArmatureAccessor.create(SwordSoaringMod.MOD_ID, "entity/fly_sword", FlySwordArmature::new);
+    public static Armatures.ArmatureAccessor<ScreenSwordArmature> SCREEN_SWORD_ARMATURE = Armatures.ArmatureAccessor.create(SwordSoaringMod.MOD_ID, "entity/screen_sword", ScreenSwordArmature::new);
+    public static Armatures.ArmatureAccessor<VatanseverArmature> VATANSEVER_ARMATURE = Armatures.ArmatureAccessor.create(SwordSoaringMod.MOD_ID, "entity/vatansever", VatanseverArmature::new);
+    public static Armatures.ArmatureAccessor<VatanseverStormArmature> VATANSEVER_STORM_ARMATURE = Armatures.ArmatureAccessor.create(SwordSoaringMod.MOD_ID, "entity/vatansever_swordgroup", VatanseverStormArmature::new);
 
     public static void registerArmatures(){
-        WAN_ARMATURE = Armatures.ArmatureAccessor.create(SwordSoaringMod.MOD_ID, "entity/wan", WanArmature::new);
-        BABYLON_ARMATURE = Armatures.ArmatureAccessor.create(SwordSoaringMod.MOD_ID, "entity/babylon", BabylonArmature::new);
-        FLY_SWORD_ARMATURE = Armatures.ArmatureAccessor.create(SwordSoaringMod.MOD_ID, "entity/fly_sword", FlySwordArmature::new);
-        SCREEN_SWORD_ARMATURE = Armatures.ArmatureAccessor.create(SwordSoaringMod.MOD_ID, "entity/screen_sword", ScreenSwordArmature::new);
-        VATANSEVER_ARMATURE = Armatures.ArmatureAccessor.create(SwordSoaringMod.MOD_ID, "entity/vatansever", VatanseverArmature::new);
-        VATANSEVER_STORM_ARMATURE = Armatures.ArmatureAccessor.create(SwordSoaringMod.MOD_ID, "entity/vatansever_swordgroup", VatanseverStormArmature::new);
         Armatures.registerEntityTypeArmature(SwordSoaringEntities.SWORD_CONVERGENCE_ENTITY.get(), WAN_ARMATURE);
         Armatures.registerEntityTypeArmature(SwordSoaringEntities.BABYLON.get(), BABYLON_ARMATURE);
         Armatures.registerEntityTypeArmature(SwordSoaringEntities.FLY_SWORD.get(), FLY_SWORD_ARMATURE);

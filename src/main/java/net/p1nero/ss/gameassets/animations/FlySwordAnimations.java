@@ -27,7 +27,7 @@ public class FlySwordAnimations {
     public static AnimationManager.AnimationAccessor<AttackAnimation> FLY_SWORD_ATK_4_4;
     public static AnimationManager.AnimationAccessor<StaticAnimation> FLY_SWORD_ATK_IDLE;
     public static AnimationManager.AnimationAccessor<StaticAnimation> FLY_SWORD_ATK_FLY;
-    public static AnimationManager.AnimationAccessor<AttackAnimation> FLY_SWORD_ATK_FLY_BACK;
+    public static AnimationManager.AnimationAccessor<ActionAnimation> FLY_SWORD_ATK_FLY_BACK;
     public static AnimationManager.AnimationAccessor<ActionAnimation> FLY_SWORD_WAN_1;
     public static AnimationManager.AnimationAccessor<ActionAnimation> FLY_SWORD_WAN_2;
     public static AnimationManager.AnimationAccessor<ActionAnimation> FLY_SWORD_WAN_3;

@@ -3,7 +3,7 @@ package net.p1nero.ss.entity.vatansever.client;
 import org.jetbrains.annotations.Nullable;
 import yesman.epicfight.api.client.model.MeshPartDefinition;
 import yesman.epicfight.api.client.model.SkinnedMesh;
-import yesman.epicfight.api.client.model.SkinnedMeshVertexBuilder;
+import yesman.epicfight.api.client.model.VertexBuilder;
 
 import java.util.List;
 import java.util.Map;
@@ -18,7 +18,7 @@ public class VatanseverMesh extends SkinnedMesh {
     public final SkinnedMesh.SkinnedMeshPart R3;
     public final List<SkinnedMesh.SkinnedMeshPart> swordLists;
 
-    public VatanseverMesh(@Nullable Map<String, Number[]> arrayMap, @Nullable Map<MeshPartDefinition, List<SkinnedMeshVertexBuilder>> partBuilders, @Nullable SkinnedMesh parent, RenderProperties properties) {
+    public VatanseverMesh(@Nullable Map<String, Number[]> arrayMap, @Nullable Map<MeshPartDefinition, List<VertexBuilder>> partBuilders, @Nullable SkinnedMesh parent, RenderProperties properties) {
         super(arrayMap, partBuilders, parent, properties);
         this.L1 = this.getOrLogException(parts, "sss_1_l");
         this.L2 = this.getOrLogException(parts, "sss_2_l");

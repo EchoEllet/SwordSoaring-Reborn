@@ -23,7 +23,7 @@ public class BabylonAnimations {
     public static AnimationManager.AnimationAccessor<StaticAnimation> BABYLON_IDLE;
     public static AnimationManager.AnimationAccessor<AttackAnimation> BABYLON_SHOOT_START;
     public static AnimationManager.AnimationAccessor<AttackAnimation> BABYLON_SHOOT_LOOP;
-    public static AnimationManager.AnimationAccessor<AttackAnimation> BABYLON_SUMMON_PLAYER;
+    public static AnimationManager.AnimationAccessor<ActionAnimation> BABYLON_SUMMON_PLAYER;
 
     public static void buildBabylonAnim(AnimationManager.AnimationBuilder builder) {
         Armatures.ArmatureAccessor<BabylonArmature> babylonArmature = SwordSoaringArmatures.BABYLON_ARMATURE;

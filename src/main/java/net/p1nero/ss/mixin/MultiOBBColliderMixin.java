@@ -3,10 +3,10 @@ package net.p1nero.ss.mixin;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.util.StringUtil;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.p1nero.ss.entity.ReplaceableArmature;
-import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -26,6 +26,7 @@ import yesman.epicfight.api.utils.math.QuaternionUtils;
 import yesman.epicfight.api.utils.math.Vec3f;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 
+import java.util.Iterator;
 import java.util.List;
 
 @Mixin(value = MultiOBBCollider.class, remap = false)
@@ -37,37 +38,34 @@ public abstract class MultiOBBColliderMixin extends MultiCollider<OBBCollider> {
     @Inject(method = "draw", at = @At("HEAD"), cancellable = true)
     @OnlyIn(Dist.CLIENT)
     private void sword_soaring$draw(PoseStack poseStack, MultiBufferSource buffer, LivingEntityPatch<?> entitypatch, AttackAnimation animation, Joint joint, float prevElapsedTime, float elapsedTime, float partialTicks, float attackSpeed, CallbackInfo ci){
-        int colliderCount = Math.max(Math.round((this.numberOfColliders + animation.getProperty(AnimationProperty.AttackAnimationProperty.EXTRA_COLLIDERS).orElse(0)) * attackSpeed), this.numberOfColliders);
-        float partialScale = 1.0F / (colliderCount - 1);
+        int colliderCount = Math.max(Math.round((float)(this.numberOfColliders + (Integer)animation.getProperty(AnimationProperty.AttackAnimationProperty.EXTRA_COLLIDERS).orElse(0)) * attackSpeed), this.numberOfColliders);
+        float partialScale = 1.0F / (float)(colliderCount - 1);
         float interpolation = 0.0F;
         Armature armature = entitypatch.getArmature();
-        int pathIndex =  armature.searchPathIndex(joint.getName());
+        String pathIndex = armature.searchPathIndex(joint.getName());
         EntityState state = animation.getState(entitypatch, elapsedTime);
         EntityState prevState = animation.getState(entitypatch, prevElapsedTime);
-        boolean attacking = prevState.attacking() || state.attacking() || (prevState.getLevel() < 2 && state.getLevel() > 2);
+        boolean attacking = prevState.attacking() || state.attacking() || prevState.getLevel() < 2 && state.getLevel() > 2;
         List<OBBCollider> colliders = Lists.newArrayList();
         float index = 0.0F;
-        float interIndex = Math.min((float)(this.numberOfColliders - 1) / (colliderCount - 1), 1.0F);
+        float interIndex = Math.min((float)(this.numberOfColliders - 1) / (float)(colliderCount - 1), 1.0F);
 
-        for (int i = 0; i < colliderCount; i++) {
+        for(int i = 0; i < colliderCount; ++i) {
             colliders.add(this.colliders.get((int)index).deepCopy());
             index += interIndex;
         }
 
-        for (OBBCollider obbCollider : colliders) {
+        for(Iterator var29 = colliders.iterator(); var29.hasNext(); interpolation += partialScale) {
+            OBBCollider obbCollider = (OBBCollider)var29.next();
             float pt1 = prevElapsedTime + (elapsedTime - prevElapsedTime) * partialTicks;
             float pt2 = prevElapsedTime + (elapsedTime - prevElapsedTime) * interpolation;
             TransformSheet coordTransform = animation.getCoord();
             Vec3f p1 = coordTransform.getInterpolatedTranslation(pt1);
             Vec3f p2 = coordTransform.getInterpolatedTranslation(pt2);
-            Vector3f gap = new Vector3f(p2.x - p1.x, p2.y - p1.y, p2.z - p1.z);
-
             poseStack.pushPose();
-            poseStack.translate(gap.x(), gap.y(), gap.z());
-
+            poseStack.translate(p2.x - p1.x, p2.y - p1.y, p2.z - p1.z);
             Pose pose;
-
-            if (pathIndex == -1) {
+            if (StringUtil.isNullOrEmpty(pathIndex)) {
                 pose = new Pose();
                 pose.putJointData("Root", JointTransform.empty());
                 animation.modifyPose(animation, pose, entitypatch, elapsedTime, 1.0F);
@@ -81,10 +79,8 @@ public abstract class MultiOBBColliderMixin extends MultiCollider<OBBCollider> {
                 poseStack.mulPose(QuaternionUtils.ZP.rotationDegrees(90));
             }
 
-            obbCollider.drawInternal(poseStack, buffer.getBuffer(this.getRenderType()), armature, joint, pose, pose, 1.0F, attacking ? 0xFFFF0000 : -1);
+            obbCollider.drawInternal(poseStack, buffer.getBuffer(this.getRenderType()), armature, joint, pose, pose, 1.0F, attacking ? -65536 : -1);
             poseStack.popPose();
-
-            interpolation += partialScale;
         }
 
         ci.cancel();

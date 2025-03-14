@@ -17,6 +17,7 @@ import net.p1nero.ss.entity.SwordSoaringEntities;
 import net.p1nero.ss.gameassets.*;
 import net.p1nero.ss.item.SwordSoaringItems;
 import org.slf4j.Logger;
+import yesman.epicfight.main.EpicFightExtensions;
 import yesman.epicfight.skill.SkillCategories;
 import yesman.epicfight.skill.SkillSlot;
 import yesman.epicfight.world.capabilities.item.CapabilityItem;
@@ -35,6 +36,7 @@ public class SwordSoaringMod {
         SkillSlot.ENUM_MANAGER.registerEnumCls(SwordSoaringMod.MOD_ID, SwordSoaringSkillSlots.class);
         CapabilityItem.WeaponCategories.ENUM_MANAGER.registerEnumCls(SwordSoaringMod.MOD_ID, SwordSoaringCategories.class);
         ComboType.ENUM_MANAGER.registerEnumCls(SwordSoaringMod.MOD_ID, SwordSoaringComboTypes.class);
+        context.registerExtensionPoint(EpicFightExtensions.class, () -> new EpicFightExtensions(SwordSoaringItems.DEFAULT_TAB.get()));
 
         IEventBus bus = context.getModEventBus();
         SwordSoaringDatakeys.DATA_KEYS.register(bus);

@@ -23,7 +23,6 @@ import net.p1nero.ss.entity.vatansever_storm.client.PatchedVatanseverStormRender
 import net.p1nero.ss.entity.vatansever_storm.client.VatanseverStormRenderer;
 import net.p1nero.ss.gameassets.SwordSoaringSkillCategories;
 import net.p1nero.ss.item.SwordSoaringItems;
-import net.p1nero.ss.item.client.RenderVatansever;
 import yesman.epicfight.api.client.forgeevent.PatchedRenderersEvent;
 import yesman.epicfight.skill.Skill;
 import yesman.epicfight.skill.SkillCategories;
@@ -64,11 +63,6 @@ public class ClientModEvents {
 
             return 0;
         });
-    }
-
-    @SubscribeEvent
-    public static void onRenderItem(final PatchedRenderersEvent.Add event) {
-        event.addItemRenderer(SwordSoaringItems.VATANSEVER.get(), new RenderVatansever());
     }
 
     @SubscribeEvent
