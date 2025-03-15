@@ -32,6 +32,7 @@ public abstract class PatchedReplaceableRenderer<E extends AbstractSwordEntity, 
 
     public PatchedReplaceableRenderer(EntityRendererProvider.Context context, EntityType<?> entityType) {
         super(context, entityType);
+        this.addReplaceablePatchedLayer();
     }
 
     /**
@@ -40,7 +41,6 @@ public abstract class PatchedReplaceableRenderer<E extends AbstractSwordEntity, 
     @Override
     public void render(E entityIn, T entityPatch, R renderer, MultiBufferSource buffer, PoseStack poseStack, int packedLight, float partialTicks) {
         if(entityIn.getOwner() != null && !(entityIn.getItemStack(entityPatch).getItem() instanceof VatanseverItem)){
-            this.addReplaceablePatchedLayer();
             Armature armature = entityPatch.getArmature();
             this.mulPoseStack(poseStack, armature, entityIn, entityPatch, partialTicks);
             OpenMatrix4f[] poseMatrices = armature.getPoseMatrices();

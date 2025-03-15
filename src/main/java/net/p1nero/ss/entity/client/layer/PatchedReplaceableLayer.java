@@ -29,7 +29,7 @@ public class PatchedReplaceableLayer<E extends LivingEntity & OwnableEntity & IP
     protected void renderLayer(T entityPatch, E entity, @Nullable R r, PoseStack poseStack, MultiBufferSource buffer, int packedLightIn, OpenMatrix4f[] poses, float v, float v1, float v2, float v3) {
         if(entityPatch.getArmature() instanceof ReplaceableArmature armature){
             ItemStack mainHandStack = entity.getItemStack(entityPatch);
-            if (mainHandStack.getItem() != Items.AIR) {
+            if (!mainHandStack.isEmpty()) {
                 renderItemInJoint(mainHandStack, entityPatch, armature, poses, buffer, poseStack, packedLightIn);
             }
         }

@@ -38,7 +38,7 @@ public abstract class MultiOBBColliderMixin extends MultiCollider<OBBCollider> {
     @Inject(method = "draw", at = @At("HEAD"), cancellable = true)
     @OnlyIn(Dist.CLIENT)
     private void sword_soaring$draw(PoseStack poseStack, MultiBufferSource buffer, LivingEntityPatch<?> entitypatch, AttackAnimation animation, Joint joint, float prevElapsedTime, float elapsedTime, float partialTicks, float attackSpeed, CallbackInfo ci){
-        int colliderCount = Math.max(Math.round((float)(this.numberOfColliders + (Integer)animation.getProperty(AnimationProperty.AttackAnimationProperty.EXTRA_COLLIDERS).orElse(0)) * attackSpeed), this.numberOfColliders);
+        int colliderCount = Math.max(Math.round((float)(this.numberOfColliders + animation.getProperty(AnimationProperty.AttackAnimationProperty.EXTRA_COLLIDERS).orElse(0)) * attackSpeed), this.numberOfColliders);
         float partialScale = 1.0F / (float)(colliderCount - 1);
         float interpolation = 0.0F;
         Armature armature = entitypatch.getArmature();
@@ -74,10 +74,10 @@ public abstract class MultiOBBColliderMixin extends MultiCollider<OBBCollider> {
             }
 
             //校正旋转 FIXME 是否重复旋转，存疑，服务端出伤异常
-            if(armature instanceof ReplaceableArmature){
-                poseStack.mulPose(QuaternionUtils.XP.rotationDegrees(90));
-                poseStack.mulPose(QuaternionUtils.ZP.rotationDegrees(90));
-            }
+//            if(armature instanceof ReplaceableArmature){
+//                poseStack.mulPose(QuaternionUtils.XP.rotationDegrees(90));
+//                poseStack.mulPose(QuaternionUtils.ZP.rotationDegrees(90));
+//            }
 
             obbCollider.drawInternal(poseStack, buffer.getBuffer(this.getRenderType()), armature, joint, pose, pose, 1.0F, attacking ? -65536 : -1);
             poseStack.popPose();
