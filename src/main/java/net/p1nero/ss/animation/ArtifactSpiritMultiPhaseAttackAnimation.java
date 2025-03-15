@@ -96,7 +96,7 @@ public class ArtifactSpiritMultiPhaseAttackAnimation extends AttackAnimation {
     protected void hurtCollidingEntities(LivingEntityPatch<?> entityPatch, float prevElapsedTime, float elapsedTime, EntityState prevState, EntityState state, Phase phase) {
         float prevPoseTime = prevState.attacking() ? prevElapsedTime : phase.preDelay;
         float poseTime = state.attacking() ? elapsedTime : phase.contact;
-        List<Entity> list = this.getPhaseByTime(elapsedTime).getCollidingEntities(entityPatch, this, prevPoseTime, poseTime, this.getPlaySpeed(entityPatch, this));
+        List<Entity> list = phase.getCollidingEntities(entityPatch, this, prevPoseTime, poseTime, this.getPlaySpeed(entityPatch, this));
 
         if (!list.isEmpty()) {
             HitEntityList hitEntities = new HitEntityList(entityPatch, list, phase.getProperty(AnimationProperty.AttackPhaseProperty.HIT_PRIORITY).orElse(HitEntityList.Priority.DISTANCE));
@@ -116,7 +116,7 @@ public class ArtifactSpiritMultiPhaseAttackAnimation extends AttackAnimation {
 
                             if (attackResult.resultType.dealtDamage()) {
 //                                artifactSpiritPatch.getOwnerPatch().getEventListener().triggerEvents(PlayerEventListener.EventType.DEALT_DAMAGE_EVENT_DAMAGE, new DealtDamageEvent.Damage((ServerPlayerPatch) artifactSpiritPatch.getOwnerPatch(), trueEntity, source, event));
-                                if(this.equals(ScreenSwordAnimations.KILL_AURA_2)){
+                                if(this.equals(ScreenSwordAnimations.KILL_AURA_2.get())){
                                     trueEntity.setSecondsOnFire(5);
                                 }
                                 hit.level().playSound(null, hit.getX(), hit.getY(), hit.getZ(), this.getHitSound(entityPatch, phase), hit.getSoundSource(), 1.0F, 1.0F);

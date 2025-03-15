@@ -10,6 +10,7 @@ import net.minecraft.world.level.Level;
 import net.p1nero.ss.entity.AbstractArtifactSpiritEntity;
 import net.p1nero.ss.entity.SwordSoaringEntities;
 import net.p1nero.ss.item.SwordSoaringItems;
+import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 
 public class VatanseverEntity extends AbstractArtifactSpiritEntity {
 
@@ -30,9 +31,18 @@ public class VatanseverEntity extends AbstractArtifactSpiritEntity {
             //仅客户端同步位置，防止双端不同步导致的乱转，旋转在Patch里同步matrix
             setPos(owner.position());
         } else {
-            setYRot(owner.yBodyRot);
-            setYBodyRot(owner.yBodyRot);
-            setYHeadRot(owner.yBodyRot);
+            if(getOwnerPatch() instanceof PlayerPatch<?> playerPatch && getOwnerPatch().getEntityState().inaction()){
+                float modelYRot = playerPatch.getYRot();
+                setYRot(modelYRot);
+                setYBodyRot(modelYRot);
+                setYHeadRot(modelYRot);
+                playerPatch.getOriginal().setYRot(modelYRot);
+                playerPatch.getOriginal().yBodyRot = modelYRot;
+            } else {
+                setYRot(owner.yBodyRot);
+                setYBodyRot(owner.yBodyRot);
+                setYHeadRot(owner.yBodyRot);
+            }
             setPos(owner.position());
         }
     }

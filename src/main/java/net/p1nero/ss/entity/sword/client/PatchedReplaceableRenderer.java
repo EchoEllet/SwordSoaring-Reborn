@@ -43,6 +43,7 @@ public abstract class PatchedReplaceableRenderer<E extends AbstractSwordEntity, 
         if(entityIn.getOwner() != null && !(entityIn.getItemStack(entityPatch).getItem() instanceof VatanseverItem)){
             Armature armature = entityPatch.getArmature();
             this.mulPoseStack(poseStack, armature, entityIn, entityPatch, partialTicks);
+            this.setArmaturePose(entityPatch, armature, partialTicks);
             OpenMatrix4f[] poseMatrices = armature.getPoseMatrices();
             this.renderLayer(renderer, entityPatch, entityIn, poseMatrices, buffer, poseStack, LightTexture.FULL_BRIGHT, partialTicks);
             this.renderDebug(entityIn, entityPatch, renderer, buffer, poseStack, partialTicks);

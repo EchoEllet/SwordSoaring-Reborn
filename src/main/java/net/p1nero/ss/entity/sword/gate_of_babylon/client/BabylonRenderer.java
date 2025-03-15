@@ -1,5 +1,7 @@
 package net.p1nero.ss.entity.sword.gate_of_babylon.client;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
@@ -19,6 +21,12 @@ public class BabylonRenderer extends MobRenderer<BabylonEntity, EmptyEntityModel
     @Override
     public boolean shouldRender(@NotNull BabylonEntity pLivingEntity, @NotNull Frustum pCamera, double pCamX, double pCamY, double pCamZ) {
         return pLivingEntity.tickCount > 15;
+    }
+
+    @Override
+    public void render(@NotNull BabylonEntity pEntity, float pEntityYaw, float pPartialTicks, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
+        this.shadowRadius = 0;
+        super.render(pEntity, pEntityYaw, pPartialTicks, pPoseStack, pBuffer, pPackedLight);
     }
 
     @Override

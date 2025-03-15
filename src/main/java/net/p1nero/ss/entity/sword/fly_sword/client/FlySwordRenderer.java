@@ -20,7 +20,7 @@ public class FlySwordRenderer extends MobRenderer<FlySwordEntity, EmptyEntityMod
 
     @Override
     public boolean shouldRender(@NotNull FlySwordEntity pLivingEntity, @NotNull Frustum pCamera, double pCamX, double pCamY, double pCamZ) {
-        return pLivingEntity.tickCount > 2;
+        return pLivingEntity.tickCount > 5;
     }
 
     @Override

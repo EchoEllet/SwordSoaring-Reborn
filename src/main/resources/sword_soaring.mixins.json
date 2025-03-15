@@ -14,7 +14,7 @@
     "ColliderMixin",
     "EntityMixin",
     "LivingEntityMixin",
-    "MultiOBBColliderMixin",
+    "OBBColliderMixin",
     "PlayerMixin",
     "WeaponCapabilityMixin"
   ],

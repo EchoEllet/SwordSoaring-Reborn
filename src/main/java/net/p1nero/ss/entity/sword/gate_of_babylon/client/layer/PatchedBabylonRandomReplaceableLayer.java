@@ -53,9 +53,8 @@ public class PatchedBabylonRandomReplaceableLayer<E extends BabylonEntity, T ext
                 ItemStack itemStack = babylons.get(i);//有多少射多少，穷鬼莫玩
                 if (itemStack != null) {
                     OpenMatrix4f jointTransform = poses[joint.getId()];
-                    jointTransform.removeScale();
                     if (entity.getStartTransform(joint.getId()) == null && jointTransform.toScaleVector().length() > 0) {
-                        entity.bindStartTransform(joint.getId(), jointTransform);
+                        entity.bindStartTransform(joint.getId(), jointTransform.removeScale());
                     }
 
                     //画传送门
@@ -116,10 +115,10 @@ public class PatchedBabylonRandomReplaceableLayer<E extends BabylonEntity, T ext
         Matrix4f pMatrix = poseStack.last().pose();
         Matrix3f normal = poseStack.last().normal();
         VertexConsumer consumer = buffer.getBuffer(RenderType.entityTranslucent(portalTexture, false));
-        consumer.vertex(pMatrix, -1, -1, 0).color(r, g, b, alpha).uv(0, 0).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(LightTexture.FULL_BRIGHT).normal(normal,1,1,1).endVertex();
-        consumer.vertex(pMatrix, 1, -1, 0).color(r, g, b, alpha).uv(1, 0).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(LightTexture.FULL_BRIGHT).normal(normal, 1,1,1).endVertex();
-        consumer.vertex(pMatrix, 1, 1, 0).color(r, g, b, alpha).uv(1, 1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(LightTexture.FULL_BRIGHT).normal(normal, 1,1,1).endVertex();
-        consumer.vertex(pMatrix, -1, 1, 0).color(r, g, b, alpha).uv(0, 1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(LightTexture.FULL_BRIGHT).normal(normal, 1,1,1).endVertex();
+        consumer.vertex(pMatrix, -1, -1, 0).color(r, g, b, alpha).uv(0, 0).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(LightTexture.FULL_BRIGHT).normal(0, 0,1).endVertex();
+        consumer.vertex(pMatrix, 1, -1, 0).color(r, g, b, alpha).uv(1, 0).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(LightTexture.FULL_BRIGHT).normal(0, 0,1).endVertex();
+        consumer.vertex(pMatrix, 1, 1, 0).color(r, g, b, alpha).uv(1, 1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(LightTexture.FULL_BRIGHT).normal(0, 0,1).endVertex();
+        consumer.vertex(pMatrix, -1, 1, 0).color(r, g, b, alpha).uv(0, 1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(LightTexture.FULL_BRIGHT).normal( 0, 0,1).endVertex();
 
         poseStack.popPose();
     }

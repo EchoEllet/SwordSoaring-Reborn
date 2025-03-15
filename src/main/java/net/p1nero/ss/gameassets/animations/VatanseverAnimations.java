@@ -143,34 +143,34 @@ public class VatanseverAnimations {
         VATANSEVER_FLY_STOP = builder.nextAccessor("biped/vatansever/living/vatansever_fly_stop", accessor -> new StaticAnimation(true, accessor, vatanseverArmature));
         VATANSEVER_SNEAK = builder.nextAccessor("biped/vatansever/living/vatansever_sneak", accessor -> new StaticAnimation(true, accessor, vatanseverArmature));
         VATANSEVER_SNEAK_STOP = builder.nextAccessor("biped/vatansever/living/vatansever_sneak_stop", accessor -> new StaticAnimation(true, accessor, vatanseverArmature));
-        VATANSEVER_AUTO1 = builder.nextAccessor("biped/vatansever/vatansever_auto1", accessor -> new VatanseverAttackAnimation(0.01F, accessor, vatanseverArmature,
+        VATANSEVER_AUTO1 = builder.nextAccessor("biped/vatansever/vatansever_auto1", accessor -> new VatanseverAttackAnimation(0.15F, accessor, vatanseverArmature,
                 new ArtifactSpiritMultiPhaseAttackAnimation.MultiAttackPhase(0.0F, 0.7F, 1.1F, 1.1F, Float.MAX_VALUE, vatanseverArmature.get().R1, SwordSoaringColliders.VATANSEVER)
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F)),
                 new ArtifactSpiritMultiPhaseAttackAnimation.MultiAttackPhase(0.0F, 0.7F, 1.1F, 1.1F, Float.MAX_VALUE, vatanseverArmature.get().R2, SwordSoaringColliders.VATANSEVER)
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F)),
                 new ArtifactSpiritMultiPhaseAttackAnimation.MultiAttackPhase(0.0F, 0.7F, 1.1F, 1.1F, Float.MAX_VALUE, vatanseverArmature.get().R3, SwordSoaringColliders.VATANSEVER)
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F))));
-        VATANSEVER_AUTO2 = builder.nextAccessor("biped/vatansever/vatansever_auto2", accessor -> new VatanseverAttackAnimation(0.01F, accessor, vatanseverArmature,
+        VATANSEVER_AUTO2 = builder.nextAccessor("biped/vatansever/vatansever_auto2", accessor -> new VatanseverAttackAnimation(0.15F, accessor, vatanseverArmature,
                 new ArtifactSpiritMultiPhaseAttackAnimation.MultiAttackPhase(0.0F, 0.7F, 1.0F, 1.60F, Float.MAX_VALUE, vatanseverArmature.get().L1, SwordSoaringColliders.VATANSEVER)
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F)),
                 new ArtifactSpiritMultiPhaseAttackAnimation.MultiAttackPhase(0.0F, 0.7F, 1.0F, 1.60F, Float.MAX_VALUE, vatanseverArmature.get().L2, SwordSoaringColliders.VATANSEVER)
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F)),
                 new ArtifactSpiritMultiPhaseAttackAnimation.MultiAttackPhase(0.0F, 0.7F, 1.0F, 1.60F, Float.MAX_VALUE, vatanseverArmature.get().L3, SwordSoaringColliders.VATANSEVER)
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F))));
-        VATANSEVER_AUTO3 = builder.nextAccessor("biped/vatansever/vatansever_auto3", accessor -> new AttackAnimation(0.01F, accessor, vatanseverArmature,
+        VATANSEVER_AUTO3 = builder.nextAccessor("biped/vatansever/vatansever_auto3", accessor -> new AttackAnimation(0.15F, accessor, vatanseverArmature,
                 new AttackAnimation.Phase(0.0F, 0.01F, 0.01F, 0.01F, 0.01F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, right)
                         .addProperty(AnimationProperty.AttackPhaseProperty.SWING_SOUND, EpicFightSounds.NO_SOUND.get())
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F))));
 
-        VATANSEVER_AUTO3_B = builder.nextAccessor("biped/vatansever/vatansever_auto3_b", accessor -> new AttackAnimation(0.01F, accessor, vatanseverArmature,
+        VATANSEVER_AUTO3_B = builder.nextAccessor("biped/vatansever/vatansever_auto3_b", accessor -> new AttackAnimation(0.15F, accessor, vatanseverArmature,
                 new AttackAnimation.Phase(0.0F, 1.75F, 1.75F, 4.0F, 4.0F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, right)
                         .addProperty(AnimationProperty.AttackPhaseProperty.SWING_SOUND, SwordSoaringSounds.VATANSEVER_WHOOSH_BIG.get())
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F))));
-        VATANSEVER_AUTO4 = builder.nextAccessor("biped/vatansever/vatansever_auto4", accessor -> new AttackAnimation(0.01F, accessor, vatanseverArmature,
+        VATANSEVER_AUTO4 = builder.nextAccessor("biped/vatansever/vatansever_auto4", accessor -> new AttackAnimation(0.15F, accessor, vatanseverArmature,
                 new AttackAnimation.Phase(0.0F, 1.33F, 1.33F, 1.43F, 4.0F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, all)
                         .addProperty(AnimationProperty.AttackPhaseProperty.SWING_SOUND, SwordSoaringSounds.VATANSEVER_WHOOSH_BIG.get())
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F))));
-        VATANSEVER_AUTO4_B = builder.nextAccessor("biped/vatansever/vatansever_auto4_b", accessor -> new AttackAnimation(0.01F, accessor, vatanseverArmature,
+        VATANSEVER_AUTO4_B = builder.nextAccessor("biped/vatansever/vatansever_auto4_b", accessor -> new AttackAnimation(0.15F, accessor, vatanseverArmature,
                 new AttackAnimation.Phase(0.0F, 1.33F, 1.33F, 1.43F, 4.0F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, all)
                         .addProperty(AnimationProperty.AttackPhaseProperty.SWING_SOUND, EpicFightSounds.NO_SOUND.get())
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F))));
@@ -241,7 +241,7 @@ public class VatanseverAnimations {
                                 groundSplit(livingEntityPatch, 5, 0, 0, 0, getTotalAttackDamage(livingEntityPatch) * 6, 1.1F, 200);
                             }
                         }), AnimationEvent.Side.BOTH)));
-        PLAYER_AUTO3 = builder.nextAccessor("biped/vatansever/vatansever_auto3_owner", accessor -> new LinkArtifactSpiritAnimation(0.15F, 2.25F, accessor, biped, VATANSEVER_AUTO3)
+        PLAYER_AUTO3 = builder.nextAccessor("biped/vatansever/vatansever_auto3_owner", accessor -> new LinkArtifactSpiritAnimation(0, 2.25F, accessor, biped, VATANSEVER_AUTO3)
                 .newTimePair(0.0F, 3.0F)
                 .addStateRemoveOld(EntityState.TURNING_LOCKED, true)
                 .addEvents(

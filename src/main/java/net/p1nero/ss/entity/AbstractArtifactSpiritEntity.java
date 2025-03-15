@@ -117,10 +117,12 @@ public abstract class AbstractArtifactSpiritEntity extends PathfinderMob impleme
     }
 
     protected void moveToOwner(LivingEntity owner){
-        setYRot(owner.yBodyRot);
-        setYBodyRot(owner.yBodyRot);
-        setYHeadRot(owner.yBodyRot);
-        setPos(owner.position());
+        if(!getOwnerPatch().getEntityState().lockonRotate()){
+            setYRot(owner.yBodyRot);
+            setYBodyRot(owner.yBodyRot);
+            setYHeadRot(owner.yBodyRot);
+            setPos(owner.position());
+        }
     }
 
     protected boolean shouldRemoveWhenOwnerLost(){
