@@ -36,8 +36,8 @@ public class VatanseverEntity extends AbstractArtifactSpiritEntity {
                 setYRot(modelYRot);
                 setYBodyRot(modelYRot);
                 setYHeadRot(modelYRot);
-                playerPatch.getOriginal().setYRot(modelYRot);
-                playerPatch.getOriginal().yBodyRot = modelYRot;
+//                playerPatch.getOriginal().setYRot(modelYRot);
+//                playerPatch.getOriginal().yBodyRot = modelYRot;
             } else {
                 setYRot(owner.yBodyRot);
                 setYBodyRot(owner.yBodyRot);

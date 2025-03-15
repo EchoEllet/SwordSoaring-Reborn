@@ -62,12 +62,12 @@ description='''${mod_description}'''
 [[dependencies.${mod_id}]]
     modId="invincible"
     mandatory=true
-    versionRange="[20.10.0,)"
+    versionRange="[20.10,)"
     ordering="NONE"
     side="BOTH"
 [[dependencies.${mod_id}]]
     modId="epicfight"
     mandatory=true
-    versionRange="[20.10.0,)"
-    ordering="BEFORE"
+    versionRange="[20.10,)"
+    ordering="AFTER"
     side="BOTH"
