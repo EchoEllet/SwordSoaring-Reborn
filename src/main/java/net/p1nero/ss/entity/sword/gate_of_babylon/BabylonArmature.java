@@ -10,6 +10,7 @@ public class BabylonArmature extends ReplaceableArmature {
         super(name, jointNumber, rootJoint, jointMap);
         for(int i = 1; i <= 44; i++){
             //你问为什么没有009？因为猪鼻merlin把它掰弯了，含泪抛弃
+            //大胆！！！
             if(i == 9){
                 continue;
             }

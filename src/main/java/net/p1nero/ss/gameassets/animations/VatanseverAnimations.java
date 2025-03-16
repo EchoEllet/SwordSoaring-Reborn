@@ -105,6 +105,8 @@ public class VatanseverAnimations {
 
     public static void buildVatanseverAnim(AnimationManager.AnimationBuilder builder) {
         Armatures.ArmatureAccessor<VatanseverArmature> vatanseverArmature = SwordSoaringArmatures.VATANSEVER_ARMATURE;
+
+
         List<AttackAnimation.JointColliderPair> leftJoints = List.of(AttackAnimation.JointColliderPair.of(vatanseverArmature.get().L1, SwordSoaringColliders.VATANSEVER),
                 AttackAnimation.JointColliderPair.of(vatanseverArmature.get().L2, SwordSoaringColliders.VATANSEVER),
                 AttackAnimation.JointColliderPair.of(vatanseverArmature.get().L3, SwordSoaringColliders.VATANSEVER));
@@ -315,29 +317,29 @@ public class VatanseverAnimations {
                             createStorm(livingEntityPatch, 0, 0, 0, VatanseverStormAnimations.VATANSEVER_STORM_DOWN);
                         }), AnimationEvent.Side.BOTH)));
 
-        PLAYER_SHOOT_L3 = builder.nextAccessor("biped/vatansever/skill/vatansever_shoot_l3", accessor -> new VatanseverPlayerShootAnimation(0.15F, 0.0F, 0.0F, Float.MAX_VALUE, Float.MAX_VALUE,
-                SwordSoaringColliders.SCAN_SCALE, vatanseverArmature.get().rootJoint, accessor, vatanseverArmature)
+        PLAYER_SHOOT_L3 = builder.nextAccessor("biped/vatansever/skill/vatansever_shoot_l3_owner", accessor -> new VatanseverPlayerShootAnimation(0.15F, 0.0F, 0.0F, Float.MAX_VALUE, Float.MAX_VALUE,
+                SwordSoaringColliders.SCAN_SCALE, biped.get().rootJoint, accessor, biped)
                 .setArtifactSpiritAnimation(VATANSEVER_SHOOT_L3)
                 .newTimePair(0.0F, Float.MAX_VALUE)
                 .addStateRemoveOld(EntityState.TURNING_LOCKED, false));
-        PLAYER_SHOOT_R3 = builder.nextAccessor("biped/vatansever/skill/vatansever_shoot_r3", accessor -> new VatanseverPlayerShootAnimation(0.15F, 0.0F, 0.0F, Float.MAX_VALUE, Float.MAX_VALUE,
-                SwordSoaringColliders.SCAN_SCALE, vatanseverArmature.get().rootJoint, accessor, vatanseverArmature).setArtifactSpiritAnimation(VATANSEVER_SHOOT_R3)
+        PLAYER_SHOOT_R3 = builder.nextAccessor("biped/vatansever/skill/vatansever_shoot_r3_owner", accessor -> new VatanseverPlayerShootAnimation(0.15F, 0.0F, 0.0F, Float.MAX_VALUE, Float.MAX_VALUE,
+                SwordSoaringColliders.SCAN_SCALE, biped.get().rootJoint, accessor, biped).setArtifactSpiritAnimation(VATANSEVER_SHOOT_R3)
                 .newTimePair(0.0F, Float.MAX_VALUE)
                 .addStateRemoveOld(EntityState.TURNING_LOCKED, false));
-        PLAYER_SHOOT_L2 = builder.nextAccessor("biped/vatansever/skill/vatansever_shoot_l2", accessor -> new VatanseverPlayerShootAnimation(0.15F, 0.0F, 0.0F, Float.MAX_VALUE, Float.MAX_VALUE,
-                SwordSoaringColliders.SCAN_SCALE, vatanseverArmature.get().rootJoint, accessor, vatanseverArmature).setArtifactSpiritAnimation(VATANSEVER_SHOOT_L2)
+        PLAYER_SHOOT_L2 = builder.nextAccessor("biped/vatansever/skill/vatansever_shoot_l2_owner", accessor -> new VatanseverPlayerShootAnimation(0.15F, 0.0F, 0.0F, Float.MAX_VALUE, Float.MAX_VALUE,
+                SwordSoaringColliders.SCAN_SCALE, biped.get().rootJoint, accessor, biped).setArtifactSpiritAnimation(VATANSEVER_SHOOT_L2)
                 .newTimePair(0.0F, Float.MAX_VALUE)
                 .addStateRemoveOld(EntityState.TURNING_LOCKED, false));
-        PLAYER_SHOOT_R2 = builder.nextAccessor("biped/vatansever/skill/vatansever_shoot_r2", accessor -> new VatanseverPlayerShootAnimation(0.15F, 0.0F, 0.0F, Float.MAX_VALUE, Float.MAX_VALUE,
-                SwordSoaringColliders.SCAN_SCALE, vatanseverArmature.get().rootJoint, accessor, vatanseverArmature).setArtifactSpiritAnimation(VATANSEVER_SHOOT_R2)
+        PLAYER_SHOOT_R2 = builder.nextAccessor("biped/vatansever/skill/vatansever_shoot_r2_owner", accessor -> new VatanseverPlayerShootAnimation(0.15F, 0.0F, 0.0F, Float.MAX_VALUE, Float.MAX_VALUE,
+                SwordSoaringColliders.SCAN_SCALE, biped.get().rootJoint, accessor, biped).setArtifactSpiritAnimation(VATANSEVER_SHOOT_R2)
                 .newTimePair(0.0F, Float.MAX_VALUE)
                 .addStateRemoveOld(EntityState.TURNING_LOCKED, false));
-        PLAYER_SHOOT_L1 = builder.nextAccessor("biped/vatansever/skill/vatansever_shoot_l1", accessor -> new VatanseverPlayerShootAnimation(0.15F, 0.0F, 0.0F, Float.MAX_VALUE, Float.MAX_VALUE,
-                SwordSoaringColliders.SCAN_SCALE, vatanseverArmature.get().rootJoint, accessor, vatanseverArmature).setArtifactSpiritAnimation(VATANSEVER_SHOOT_L1)
+        PLAYER_SHOOT_L1 = builder.nextAccessor("biped/vatansever/skill/vatansever_shoot_l1_owner", accessor -> new VatanseverPlayerShootAnimation(0.15F, 0.0F, 0.0F, Float.MAX_VALUE, Float.MAX_VALUE,
+                SwordSoaringColliders.SCAN_SCALE, biped.get().rootJoint, accessor, biped).setArtifactSpiritAnimation(VATANSEVER_SHOOT_L1)
                 .newTimePair(0.0F, Float.MAX_VALUE)
                 .addStateRemoveOld(EntityState.TURNING_LOCKED, false));
-        PLAYER_SHOOT_R1 = builder.nextAccessor("biped/vatansever/skill/vatansever_shoot_r1", accessor -> new VatanseverPlayerShootAnimation(0.15F, 0.0F, 0.0F, Float.MAX_VALUE, Float.MAX_VALUE,
-                SwordSoaringColliders.SCAN_SCALE, vatanseverArmature.get().rootJoint, accessor, vatanseverArmature).setArtifactSpiritAnimation(VATANSEVER_SHOOT_R1)
+        PLAYER_SHOOT_R1 = builder.nextAccessor("biped/vatansever/skill/vatansever_shoot_r1_owner", accessor -> new VatanseverPlayerShootAnimation(0.15F, 0.0F, 0.0F, Float.MAX_VALUE, Float.MAX_VALUE,
+                SwordSoaringColliders.SCAN_SCALE, biped.get().rootJoint, accessor, biped).setArtifactSpiritAnimation(VATANSEVER_SHOOT_R1)
                 .newTimePair(0.0F, Float.MAX_VALUE)
                 .addStateRemoveOld(EntityState.TURNING_LOCKED, false));
     }
