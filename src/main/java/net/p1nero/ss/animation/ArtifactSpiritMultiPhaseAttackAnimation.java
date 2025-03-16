@@ -14,6 +14,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.entity.PartEntity;
 import net.p1nero.ss.capability.SSCapabilityProvider;
 import net.p1nero.ss.capability.SSPlayer;
+import net.p1nero.ss.collider.WrappedCollider;
 import net.p1nero.ss.entity.AbstractArtifactSpiritPatch;
 import net.p1nero.ss.entity.sword.AbstractSwordEntity;
 import net.p1nero.ss.gameassets.animations.ScreenSwordAnimations;
@@ -157,7 +158,7 @@ public class ArtifactSpiritMultiPhaseAttackAnimation extends AttackAnimation {
                 collider = colliderInfo.getSecond();
                 if(entityPatch.getOriginal() instanceof AbstractSwordEntity swordEntity){
                     ItemStack stack = swordEntity.getItemStack(entityPatch);
-                    Collider newCollider = EpicFightCapabilities.getItemStackCapability(stack).getWeaponCollider();
+                    Collider newCollider = new WrappedCollider<>(EpicFightCapabilities.getItemStackCapability(stack).getWeaponCollider());
                     if (!newCollider.equals(colliderInfo.getSecond())){
                         flag = true;
                         collider = newCollider;
@@ -220,7 +221,7 @@ public class ArtifactSpiritMultiPhaseAttackAnimation extends AttackAnimation {
                     colliderInfo = iterator.next();
                     collider = colliderInfo.getSecond();
                     ItemStack stack = swordEntity.getItemStack(entityPatch);
-                    Collider newCollider = EpicFightCapabilities.getItemStackCapability(stack).getWeaponCollider();
+                    Collider newCollider = new WrappedCollider<>(EpicFightCapabilities.getItemStackCapability(stack).getWeaponCollider());
                     if(!newCollider.equals(colliderInfo.getSecond())){
                         flag = true;
                         collider = newCollider;

@@ -11,9 +11,10 @@
     "TrailParticleMixin"
   ],
   "mixins": [
-    "ColliderMixin",
+    "ColliderInvoker",
     "EntityMixin",
     "LivingEntityMixin",
+    "MultiColliderAccessor",
     "OBBColliderMixin",
     "PlayerMixin",
     "WeaponCapabilityMixin"
