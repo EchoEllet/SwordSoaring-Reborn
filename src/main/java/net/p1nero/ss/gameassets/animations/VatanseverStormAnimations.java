@@ -4,7 +4,6 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -13,6 +12,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.p1nero.ss.animation.AutoDiscardActionAnimation;
 import net.p1nero.ss.entity.AbstractArtifactSpiritEntity;
 import net.p1nero.ss.entity.vatansever_storm.VatanseverStormArmature;
 import net.p1nero.ss.entity.vatansever_storm.VatanseverStormEntity;
@@ -71,26 +71,10 @@ public class VatanseverStormAnimations {
                 .addEvents(AnimationEvent.InPeriodEvent.create(0, 3, (entityPatch, self, params) -> stormVFX(entityPatch), AnimationEvent.Side.CLIENT))
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.SimpleEvent.create(((livingEntityPatch, staticAnimation, objects) -> livingEntityPatch.reserveAnimation(VATANSEVER_STORM_DOWN)), AnimationEvent.Side.SERVER))
                 .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1, v2) -> 0.8F)));
-        VATANSEVER_STORM_RISE_1 = builder.nextAccessor("vatansever_storm/vatansever_storm_rise_1", accessor ->  new ActionAnimation(0.0001F, accessor, stormArmature)
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.SimpleEvent.create(((livingEntityPatch, staticAnimation, objects) -> {
-                    LivingEntity entity = livingEntityPatch.getOriginal();
-                    entity.discard();
-                }), AnimationEvent.Side.SERVER)));
-        VATANSEVER_STORM_RISE_2 = builder.nextAccessor("vatansever_storm/vatansever_storm_rise_2", accessor ->  new ActionAnimation(0.0001F, accessor, stormArmature)
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.SimpleEvent.create(((livingEntityPatch, staticAnimation, objects) -> {
-                    LivingEntity entity = livingEntityPatch.getOriginal();
-                    entity.discard();
-                }), AnimationEvent.Side.SERVER)));
-        VATANSEVER_STORM_RISE_3 = builder.nextAccessor("vatansever_storm/vatansever_storm_rise_3", accessor ->  new ActionAnimation(0.0001F, accessor, stormArmature)
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.SimpleEvent.create(((livingEntityPatch, staticAnimation, objects) -> {
-                    LivingEntity entity = livingEntityPatch.getOriginal();
-                    entity.discard();
-                }), AnimationEvent.Side.SERVER)));
-        VATANSEVER_STORM_RISE_4 = builder.nextAccessor("vatansever_storm/vatansever_storm_rise_4", accessor ->  new ActionAnimation(0.0001F, accessor, stormArmature)
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.SimpleEvent.create(((livingEntityPatch, staticAnimation, objects) -> {
-                    LivingEntity entity = livingEntityPatch.getOriginal();
-                    entity.discard();
-                }), AnimationEvent.Side.SERVER)));
+        VATANSEVER_STORM_RISE_1 = builder.nextAccessor("vatansever_storm/vatansever_storm_rise_1", accessor ->  new AutoDiscardActionAnimation(0.0001F, accessor, stormArmature));
+        VATANSEVER_STORM_RISE_2 = builder.nextAccessor("vatansever_storm/vatansever_storm_rise_2", accessor ->  new AutoDiscardActionAnimation(0.0001F, accessor, stormArmature));
+        VATANSEVER_STORM_RISE_3 = builder.nextAccessor("vatansever_storm/vatansever_storm_rise_3", accessor ->  new AutoDiscardActionAnimation(0.0001F, accessor, stormArmature));
+        VATANSEVER_STORM_RISE_4 = builder.nextAccessor("vatansever_storm/vatansever_storm_rise_4", accessor ->  new AutoDiscardActionAnimation(0.0001F, accessor, stormArmature));
     }
 
 

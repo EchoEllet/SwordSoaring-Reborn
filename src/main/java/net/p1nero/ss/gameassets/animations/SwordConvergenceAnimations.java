@@ -1,6 +1,12 @@
 package net.p1nero.ss.gameassets.animations;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.p1nero.ss.Config;
 import net.p1nero.ss.animation.BabylonMultiPhaseAttackAnimation;
 import net.p1nero.ss.client.CameraAnim;
 import net.p1nero.ss.entity.sword.sword_convergence.SwordConvergenceEntity;
@@ -10,17 +16,23 @@ import net.p1nero.ss.gameassets.SwordSoaringDatakeys;
 import net.p1nero.ss.gameassets.SwordSoaringSkillSlots;
 import net.p1nero.ss.util.AnimationUtils;
 import yesman.epicfight.api.animation.AnimationManager;
+import yesman.epicfight.api.animation.Joint;
 import yesman.epicfight.api.animation.property.AnimationEvent;
 import yesman.epicfight.api.animation.property.AnimationProperty;
 import yesman.epicfight.api.animation.types.ActionAnimation;
 import yesman.epicfight.api.animation.types.AttackAnimation;
 import yesman.epicfight.api.animation.types.EntityState;
 import yesman.epicfight.api.animation.types.StaticAnimation;
+import yesman.epicfight.api.client.animation.property.ClientAnimationProperties;
+import yesman.epicfight.api.client.animation.property.TrailInfo;
 import yesman.epicfight.api.utils.math.Vec3f;
 import yesman.epicfight.gameasset.Armatures;
 import yesman.epicfight.model.armature.HumanoidArmature;
 import yesman.epicfight.skill.SkillDataManager;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("rawtypes")
 public class SwordConvergenceAnimations {
@@ -57,6 +69,25 @@ public class SwordConvergenceAnimations {
     }
 
     public static final AnimationEvent DISCARD_SELF = AnimationEvent.SimpleEvent.create((livingEntityPatch, staticAnimation, objects) -> livingEntityPatch.getOriginal().discard(), AnimationEvent.Side.SERVER);
+
+    public static List<TrailInfo> getWanTrails(){
+        List<TrailInfo> wanTrails = new ArrayList<>();
+        for(Joint joint : SwordSoaringArmatures.WAN_ARMATURE.get().joints){
+            wanTrails.add(TrailInfo.builder()
+                    .r(1.0F).b(1.0F).g(1.0F)
+                    .startPos(new Vec3(0.1, 0, 0))
+                    .endPos(new Vec3(-0.1, 0, 0))
+                    .time(0, 3)
+                    .lifetime(10)
+                    .interpolations(6)
+                    .joint(joint.getName())
+                    .itemSkinHand(InteractionHand.MAIN_HAND)
+                    .texture("epicfight:textures/particle/swing_trail.png")
+                    .type((SimpleParticleType)ForgeRegistries.PARTICLE_TYPES.getValue(new ResourceLocation(Config.TRAIL_PARTICLE_TYPE.get())))
+                    .create());
+        }
+        return wanTrails;
+    }
 
     public static void buildSwordConvergenceAnim(AnimationManager.AnimationBuilder builder) {
         Armatures.ArmatureAccessor<HumanoidArmature> biped = Armatures.BIPED;
@@ -113,10 +144,12 @@ public class SwordConvergenceAnimations {
                 .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1, v2) -> 1.5F)));
 
         Armatures.ArmatureAccessor<WanArmature> wanArmature = SwordSoaringArmatures.WAN_ARMATURE;
+
         WAN1_L = builder.nextAccessor("wan/wan_l_1", accessor ->  new BabylonMultiPhaseAttackAnimation(0.15F, accessor, wanArmature, AnimationUtils.getPhases(wanArmature.get().wanJoints, 0, 2.667F))
                 .addEvents(summonAndPlay(2.30F, WAN2_L))
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF)
-                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1, v2) -> 0.5F)));
+                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1, v2) -> 0.5F))
+                .addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWanTrails()));
         WAN2_L = builder.nextAccessor("wan/wan_l_2", accessor ->  new BabylonMultiPhaseAttackAnimation(0.0001F, accessor, wanArmature, AnimationUtils.getPhases(wanArmature.get().wanJoints, 0, 2.667F))
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.SimpleEvent.create((livingEntityPatch, staticAnimation, objects) -> {
                     if (livingEntityPatch.getOriginal() instanceof SwordConvergenceEntity swordConvergenceEntity) {
@@ -129,18 +162,22 @@ public class SwordConvergenceAnimations {
                 }, AnimationEvent.Side.SERVER)));
         WAN3_L = builder.nextAccessor( "wan/wan_l_3", accessor ->  new BabylonMultiPhaseAttackAnimation(0.0001F, accessor, wanArmature, AnimationUtils.getPhases(wanArmature.get().wanJoints, 0, 2.667F))
                 .addEvents(summonAndPlay(1.13F, WAN4_L))
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF));
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF)
+                .addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWanTrails()));
         WAN4_L = builder.nextAccessor("wan/wan_l_4", accessor ->  new BabylonMultiPhaseAttackAnimation(0.15F, accessor, wanArmature, AnimationUtils.getPhases(wanArmature.get().wanJoints, 0, 2.667F))
                 .addEvents(summonAndPlay(1.13F, WAN_SHOOT_L))
                 .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1, v2) -> 1F))
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF));
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF)
+                .addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWanTrails()));
         WAN_SHOOT_L = builder.nextAccessor("wan/wan_shoot_l", accessor ->  new BabylonMultiPhaseAttackAnimation(0.0001F, accessor, wanArmature, AnimationUtils.getPhases(wanArmature.get().wanJoints, 0, 2.667F))
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF));
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF)
+                .addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWanTrails()));
 
         WAN1_R = builder.nextAccessor("wan/wan_r_1", accessor ->  new BabylonMultiPhaseAttackAnimation(0.15F, accessor, wanArmature, AnimationUtils.getPhases(wanArmature.get().wanJoints, 0, 2.667F))
                 .addEvents( summonAndPlay(2.30F, WAN2_R))
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF)
-                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1, v2) -> 0.5F)));
+                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1, v2) -> 0.5F))
+                .addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWanTrails()));
         WAN2_R = builder.nextAccessor("wan/wan_r_2", accessor ->  new BabylonMultiPhaseAttackAnimation(0.0001F, accessor, wanArmature, AnimationUtils.getPhases(wanArmature.get().wanJoints, 0, 2.667F))
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.SimpleEvent.create((livingEntityPatch, staticAnimation, objects) -> {
                     if (livingEntityPatch.getOriginal() instanceof SwordConvergenceEntity swordConvergenceEntity) {
@@ -150,16 +187,20 @@ public class SwordConvergenceAnimations {
                             livingEntityPatch.reserveAnimation(WAN3_R);
                         }
                     }
-                }, AnimationEvent.Side.SERVER)));
+                }, AnimationEvent.Side.SERVER))
+                .addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWanTrails()));
         WAN3_R = builder.nextAccessor("wan/wan_r_3", accessor ->  new BabylonMultiPhaseAttackAnimation(0.0001F, accessor, wanArmature, AnimationUtils.getPhases(wanArmature.get().wanJoints, 0, 2.667F))
                 .addEvents(summonAndPlay(1.13F, WAN4_R))
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF));
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF)
+                .addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWanTrails()));
         WAN4_R = builder.nextAccessor("wan/wan_r_4", accessor ->  new BabylonMultiPhaseAttackAnimation(0.15F, accessor, wanArmature, AnimationUtils.getPhases(wanArmature.get().wanJoints, 0, 2.667F))
                 .addEvents(summonAndPlay(1.13F, WAN_SHOOT_R))
                 .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1, v2) -> 1F))
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF));
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF)
+                .addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWanTrails()));
         WAN_SHOOT_R = builder.nextAccessor("wan/wan_shoot_r", accessor ->  new BabylonMultiPhaseAttackAnimation(0.0001F, accessor, wanArmature, AnimationUtils.getPhases(wanArmature.get().wanJoints, 0, 2.667F))
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF));
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF)
+                .addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWanTrails()));
 
     }
 }

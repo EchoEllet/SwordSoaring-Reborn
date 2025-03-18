@@ -18,6 +18,7 @@ import net.p1nero.ss.entity.sword.gate_of_babylon.BabylonEntity;
 import net.p1nero.ss.gameassets.SwordSoaringArmatures;
 import net.p1nero.ss.gameassets.SwordSoaringDatakeys;
 import net.p1nero.ss.gameassets.animations.BabylonAnimations;
+import net.p1nero.ss.item.VatanseverItem;
 import yesman.epicfight.api.utils.math.Vec3f;
 import yesman.epicfight.client.gui.BattleModeGui;
 import yesman.epicfight.skill.Skill;
@@ -51,6 +52,9 @@ public class GateOfBabylonSkill extends Skill {
     @Override
     public boolean canExecute(SkillContainer container) {
         PlayerPatch<?> executer = container.getExecutor();
+        if(executer.getOriginal().getMainHandItem().getItem() instanceof VatanseverItem){
+            return false;
+        }
         return (container.getDataManager().getDataValue(SwordSoaringDatakeys.COOLDOWN_TIMER.get()) <= 0 || executer.getOriginal().isCreative()) && !executer.getOriginal().getMainHandItem().isEmpty() && executer.getOriginal().onGround();
     }
     @Override

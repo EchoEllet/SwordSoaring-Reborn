@@ -306,8 +306,7 @@ public class VatanseverAnimations {
                             createStorm(livingEntityPatch, 0, 0, 0, VatanseverStormAnimations.VATANSEVER_STORM_RISE_4);
                             Entity entity = livingEntityPatch.getOriginal();
                             if (entity.level() instanceof ServerLevel serverLevel) {
-                                serverLevel.playSound(null, entity.getX(), entity.getY(), entity.getZ(), SwordSoaringSounds.VATANSEVER_STORM.get(), SoundSource.HOSTILE, 1.0F, 1.0F
-                                );
+                                serverLevel.playSound(null, entity.getX(), entity.getY(), entity.getZ(), SwordSoaringSounds.VATANSEVER_STORM.get(), SoundSource.HOSTILE, 1.0F, 1.0F);
                             }
                         }), AnimationEvent.Side.BOTH),
                         AnimationEvent.InTimeEvent.create(2.2F, ((livingEntityPatch, staticAnimation, objects) -> {
@@ -396,7 +395,9 @@ public class VatanseverAnimations {
             VatanseverStormEntity stormEntity = new VatanseverStormEntity(serverPlayer.level(), serverPlayer, pos);
             serverPlayer.level().addFreshEntity(stormEntity);
             stormEntity.setYRot(serverPlayer.getYRot());
-            EpicFightCapabilities.getEntityPatch(stormEntity, VatanseverStormEntityPatch.class).playAnimationSynchronized(staticAnimation, 0.05F);
+            VatanseverStormEntityPatch vatanseverStormEntityPatch = EpicFightCapabilities.getEntityPatch(stormEntity, VatanseverStormEntityPatch.class);
+            System.out.println(vatanseverStormEntityPatch.getArmature().getClass());
+            vatanseverStormEntityPatch.playAnimationSynchronized(staticAnimation, 0.05F);
         }
 
     }
