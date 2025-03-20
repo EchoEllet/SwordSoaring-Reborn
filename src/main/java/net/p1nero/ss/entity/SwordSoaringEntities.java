@@ -11,14 +11,14 @@ import net.p1nero.ss.SwordSoaringMod;
 import net.p1nero.ss.entity.sword.fly_sword.FlySwordEntity;
 import net.p1nero.ss.entity.sword.gate_of_babylon.BabylonEntity;
 import net.p1nero.ss.entity.sword.screen_sword.ScreenSwordEntity;
-import net.p1nero.ss.entity.sword.sword_convergence.SwordConvergenceEntity;
+import net.p1nero.ss.entity.sword.wan.WanEntity;
 import net.p1nero.ss.entity.vatansever.VatanseverEntity;
 import net.p1nero.ss.entity.vatansever_storm.VatanseverStormEntity;
 
 public class SwordSoaringEntities {
     public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, SwordSoaringMod.MOD_ID);
-    public static final RegistryObject<EntityType<SwordConvergenceEntity>> SWORD_CONVERGENCE_ENTITY = register("sword_convergence_entity",
-            EntityType.Builder.<SwordConvergenceEntity>of(SwordConvergenceEntity::new, MobCategory.MISC).sized(0, 0).clientTrackingRange(64).updateInterval(1).noSave());
+    public static final RegistryObject<EntityType<WanEntity>> WAN_ENTITY = register("sword_convergence_entity",
+            EntityType.Builder.<WanEntity>of(WanEntity::new, MobCategory.MISC).sized(0, 0).clientTrackingRange(64).updateInterval(1).noSave());
     public static final RegistryObject<EntityType<BabylonEntity>> BABYLON = register("babylon",
             EntityType.Builder.<BabylonEntity>of(BabylonEntity::new, MobCategory.MISC).sized(0, 0).clientTrackingRange(64).updateInterval(1).noSave());
     public static final RegistryObject<EntityType<FlySwordEntity>> FLY_SWORD = register("fly_sword",

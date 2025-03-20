@@ -8,10 +8,8 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraftforge.entity.PartEntity;
 import net.p1nero.ss.capability.SSCapabilityProvider;
 import net.p1nero.ss.capability.SSPlayer;
-import net.p1nero.ss.entity.AbstractArtifactSpiritPatch;
 import net.p1nero.ss.entity.sword.gate_of_babylon.AbstractBabylonPatch;
-import net.p1nero.ss.entity.sword.sword_convergence.SwordConvergenceEntity;
-import net.p1nero.ss.gameassets.animations.ScreenSwordAnimations;
+import net.p1nero.ss.entity.sword.wan.WanEntity;
 import org.jetbrains.annotations.Nullable;
 import yesman.epicfight.api.animation.AnimationManager;
 import yesman.epicfight.api.animation.Joint;
@@ -24,12 +22,8 @@ import yesman.epicfight.api.model.Armature;
 import yesman.epicfight.api.utils.AttackResult;
 import yesman.epicfight.api.utils.HitEntityList;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
-import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 import yesman.epicfight.world.damagesource.EpicFightDamageSource;
-import yesman.epicfight.world.entity.eventlistener.DealtDamageEvent;
-import yesman.epicfight.world.entity.eventlistener.PlayerEventListener;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class BabylonMultiPhaseAttackAnimation extends ArtifactSpiritMultiPhaseAttackAnimation {
@@ -72,7 +66,7 @@ public class BabylonMultiPhaseAttackAnimation extends ArtifactSpiritMultiPhaseAt
                             hit.invulnerableTime = 0;
                             double damage = babylonPatch.getOriginal().getJointDamage(List.of(phase.colliders).get(0).getFirst());
                             //万剑不知道为何没法计算各部伤害？
-                            if(entityPatch.getOriginal() instanceof SwordConvergenceEntity){
+                            if(entityPatch.getOriginal() instanceof WanEntity){
                                 damage = babylonPatch.getOwnerPatch().getOriginal().getAttributeValue(Attributes.ATTACK_DAMAGE);
                             }
                             if(damage == 0){

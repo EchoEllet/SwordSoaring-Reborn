@@ -17,10 +17,10 @@ import net.p1nero.ss.capability.SSCapabilityProvider;
 import net.p1nero.ss.client.keymapping.SwordSoaringKeyMappings;
 import net.p1nero.ss.client.sound.WanSoundInstance;
 import net.p1nero.ss.entity.sword.fly_sword.FlySwordEntity;
-import net.p1nero.ss.entity.sword.sword_convergence.SwordConvergenceEntity;
+import net.p1nero.ss.entity.sword.wan.WanEntity;
 import net.p1nero.ss.gameassets.SwordSoaringDatakeys;
 import net.p1nero.ss.gameassets.animations.FlySwordAnimations;
-import net.p1nero.ss.gameassets.animations.SwordConvergenceAnimations;
+import net.p1nero.ss.gameassets.animations.WanAnimations;
 import net.p1nero.ss.util.ItemUtils;
 import yesman.epicfight.client.events.engine.ControllEngine;
 import yesman.epicfight.client.gui.BattleModeGui;
@@ -89,7 +89,7 @@ public class WanJianGuiZongSkill extends Skill {
         ServerPlayerPatch executer = container.getServerExecutor();
         super.executeOnServer(container, args);
         container.getDataManager().setDataSync(SwordSoaringDatakeys.COOLDOWN_TIMER.get(), cooldown, executer.getOriginal());
-        executer.playAnimationSynchronized(SwordConvergenceAnimations.WAN1_PLAYER, 0.15F);
+        executer.playAnimationSynchronized(WanAnimations.WAN1_PLAYER, 0.15F);
         ArrayList<ItemStack> list = ItemUtils.calculateValidBabylonItems(executer.getOriginal(), false, (SwordSoaringMod::isValidSword));
         executer.getOriginal().getCapability(SSCapabilityProvider.SS_PLAYER).ifPresent(ssPlayer -> ssPlayer.setWanSwordList(list));
         ArrayList<ItemStack> firstHalf;
@@ -100,12 +100,12 @@ public class WanJianGuiZongSkill extends Skill {
             firstHalf = new ArrayList<>(list.subList(0, list.size() / 2));
             secondHalf = new ArrayList<>(list.subList(list.size() / 2, list.size()));
         }
-        SwordConvergenceEntity leftOne = new SwordConvergenceEntity(executer.getOriginal());
-        leftOne.setAnimationToPlay(SwordConvergenceAnimations.WAN1_L);
+        WanEntity leftOne = new WanEntity(executer.getOriginal());
+        leftOne.setAnimationToPlay(WanAnimations.WAN1_L);
         leftOne.initBabylonItems(firstHalf, true);
         executer.getOriginal().level().addFreshEntity(leftOne);
-        SwordConvergenceEntity rightOne = new SwordConvergenceEntity(executer.getOriginal());
-        rightOne.setAnimationToPlay(SwordConvergenceAnimations.WAN1_R);
+        WanEntity rightOne = new WanEntity(executer.getOriginal());
+        rightOne.setAnimationToPlay(WanAnimations.WAN1_R);
         rightOne.initBabylonItems(secondHalf, true);
         executer.getOriginal().level().addFreshEntity(rightOne);
     }

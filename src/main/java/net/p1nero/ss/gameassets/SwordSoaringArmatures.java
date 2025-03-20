@@ -1,14 +1,11 @@
 package net.p1nero.ss.gameassets;
 
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.p1nero.ss.SwordSoaringMod;
 import net.p1nero.ss.entity.SwordSoaringEntities;
 import net.p1nero.ss.entity.sword.fly_sword.FlySwordArmature;
 import net.p1nero.ss.entity.sword.gate_of_babylon.BabylonArmature;
 import net.p1nero.ss.entity.sword.screen_sword.ScreenSwordArmature;
-import net.p1nero.ss.entity.sword.sword_convergence.WanArmature;
+import net.p1nero.ss.entity.sword.wan.WanArmature;
 import net.p1nero.ss.entity.vatansever.VatanseverArmature;
 import net.p1nero.ss.entity.vatansever_storm.VatanseverStormArmature;
 import yesman.epicfight.gameasset.Armatures;
@@ -22,7 +19,7 @@ public class SwordSoaringArmatures {
     public static Armatures.ArmatureAccessor<VatanseverStormArmature> VATANSEVER_STORM_ARMATURE = Armatures.ArmatureAccessor.create(SwordSoaringMod.MOD_ID, "entity/vatansever_swordgroup", VatanseverStormArmature::new);
 
     public static void registerArmatures(){
-        Armatures.registerEntityTypeArmature(SwordSoaringEntities.SWORD_CONVERGENCE_ENTITY.get(), WAN_ARMATURE);
+        Armatures.registerEntityTypeArmature(SwordSoaringEntities.WAN_ENTITY.get(), WAN_ARMATURE);
         Armatures.registerEntityTypeArmature(SwordSoaringEntities.BABYLON.get(), BABYLON_ARMATURE);
         Armatures.registerEntityTypeArmature(SwordSoaringEntities.FLY_SWORD.get(), FLY_SWORD_ARMATURE);
         Armatures.registerEntityTypeArmature(SwordSoaringEntities.SCREEN_SWORD.get(), SCREEN_SWORD_ARMATURE);

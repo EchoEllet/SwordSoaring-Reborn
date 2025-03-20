@@ -9,8 +9,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.p1nero.ss.Config;
 import net.p1nero.ss.animation.BabylonMultiPhaseAttackAnimation;
 import net.p1nero.ss.client.CameraAnim;
-import net.p1nero.ss.entity.sword.sword_convergence.SwordConvergenceEntity;
-import net.p1nero.ss.entity.sword.sword_convergence.WanArmature;
+import net.p1nero.ss.entity.sword.wan.WanEntity;
+import net.p1nero.ss.entity.sword.wan.WanArmature;
 import net.p1nero.ss.gameassets.SwordSoaringArmatures;
 import net.p1nero.ss.gameassets.SwordSoaringDatakeys;
 import net.p1nero.ss.gameassets.SwordSoaringSkillSlots;
@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("rawtypes")
-public class SwordConvergenceAnimations {
+public class WanAnimations {
     public static AnimationManager.AnimationAccessor<AttackAnimation> WAN1_L;
     public static AnimationManager.AnimationAccessor<AttackAnimation> WAN2_L;
     public static AnimationManager.AnimationAccessor<AttackAnimation> WAN3_L;
@@ -55,11 +55,11 @@ public class SwordConvergenceAnimations {
 
     public static AnimationEvent.InTimeEvent summonAndPlay(float time, AnimationManager.AnimationAccessor<? extends StaticAnimation> animationToPlay) {
         return AnimationEvent.InTimeEvent.create(time, (livingEntityPatch, staticAnimation, objects) -> {
-            if (livingEntityPatch.getOriginal() instanceof SwordConvergenceEntity swordConvergenceEntity) {
-                SwordConvergenceEntity newSwords = new SwordConvergenceEntity(swordConvergenceEntity.getOwner());
+            if (livingEntityPatch.getOriginal() instanceof WanEntity wanEntity) {
+                WanEntity newSwords = new WanEntity(wanEntity.getOwner());
                 newSwords.setAnimationToPlay(animationToPlay);
-                newSwords.initBabylonItems(swordConvergenceEntity.getValidBabylonItems(), false);
-                swordConvergenceEntity.level().addFreshEntity(newSwords);
+                newSwords.initBabylonItems(wanEntity.getValidBabylonItems(), false);
+                wanEntity.level().addFreshEntity(newSwords);
             }
         }, AnimationEvent.Side.SERVER);
     }
@@ -89,7 +89,7 @@ public class SwordConvergenceAnimations {
         return wanTrails;
     }
 
-    public static void buildSwordConvergenceAnim(AnimationManager.AnimationBuilder builder) {
+    public static void buildWanAnim(AnimationManager.AnimationBuilder builder) {
         Armatures.ArmatureAccessor<HumanoidArmature> biped = Armatures.BIPED;
         WAN1_PLAYER = builder.nextAccessor("wan/wan_owner_1", accessor -> new ActionAnimation(0.15F, accessor, biped)
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_BEGIN_EVENTS,
@@ -152,8 +152,8 @@ public class SwordConvergenceAnimations {
                 .addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWanTrails()));
         WAN2_L = builder.nextAccessor("wan/wan_l_2", accessor ->  new BabylonMultiPhaseAttackAnimation(0.0001F, accessor, wanArmature, AnimationUtils.getPhases(wanArmature.get().wanJoints, 0, 2.667F))
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.SimpleEvent.create((livingEntityPatch, staticAnimation, objects) -> {
-                    if (livingEntityPatch.getOriginal() instanceof SwordConvergenceEntity swordConvergenceEntity) {
-                        if (swordConvergenceEntity.isOwnerKeyPressing()) {
+                    if (livingEntityPatch.getOriginal() instanceof WanEntity wanEntity) {
+                        if (wanEntity.isOwnerKeyPressing()) {
                             livingEntityPatch.reserveAnimation(WAN2_L);
                         } else {
                             livingEntityPatch.reserveAnimation(WAN3_L);
@@ -180,8 +180,8 @@ public class SwordConvergenceAnimations {
                 .addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWanTrails()));
         WAN2_R = builder.nextAccessor("wan/wan_r_2", accessor ->  new BabylonMultiPhaseAttackAnimation(0.0001F, accessor, wanArmature, AnimationUtils.getPhases(wanArmature.get().wanJoints, 0, 2.667F))
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.SimpleEvent.create((livingEntityPatch, staticAnimation, objects) -> {
-                    if (livingEntityPatch.getOriginal() instanceof SwordConvergenceEntity swordConvergenceEntity) {
-                        if (swordConvergenceEntity.isOwnerKeyPressing()) {
+                    if (livingEntityPatch.getOriginal() instanceof WanEntity wanEntity) {
+                        if (wanEntity.isOwnerKeyPressing()) {
                             livingEntityPatch.reserveAnimation(WAN2_R);
                         } else {
                             livingEntityPatch.reserveAnimation(WAN3_R);

@@ -1,4 +1,4 @@
-package net.p1nero.ss.entity.sword.sword_convergence.client;
+package net.p1nero.ss.entity.sword.wan.client;
 
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -10,9 +10,9 @@ import net.p1nero.ss.entity.client.layer.ReplaceableRenderLayer;
 import net.p1nero.ss.entity.client.model.EmptyEntityModel;
 import org.jetbrains.annotations.NotNull;
 
-public class SwordConvergenceRenderer extends MobRenderer<AbstractArtifactSpiritEntity, EmptyEntityModel<AbstractArtifactSpiritEntity>> {
+public class WanRenderer extends MobRenderer<AbstractArtifactSpiritEntity, EmptyEntityModel<AbstractArtifactSpiritEntity>> {
     public static final ResourceLocation TEXTURE = new ResourceLocation(SwordSoaringMod.MOD_ID, "textures/entity/vatansever_swordgroup.png");
-    public SwordConvergenceRenderer(EntityRendererProvider.Context context) {
+    public WanRenderer(EntityRendererProvider.Context context) {
         super(context, new EmptyEntityModel<>(), 1);
         this.addLayer(new ReplaceableRenderLayer<>(this));
     }

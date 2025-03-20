@@ -21,6 +21,7 @@ import yesman.epicfight.api.animation.Joint;
 import yesman.epicfight.api.utils.math.MathUtils;
 import yesman.epicfight.api.utils.math.OpenMatrix4f;
 import yesman.epicfight.api.utils.math.QuaternionUtils;
+import yesman.epicfight.api.utils.math.Vec3f;
 import yesman.epicfight.client.renderer.patched.layer.PatchedLayer;
 
 import java.util.List;
@@ -54,6 +55,8 @@ public class PatchedBabylonRandomReplaceableLayer<E extends BabylonEntity, T ext
                 if (itemStack != null) {
                     OpenMatrix4f jointTransform = poses[joint.getId()];
                     if (entity.getStartTransform(joint.getId()) == null && jointTransform.toScaleVector().length() > 0) {
+                        removeRotationFromMatrix(jointTransform);
+                        jointTransform.rotateDeg(90, Vec3f.X_AXIS);
                         entity.bindStartTransform(joint.getId(), jointTransform.removeScale());
                     }
 
@@ -121,6 +124,28 @@ public class PatchedBabylonRandomReplaceableLayer<E extends BabylonEntity, T ext
         consumer.vertex(pMatrix, -1, 1, 0).color(r, g, b, alpha).uv(0, 1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(LightTexture.FULL_BRIGHT).normal( 0, 0,1).endVertex();
 
         poseStack.popPose();
+    }
+
+    public static void removeRotationFromMatrix(OpenMatrix4f matrix) {
+        float sx = (float) Math.sqrt(
+                matrix.m00 * matrix.m00 +
+                        matrix.m10 * matrix.m10 +
+                        matrix.m20 * matrix.m20
+        );
+        float sy = (float) Math.sqrt(
+                matrix.m01 * matrix.m01 +
+                        matrix.m11 * matrix.m11 +
+                        matrix.m21 * matrix.m21
+        );
+        float sz = (float) Math.sqrt(
+                matrix.m02 * matrix.m02 +
+                        matrix.m12 * matrix.m12 +
+                        matrix.m22 * matrix.m22
+        );
+
+        matrix.m00 = sx; matrix.m01 = 0; matrix.m02 = 0;
+        matrix.m10 = 0; matrix.m11 = sy; matrix.m12 = 0;
+        matrix.m20 = 0; matrix.m21 = 0; matrix.m22 = sz;
     }
 
 }

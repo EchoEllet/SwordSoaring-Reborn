@@ -1,4 +1,4 @@
-package net.p1nero.ss.entity.sword.sword_convergence;
+package net.p1nero.ss.entity.sword.wan;
 
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -13,27 +13,24 @@ import net.p1nero.ss.entity.sword.gate_of_babylon.BabylonEntity;
 import net.p1nero.ss.gameassets.SwordSoaringArmatures;
 import net.p1nero.ss.gameassets.SwordSoaringDatakeys;
 import net.p1nero.ss.gameassets.SwordSoaringSkillSlots;
-import net.p1nero.ss.gameassets.animations.SwordConvergenceAnimations;
-import net.p1nero.ss.skill.sword_controller.WanJianGuiZongSkill;
-import yesman.epicfight.api.animation.AnimationManager;
+import net.p1nero.ss.gameassets.animations.WanAnimations;
 import yesman.epicfight.api.animation.Joint;
 import yesman.epicfight.api.animation.types.DynamicAnimation;
-import yesman.epicfight.api.animation.types.StaticAnimation;
 import yesman.epicfight.api.asset.AssetAccessor;
 import yesman.epicfight.skill.SkillDataManager;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 
 import java.util.List;
 
-public class SwordConvergenceEntity extends BabylonEntity {
-    private static final EntityDataAccessor<Integer> SEED = SynchedEntityData.defineId(SwordConvergenceEntity.class, EntityDataSerializers.INT);//双端打乱顺序需要同步
+public class WanEntity extends BabylonEntity {
+    private static final EntityDataAccessor<Integer> SEED = SynchedEntityData.defineId(WanEntity.class, EntityDataSerializers.INT);//双端打乱顺序需要同步
 
-    public SwordConvergenceEntity(EntityType<? extends AbstractArtifactSpiritEntity> entityType, Level level) {
+    public WanEntity(EntityType<? extends AbstractArtifactSpiritEntity> entityType, Level level) {
         super(entityType, level);
     }
 
-    public SwordConvergenceEntity(LivingEntity owner) {
-        super(SwordSoaringEntities.SWORD_CONVERGENCE_ENTITY.get(), owner, owner.position(), owner.getYRot());
+    public WanEntity(LivingEntity owner) {
+        super(SwordSoaringEntities.WAN_ENTITY.get(), owner, owner.position(), owner.getYRot());
         if (!level().isClientSide) {
             getEntityData().set(SEED, random.nextInt());
         }
@@ -57,7 +54,7 @@ public class SwordConvergenceEntity extends BabylonEntity {
     public boolean isOwnerCharging(){
         if(getOwnerPatch() instanceof ServerPlayerPatch serverPlayerPatch){
             AssetAccessor<? extends DynamicAnimation> currentOwnerAnim = serverPlayerPatch.getAnimator().getPlayerFor(null).getAnimation();
-            return currentOwnerAnim.equals(SwordConvergenceAnimations.WAN1_PLAYER) || currentOwnerAnim.equals(SwordConvergenceAnimations.WAN2_PLAYER);
+            return currentOwnerAnim.equals(WanAnimations.WAN1_PLAYER) || currentOwnerAnim.equals(WanAnimations.WAN2_PLAYER);
         }
         return false;
     }

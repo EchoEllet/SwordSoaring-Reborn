@@ -7,7 +7,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.p1nero.ss.gameassets.SwordSoaringDatakeys;
 import net.p1nero.ss.gameassets.SwordSoaringSkillSlots;
-import net.p1nero.ss.skill.sword_controller.WanJianGuiZongSkill;
 import yesman.epicfight.client.world.capabilites.entitypatch.player.LocalPlayerPatch;
 import yesman.epicfight.skill.SkillDataManager;
 
@@ -17,7 +16,7 @@ public class WanSoundInstance extends AbstractTickableSoundInstance {
     private int time = 0;
 
     public WanSoundInstance(LocalPlayerPatch pPlayer) {
-        super(SwordSoaringSounds.SWORD_CONVERGENCE.get(), SoundSource.PLAYERS, SoundInstance.createUnseededRandom());
+        super(SwordSoaringSounds.WAN_GATHERING.get(), SoundSource.PLAYERS, SoundInstance.createUnseededRandom());
         this.playerPatch = pPlayer;
         this.looping = true;
         this.delay = 0;

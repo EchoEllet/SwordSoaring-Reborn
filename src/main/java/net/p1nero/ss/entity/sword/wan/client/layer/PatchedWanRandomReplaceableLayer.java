@@ -1,4 +1,4 @@
-package net.p1nero.ss.entity.sword.sword_convergence.client.layer;
+package net.p1nero.ss.entity.sword.wan.client.layer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -12,7 +12,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.p1nero.ss.entity.AbstractArtifactSpiritPatch;
 import net.p1nero.ss.entity.ReplaceableArmature;
-import net.p1nero.ss.entity.sword.sword_convergence.SwordConvergenceEntity;
+import net.p1nero.ss.entity.sword.wan.WanEntity;
 import net.p1nero.ss.gameassets.SwordSoaringDatakeys;
 import net.p1nero.ss.gameassets.SwordSoaringSkillSlots;
 import net.p1nero.ss.skill.sword_controller.WanJianGuiZongSkill;
@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Random;
 
 @OnlyIn(Dist.CLIENT)
-public class PatchedSwordConvergenceRandomReplaceableLayer<E extends SwordConvergenceEntity, T extends AbstractArtifactSpiritPatch<E>, M extends EntityModel<E>> extends PatchedLayer<E, T, M, RenderLayer<E, M>> {
+public class PatchedWanRandomReplaceableLayer<E extends WanEntity, T extends AbstractArtifactSpiritPatch<E>, M extends EntityModel<E>> extends PatchedLayer<E, T, M, RenderLayer<E, M>> {
 
     @Override
     protected void renderLayer(T entityPatch, E entity, RenderLayer<E, M> vanillaLayer, PoseStack postStack, MultiBufferSource buffer, int packedLightIn, OpenMatrix4f[] poses, float bob, float yRot, float xRot, float partialTicks) {
@@ -39,7 +39,7 @@ public class PatchedSwordConvergenceRandomReplaceableLayer<E extends SwordConver
     /**
      * 根据玩家物品栏物品随机替换Joint的位置渲染
      */
-    public static void renderItemInJoint(SwordConvergenceEntity entity, AbstractArtifactSpiritPatch<?> artifactSpiritPatch, ReplaceableArmature armature, OpenMatrix4f[] poses, MultiBufferSource buffer, PoseStack poseStack, int packedLight) {
+    public static void renderItemInJoint(WanEntity entity, AbstractArtifactSpiritPatch<?> artifactSpiritPatch, ReplaceableArmature armature, OpenMatrix4f[] poses, MultiBufferSource buffer, PoseStack poseStack, int packedLight) {
         if (entity.getOwner() != null) {
             List<ItemStack> babylons = entity.getValidBabylonItems();
             if (babylons.isEmpty()) {

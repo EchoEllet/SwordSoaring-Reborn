@@ -51,9 +51,11 @@ import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+@SuppressWarnings("rawtypes")
 public class VatanseverAnimations {
     public static AnimationManager.AnimationAccessor<ActionAnimation> PLAYER_AUTO1;
     public static AnimationManager.AnimationAccessor<ActionAnimation> PLAYER_AUTO2;
@@ -359,6 +361,13 @@ public class VatanseverAnimations {
                                     manager.setDataSync(SwordSoaringDatakeys.SWORD_COUNT.get(), vatanseverEntityPatch.getLeftSwordCount() - 1, serverPlayerPatch.getOriginal());
                                 }
                             }
+                        } else {
+                            //否则重置状态
+                            Iterator<?> iterator = ssPlayer.getVatanseverShootEntities().iterator();
+                            while (iterator.hasNext()){
+                                iterator.remove();
+                            }
+                            serverPlayerPatch.getSkill(SkillSlots.WEAPON_INNATE).getDataManager().setDataSync(SwordSoaringDatakeys.SWORD_COUNT.get(), 6, serverPlayerPatch.getOriginal());
                         }
                     });
                 }
@@ -453,7 +462,7 @@ public class VatanseverAnimations {
     public static void attractEntities(LivingEntityPatch<?> entityPatch, float attractRadius, float damage, float damageRadius) {
         LivingEntity source = entityPatch.getOriginal();
         Vec3 sourcePos = source.position();
-        if (source.level() instanceof ServerLevel level) {
+        if (source.level() instanceof ServerLevel) {
 
             AABB area = new AABB(sourcePos.x - attractRadius, sourcePos.y - attractRadius, sourcePos.z - attractRadius,
                     sourcePos.x + attractRadius, sourcePos.y + attractRadius, sourcePos.z + attractRadius);

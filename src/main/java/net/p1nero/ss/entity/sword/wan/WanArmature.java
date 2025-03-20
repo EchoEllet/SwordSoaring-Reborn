@@ -1,4 +1,4 @@
-package net.p1nero.ss.entity.sword.sword_convergence;
+package net.p1nero.ss.entity.sword.wan;
 
 import net.p1nero.ss.entity.ReplaceableArmature;
 import yesman.epicfight.api.animation.Joint;

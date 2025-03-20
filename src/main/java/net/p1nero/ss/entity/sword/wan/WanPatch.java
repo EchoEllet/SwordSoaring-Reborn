@@ -1,11 +1,11 @@
-package net.p1nero.ss.entity.sword.sword_convergence;
+package net.p1nero.ss.entity.sword.wan;
 
 import net.p1nero.ss.entity.sword.gate_of_babylon.AbstractBabylonPatch;
 import net.p1nero.ss.gameassets.animations.VatanseverStormAnimations;
 import yesman.epicfight.api.animation.Animator;
 import yesman.epicfight.api.animation.LivingMotions;
 
-public class SwordConvergencePatch extends AbstractBabylonPatch<SwordConvergenceEntity> {
+public class WanPatch extends AbstractBabylonPatch<WanEntity> {
 
     @Override
     protected void initAnimator(Animator animator) {

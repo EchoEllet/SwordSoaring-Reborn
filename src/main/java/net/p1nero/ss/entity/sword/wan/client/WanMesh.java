@@ -1,4 +1,4 @@
-package net.p1nero.ss.entity.sword.sword_convergence.client;
+package net.p1nero.ss.entity.sword.wan.client;
 
 import org.jetbrains.annotations.Nullable;
 import yesman.epicfight.api.client.model.MeshPartDefinition;
