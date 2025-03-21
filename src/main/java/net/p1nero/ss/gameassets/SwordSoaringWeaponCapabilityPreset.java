@@ -26,7 +26,7 @@ SwordSoaringWeaponCapabilityPreset {
                     .styleProvider((livingEntityPatch) -> CapabilityItem.Styles.TWO_HAND)
                     .collider(SwordSoaringColliders.VATANSEVER)
                     .hitSound(EpicFightSounds.BLADE_HIT.get())
-                    .swingSound(SwordSoaringSounds.VATANSEVER_WHOOSH.get())
+                    .swingSound(EpicFightSounds.NO_SOUND.get())
                     .hitParticle(EpicFightParticles.HIT_BLADE.get())
                     .canBePlacedOffhand(false)
                     .comboCancel((style) -> false)

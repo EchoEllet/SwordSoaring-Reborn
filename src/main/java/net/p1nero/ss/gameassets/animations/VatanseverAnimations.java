@@ -1,7 +1,9 @@
 package net.p1nero.ss.gameassets.animations;
 
-import com.mojang.datafixers.util.Pair;
+import moe.plushie.armourers_workshop.core.armature.thirdparty.EpicFightArmatureTransformerBuilder;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -16,6 +18,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.p1nero.ss.Config;
 import net.p1nero.ss.animation.*;
 import net.p1nero.ss.capability.SSCapabilityProvider;
 import net.p1nero.ss.client.sound.SwordSoaringSounds;
@@ -29,18 +33,20 @@ import net.p1nero.ss.entity.vatansever_storm.VatanseverStormEntityPatch;
 import net.p1nero.ss.gameassets.SwordSoaringArmatures;
 import net.p1nero.ss.gameassets.SwordSoaringColliders;
 import net.p1nero.ss.gameassets.SwordSoaringDatakeys;
-import net.p1nero.ss.skill.weapon_passive.ArtifactSpiritPassiveSkill;
-import net.p1nero.ss.skill.weapon_passive.VatanseverPassive;
+import net.p1nero.ss.util.AnimationUtils;
+import net.p1nero.ss.util.vfx.ParticleVFX;
 import yesman.epicfight.api.animation.AnimationManager;
 import yesman.epicfight.api.animation.Joint;
 import yesman.epicfight.api.animation.property.AnimationEvent;
 import yesman.epicfight.api.animation.property.AnimationProperty;
 import yesman.epicfight.api.animation.types.*;
-import yesman.epicfight.api.collider.Collider;
+import yesman.epicfight.api.client.animation.property.ClientAnimationProperties;
+import yesman.epicfight.api.client.animation.property.TrailInfo;
 import yesman.epicfight.api.utils.LevelUtil;
 import yesman.epicfight.api.utils.math.OpenMatrix4f;
 import yesman.epicfight.api.utils.math.ValueModifier;
 import yesman.epicfight.api.utils.math.Vec3f;
+import yesman.epicfight.gameasset.Animations;
 import yesman.epicfight.gameasset.Armatures;
 import yesman.epicfight.gameasset.EpicFightSounds;
 import yesman.epicfight.model.armature.HumanoidArmature;
@@ -53,7 +59,6 @@ import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
 
 @SuppressWarnings("rawtypes")
 public class VatanseverAnimations {
@@ -414,40 +419,51 @@ public class VatanseverAnimations {
     public static void groundSplit(LivingEntityPatch<?> entityPatch, double viewOffset, double xOffset, double yOffset, double zOffset, float damage, float radius, int particleCount) {
         LivingEntity entity = entityPatch.getOriginal();
         Vec3 pos = entity.position();
-        Vec3 dir = entity.getViewVector(1).normalize().scale(viewOffset);
+
+
+        float yaw = entityPatch.getYRot();
+        double radians = Math.toRadians(yaw);
+        Vec3 dir = new Vec3(-Math.sin(radians), 0, Math.cos(radians)).normalize().scale(viewOffset);
+
         Vec3 target = pos.add(dir.x + xOffset, -1 + yOffset, dir.z + zOffset);
         Vec3 damagetarget = pos.add(dir.x + xOffset, yOffset, dir.z + zOffset);
+
         if (entity.level() instanceof ServerLevel level) {
             LevelUtil.circleSlamFracture(entity, level, target, radius);
             dealAreaDamage(level, damagetarget, entity, damage, radius);
         } else {
-            createRandomSmokeLine(entity.level(), target, particleCount);
+            ParticleVFX.createRandomLine(entity.level(),target,ParticleTypes.CLOUD,0.1,0.2,300);
         }
     }
 
-    private static void jet(VatanseverEntityPatch vatanseverEntityPatch, Joint toolJoint, int particleCount) {
+    private static void jet(VatanseverEntityPatch vatanseverEntityPatch, Joint joint, int particleCount) {
         VatanseverEntity vatanseverEntity = vatanseverEntityPatch.getOriginal();
         if (vatanseverEntity.getOwner() == null) {
             return;
         }
         Level world = vatanseverEntity.level();
-        // 获取骨骼变换矩阵
-        OpenMatrix4f transformMatrix = vatanseverEntityPatch.getArmature().getBindedTransformFor(vatanseverEntityPatch.getAnimator().getPose(1.0F), toolJoint);
+        Vec3 vec3 = AnimationUtils.getJointWorldPos(vatanseverEntityPatch,joint);
+        ParticleVFX.createRandomInSphereParticles(world,vec3,ParticleTypes.CLOUD,0.3,0.0,0.03,2);
+        ParticleVFX.createRandomInSphereParticles(world,vec3,ParticleTypes.END_ROD,0.05,0.0,0.03,5);
 
-        // 初始变换（位置偏移和基础旋转）
-        transformMatrix.translate(new Vec3f(0.0F, 0.0F, 0.0F));
-        OpenMatrix4f rotation = new OpenMatrix4f().rotate(-(float) Math.toRadians(vatanseverEntityPatch.getOriginal().yBodyRot + 180.0F), new Vec3f(0.0F, 1.0F, 0.0F));
-        OpenMatrix4f.mul(rotation, transformMatrix, transformMatrix);
-
-        // 生成粒子
-        for (int i = 0; i < 5 * particleCount; i++) {
-            world.addParticle(ParticleTypes.CLOUD, transformMatrix.m30 + (float) vatanseverEntity.getX(), transformMatrix.m31 + (float) vatanseverEntity.getY(), transformMatrix.m32 + (float) vatanseverEntity.getZ(), 0, 0, 0);
+    }
+    private static List<TrailInfo> getJetTrails(){
+        List<TrailInfo> jetTrails = new ArrayList<>();
+        for(Joint joint : SwordSoaringArmatures.VATANSEVER_ARMATURE.get().joints){
+            jetTrails.add(TrailInfo.builder()
+                    .r(1.0F).b(1.0F).g(1.0F)
+                    .startPos(new Vec3(0.1, 0, 0))
+                    .endPos(new Vec3(-0.1, 0, 0))
+                    .time(0, 3)
+                    .lifetime(10)
+                    .interpolations(6)
+                    .joint(joint.getName())
+                    .itemSkinHand(InteractionHand.MAIN_HAND)
+                    .texture("epicfight:textures/particle/swing_trail.png")
+                    .type((SimpleParticleType) ForgeRegistries.PARTICLE_TYPES.getValue(new ResourceLocation(Config.TRAIL_PARTICLE_TYPE.get())))
+                    .create());
         }
-        for (int i = 0; i < 3 * particleCount; i++) {
-            world.addParticle(
-                    ParticleTypes.END_ROD, transformMatrix.m30 + (float) vatanseverEntity.getX(), transformMatrix.m31 + (float) vatanseverEntity.getY(), transformMatrix.m32 + (float) vatanseverEntity.getZ(), 0, 0, 0
-            );
-        }
+        return jetTrails;
     }
 
     public static void flyVFX(LivingEntityPatch<?> entityPatch) {
@@ -535,10 +551,18 @@ public class VatanseverAnimations {
         for (LivingEntity entity : new ArrayList<>(entities)) {
             if (entity.invulnerableTime >= 0 && source != null) {
                 entity.invulnerableTime = 0;
-                entity.hurt(entity.damageSources().indirectMagic(source, source), damage * 0.5F);
+                entity.hurt(entity.damageSources().mobAttack((LivingEntity) source), damage*0.5F);
                 entity.invulnerableTime = 0;
                 entity.hurt(entity.damageSources().indirectMagic(source, source), damage);
                 entity.invulnerableTime = 0;
+                if (entity != null) {
+                    LivingEntityPatch livingEntityPatch = EpicFightCapabilities.getEntityPatch(entity, LivingEntityPatch.class);
+                    if (livingEntityPatch != null){
+                        if (livingEntityPatch.getArmature() instanceof HumanoidArmature){
+                            livingEntityPatch.playAnimationSynchronized(Animations.BIPED_KNOCKDOWN,0.1F);
+                        }
+                    }
+                }
             }
         }
     }
