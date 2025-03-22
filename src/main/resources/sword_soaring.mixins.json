@@ -8,6 +8,7 @@
     "GameRendererMixin",
     "LocalPlayerPatchMixin",
     "RenderEngineMixin",
+    "SkinnedMeshMixin",
     "TrailParticleMixin"
   ],
   "mixins": [

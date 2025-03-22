@@ -15,9 +15,12 @@ import net.p1nero.ss.entity.sword.screen_sword.ScreenSwordEntity;
 import net.p1nero.ss.entity.sword.wan.WanEntity;
 import net.p1nero.ss.entity.vatansever.VatanseverEntity;
 import net.p1nero.ss.entity.vatansever_storm.VatanseverStormEntity;
+import net.p1nero.ss.entity.wraithon.WraithonEntity;
 
 public class SwordSoaringEntities {
     public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, SwordSoaringMod.MOD_ID);
+    public static final RegistryObject<EntityType<WraithonEntity>> WRAITHON = register("wraithon",
+            EntityType.Builder.<WraithonEntity>of(WraithonEntity::new, MobCategory.MONSTER).sized(6, 4));
     public static final RegistryObject<EntityType<WanEntity>> WAN_ENTITY = register("sword_convergence_entity",
             EntityType.Builder.<WanEntity>of(WanEntity::new, MobCategory.MISC).sized(0, 0).clientTrackingRange(64).updateInterval(1).noSave());
     public static final RegistryObject<EntityType<BabylonEntity>> BABYLON = register("babylon",
@@ -32,14 +35,6 @@ public class SwordSoaringEntities {
             EntityType.Builder.<VatanseverStormEntity>of(VatanseverStormEntity::new, MobCategory.MISC).sized(0, 0).clientTrackingRange(64).updateInterval(1).noSave());
     public static final RegistryObject<EntityType<RayEntity>> RAY_ENTITY = register("custom_ray",
             EntityType.Builder.of(RayEntity::new, MobCategory.MISC).sized(5, 5).clientTrackingRange(64).updateInterval(1).noSave());
-
-
-
-
-
-
-
-
 
     private static <T extends Entity> RegistryObject<EntityType<T>> register(String name, EntityType.Builder<T> entityTypeBuilder) {
         return ENTITIES.register(name, () -> entityTypeBuilder.build(new ResourceLocation(SwordSoaringMod.MOD_ID, name).toString()));

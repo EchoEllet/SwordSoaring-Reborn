@@ -14,6 +14,8 @@ import net.p1nero.ss.entity.sword.screen_sword.ScreenSwordPatch;
 import net.p1nero.ss.entity.sword.wan.WanPatch;
 import net.p1nero.ss.entity.vatansever.VatanseverEntityPatch;
 import net.p1nero.ss.entity.vatansever_storm.VatanseverStormEntityPatch;
+import net.p1nero.ss.entity.wraithon.WraithonEntity;
+import net.p1nero.ss.entity.wraithon.WraithonEntityPatch;
 import net.p1nero.ss.gameassets.SwordSoaringArmatures;
 import net.p1nero.ss.network.PacketHandler;
 import yesman.epicfight.api.forgeevent.EntityPatchRegistryEvent;
@@ -23,6 +25,7 @@ public class ModEvents{
 
     @SubscribeEvent
     public static void entityAttributeEvent(EntityAttributeCreationEvent event) {
+        event.put(SwordSoaringEntities.WRAITHON.get(), WraithonEntity.getDefaultAttribute());
         event.put(SwordSoaringEntities.WAN_ENTITY.get(), AbstractArtifactSpiritEntity.getDefaultAttribute());
         event.put(SwordSoaringEntities.BABYLON.get(), AbstractArtifactSpiritEntity.getDefaultAttribute());
         event.put(SwordSoaringEntities.FLY_SWORD.get(), AbstractArtifactSpiritEntity.getDefaultAttribute());
@@ -33,6 +36,7 @@ public class ModEvents{
 
     @SubscribeEvent
     public static void setPatch(EntityPatchRegistryEvent event) {
+        event.getTypeEntry().put(SwordSoaringEntities.WRAITHON.get(), (entity) -> WraithonEntityPatch::new);
         event.getTypeEntry().put(SwordSoaringEntities.WAN_ENTITY.get(), (entity) -> WanPatch::new);
         event.getTypeEntry().put(SwordSoaringEntities.BABYLON.get(), (entity) -> BabylonPatch::new);
         event.getTypeEntry().put(SwordSoaringEntities.FLY_SWORD.get(), (entity) -> FlySwordPatch::new);

@@ -22,6 +22,8 @@ import net.p1nero.ss.entity.vatansever.client.PatchedVatanseverRenderer;
 import net.p1nero.ss.entity.vatansever.client.VatanseverRenderer;
 import net.p1nero.ss.entity.vatansever_storm.client.PatchedVatanseverStormRenderer;
 import net.p1nero.ss.entity.vatansever_storm.client.VatanseverStormRenderer;
+import net.p1nero.ss.entity.wraithon.client.PatchedWraithonRenderer;
+import net.p1nero.ss.entity.wraithon.client.WraithonRenderer;
 import net.p1nero.ss.gameassets.SwordSoaringSkillCategories;
 import yesman.epicfight.api.client.forgeevent.PatchedRenderersEvent;
 import yesman.epicfight.skill.Skill;
@@ -33,6 +35,7 @@ import yesman.epicfight.world.item.SkillBookItem;
 public class ClientModEvents {
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
+        EntityRenderers.register(SwordSoaringEntities.WRAITHON.get(), WraithonRenderer::new);
         EntityRenderers.register(SwordSoaringEntities.WAN_ENTITY.get(), WanRenderer::new);
         EntityRenderers.register(SwordSoaringEntities.BABYLON.get(), BabylonRenderer::new);
         EntityRenderers.register(SwordSoaringEntities.FLY_SWORD.get(), FlySwordRenderer::new);
@@ -68,6 +71,7 @@ public class ClientModEvents {
 
     @SubscribeEvent
     public static void onPatchedRenderer(PatchedRenderersEvent.Add event){
+        event.addPatchedEntityRenderer(SwordSoaringEntities.WRAITHON.get(), entityType -> new PatchedWraithonRenderer(event.getContext(), entityType).initLayerLast(event.getContext(), entityType));
         event.addPatchedEntityRenderer(SwordSoaringEntities.WAN_ENTITY.get(), entityType -> new PatchedWanRenderer(event.getContext(), entityType).initLayerLast(event.getContext(), entityType));
         event.addPatchedEntityRenderer(SwordSoaringEntities.BABYLON.get(), entityType -> new PatchedBabylonRenderer<>(event.getContext(), entityType).initLayerLast(event.getContext(), entityType));
         event.addPatchedEntityRenderer(SwordSoaringEntities.FLY_SWORD.get(), entityType -> new PatchedFlySwordRenderer<>(event.getContext(), entityType).initLayerLast(event.getContext(), entityType));
