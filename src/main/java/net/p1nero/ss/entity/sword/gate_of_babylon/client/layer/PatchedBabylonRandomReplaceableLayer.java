@@ -95,7 +95,7 @@ public class PatchedBabylonRandomReplaceableLayer<E extends BabylonEntity, T ext
                     poseStack.pushPose();
                     poseStack.scale(outerAlpha, outerAlpha, outerAlpha);
                     poseStack.scale(0.7F, 0.7F, 0.7F);
-//                    renderPortal(poseStack, 0.5F, 1.0F, 1.0F, 1.0F, LIGHT_TEXTURE, buffer,frame);
+                    renderPortal(poseStack, 0.5F, 1.0F, 1.0F, 1.0F, LIGHT_TEXTURE, buffer,frame);
                     renderPortal(poseStack, 1, 1.0F, 1.0F, 1.0F, PORTAL_TEXTURE, buffer,frame);
                     poseStack.popPose();
 

@@ -1,13 +1,21 @@
 package net.p1nero.ss.gameassets.animations;
 
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import net.p1nero.ss.animation.ArtifactSpiritMultiPhaseAttackAnimation;
+import net.p1nero.ss.entity.SwordSoaringEntities;
+import net.p1nero.ss.entity.ray.RayEntity;
 import net.p1nero.ss.entity.sword.screen_sword.ScreenSwordArmature;
+import net.p1nero.ss.entity.vatansever_storm.VatanseverStormEntity;
+import net.p1nero.ss.entity.vatansever_storm.VatanseverStormEntityPatch;
 import net.p1nero.ss.gameassets.SwordSoaringArmatures;
 import net.p1nero.ss.util.AnimationUtils;
 import net.p1nero.ss.util.vfx.ParticleVFX;
@@ -24,6 +32,8 @@ import yesman.epicfight.api.utils.math.Vec3f;
 import yesman.epicfight.gameasset.Armatures;
 import yesman.epicfight.model.armature.HumanoidArmature;
 import yesman.epicfight.particle.EpicFightParticles;
+import yesman.epicfight.world.capabilities.EpicFightCapabilities;
+import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 
 import java.util.List;
 import java.util.Random;
@@ -150,6 +160,18 @@ public class ScreenSwordAnimations {
                 .addEvents(RESET_ANIM,
                         spawnFireParticle(0.1F, screenSwordArmature.get().joints, 5),
                         spawnParticles(0.3F, screenSwordArmature.get().joints, 5, EpicFightParticles.BLOOD::get),
+                        AnimationEvent.InPeriodEvent.create(0, 3, (entityPatch, self, params) -> {
+                            Entity entity = entityPatch.getOriginal();
+                            LivingEntity livingEntity = entityPatch.getOriginal();
+                            Vec3 start = AnimationUtils.getJointWorldPos(entityPatch,screenSwordArmature.get().W1);
+                            Vec3 end = AnimationUtils.jointRayDetectionY(entityPatch,screenSwordArmature.get().W1,15);
+                            if (entity.level() instanceof ClientLevel level) {
+                                ParticleVFX.createSphereParticles(level,end,ParticleTypes.END_ROD,1,0,0,50);
+                            }
+                            if (entity.level() instanceof ServerLevel serverLevel) {
+                                RayEntity.spawnRay(serverLevel,livingEntity,start,end);
+                            }
+                        }, AnimationEvent.Side.BOTH),
                         spawnSummonParticle(0.49F, () -> ParticleTypes.FLAME, () -> ParticleTypes.LAVA)));
         KILL_AURA_2_SUMMON = builder.nextAccessor("screen_sword/kill_aura_2_summon", accessor ->  new ActionAnimation(0.15F, accessor, screenSwordArmature)
                 .addEvents(spawnParticles(0.3F, screenSwordArmature.get().joints, 5, EpicFightParticles.BLOOD::get))

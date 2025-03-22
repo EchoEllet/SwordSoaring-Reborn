@@ -9,6 +9,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.p1nero.ss.SwordSoaringMod;
 import net.p1nero.ss.entity.SwordSoaringEntities;
+import net.p1nero.ss.entity.ray.client.RayRenderer;
 import net.p1nero.ss.entity.sword.fly_sword.client.FlySwordRenderer;
 import net.p1nero.ss.entity.sword.fly_sword.client.PatchedFlySwordRenderer;
 import net.p1nero.ss.entity.sword.gate_of_babylon.client.BabylonRenderer;
@@ -38,6 +39,7 @@ public class ClientModEvents {
         EntityRenderers.register(SwordSoaringEntities.SCREEN_SWORD.get(), ScreenSwordRenderer::new);
         EntityRenderers.register(SwordSoaringEntities.VATANSEVER.get(), VatanseverRenderer::new);
         EntityRenderers.register(SwordSoaringEntities.VATANSEVER_STORM.get(), VatanseverStormRenderer::new);
+        EntityRenderers.register(SwordSoaringEntities.RAY_ENTITY.get(), RayRenderer::new);
 
         ItemProperties.register(EpicFightItems.SKILLBOOK.get(), new ResourceLocation(SwordSoaringMod.MOD_ID,"skill"), (pStack, pLevel, pEntity, pSeed) -> {
             Skill skill = SkillBookItem.getContainSkill(pStack);

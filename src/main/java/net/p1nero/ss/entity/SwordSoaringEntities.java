@@ -8,6 +8,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import net.p1nero.ss.SwordSoaringMod;
+import net.p1nero.ss.entity.ray.RayEntity;
 import net.p1nero.ss.entity.sword.fly_sword.FlySwordEntity;
 import net.p1nero.ss.entity.sword.gate_of_babylon.BabylonEntity;
 import net.p1nero.ss.entity.sword.screen_sword.ScreenSwordEntity;
@@ -29,6 +30,17 @@ public class SwordSoaringEntities {
             EntityType.Builder.<VatanseverEntity>of(VatanseverEntity::new, MobCategory.MISC).sized(0, 0).clientTrackingRange(64).updateInterval(1).noSummon().noSave());
     public static final RegistryObject<EntityType<VatanseverStormEntity>> VATANSEVER_STORM = register("vatansever_storm",
             EntityType.Builder.<VatanseverStormEntity>of(VatanseverStormEntity::new, MobCategory.MISC).sized(0, 0).clientTrackingRange(64).updateInterval(1).noSave());
+    public static final RegistryObject<EntityType<RayEntity>> RAY_ENTITY = register("custom_ray",
+            EntityType.Builder.of(RayEntity::new, MobCategory.MISC).sized(5, 5).clientTrackingRange(64).updateInterval(1).noSave());
+
+
+
+
+
+
+
+
+
     private static <T extends Entity> RegistryObject<EntityType<T>> register(String name, EntityType.Builder<T> entityTypeBuilder) {
         return ENTITIES.register(name, () -> entityTypeBuilder.build(new ResourceLocation(SwordSoaringMod.MOD_ID, name).toString()));
     }
