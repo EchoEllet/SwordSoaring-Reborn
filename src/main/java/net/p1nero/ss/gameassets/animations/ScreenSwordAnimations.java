@@ -168,9 +168,6 @@ public class ScreenSwordAnimations {
                             if (entity.level() instanceof ClientLevel level) {
                                 ParticleVFX.createSphereParticles(level,end,ParticleTypes.END_ROD,1,0,0,50);
                             }
-                            if (entity.level() instanceof ServerLevel serverLevel) {
-                                RayEntity.spawnRay(serverLevel,livingEntity,start,end);
-                            }
                         }, AnimationEvent.Side.BOTH),
                         spawnSummonParticle(0.49F, () -> ParticleTypes.FLAME, () -> ParticleTypes.LAVA)));
         KILL_AURA_2_SUMMON = builder.nextAccessor("screen_sword/kill_aura_2_summon", accessor ->  new ActionAnimation(0.15F, accessor, screenSwordArmature)

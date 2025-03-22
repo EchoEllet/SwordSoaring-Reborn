@@ -1,9 +1,11 @@
 package net.p1nero.ss.util;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import net.p1nero.ss.animation.ArtifactSpiritMultiPhaseAttackAnimation;
+import net.p1nero.ss.util.vfx.ParticleVFX;
 import yesman.epicfight.api.animation.Animator;
 import yesman.epicfight.api.animation.Joint;
 import yesman.epicfight.api.animation.Pose;
@@ -44,18 +46,6 @@ public class AnimationUtils {
         return multiAttackPhases.toArray(new ArtifactSpiritMultiPhaseAttackAnimation.MultiAttackPhase[0]);
     }
 
-    public static Vec3 jointRayDetection(LivingEntityPatch<?> livingEntityPatch, Joint joint, float distance,String xyz){
-        if (xyz == "x"){
-            return jointRayDetectionX(livingEntityPatch,joint,distance);
-        }
-        if (xyz == "y"){
-            return jointRayDetectionY(livingEntityPatch,joint,distance);
-        }
-        if (xyz == "z"){
-            return jointRayDetectionZ(livingEntityPatch,joint,distance);
-        }
-        return null;
-    }
 
 
     public static Vec3 jointRayDetectionX(LivingEntityPatch<?> livingEntityPatch, Joint joint, float distance) {
@@ -109,6 +99,7 @@ public class AnimationUtils {
                     currentTransform.m31 + (float) entity.getY(),
                     currentTransform.m32 + (float) entity.getZ()
             );
+            ParticleVFX.createSphereParticles(entity.level(),pos, ParticleTypes.SMOKE,0.2,0,0,5);
             BlockPos center = new BlockPos((int) pos.x, (int) pos.y, (int) pos.z);
             if (checkRadiusBlocks(entity, center, 1)) {
                 return pos;
