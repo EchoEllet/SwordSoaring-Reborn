@@ -43,7 +43,7 @@ public class Config {
         BUILDER.pop();
         BUILDER.push("Sword Convergence 万剑归宗");
         SWORD_EFFECT_PER_TICK = createInt("sword_effect_per_tick", 4, "additional swords per tick", "每秒聚集的剑数（仅特效）");
-        WAN_TRAIL_UPDATE_TICK = createInt("wan_trail_update_tick", 3, "trail effect update interval", "刀光刷新频率");
+        WAN_TRAIL_UPDATE_TICK = createInt("wan_trail_update_tick", 0, "trail effect update interval", "刀光刷新频率，0为关闭");
         TRAIL_PARTICLE_TYPE = BUILDER.comment("default trail particle type", "默认刀光类型").define("trail_particle_type", "epicfight:swing_trail");
         BUILDER.pop();
 

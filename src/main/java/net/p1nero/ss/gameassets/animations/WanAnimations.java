@@ -71,6 +71,10 @@ public class WanAnimations {
     public static final AnimationEvent DISCARD_SELF = AnimationEvent.SimpleEvent.create((livingEntityPatch, staticAnimation, objects) -> livingEntityPatch.getOriginal().discard(), AnimationEvent.Side.SERVER);
 
     public static List<TrailInfo> getWanTrails(){
+        int updateInterVal =  Config.WAN_TRAIL_UPDATE_TICK.get();
+        if(updateInterVal <= 0){
+            return List.of();
+        }
         List<TrailInfo> wanTrails = new ArrayList<>();
         for(Joint joint : SwordSoaringArmatures.WAN_ARMATURE.get().joints){
             wanTrails.add(TrailInfo.builder()
@@ -80,6 +84,7 @@ public class WanAnimations {
                     .time(0, 3)
                     .lifetime(10)
                     .interpolations(6)
+                    .updateInterval(updateInterVal)
                     .joint(joint.getName())
                     .itemSkinHand(InteractionHand.MAIN_HAND)
                     .texture("epicfight:textures/particle/swing_trail.png")

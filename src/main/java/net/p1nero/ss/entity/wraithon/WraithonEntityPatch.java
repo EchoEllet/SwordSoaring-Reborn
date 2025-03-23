@@ -1,15 +1,17 @@
 package net.p1nero.ss.entity.wraithon;
 
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.p1nero.ss.gameassets.SwordSoaringArmatures;
 import net.p1nero.ss.gameassets.animations.WraithonAnimations;
+import net.p1nero.ss.util.AnimationUtils;
 import yesman.epicfight.api.animation.Animator;
+import yesman.epicfight.api.animation.Joint;
 import yesman.epicfight.api.animation.LivingMotions;
 import yesman.epicfight.api.animation.types.StaticAnimation;
 import yesman.epicfight.api.asset.AssetAccessor;
+import yesman.epicfight.api.utils.math.MathUtils;
 import yesman.epicfight.api.utils.math.OpenMatrix4f;
 import yesman.epicfight.world.capabilities.entitypatch.MobPatch;
 import yesman.epicfight.world.damagesource.StunType;
@@ -20,13 +22,11 @@ import javax.annotation.Nullable;
 public class WraithonEntityPatch extends MobPatch<WraithonEntity> {
 
     public final float SCALE = 2.0F;
-    //旋转目标，
+    //旋转目标
     @Nullable
-    private Entity turningTarget;
-
-
-
-
+    private Entity rotateTarget;
+    //旋转到距离目标夹角多少时停止
+    private float rangeDegree;
 
     @Override
     protected void initAnimator(Animator animator) {
@@ -47,28 +47,45 @@ public class WraithonEntityPatch extends MobPatch<WraithonEntity> {
     }
 
     @Override
+    public void tick(LivingEvent.LivingTickEvent event) {
+        super.tick(event);
+        syncPartEntities();
+    }
+
+    @Override
     protected void serverTick(LivingEvent.LivingTickEvent event) {
         super.serverTick(event);
         checkRotation();
-        //TODO 同步各受击碰撞箱的位置
     }
 
-    public boolean isTargetInRightSide(Entity target){
-        return isTargetInRightSide(target, 180);
+    public void syncPartEntities(){
+        for(WraithonPartEntity part: this.getOriginal().getWraithonParts()) {
+            if(part == null){
+                continue;
+            }
+            Vec3 newPos = AnimationUtils.getJointWorldPos(this, part.joint);
+            part.moveTo(newPos.add(part.getYOffset()));
+        }
     }
 
-    public boolean isTargetInRightSide(Entity target, float rangeDegree){
+    public boolean isTargetInDegree(Entity target){
+        return isTargetInDegree(target, 10);
+    }
+
+    /**
+     * 判断目标是否在一定角度范围内
+     * @param target 目标
+     * @param rangeDegree 角度范围
+     */
+    public boolean isTargetInDegree(Entity target, float rangeDegree){
         Vec3 targetPos = target.position();
         Vec3 selfPos = this.getOriginal().position();
         float yRot = this.getYRot();
-        double dx = targetPos.x - selfPos.x;
-        double dz = targetPos.z - selfPos.z;
-        double theta = Math.toDegrees(Math.atan2(dz, dx));
+        double theta = MathUtils.getYRotOfVector(targetPos.subtract(selfPos));
         theta = (theta + 360) % 360;
         float bossAngle = (yRot % 360 + 360) % 360;
         double delta = theta - bossAngle;
-        delta = (delta + 180) % 360 - 180;
-        return delta >= -rangeDegree && delta <= 0;
+        return Math.abs(delta) < rangeDegree;
     }
 
     /**
@@ -78,8 +95,14 @@ public class WraithonEntityPatch extends MobPatch<WraithonEntity> {
         turnRight(target, 10);
     }
 
+    /**
+     * 右转向敌人
+     * @param target 敌人
+     * @param rangeDegree 距离多少时停止
+     */
     public void turnRight(Entity target, float rangeDegree){
-        this.turningTarget = target;
+        this.rotateTarget = target;
+        this.rangeDegree = rangeDegree;
         this.playAnimationSynchronized(WraithonAnimations.WRAITHON_ROTATE_R, 0.15F);
     }
 
@@ -88,21 +111,20 @@ public class WraithonEntityPatch extends MobPatch<WraithonEntity> {
     }
 
     public void turnLeft(Entity target, float rangeDegree){
-        this.turningTarget = target;
+        this.rotateTarget = target;
+        this.rangeDegree = rangeDegree;
         this.playAnimationSynchronized(WraithonAnimations.WRAITHON_ROTATE_L, 0.15F);
     }
 
     public void checkRotation(){
-        if(turningTarget == null) {
+        if(rotateTarget == null) {
             return;
         }
-        boolean isTurningRight = this.getAnimator().getPlayerFor(null).getAnimation().get().equals(WraithonAnimations.WRAITHON_ROTATE_R.get());
 
-        if(isTargetInRightSide(turningTarget)){
+        if(isTargetInDegree(rotateTarget, rangeDegree)){
             //打断动画
             this.playAnimationSynchronized(WraithonAnimations.WRAITHON_IDLE, 0.15F);
         }
-
 
     }
 

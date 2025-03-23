@@ -16,6 +16,7 @@ import net.p1nero.ss.entity.vatansever.VatanseverEntityPatch;
 import net.p1nero.ss.entity.vatansever_storm.VatanseverStormEntityPatch;
 import net.p1nero.ss.entity.wraithon.WraithonEntity;
 import net.p1nero.ss.entity.wraithon.WraithonEntityPatch;
+import net.p1nero.ss.entity.wraithon.WraithonPartEntity;
 import net.p1nero.ss.gameassets.SwordSoaringArmatures;
 import net.p1nero.ss.network.PacketHandler;
 import yesman.epicfight.api.forgeevent.EntityPatchRegistryEvent;
@@ -36,7 +37,13 @@ public class ModEvents{
 
     @SubscribeEvent
     public static void setPatch(EntityPatchRegistryEvent event) {
-        event.getTypeEntry().put(SwordSoaringEntities.WRAITHON.get(), (entity) -> WraithonEntityPatch::new);
+        //防止子实体干扰
+        event.getTypeEntry().put(SwordSoaringEntities.WRAITHON.get(), (entity) -> {
+            if(entity instanceof WraithonEntity){
+                return WraithonEntityPatch::new;
+            }
+            return () -> null;
+        });
         event.getTypeEntry().put(SwordSoaringEntities.WAN_ENTITY.get(), (entity) -> WanPatch::new);
         event.getTypeEntry().put(SwordSoaringEntities.BABYLON.get(), (entity) -> BabylonPatch::new);
         event.getTypeEntry().put(SwordSoaringEntities.FLY_SWORD.get(), (entity) -> FlySwordPatch::new);

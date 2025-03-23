@@ -50,7 +50,7 @@ public abstract class OBBColliderMixin extends Collider {
         Pose interpolatedPose = Pose.interpolatePose(pose1, pose2, partialTicks);
         OpenMatrix4f poseMatrix;
         if (armature.rootJoint.equals(joint)) {
-            JointTransform jt = interpolatedPose.getOrDefaultTransform("Root");
+            JointTransform jt = interpolatedPose.get("Root");
             jt.rotation().x = 0.0F;
             jt.rotation().y = 0.0F;
             jt.rotation().z = 0.0F;

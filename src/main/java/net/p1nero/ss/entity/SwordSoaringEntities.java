@@ -20,7 +20,7 @@ import net.p1nero.ss.entity.wraithon.WraithonEntity;
 public class SwordSoaringEntities {
     public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, SwordSoaringMod.MOD_ID);
     public static final RegistryObject<EntityType<WraithonEntity>> WRAITHON = register("wraithon",
-            EntityType.Builder.<WraithonEntity>of(WraithonEntity::new, MobCategory.MONSTER).sized(6, 4));
+            EntityType.Builder.<WraithonEntity>of(WraithonEntity::new, MobCategory.MONSTER).fireImmune().sized(2F, 2F).clientTrackingRange(10));
     public static final RegistryObject<EntityType<WanEntity>> WAN_ENTITY = register("sword_convergence_entity",
             EntityType.Builder.<WanEntity>of(WanEntity::new, MobCategory.MISC).sized(0, 0).clientTrackingRange(64).updateInterval(1).noSave());
     public static final RegistryObject<EntityType<BabylonEntity>> BABYLON = register("babylon",
