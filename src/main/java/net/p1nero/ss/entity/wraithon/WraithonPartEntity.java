@@ -17,14 +17,24 @@ public class WraithonPartEntity extends PartEntity<WraithonEntity> {
     public final Joint joint;
     private final EntityDimensions size;
     private final Vec3 offset;
+    private float damageReduce;
 
-    public WraithonPartEntity(WraithonEntity pParentMob, Joint joint, float pWidth, float pHeight, Vec3 offset) {
+    public WraithonPartEntity(WraithonEntity pParentMob, Joint joint, float pWidth, float pHeight, Vec3 offset, float damageReduce) {
         super(pParentMob);
         this.size = EntityDimensions.scalable(pWidth, pHeight);
         this.refreshDimensions();
         this.parentMob = pParentMob;
         this.joint = joint;
         this.offset = offset;
+        this.damageReduce = damageReduce;
+    }
+
+    public void setDamageReduce(float damageReduce) {
+        this.damageReduce = damageReduce;
+    }
+
+    public float getDamageReduce() {
+        return damageReduce;
     }
 
     public Vec3 getYOffset() {
@@ -53,6 +63,9 @@ public class WraithonPartEntity extends PartEntity<WraithonEntity> {
         return this.parentMob.getPickResult();
     }
 
+    /**
+     * 根据部位衰减伤害在主体里做
+     */
     public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
         return !this.isInvulnerableTo(pSource) && this.parentMob.hurt(this, pSource, pAmount);
     }
