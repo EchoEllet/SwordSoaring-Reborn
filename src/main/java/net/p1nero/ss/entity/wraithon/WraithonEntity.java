@@ -31,6 +31,7 @@ public class WraithonEntity extends PathfinderMob {
 
     public WraithonEntity(EntityType<? extends WraithonEntity> pEntityType, Level pLevel) {
         super(SwordSoaringEntities.WRAITHON.get(), pLevel);
+
         WraithonArmature armature = SwordSoaringArmatures.WRAITHON_ARMATURE.get();
         this.head = new WraithonPartEntity(this, armature.head, 1.5F, 1.5F, new Vec3(0, -0.5, 1));
         this.chest = new WraithonPartEntity(this, armature.chest, 3.0F, 7.0F, new Vec3(0, -4, 0));

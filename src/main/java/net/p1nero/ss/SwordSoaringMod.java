@@ -49,6 +49,7 @@ public class SwordSoaringMod {
         SwordSoaringEntities.ENTITIES.register(bus);
         SwordSoaringSounds.SOUND_EVENTS.register(bus);
         context.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+
         MinecraftForge.EVENT_BUS.register(new GGEventHandler());
     }
 

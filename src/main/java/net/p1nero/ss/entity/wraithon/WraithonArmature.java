@@ -21,7 +21,7 @@ public class WraithonArmature extends Armature {
     public WraithonArmature(String name, int jointNumber, Joint rootJoint, Map<String, Joint> jointMap) {
         super(name, jointNumber, rootJoint, jointMap);
         partJointMap = new HashMap<>();
-        weapon = getOrLogException(jointMap, "weapon");
+        weapon = getOrLogException(jointMap, "weapon_r");
         head = getAndAddToPartJointMap(jointMap, "head");
         chest = getAndAddToPartJointMap(jointMap, "chest");
         tail = getAndAddToPartJointMap(jointMap, "tail_2");
