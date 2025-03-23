@@ -24,6 +24,10 @@ public class WraithonEntityPatch extends MobPatch<WraithonEntity> {
     @Nullable
     private Entity turningTarget;
 
+
+
+
+
     @Override
     protected void initAnimator(Animator animator) {
         super.initAnimator(animator);

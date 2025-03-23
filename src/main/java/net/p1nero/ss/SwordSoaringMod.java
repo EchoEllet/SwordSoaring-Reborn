@@ -5,6 +5,7 @@ import com.p1nero.invincible.api.skill.ComboType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -15,6 +16,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.p1nero.ss.client.sound.SwordSoaringSounds;
 import net.p1nero.ss.entity.SwordSoaringEntities;
 import net.p1nero.ss.gameassets.*;
+import net.p1nero.ss.item.GGEventHandler;
 import net.p1nero.ss.item.SwordSoaringItems;
 import org.slf4j.Logger;
 import yesman.epicfight.main.EpicFightExtensions;
@@ -22,6 +24,7 @@ import yesman.epicfight.skill.SkillCategories;
 import yesman.epicfight.skill.SkillSlot;
 import yesman.epicfight.world.capabilities.item.CapabilityItem;
 
+import java.beans.EventHandler;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -38,6 +41,7 @@ public class SwordSoaringMod {
         ComboType.ENUM_MANAGER.registerEnumCls(SwordSoaringMod.MOD_ID, SwordSoaringComboTypes.class);
         context.registerExtensionPoint(EpicFightExtensions.class, () -> new EpicFightExtensions(SwordSoaringItems.DEFAULT_TAB.get()));
 
+
         IEventBus bus = context.getModEventBus();
         SwordSoaringDatakeys.DATA_KEYS.register(bus);
         SwordSoaringItems.ITEMS.register(bus);
@@ -45,6 +49,7 @@ public class SwordSoaringMod {
         SwordSoaringEntities.ENTITIES.register(bus);
         SwordSoaringSounds.SOUND_EVENTS.register(bus);
         context.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+        MinecraftForge.EVENT_BUS.register(new GGEventHandler());
     }
 
     public static boolean isArmourersWorkshopLoaded() {
