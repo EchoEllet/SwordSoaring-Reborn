@@ -59,6 +59,7 @@ import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Supplier;
 
 @SuppressWarnings("rawtypes")
 public class VatanseverAnimations {
@@ -113,19 +114,22 @@ public class VatanseverAnimations {
     public static void buildVatanseverAnim(AnimationManager.AnimationBuilder builder) {
         Armatures.ArmatureAccessor<VatanseverArmature> vatanseverArmature = SwordSoaringArmatures.VATANSEVER_ARMATURE;
 
+        Supplier<AttackAnimation.JointColliderPair[]> right = ()->{
+            List<AttackAnimation.JointColliderPair> rightJoints = List.of(AttackAnimation.JointColliderPair.of(vatanseverArmature.get().R1, SwordSoaringColliders.VATANSEVER),
+                    AttackAnimation.JointColliderPair.of(vatanseverArmature.get().R2, SwordSoaringColliders.VATANSEVER),
+                    AttackAnimation.JointColliderPair.of(vatanseverArmature.get().R3, SwordSoaringColliders.VATANSEVER));
+            return rightJoints.toArray(new AttackAnimation.JointColliderPair[0]);
+        };
 
-        List<AttackAnimation.JointColliderPair> leftJoints = List.of(AttackAnimation.JointColliderPair.of(vatanseverArmature.get().L1, SwordSoaringColliders.VATANSEVER),
-                AttackAnimation.JointColliderPair.of(vatanseverArmature.get().L2, SwordSoaringColliders.VATANSEVER),
-                AttackAnimation.JointColliderPair.of(vatanseverArmature.get().L3, SwordSoaringColliders.VATANSEVER));
-        List<AttackAnimation.JointColliderPair> rightJoints = List.of(AttackAnimation.JointColliderPair.of(vatanseverArmature.get().R1, SwordSoaringColliders.VATANSEVER),
-                AttackAnimation.JointColliderPair.of(vatanseverArmature.get().R2, SwordSoaringColliders.VATANSEVER),
-                AttackAnimation.JointColliderPair.of(vatanseverArmature.get().R3, SwordSoaringColliders.VATANSEVER));
-        ArrayList<AttackAnimation.JointColliderPair> allJoints = new ArrayList<>();
-        allJoints.addAll(leftJoints);
-        allJoints.addAll(rightJoints);
-        AttackAnimation.JointColliderPair[] right = rightJoints.toArray(new AttackAnimation.JointColliderPair[0]);
-        AttackAnimation.JointColliderPair[] left = leftJoints.toArray(new AttackAnimation.JointColliderPair[0]);
-        AttackAnimation.JointColliderPair[] all = allJoints.toArray(new AttackAnimation.JointColliderPair[0]);
+        Supplier<AttackAnimation.JointColliderPair[]> all = () -> {
+            List<AttackAnimation.JointColliderPair> allJoints = List.of(AttackAnimation.JointColliderPair.of(vatanseverArmature.get().L1, SwordSoaringColliders.VATANSEVER),
+                    AttackAnimation.JointColliderPair.of(vatanseverArmature.get().L2, SwordSoaringColliders.VATANSEVER),
+                    AttackAnimation.JointColliderPair.of(vatanseverArmature.get().L3, SwordSoaringColliders.VATANSEVER),
+                    AttackAnimation.JointColliderPair.of(vatanseverArmature.get().R1, SwordSoaringColliders.VATANSEVER),
+                    AttackAnimation.JointColliderPair.of(vatanseverArmature.get().R2, SwordSoaringColliders.VATANSEVER),
+                    AttackAnimation.JointColliderPair.of(vatanseverArmature.get().R3, SwordSoaringColliders.VATANSEVER));
+            return allJoints.toArray(new AttackAnimation.JointColliderPair[0]);
+        };
 
         VATANSEVER_IDLE = builder.nextAccessor("biped/vatansever/living/vatansever_idle", accessor -> new StaticAnimation(true, accessor, vatanseverArmature));
         VATANSEVER_WALK_F = builder.nextAccessor("biped/vatansever/living/vatansever_walk", accessor -> new StaticAnimation(true, accessor, vatanseverArmature));
@@ -167,20 +171,20 @@ public class VatanseverAnimations {
                 new ArtifactSpiritMultiPhaseAttackAnimation.MultiAttackPhase(0.0F, 0.7F, 1.0F, 1.60F, Float.MAX_VALUE, vatanseverArmature.get().L3, SwordSoaringColliders.VATANSEVER)
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F))));
         VATANSEVER_AUTO3 = builder.nextAccessor("biped/vatansever/vatansever_auto3", accessor -> new AttackAnimation(0.15F, accessor, vatanseverArmature,
-                new AttackAnimation.Phase(0.0F, 0.01F, 0.01F, 0.01F, 0.01F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, right)
+                new AttackAnimation.Phase(0.0F, 0.01F, 0.01F, 0.01F, 0.01F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, right.get())
                         .addProperty(AnimationProperty.AttackPhaseProperty.SWING_SOUND, EpicFightSounds.NO_SOUND.get())
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F))));
 
         VATANSEVER_AUTO3_B = builder.nextAccessor("biped/vatansever/vatansever_auto3_b", accessor -> new AttackAnimation(0.15F, accessor, vatanseverArmature,
-                new AttackAnimation.Phase(0.0F, 1.75F, 1.75F, 4.0F, 4.0F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, right)
+                new AttackAnimation.Phase(0.0F, 1.75F, 1.75F, 4.0F, 4.0F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, right.get())
                         .addProperty(AnimationProperty.AttackPhaseProperty.SWING_SOUND, SwordSoaringSounds.VATANSEVER_WHOOSH_BIG.get())
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F))));
         VATANSEVER_AUTO4 = builder.nextAccessor("biped/vatansever/vatansever_auto4", accessor -> new AttackAnimation(0.15F, accessor, vatanseverArmature,
-                new AttackAnimation.Phase(0.0F, 1.33F, 1.33F, 1.43F, 4.0F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, all)
+                new AttackAnimation.Phase(0.0F, 1.33F, 1.33F, 1.43F, 4.0F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, all.get())
                         .addProperty(AnimationProperty.AttackPhaseProperty.SWING_SOUND, SwordSoaringSounds.VATANSEVER_WHOOSH_BIG.get())
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F))));
         VATANSEVER_AUTO4_B = builder.nextAccessor("biped/vatansever/vatansever_auto4_b", accessor -> new AttackAnimation(0.15F, accessor, vatanseverArmature,
-                new AttackAnimation.Phase(0.0F, 1.33F, 1.33F, 1.43F, 4.0F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, all)
+                new AttackAnimation.Phase(0.0F, 1.33F, 1.33F, 1.43F, 4.0F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, all.get())
                         .addProperty(AnimationProperty.AttackPhaseProperty.SWING_SOUND, EpicFightSounds.NO_SOUND.get())
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F))));
         VATANSEVER_STORM_START = builder.nextAccessor("biped/vatansever/skill/vatansever_storm_start", accessor -> new ActionAnimation(0.15F, accessor, vatanseverArmature));

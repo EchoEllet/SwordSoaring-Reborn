@@ -13,11 +13,14 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.p1nero.ss.SwordSoaringMod;
 import net.p1nero.ss.entity.ray.RayEntity;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
+@OnlyIn(Dist.CLIENT)
 public class RayRenderer extends EntityRenderer<RayEntity> {
 
     public static final ResourceLocation RAY = new ResourceLocation(SwordSoaringMod.MOD_ID,"textures/entity/ray.png");

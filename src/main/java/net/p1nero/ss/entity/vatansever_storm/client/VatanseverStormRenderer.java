@@ -19,7 +19,7 @@ public class VatanseverStormRenderer extends MobRenderer<AbstractArtifactSpiritE
 
     @Override
     public boolean shouldRender(@NotNull AbstractArtifactSpiritEntity pLivingEntity, @NotNull Frustum pCamera, double pCamX, double pCamY, double pCamZ) {
-        return true;
+        return pLivingEntity.tickCount > 5;
     }
 
     @Override

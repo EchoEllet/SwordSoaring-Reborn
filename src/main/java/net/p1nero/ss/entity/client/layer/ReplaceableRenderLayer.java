@@ -5,9 +5,12 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.p1nero.ss.entity.client.model.EmptyEntityModel;
 import org.jetbrains.annotations.NotNull;
 
+@OnlyIn(Dist.CLIENT)
 public class ReplaceableRenderLayer<T extends LivingEntity> extends RenderLayer<T, EmptyEntityModel<T>> {
 
     public ReplaceableRenderLayer(RenderLayerParent<T, EmptyEntityModel<T>> pRenderer) {
