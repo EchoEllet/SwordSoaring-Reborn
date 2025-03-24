@@ -1,8 +1,12 @@
 package net.p1nero.ss.entity.wraithon;
 
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.p1nero.ss.client.sound.SwordSoaringSounds;
 import net.p1nero.ss.gameassets.SwordSoaringArmatures;
 import net.p1nero.ss.gameassets.animations.WraithonAnimations;
 import net.p1nero.ss.util.AnimationUtils;
@@ -13,6 +17,9 @@ import yesman.epicfight.api.animation.types.StaticAnimation;
 import yesman.epicfight.api.asset.AssetAccessor;
 import yesman.epicfight.api.utils.math.MathUtils;
 import yesman.epicfight.api.utils.math.OpenMatrix4f;
+import yesman.epicfight.gameasset.EpicFightSounds;
+import yesman.epicfight.particle.EpicFightParticles;
+import yesman.epicfight.particle.HitParticleType;
 import yesman.epicfight.world.capabilities.entitypatch.MobPatch;
 import yesman.epicfight.world.damagesource.StunType;
 import yesman.epicfight.world.entity.ai.goal.AnimatedAttackGoal;
@@ -129,6 +136,22 @@ public class WraithonEntityPatch extends MobPatch<WraithonEntity> {
     }
 
     @Override
+    public SoundEvent getWeaponHitSound(InteractionHand hand) {
+
+        return EpicFightSounds.BLADE_HIT.get();
+    }
+
+    @Override
+    public SoundEvent getSwingSound(InteractionHand hand) {
+        return SwordSoaringSounds.VATANSEVER_WHOOSH_BIG.get();
+    }
+
+    @Override
+    public HitParticleType getWeaponHitParticle(InteractionHand hand) {
+        return EpicFightParticles.HIT_BLADE.get();
+    }
+
+    @Override
     public OpenMatrix4f getMatrix(float partialTicks) {
         return super.getMatrix(partialTicks).scale(SCALE, SCALE, SCALE);
     }
@@ -137,6 +160,7 @@ public class WraithonEntityPatch extends MobPatch<WraithonEntity> {
     public OpenMatrix4f getModelMatrix(float partialTicks) {
         return super.getModelMatrix(partialTicks).scale(SCALE, SCALE, SCALE);
     }
+
 
     @Override
     public AssetAccessor<? extends StaticAnimation> getHitAnimation(StunType stunType) {

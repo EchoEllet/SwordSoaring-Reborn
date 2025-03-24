@@ -7,7 +7,7 @@ public class SwordSoaringColliders {
     public static final Collider VATANSEVER = new MultiOBBCollider(1, 0.4, 1.7, 0.4, 0.0, 0.5, 0);
     public static final Collider SCAN_SCALE = new MultiOBBCollider(1, 8, 16, 15, 0, -8, -16);
     public static final Collider FLY_SWORD_COMMON = new MultiOBBCollider(3, 1, 1, 1, 0.0, 0, 0);
-    public static final Collider WRAITHON_BASIC_ATTACK_1 = new MultiOBBCollider(3, 0.85, 0.8, 0.2, 0.0, 5, 0);
-    public static final Collider WRAITHON_BASIC_ATTACK_2 = new MultiOBBCollider(3, 0.11, 1.5, 0.2, 0.0, 5.5, 0);
+    public static final Collider WRAITHON_BASIC_ATTACK_1 = new MultiOBBCollider(10, 0.85, 0.8, 0.2, 0.0, 5, 0);
+    public static final Collider WRAITHON_BASIC_ATTACK_2 = new MultiOBBCollider(10, 0.11, 1.5, 0.2, 0.0, 5.5, 0);
 
 }
