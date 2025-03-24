@@ -33,12 +33,11 @@ import java.util.List;
 public class GateOfBabylonSkill extends Skill {
     private int cooldown, interval;
     private int count = -1;
-    private final int perShootCount;
+    private int perShootCount;
     private Vec3 startPos;
     private float startYRot;
     public GateOfBabylonSkill(SkillBuilder<? extends Skill> builder) {
         super(builder);
-        perShootCount = SwordSoaringArmatures.BABYLON_ARMATURE.get().joints.size();
     }
 
     @Override
@@ -60,6 +59,7 @@ public class GateOfBabylonSkill extends Skill {
     @Override
     public void executeOnServer(SkillContainer container, FriendlyByteBuf args) {
         super.executeOnServer(container, args);
+        perShootCount = SwordSoaringArmatures.BABYLON_ARMATURE.get().joints.size();//这个时候joints才初始化了= =byd新版本
         ServerPlayerPatch executor = container.getServerExecutor();
         container.getDataManager().setDataSync(SwordSoaringDatakeys.COOLDOWN_TIMER.get(), cooldown, executor.getOriginal());
         executor.playAnimationSynchronized(BabylonAnimations.BABYLON_SUMMON_PLAYER, 0.15F);

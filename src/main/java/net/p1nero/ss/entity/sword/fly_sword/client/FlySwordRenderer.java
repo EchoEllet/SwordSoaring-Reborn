@@ -6,12 +6,15 @@ import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.p1nero.ss.entity.client.layer.ReplaceableRenderLayer;
 import net.p1nero.ss.entity.client.model.EmptyEntityModel;
 import net.p1nero.ss.entity.sword.fly_sword.FlySwordEntity;
 import net.p1nero.ss.entity.vatansever.client.VatanseverRenderer;
 import org.jetbrains.annotations.NotNull;
 
+@OnlyIn(Dist.CLIENT)
 public class FlySwordRenderer extends MobRenderer<FlySwordEntity, EmptyEntityModel<FlySwordEntity>> {
     public FlySwordRenderer(EntityRendererProvider.Context context) {
         super(context, new EmptyEntityModel<>(), 1);

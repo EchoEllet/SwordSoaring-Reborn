@@ -12,7 +12,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.p1nero.ss.entity.SwordSoaringEntities;
 import org.joml.Vector3f;
-import yesman.epicfight.api.animation.Joint;
 
 import javax.annotation.Nullable;
 import java.util.Optional;

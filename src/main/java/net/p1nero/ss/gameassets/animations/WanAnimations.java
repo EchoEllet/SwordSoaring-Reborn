@@ -5,6 +5,9 @@ import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.p1nero.ss.Config;
 import net.p1nero.ss.animation.BabylonMultiPhaseAttackAnimation;
@@ -70,6 +73,7 @@ public class WanAnimations {
 
     public static final AnimationEvent DISCARD_SELF = AnimationEvent.SimpleEvent.create((livingEntityPatch, staticAnimation, objects) -> livingEntityPatch.getOriginal().discard(), AnimationEvent.Side.SERVER);
 
+    @OnlyIn(Dist.CLIENT)
     public static List<TrailInfo> getWanTrails(){
         int updateInterVal =  Config.WAN_TRAIL_UPDATE_TICK.get();
         if(updateInterVal <= 0){
@@ -150,62 +154,113 @@ public class WanAnimations {
 
         Armatures.ArmatureAccessor<WanArmature> wanArmature = SwordSoaringArmatures.WAN_ARMATURE;
 
-        WAN1_L = builder.nextAccessor("wan/wan_l_1", accessor ->  new BabylonMultiPhaseAttackAnimation(0.15F, accessor, wanArmature, AnimationUtils.getPhases(wanArmature.get().wanJoints, 0, 2.667F))
-                .addEvents(summonAndPlay(2.30F, WAN2_L))
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF)
-                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1, v2) -> 0.5F))
-                .addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWanTrails()));
-        WAN2_L = builder.nextAccessor("wan/wan_l_2", accessor ->  new BabylonMultiPhaseAttackAnimation(0.0001F, accessor, wanArmature, AnimationUtils.getPhases(wanArmature.get().wanJoints, 0, 2.667F))
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.SimpleEvent.create((livingEntityPatch, staticAnimation, objects) -> {
-                    if (livingEntityPatch.getOriginal() instanceof WanEntity wanEntity) {
-                        if (wanEntity.isOwnerKeyPressing()) {
-                            livingEntityPatch.reserveAnimation(WAN2_L);
-                        } else {
-                            livingEntityPatch.reserveAnimation(WAN3_L);
+        WAN1_L = builder.nextAccessor("wan/wan_l_1", accessor -> {
+            BabylonMultiPhaseAttackAnimation animation = new BabylonMultiPhaseAttackAnimation(0.15F, accessor, wanArmature, AnimationUtils.getPhases(wanArmature.get().wanJoints, 0, 2.667F))
+                    .addEvents(summonAndPlay(2.30F, WAN2_L))
+                    .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF)
+                    .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1, v2) -> 0.5F));
+            if(FMLEnvironment.dist == Dist.CLIENT){
+                animation.addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWanTrails());
+            }
+            return animation;
+        });
+        WAN2_L = builder.nextAccessor("wan/wan_l_2", accessor ->  {
+            BabylonMultiPhaseAttackAnimation animation = new BabylonMultiPhaseAttackAnimation(0.0001F, accessor, wanArmature, AnimationUtils.getPhases(wanArmature.get().wanJoints, 0, 2.667F))
+                    .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.SimpleEvent.create((livingEntityPatch, staticAnimation, objects) -> {
+                        if (livingEntityPatch.getOriginal() instanceof WanEntity wanEntity) {
+                            if (wanEntity.isOwnerKeyPressing()) {
+                                livingEntityPatch.reserveAnimation(WAN2_L);
+                            } else {
+                                livingEntityPatch.reserveAnimation(WAN3_L);
+                            }
                         }
-                    }
-                }, AnimationEvent.Side.SERVER)));
-        WAN3_L = builder.nextAccessor( "wan/wan_l_3", accessor ->  new BabylonMultiPhaseAttackAnimation(0.0001F, accessor, wanArmature, AnimationUtils.getPhases(wanArmature.get().wanJoints, 0, 2.667F))
-                .addEvents(summonAndPlay(1.13F, WAN4_L))
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF)
-                .addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWanTrails()));
-        WAN4_L = builder.nextAccessor("wan/wan_l_4", accessor ->  new BabylonMultiPhaseAttackAnimation(0.15F, accessor, wanArmature, AnimationUtils.getPhases(wanArmature.get().wanJoints, 0, 2.667F))
-                .addEvents(summonAndPlay(1.13F, WAN_SHOOT_L))
-                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1, v2) -> 1F))
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF)
-                .addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWanTrails()));
-        WAN_SHOOT_L = builder.nextAccessor("wan/wan_shoot_l", accessor ->  new BabylonMultiPhaseAttackAnimation(0.0001F, accessor, wanArmature, AnimationUtils.getPhases(wanArmature.get().wanJoints, 0, 2.667F))
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF)
-                .addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWanTrails()));
+                    }, AnimationEvent.Side.SERVER));
+            if(FMLEnvironment.dist == Dist.CLIENT){
+                animation.addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWanTrails());
+            }
+            return animation;
+        });
+        WAN3_L = builder.nextAccessor( "wan/wan_l_3", accessor ->  {
+            BabylonMultiPhaseAttackAnimation animation = new BabylonMultiPhaseAttackAnimation(0.0001F, accessor, wanArmature, AnimationUtils.getPhases(wanArmature.get().wanJoints, 0, 2.667F))
+                    .addEvents(summonAndPlay(1.13F, WAN4_L))
+                    .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF);
+            if(FMLEnvironment.dist == Dist.CLIENT){
+                animation.addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWanTrails());
+            }
+            return animation;
+        });
+        WAN4_L = builder.nextAccessor("wan/wan_l_4", accessor -> {
+            BabylonMultiPhaseAttackAnimation animation = new BabylonMultiPhaseAttackAnimation(0.15F, accessor, wanArmature, AnimationUtils.getPhases(wanArmature.get().wanJoints, 0, 2.667F))
+                    .addEvents(summonAndPlay(1.13F, WAN_SHOOT_L))
+                    .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1, v2) -> 1F))
+                    .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF);
+            if(FMLEnvironment.dist == Dist.CLIENT){
+                animation.addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWanTrails());
+            }
+            return animation;
+        });
+        WAN_SHOOT_L = builder.nextAccessor("wan/wan_shoot_l", accessor ->  {
+            BabylonMultiPhaseAttackAnimation animation = new BabylonMultiPhaseAttackAnimation(0.0001F, accessor, wanArmature, AnimationUtils.getPhases(wanArmature.get().wanJoints, 0, 2.667F))
+                    .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF);
+            if(FMLEnvironment.dist == Dist.CLIENT){
+                animation.addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWanTrails());
+            }
+            return animation;
+        });
 
-        WAN1_R = builder.nextAccessor("wan/wan_r_1", accessor ->  new BabylonMultiPhaseAttackAnimation(0.15F, accessor, wanArmature, AnimationUtils.getPhases(wanArmature.get().wanJoints, 0, 2.667F))
-                .addEvents( summonAndPlay(2.30F, WAN2_R))
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF)
-                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1, v2) -> 0.5F))
-                .addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWanTrails()));
-        WAN2_R = builder.nextAccessor("wan/wan_r_2", accessor ->  new BabylonMultiPhaseAttackAnimation(0.0001F, accessor, wanArmature, AnimationUtils.getPhases(wanArmature.get().wanJoints, 0, 2.667F))
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.SimpleEvent.create((livingEntityPatch, staticAnimation, objects) -> {
-                    if (livingEntityPatch.getOriginal() instanceof WanEntity wanEntity) {
-                        if (wanEntity.isOwnerKeyPressing()) {
-                            livingEntityPatch.reserveAnimation(WAN2_R);
-                        } else {
-                            livingEntityPatch.reserveAnimation(WAN3_R);
+        WAN1_R = builder.nextAccessor("wan/wan_r_1", accessor -> {
+            BabylonMultiPhaseAttackAnimation animation = new BabylonMultiPhaseAttackAnimation(0.15F, accessor, wanArmature, AnimationUtils.getPhases(wanArmature.get().wanJoints, 0, 2.667F))
+                    .addEvents( summonAndPlay(2.30F, WAN2_R))
+                    .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF)
+                    .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1, v2) -> 0.5F));
+            if(FMLEnvironment.dist == Dist.CLIENT){
+                animation.addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWanTrails());
+            }
+            return animation;
+        });
+        WAN2_R = builder.nextAccessor("wan/wan_r_2", accessor ->  {
+            BabylonMultiPhaseAttackAnimation animation = new BabylonMultiPhaseAttackAnimation(0.0001F, accessor, wanArmature, AnimationUtils.getPhases(wanArmature.get().wanJoints, 0, 2.667F))
+                    .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.SimpleEvent.create((livingEntityPatch, staticAnimation, objects) -> {
+                        if (livingEntityPatch.getOriginal() instanceof WanEntity wanEntity) {
+                            if (wanEntity.isOwnerKeyPressing()) {
+                                livingEntityPatch.reserveAnimation(WAN2_R);
+                            } else {
+                                livingEntityPatch.reserveAnimation(WAN3_R);
+                            }
                         }
-                    }
-                }, AnimationEvent.Side.SERVER))
-                .addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWanTrails()));
-        WAN3_R = builder.nextAccessor("wan/wan_r_3", accessor ->  new BabylonMultiPhaseAttackAnimation(0.0001F, accessor, wanArmature, AnimationUtils.getPhases(wanArmature.get().wanJoints, 0, 2.667F))
-                .addEvents(summonAndPlay(1.13F, WAN4_R))
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF)
-                .addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWanTrails()));
-        WAN4_R = builder.nextAccessor("wan/wan_r_4", accessor ->  new BabylonMultiPhaseAttackAnimation(0.15F, accessor, wanArmature, AnimationUtils.getPhases(wanArmature.get().wanJoints, 0, 2.667F))
-                .addEvents(summonAndPlay(1.13F, WAN_SHOOT_R))
-                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1, v2) -> 1F))
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF)
-                .addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWanTrails()));
-        WAN_SHOOT_R = builder.nextAccessor("wan/wan_shoot_r", accessor ->  new BabylonMultiPhaseAttackAnimation(0.0001F, accessor, wanArmature, AnimationUtils.getPhases(wanArmature.get().wanJoints, 0, 2.667F))
-                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF)
-                .addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWanTrails()));
+                    }, AnimationEvent.Side.SERVER));
+            if(FMLEnvironment.dist == Dist.CLIENT){
+                animation.addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWanTrails());
+            }
+            return animation;
+        });
+        WAN3_R = builder.nextAccessor("wan/wan_r_3", accessor -> {
+            BabylonMultiPhaseAttackAnimation animation = new BabylonMultiPhaseAttackAnimation(0.0001F, accessor, wanArmature, AnimationUtils.getPhases(wanArmature.get().wanJoints, 0, 2.667F))
+                    .addEvents(summonAndPlay(1.13F, WAN4_R))
+                    .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF);
+            if(FMLEnvironment.dist == Dist.CLIENT){
+                animation.addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWanTrails());
+            }
+            return animation;
+        });
+        WAN4_R = builder.nextAccessor("wan/wan_r_4", accessor ->  {
+            BabylonMultiPhaseAttackAnimation animation = new BabylonMultiPhaseAttackAnimation(0.15F, accessor, wanArmature, AnimationUtils.getPhases(wanArmature.get().wanJoints, 0, 2.667F))
+                    .addEvents(summonAndPlay(1.13F, WAN_SHOOT_R))
+                    .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1, v2) -> 1F))
+                    .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF);
+            if(FMLEnvironment.dist == Dist.CLIENT){
+                animation.addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWanTrails());
+            }
+            return animation;
+        });
+        WAN_SHOOT_R = builder.nextAccessor("wan/wan_shoot_r", accessor -> {
+            BabylonMultiPhaseAttackAnimation animation = new BabylonMultiPhaseAttackAnimation(0.0001F, accessor, wanArmature, AnimationUtils.getPhases(wanArmature.get().wanJoints, 0, 2.667F))
+                    .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF);
+            if(FMLEnvironment.dist == Dist.CLIENT){
+                animation.addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWanTrails());
+            }
+            return animation;
+        });
 
     }
 }
