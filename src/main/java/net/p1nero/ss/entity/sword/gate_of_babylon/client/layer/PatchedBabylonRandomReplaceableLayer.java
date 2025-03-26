@@ -76,19 +76,6 @@ public class PatchedBabylonRandomReplaceableLayer<E extends BabylonEntity, T ext
                     }
                     final float outerAlpha = alpha;
                     float frame = currentTickCount * 1.0F % 20;
-                    //画不断放大的圈圈
-//                    if(currentTickCount < LIFE_TIME - FADE_TIME){
-//                        alpha = (currentTickCount * 1.0F % FADE_TIME) / FADE_TIME;
-//                        poseStack.pushPose();
-//                        poseStack.scale(alpha, alpha, alpha);
-//                        poseStack.pushPose();
-//                        poseStack.scale(0.7F, 0.7F, 0.7F);
-//                        renderPortal(poseStack, 0.5F, 1.0F, 1.0F, 1.0F, PORTAL_TEXTURE, buffer,frame);
-//                        poseStack.popPose();
-//                        renderPortal(poseStack, 1, 1.0F, 1.0F, 1.0F, LIGHT_TEXTURE, buffer,frame);
-//                        poseStack.popPose();
-//                    }
-
                     //画核心圈圈
 
 

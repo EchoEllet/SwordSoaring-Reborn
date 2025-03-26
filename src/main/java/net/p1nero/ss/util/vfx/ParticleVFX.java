@@ -313,7 +313,8 @@ public class ParticleVFX {
             double z = center.z() + offsetZ * radius;
             double speed = minSpeed + random.nextDouble() * (maxSpeed - minSpeed);
 
-            level.addParticle(particleOptions, x, y, z, offsetX * speed, offsetY * speed, offsetZ * speed);
+            level.addParticle(particleOptions,true,
+                    x, y, z, offsetX * speed, offsetY * speed, offsetZ * speed);
         }
     }
 

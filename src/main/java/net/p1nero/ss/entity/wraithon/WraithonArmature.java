@@ -17,11 +17,15 @@ public class WraithonArmature extends Armature {
     public final Joint leg_F_3_L;
     public final Joint leg_M_3_L;
     public final Joint leg_B_3_L;
+    public final Joint root;
+    public final Joint weapon_s;
     public final Map<String, Joint> partJointMap;
     public WraithonArmature(String name, int jointNumber, Joint rootJoint, Map<String, Joint> jointMap) {
         super(name, jointNumber, rootJoint, jointMap);
         partJointMap = new HashMap<>();
         weapon = getOrLogException(jointMap, "weapon_r");
+        root = getOrLogException(jointMap, "Root");
+        weapon_s = getOrLogException(jointMap, "weapon_S");
         head = getAndAddToPartJointMap(jointMap, "head");
         chest = getAndAddToPartJointMap(jointMap, "chest");
         tail = getAndAddToPartJointMap(jointMap, "tail_2");

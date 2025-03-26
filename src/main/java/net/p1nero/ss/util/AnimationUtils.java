@@ -30,6 +30,18 @@ public class AnimationUtils {
         return OpenMatrix4f.transform(JointTf, Vec3.ZERO);
     }
 
+    public static Vec3 getJointWorldRawPos(LivingEntityPatch<?> entityPatch, Joint joint,float time) {
+        Animator animator = entityPatch.getAnimator();
+        Pose pose = animator.getPlayerFor(null).getAnimation().get().getRawPose(time);
+        Vec3 pos = entityPatch.getOriginal().position();
+        OpenMatrix4f modelTf = OpenMatrix4f.createTranslation((float) pos.x, (float) pos.y, (float) pos.z)
+                .mulBack(OpenMatrix4f.createRotatorDeg(180.0F, Vec3f.Y_AXIS)
+                        .mulBack(entityPatch.getModelMatrix(1)));
+        OpenMatrix4f JointTf = new OpenMatrix4f(entityPatch.getArmature().getBindedTransformFor(pose, joint)).mulFront(modelTf);
+
+        return OpenMatrix4f.transform(JointTf, Vec3.ZERO);
+    }
+
     public static ArtifactSpiritMultiPhaseAttackAnimation.MultiAttackPhase[] getPhases(List<Joint> joints, float maxTime) {
         ArrayList<ArtifactSpiritMultiPhaseAttackAnimation.MultiAttackPhase> multiAttackPhases = new ArrayList<>();
         for (Joint joint : joints) {
@@ -48,7 +60,7 @@ public class AnimationUtils {
 
 
 
-    public static Vec3 jointRayDetectionX(LivingEntityPatch<?> livingEntityPatch, Joint joint, float distance) {
+    public static Vec3 jointRayDetectionX(LivingEntityPatch<?> livingEntityPatch, Joint joint, float distance,boolean defaultEndpoint) {
         LivingEntity entity = livingEntityPatch.getOriginal();
         OpenMatrix4f transformMatrix = livingEntityPatch.getArmature().getBindedTransformFor(livingEntityPatch.getAnimator().getPose(1.0F), joint);
         OpenMatrix4f rotation = new OpenMatrix4f().rotate(-(float) Math.toRadians(entity.yBodyRotO + 180.0F), new Vec3f(0.0F, 1.0F, 0.0F));
@@ -71,17 +83,20 @@ public class AnimationUtils {
                 return pos;
             }
         }
-        OpenMatrix4f endTransform = new OpenMatrix4f(rotatedMatrix);
-        endTransform.translate(new Vec3f(distance, 0.0F, 0.0F));
-        Vec3 endPos = new Vec3(
-                endTransform.m30 + (float) entity.getX(),
-                endTransform.m31 + (float) entity.getY(),
-                endTransform.m32 + (float) entity.getZ()
-        );
-        return endPos;
+        if (defaultEndpoint){
+            OpenMatrix4f endTransform = new OpenMatrix4f(rotatedMatrix);
+            endTransform.translate(new Vec3f(distance, 0.0F, 0.0F));
+            Vec3 endPos = new Vec3(
+                    endTransform.m30 + (float) entity.getX(),
+                    endTransform.m31 + (float) entity.getY(),
+                    endTransform.m32 + (float) entity.getZ()
+            );
+            return endPos;
+        }
+        return null;
     }
 
-    public static Vec3 jointRayDetectionY(LivingEntityPatch<?> livingEntityPatch, Joint joint, float distance) {
+    public static Vec3 jointRayDetectionY(LivingEntityPatch<?> livingEntityPatch, Joint joint, float distance,boolean defaultEndpoint) {
         LivingEntity entity = livingEntityPatch.getOriginal();
         OpenMatrix4f transformMatrix = livingEntityPatch.getArmature().getBindedTransformFor(livingEntityPatch.getAnimator().getPose(1.0F), joint);
         OpenMatrix4f rotation = new OpenMatrix4f().rotate(-(float) Math.toRadians(entity.yBodyRotO + 180.0F), new Vec3f(0.0F, 1.0F, 0.0F));
@@ -100,22 +115,26 @@ public class AnimationUtils {
                     currentTransform.m32 + (float) entity.getZ()
             );
             ParticleVFX.createSphereParticles(entity.level(),pos, ParticleTypes.SMOKE,0.2,0,0,5);
+
             BlockPos center = new BlockPos((int) pos.x, (int) pos.y, (int) pos.z);
             if (checkRadiusBlocks(entity, center, 1)) {
                 return pos;
             }
         }
-        OpenMatrix4f endTransform = new OpenMatrix4f(rotatedMatrix);
-        endTransform.translate(new Vec3f(0.0F, distance, 0.0F));
-        Vec3 endPos = new Vec3(
-                endTransform.m30 + (float) entity.getX(),
-                endTransform.m31 + (float) entity.getY(),
-                endTransform.m32 + (float) entity.getZ()
-        );
-        return endPos;
+        if (defaultEndpoint){
+            OpenMatrix4f endTransform = new OpenMatrix4f(rotatedMatrix);
+            endTransform.translate(new Vec3f(distance, 0.0F, 0.0F));
+            Vec3 endPos = new Vec3(
+                    endTransform.m30 + (float) entity.getX(),
+                    endTransform.m31 + (float) entity.getY(),
+                    endTransform.m32 + (float) entity.getZ()
+            );
+            return endPos;
+        }
+        return null;
     }
 
-    public static Vec3 jointRayDetectionZ(LivingEntityPatch<?> livingEntityPatch, Joint joint, float distance) {
+    public static Vec3 jointRayDetectionZ(LivingEntityPatch<?> livingEntityPatch, Joint joint, float distance,boolean defaultEndpoint) {
         LivingEntity entity = livingEntityPatch.getOriginal();
         OpenMatrix4f transformMatrix = livingEntityPatch.getArmature().getBindedTransformFor(livingEntityPatch.getAnimator().getPose(1.0F), joint);
         OpenMatrix4f rotation = new OpenMatrix4f().rotate(-(float) Math.toRadians(entity.yBodyRotO + 180.0F), new Vec3f(0.0F, 1.0F, 0.0F));
@@ -138,14 +157,17 @@ public class AnimationUtils {
                 return pos;
             }
         }
-        OpenMatrix4f endTransform = new OpenMatrix4f(rotatedMatrix);
-        endTransform.translate(new Vec3f(0.0F, 0.0F, distance));
-        Vec3 endPos = new Vec3(
-                endTransform.m30 + (float) entity.getX(),
-                endTransform.m31 + (float) entity.getY(),
-                endTransform.m32 + (float) entity.getZ()
-        );
-        return endPos;
+        if (defaultEndpoint){
+            OpenMatrix4f endTransform = new OpenMatrix4f(rotatedMatrix);
+            endTransform.translate(new Vec3f(distance, 0.0F, 0.0F));
+            Vec3 endPos = new Vec3(
+                    endTransform.m30 + (float) entity.getX(),
+                    endTransform.m31 + (float) entity.getY(),
+                    endTransform.m32 + (float) entity.getZ()
+            );
+            return endPos;
+        }
+        return null;
     }
     private static boolean checkRadiusBlocks(LivingEntity entity, BlockPos center, int radius) {
         for (int x = -radius; x <= radius; x++) {
