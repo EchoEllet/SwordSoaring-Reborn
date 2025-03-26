@@ -17,6 +17,7 @@ public class Config {
     public static final ForgeConfigSpec.BooleanValue ARACHNOPHOBIA_MODE;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> ITEMS_CAN_FLY;
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> ITEMS_CAN_NOT_FLY;
+    public static final ForgeConfigSpec.IntValue FLY_DELAY;
     public static final ForgeConfigSpec.BooleanValue ITEMS_BLOOM;
     public static final ForgeConfigSpec.BooleanValue REMOVE_ITEM;
     public static final ForgeConfigSpec.IntValue SWORD_EFFECT_PER_TICK;
@@ -36,6 +37,8 @@ public class Config {
         ITEMS_CAN_NOT_FLY = BUILDER
                 .comment("A list of items not considered as sword.", "不被视为剑的物品")
                 .defineListAllowEmpty(List.of("items not considered as sword."), () -> List.of("sword_soaring:vatansever"), Config::validateItemName);
+        BUILDER.push("Sword Soaring 御剑凌虚");
+        FLY_DELAY = createInt("fly_delay", 200, "time mills between double click of starting flying", "起飞的双击间隔的毫秒数");
         BUILDER.pop();
         BUILDER.push("Gate of Babylon Skill 王之财宝");
         ITEMS_BLOOM = createBool("items_bloom", false, "should the item shot glowing", "发射的物品是否发光");

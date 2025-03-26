@@ -61,7 +61,7 @@ public class VatanseverItem extends WeaponItem {
 
     @Override
     public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, @NotNull List<Component> pTooltipComponents, @NotNull TooltipFlag pIsAdvanced) {
-        pTooltipComponents.add(Component.literal("item.sword_soaring.vatansever.description1"));
-        pTooltipComponents.add(Component.literal("item.sword_soaring.vatansever.description2"));
+        pTooltipComponents.add(Component.translatable("item.sword_soaring.vatansever.description1"));
+        pTooltipComponents.add(Component.translatable("item.sword_soaring.vatansever.description2"));
     }
 }

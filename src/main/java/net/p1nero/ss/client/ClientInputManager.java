@@ -8,6 +8,7 @@ import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.p1nero.ss.Config;
 import net.p1nero.ss.SwordSoaringMod;
 import net.p1nero.ss.client.keymapping.SwordSoaringKeyMappings;
 import net.p1nero.ss.gameassets.SwordSoaringSkillCategories;
@@ -47,8 +48,11 @@ public class ClientInputManager {
     public static void onKeyInput(TickEvent.ClientTickEvent event){
         if(event.phase.equals(TickEvent.Phase.END)){
             while (SwordSoaringKeyMappings.TAKE_OFF.consumeClick()){
-                //TODO 做双击起飞
-                sendSkillPacket(SwordSoaringSkillSlots.SWORD_SOARING, SwordSoaringKeyMappings.TAKE_OFF);
+                long currentTime = System.currentTimeMillis();
+                if(currentTime - lastPressTime < Config.FLY_DELAY.get()) {
+                    sendSkillPacket(SwordSoaringSkillSlots.SWORD_SOARING, SwordSoaringKeyMappings.TAKE_OFF);
+                }
+                lastPressTime = System.currentTimeMillis();
             }
             while (SwordSoaringKeyMappings.SWORD_SKILL.consumeClick()){
                 sendSkillPacket(SwordSoaringSkillSlots.SWORD_CONTROLLER, SwordSoaringKeyMappings.SWORD_SKILL);

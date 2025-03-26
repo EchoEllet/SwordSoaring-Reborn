@@ -25,6 +25,7 @@ import yesman.epicfight.api.utils.math.Vec3f;
 import yesman.epicfight.gameasset.Armatures;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -35,6 +36,8 @@ public class WraithonAnimations {
     public static AnimationManager.AnimationAccessor<ActionAnimation> WRAITHON_ROTATE_L;
     public static AnimationManager.AnimationAccessor<BasicAttackAnimation> WRAITHON_1;
     public static AnimationManager.AnimationAccessor<BasicAttackAnimation> WRAITHON_3;
+
+    public static final List<AnimationManager.AnimationAccessor<? extends StaticAnimation>> DEBUG_ANIM_LIST = new ArrayList<>();
 
     public static void buildWraithonAnim(AnimationManager.AnimationBuilder builder) {
         Armatures.ArmatureAccessor<WraithonArmature> armature = SwordSoaringArmatures.WRAITHON_ARMATURE;
@@ -71,7 +74,7 @@ public class WraithonAnimations {
                 new AttackAnimation.Phase(1.25F, 2.16F, 2.16F, 2.42F, 2.42F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, supplier.get()))
                 .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1, v2) -> 1F))));
 
-
+        DEBUG_ANIM_LIST.add(WRAITHON_1);
     }
     private static void wraithonGroundSplit(LivingEntityPatch<?> entityPatch, float radius, int particleCount) {
         LivingEntity entity = entityPatch.getOriginal();
