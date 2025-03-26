@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.p1nero.ss.SwordSoaringMod;
@@ -27,19 +28,14 @@ import java.util.List;
 
 @Mod.EventBusSubscriber(modid = SwordSoaringMod.MOD_ID, value = {Dist.CLIENT})
 public class ClientInputManager {
+    public static long lastPressTime;
 
     @SubscribeEvent
     public static void onMouseInput(InputEvent.MouseButton event) {
 
         if(Minecraft.getInstance().player != null && Minecraft.getInstance().screen == null){
-            if(event.getButton() == SwordSoaringKeyMappings.TAKE_OFF.getKey().getValue()){
-                takeOffKeyPressed(event.getAction());
-            }
             if(event.getButton() == SwordSoaringKeyMappings.SWITCH_MODE.getKey().getValue()){
                 switchModeKeyPressed(event.getAction());
-            }
-            if(event.getButton() == SwordSoaringKeyMappings.SWORD_SKILL.getKey().getValue()){
-                swordSkillKeyPressed(event.getAction());
             }
             if(event.getButton() == SwordSoaringKeyMappings.SWORD_BACK.getKey().getValue()){
                 swordBackKeyPressed(event.getAction());
@@ -48,32 +44,27 @@ public class ClientInputManager {
     }
 
     @SubscribeEvent
+    public static void onKeyInput(TickEvent.ClientTickEvent event){
+        if(event.phase.equals(TickEvent.Phase.END)){
+            while (SwordSoaringKeyMappings.TAKE_OFF.consumeClick()){
+                //TODO 做双击起飞
+                sendSkillPacket(SwordSoaringSkillSlots.SWORD_SOARING, SwordSoaringKeyMappings.TAKE_OFF);
+            }
+            while (SwordSoaringKeyMappings.SWORD_SKILL.consumeClick()){
+                sendSkillPacket(SwordSoaringSkillSlots.SWORD_CONTROLLER, SwordSoaringKeyMappings.SWORD_SKILL);
+            }
+        }
+    }
+
+    @SubscribeEvent
     public static void onKeyInput(InputEvent.Key event){
         if(Minecraft.getInstance().player != null && Minecraft.getInstance().screen == null){
-            if(event.getKey() == SwordSoaringKeyMappings.TAKE_OFF.getKey().getValue()){
-                takeOffKeyPressed(event.getAction());
-            }
             if(event.getKey() == SwordSoaringKeyMappings.SWITCH_MODE.getKey().getValue()){
                 switchModeKeyPressed(event.getAction());
-            }
-            if(event.getKey() == SwordSoaringKeyMappings.SWORD_SKILL.getKey().getValue()){
-                swordSkillKeyPressed(event.getAction());
             }
             if(event.getKey() == SwordSoaringKeyMappings.SWORD_BACK.getKey().getValue()){
                 swordBackKeyPressed(event.getAction());
             }
-        }
-    }
-
-    public static void takeOffKeyPressed(int action){
-        if(action == 1){
-            sendSkillPacket(SwordSoaringSkillSlots.SWORD_SOARING, SwordSoaringKeyMappings.TAKE_OFF);
-        }
-    }
-
-    public static void swordSkillKeyPressed(int action){
-        if(action == 1){
-            sendSkillPacket(SwordSoaringSkillSlots.SWORD_CONTROLLER, SwordSoaringKeyMappings.SWORD_SKILL);
         }
     }
 
