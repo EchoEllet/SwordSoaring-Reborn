@@ -5,10 +5,11 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -26,11 +27,23 @@ import yesman.epicfight.world.entity.ai.attribute.EpicFightAttributes;
 import java.util.List;
 
 public class WraithonEntity extends PathfinderMob {
+    public static final int PHASE0 = 0;//阶段0（用血量表示什么的）
+    public static final int PHASE1 = 1;//阶段1（用血量表示什么的）
+    public static final int DEFAULT_STATE = 0;//火状态（吸收火伤到一定程度）
+    public static final int FIRE_STATE = 1;//火状态（吸收火伤到一定程度）
+    public static final int EXPLOSION_STATE = 2;//爆炸状态（吸收爆炸伤害到一定程度）
+    public static final int MAGIC_STATE = 3;//魔法状态（吸收魔法伤害到一定程度）
+    public static final int OUTSIDE_STATE = 4;//虚空状态（吸收虚空伤害到一定程度）真jb有人打虚空伤害？
+    public static final int PROJECTILE_STATE = 5;//投掷物伤害（吸收投掷物伤害到一定程度）
+    protected static final EntityDataAccessor<Integer> PHASE = SynchedEntityData.defineId(WraithonEntity.class, EntityDataSerializers.INT);
+    protected static final EntityDataAccessor<Integer> STATE = SynchedEntityData.defineId(WraithonEntity.class, EntityDataSerializers.INT);
     protected static final EntityDataAccessor<Float> FIRE_CONTAINER = SynchedEntityData.defineId(WraithonEntity.class, EntityDataSerializers.FLOAT);
     protected static final EntityDataAccessor<Float> EXPLOSION_CONTAINER = SynchedEntityData.defineId(WraithonEntity.class, EntityDataSerializers.FLOAT);
     protected static final EntityDataAccessor<Float> MAGIC_CONTAINER = SynchedEntityData.defineId(WraithonEntity.class, EntityDataSerializers.FLOAT);
     protected static final EntityDataAccessor<Float> OUTSIDE_BORDER_CONTAINER = SynchedEntityData.defineId(WraithonEntity.class, EntityDataSerializers.FLOAT);
     protected static final EntityDataAccessor<Float> PROJECTILE_CONTAINER = SynchedEntityData.defineId(WraithonEntity.class, EntityDataSerializers.FLOAT);
+    public static final int MAX_LEG_DAMAGE = 300;
+    protected static final EntityDataAccessor<Float> LEG_DAMAGE_VALUE = SynchedEntityData.defineId(WraithonEntity.class, EntityDataSerializers.FLOAT);
     private final WraithonPartEntity[] subEntities;
     private final WraithonPartEntity head;
     private final WraithonPartEntity chest;
@@ -73,6 +86,61 @@ public class WraithonEntity extends PathfinderMob {
     }
 
     /**
+     * 不做持久化了
+     */
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(PHASE, 0);
+        this.entityData.define(STATE, 0);
+        this.entityData.define(FIRE_CONTAINER, 0.0F);
+        this.entityData.define(EXPLOSION_CONTAINER, 0.0F);
+        this.entityData.define(MAGIC_CONTAINER, 0.0F);
+        this.entityData.define(OUTSIDE_BORDER_CONTAINER, 0.0F);
+        this.entityData.define(PROJECTILE_CONTAINER, 0.0F);
+        this.entityData.define(LEG_DAMAGE_VALUE, 0.0F);
+    }
+
+    /**
+     * 获取boss当前阶段
+     */
+    public int getPhase(){
+        return this.entityData.get(PHASE);
+    }
+
+    public void setPhase(int newPhase){
+        this.entityData.set(PHASE, newPhase);
+    }
+
+    /**
+     * 获取boss当前状态
+     */
+    public int getState(){
+        return this.entityData.get(STATE);
+    }
+
+    public void setState(int newState){
+        this.entityData.set(STATE, newState);
+    }
+
+    public float getLegDamage(){
+        return this.entityData.get(LEG_DAMAGE_VALUE);
+    }
+
+    public void damageLegs(float damageValue){
+        this.entityData.set(LEG_DAMAGE_VALUE, this.getLegDamage() + damageValue);
+        //大于最大值则进入硬直
+        if(this.getLegDamage() > MAX_LEG_DAMAGE){
+            //TODO 进硬直
+            clearLegDamage();
+        }
+    }
+
+    public void clearLegDamage(){
+        this.entityData.set(LEG_DAMAGE_VALUE, 0.0F);
+    }
+
+    /**
      * 防止被推
      */
     @Override
@@ -86,6 +154,9 @@ public class WraithonEntity extends PathfinderMob {
         setYHeadRot(getYRot());
     }
 
+    /**
+     * 以肢体碰撞为准
+     */
     @Override
     protected void pushEntities() {
         for(WraithonPartEntity part : getWraithonParts()) {
@@ -101,7 +172,6 @@ public class WraithonEntity extends PathfinderMob {
                         this.doPush(entity);
                     }
                 }
-
             }
         }
     }
@@ -135,13 +205,22 @@ public class WraithonEntity extends PathfinderMob {
         return super.hurt(pSource, pAmount);
     }
 
-    public boolean hurt(WraithonPartEntity wraithonPartEntity, DamageSource pSource, float pAmount) {
+    /**
+     *
+     */
+    public boolean hurtFromPartEntity(WraithonPartEntity wraithonPartEntity, DamageSource pSource, float pAmount) {
         if (isDamageTypeInRange(pSource)) {
-
+            //TODO 根据伤害判定
+            return true;
         } else {
             pAmount *= wraithonPartEntity.getDamageReduce();
+            if(wraithonPartEntity.isLeg()) {
+                this.damageLegs(pAmount);
+            }
+            MobEffectInstance currentDamageResistance = this.getEffect(MobEffects.DAMAGE_RESISTANCE);
+            this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 10, currentDamageResistance == null ? 0 : currentDamageResistance.getAmplifier() + 1));
+            return this.hurt(pSource, pAmount);
         }
-        return this.hurt(pSource, pAmount);
     }
 
     /**
