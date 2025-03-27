@@ -113,7 +113,7 @@ public class PlayerScanAnimation extends AttackAnimation implements ILinkArtifac
         list.sort(Comparator.comparingDouble((entity) -> entity.distanceTo(entityPatch.getOriginal())));
         for(Entity target : list){
             LivingEntity trueEntity = this.getTrueEntity(target);
-            if (trueEntity != null && trueEntity.isAlive() && !entityPatch.isTeammate(trueEntity)) {
+            if (trueEntity != null && trueEntity.isAlive() && !entityPatch.isTargetInvulnerable(trueEntity)) {
                 if (target instanceof LivingEntity || target instanceof PartEntity) {
                     if (entityPatch instanceof ServerPlayerPatch serverPlayerPatch) {
                         serverPlayerPatch.setAttackTarget(trueEntity);
