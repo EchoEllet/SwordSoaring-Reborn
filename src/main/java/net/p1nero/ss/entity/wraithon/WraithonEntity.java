@@ -67,7 +67,7 @@ public class WraithonEntity extends PathfinderMob {
     public static AttributeSupplier getDefaultAttribute() {
         return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 1000F)
-                .add(Attributes.ATTACK_DAMAGE, 19.9f)
+                .add(Attributes.ATTACK_DAMAGE, 99999)
                 .add(EpicFightAttributes.MAX_STRIKES.get(), 50.0F)
                 .build();
     }

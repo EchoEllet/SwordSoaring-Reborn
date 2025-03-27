@@ -123,7 +123,7 @@ public class AnimationUtils {
         }
         if (defaultEndpoint){
             OpenMatrix4f endTransform = new OpenMatrix4f(rotatedMatrix);
-            endTransform.translate(new Vec3f(distance, 0.0F, 0.0F));
+            endTransform.translate(new Vec3f(0.0F, distance, 0.0F));
             Vec3 endPos = new Vec3(
                     endTransform.m30 + (float) entity.getX(),
                     endTransform.m31 + (float) entity.getY(),
@@ -159,7 +159,7 @@ public class AnimationUtils {
         }
         if (defaultEndpoint){
             OpenMatrix4f endTransform = new OpenMatrix4f(rotatedMatrix);
-            endTransform.translate(new Vec3f(distance, 0.0F, 0.0F));
+            endTransform.translate(new Vec3f(0.0F, 0.0F, distance));
             Vec3 endPos = new Vec3(
                     endTransform.m30 + (float) entity.getX(),
                     endTransform.m31 + (float) entity.getY(),
