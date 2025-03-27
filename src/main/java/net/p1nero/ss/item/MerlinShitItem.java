@@ -1,31 +1,31 @@
 package net.p1nero.ss.item;
 
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SwordItem;
+import net.minecraft.world.item.Tier;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.p1nero.ss.entity.SwordSoaringEntities;
-import net.p1nero.ss.entity.ray.RayEntity;
-import net.p1nero.ss.entity.vatansever_storm.VatanseverStormEntity;
 import net.p1nero.ss.entity.wraithon.WraithonEntity;
 import net.p1nero.ss.entity.wraithon.WraithonEntityPatch;
 import net.p1nero.ss.gameassets.animations.WraithonAnimations;
-import yesman.epicfight.gameasset.Animations;
-import yesman.epicfight.model.armature.HumanoidArmature;
+import org.jetbrains.annotations.NotNull;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 
 import java.util.List;
 
-public class GGEventHandler {
-    @SubscribeEvent
-    public void onRightClick(PlayerInteractEvent.RightClickItem event) {
-        Player player = event.getEntity();
-        ItemStack stack = event.getItemStack();
+public class MerlinShitItem extends SwordItem {
+    public MerlinShitItem(Tier pTier, int pAttackDamageModifier, float pAttackSpeedModifier, Properties pProperties) {
+        super(pTier, pAttackDamageModifier, pAttackSpeedModifier, pProperties);
+    }
+
+    @Override
+    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level pLevel, @NotNull Player player, @NotNull InteractionHand pUsedHand) {
+        ItemStack stack = player.getItemInHand(pUsedHand);
         Level world = player.level();
 
         if (stack.getItem() == SwordSoaringItems.MERLIN_GG.get() && !world.isClientSide) {
@@ -71,5 +71,6 @@ public class GGEventHandler {
             // 设置冷却
             player.getCooldowns().addCooldown(stack.getItem(), 20);
         }
+        return super.use(pLevel, player, pUsedHand);
     }
 }

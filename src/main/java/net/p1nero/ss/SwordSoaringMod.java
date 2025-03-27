@@ -16,7 +16,6 @@ import net.p1nero.ss.block.SwordSoaringBlocks;
 import net.p1nero.ss.client.sound.SwordSoaringSounds;
 import net.p1nero.ss.entity.SwordSoaringEntities;
 import net.p1nero.ss.gameassets.*;
-import net.p1nero.ss.item.GGEventHandler;
 import net.p1nero.ss.item.SwordSoaringItems;
 import org.slf4j.Logger;
 import yesman.epicfight.main.EpicFightExtensions;
@@ -50,7 +49,6 @@ public class SwordSoaringMod {
         SwordSoaringBlocks.BLOCKS.register(bus);
 
         context.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
-        MinecraftForge.EVENT_BUS.register(new GGEventHandler());
     }
 
     public static boolean isArmourersWorkshopLoaded() {
