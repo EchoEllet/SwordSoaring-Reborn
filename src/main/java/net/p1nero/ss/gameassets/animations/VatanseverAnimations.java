@@ -13,6 +13,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -540,24 +541,21 @@ public class VatanseverAnimations {
 
     public static void dealAreaDamage(ServerLevel level, Vec3 center, Entity source, float damage, float radius) {
         if (radius <= 0) return;
-        AABB area = new AABB(
-                center.x() - radius,
-                center.y() - radius,
-                center.z() - radius,
-                center.x() + radius,
-                center.y() + radius,
-                center.z() + radius
-        );
-        //来源实体过滤
+        AABB area = new AABB(center.x() - radius, center.y() - radius, center.z() - radius, center.x() + radius, center.y() + radius, center.z() + radius);
         List<LivingEntity> entities = level.getEntitiesOfClass(LivingEntity.class, area, entity ->
-                entity.isAlive() && entity.distanceToSqr(center) <= radius * radius && !(entity instanceof Player player && player.isCreative()) && entity != source && !(entity instanceof AbstractArtifactSpiritEntity));
-        //线程安全迭代
+                entity.isAlive() && entity.distanceToSqr(center) <= radius * radius
+                        && !(entity instanceof Player player && player.isCreative())
+                        && entity != source
+                        && !(entity instanceof AbstractArtifactSpiritEntity)
+                        && !(source instanceof AbstractArtifactSpiritEntity artifactSpiritEntity && entity.equals(artifactSpiritEntity.getOwner())));
+        //伤害源换主人
+        LivingEntity trueSource = source instanceof OwnableEntity ownableEntity ? ((LivingEntity) ownableEntity.getOwner()) : (LivingEntity) source;
         for (LivingEntity entity : new ArrayList<>(entities)) {
             if (entity.invulnerableTime >= 0 && source != null) {
                 entity.invulnerableTime = 0;
-                entity.hurt(entity.damageSources().mobAttack((LivingEntity) source), damage*0.5F);
+                entity.hurt(entity.damageSources().mobAttack((LivingEntity) trueSource), damage*0.5F);
                 entity.invulnerableTime = 0;
-                entity.hurt(entity.damageSources().indirectMagic(source, source), damage);
+                entity.hurt(entity.damageSources().indirectMagic(source, trueSource), damage);
                 entity.invulnerableTime = 0;
                 if (entity != null) {
                     LivingEntityPatch livingEntityPatch = EpicFightCapabilities.getEntityPatch(entity, LivingEntityPatch.class);
@@ -569,6 +567,7 @@ public class VatanseverAnimations {
                 }
             }
         }
+
     }
 
     public static float getTotalAttackDamage(LivingEntityPatch<?> entityPatch) {

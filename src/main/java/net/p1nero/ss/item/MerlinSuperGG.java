@@ -18,8 +18,8 @@ import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 
 import java.util.List;
 
-public class MerlinShitItem extends SwordItem {
-    public MerlinShitItem(Tier pTier, int pAttackDamageModifier, float pAttackSpeedModifier, Properties pProperties) {
+public class MerlinSuperGG extends SwordItem {
+    public MerlinSuperGG(Tier pTier, int pAttackDamageModifier, float pAttackSpeedModifier, Properties pProperties) {
         super(pTier, pAttackDamageModifier, pAttackSpeedModifier, pProperties);
     }
 
@@ -29,23 +29,18 @@ public class MerlinShitItem extends SwordItem {
         Level world = player.level();
 
         if (stack.getItem() == SwordSoaringItems.MERLIN_GG.get() && !world.isClientSide) {
-            // 清除周围现有的 WraithonEntity
             List<WraithonEntity> existingWraithons = world.getEntitiesOfClass(
                     WraithonEntity.class,
                     player.getBoundingBox().inflate(50.0D)
             );
-
             for (WraithonEntity wraithon : existingWraithons) {
-                wraithon.discard(); // 移除实体
+                wraithon.discard();
             }
-
-            // 生成并定位新的 WraithonEntity
             Vec3 spawnPos = new Vec3(-1.1, -59, -12);
             WraithonEntity newWraithon = new WraithonEntity(
                     SwordSoaringEntities.WRAITHON.get(),
                     world
             );
-
             newWraithon.moveTo(
                     spawnPos.x(),
                     spawnPos.y(),
@@ -55,20 +50,16 @@ public class MerlinShitItem extends SwordItem {
             );
             world.addFreshEntity(newWraithon);
 
-            // 对新生成的实体播放动画
             LivingEntityPatch<WraithonEntity> entityPatch = EpicFightCapabilities.getEntityPatch(
                     newWraithon,
                     WraithonEntityPatch.class
             );
-
             if (entityPatch != null) {
                 entityPatch.playAnimationSynchronized(
-                        WraithonAnimations.WRAITHON_1,
+                        WraithonAnimations.WRAITHON_2,
                         0.0001F
                 );
             }
-
-            // 设置冷却
             player.getCooldowns().addCooldown(stack.getItem(), 20);
         }
         return super.use(pLevel, player, pUsedHand);

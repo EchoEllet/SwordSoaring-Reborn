@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
 
 public class WraithonEntityPatch extends MobPatch<WraithonEntity> {
 
-    public final float SCALE = 2.0F;
+    public static final float SCALE = 2.0F;
     //旋转目标
     @Nullable
     private Entity rotateTarget;

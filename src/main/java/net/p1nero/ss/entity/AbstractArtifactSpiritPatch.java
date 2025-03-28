@@ -129,6 +129,9 @@ public abstract class AbstractArtifactSpiritPatch<T extends AbstractArtifactSpir
      */
     @Override
     public boolean isTargetInvulnerable(Entity entity) {
+        if(entity.equals(this.getOriginal().getOwner())){
+            return true;
+        }
         if(entity instanceof AbstractArtifactSpiritEntity artifactSpiritEntity && getOwnerPatch() != null){
             return getOwnerPatch().getOriginal().equals(artifactSpiritEntity.getOwner());
         }
