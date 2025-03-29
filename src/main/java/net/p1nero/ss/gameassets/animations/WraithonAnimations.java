@@ -50,6 +50,9 @@ public class WraithonAnimations {
 
     public static AnimationManager.AnimationAccessor<WraithonActionAnimation> WRAITHON_ROTATE_R;
     public static AnimationManager.AnimationAccessor<WraithonActionAnimation> WRAITHON_ROTATE_L;
+
+    public static AnimationManager.AnimationAccessor<WraithonActionAnimation> WRAITHON_LEG_1;
+
     public static AnimationManager.AnimationAccessor<WraithonAttackAnimation> WRAITHON_1;
     public static AnimationManager.AnimationAccessor<WraithonAttackAnimation> WRAITHON_2;
     public static AnimationManager.AnimationAccessor<WraithonAttackAnimation> WRAITHON_3;
@@ -63,6 +66,7 @@ public class WraithonAnimations {
     public static AnimationManager.AnimationAccessor<WraithonAttackAnimation> WRAITHON_11;
     public static AnimationManager.AnimationAccessor<WraithonAttackAnimation> WRAITHON_12;
     public static AnimationManager.AnimationAccessor<WraithonAttackAnimation> WRAITHON_13;
+
 
 
     public static AnimationManager.AnimationAccessor<WraithonAttackAnimation> WRAITHON_JUMP_R_ATK;
@@ -92,13 +96,15 @@ public class WraithonAnimations {
         WRAITHON_JUMP_L = builder.nextAccessor("wraithon/wraithon_jump_l", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
         WRAITHON_JUMP_B = builder.nextAccessor("wraithon/wraithon_jump_b", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
 
+        WRAITHON_LEG_1 = builder.nextAccessor("wraithon/wraithon_legattack_1", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
+
         WRAITHON_JUMP_R_ATK = builder.nextAccessor("wraithon/wraithon_jump_r_atk", (accessor -> new WraithonAttackAnimation(0.15F, accessor, armature,
                 createSimplePhase(101,112))
                 .addEvents(autoWraithonGroundSplit(101,112,6F,1))
                 .addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWraithonTrails(101,112,0,0))));
         WRAITHON_JUMP_L_ATK = builder.nextAccessor("wraithon/wraithon_jump_l_atk", (accessor -> new WraithonAttackAnimation(0.15F, accessor, armature,
                 createSimplePhase(102,113))
-                .addEvents(autoWraithonGroundSplit(102,113,6F,1))
+                .addEvents(autoWraithonGroundSplit(102,113,2.5F,1))
                 .addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWraithonTrails(102,113,0,0))));
         WRAITHON_JUMP_B_ATK = builder.nextAccessor("wraithon/wraithon_jump_b_atk", (accessor -> new WraithonAttackAnimation(0.15F, accessor, armature,
                 createSimplePhase(111,115))
@@ -156,12 +162,12 @@ public class WraithonAnimations {
 
         WRAITHON_10 = builder.nextAccessor("wraithon/wraithon_attack_10", (accessor -> new WraithonAttackAnimation(0.15F, accessor, armature,
                 createSimplePhase(49,63))
-                .addEvents(autoWraithonGroundSplit(49,63,5F,1))
+                .addEvents(autoWraithonGroundSplit(49,63,2.5F,1))
                 .addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWraithonTrails(49,63,0,0))));
 
         WRAITHON_11 = builder.nextAccessor("wraithon/wraithon_attack_11", (accessor -> new WraithonAttackAnimation(0.15F, accessor, armature,
                 createSimplePhase(66,75))
-                .addEvents(autoWraithonGroundSplit(66,75,5F,1))
+                .addEvents(autoWraithonGroundSplit(66,75,2.5F,1))
                 .addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWraithonTrails(66,75,0,0))));
 
         WRAITHON_12 = builder.nextAccessor("wraithon/wraithon_attack_12", (accessor -> new WraithonAttackAnimation(0.15F, accessor, armature,
