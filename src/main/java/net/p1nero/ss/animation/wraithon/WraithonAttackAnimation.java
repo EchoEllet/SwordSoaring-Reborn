@@ -1,54 +1,19 @@
-package net.p1nero.ss.animation.WraithonAnimation;
+package net.p1nero.ss.animation.wraithon;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.datafixers.util.Pair;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MoverType;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.entity.PartEntity;
-import net.minecraftforge.registries.RegistryObject;
 import net.p1nero.ss.entity.wraithon.WraithonEntityPatch;
 import org.jetbrains.annotations.Nullable;
 import yesman.epicfight.api.animation.*;
-import yesman.epicfight.api.animation.property.AnimationProperty;
-import yesman.epicfight.api.animation.property.MoveCoordFunctions;
 import yesman.epicfight.api.animation.types.*;
 import yesman.epicfight.api.asset.AssetAccessor;
-import yesman.epicfight.api.client.animation.Layer;
-import yesman.epicfight.api.client.animation.property.ClientAnimationProperties;
-import yesman.epicfight.api.client.animation.property.JointMaskEntry;
 import yesman.epicfight.api.collider.Collider;
 import yesman.epicfight.api.model.Armature;
-import yesman.epicfight.api.utils.AttackResult;
-import yesman.epicfight.api.utils.HitEntityList;
-import yesman.epicfight.api.utils.TimePairList;
-import yesman.epicfight.gameasset.Animations;
-import yesman.epicfight.particle.HitParticleType;
-import yesman.epicfight.world.capabilities.entitypatch.HumanoidMobPatch;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 import yesman.epicfight.world.capabilities.entitypatch.MobPatch;
-import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
-import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
-import yesman.epicfight.world.damagesource.EpicFightDamageSource;
-import yesman.epicfight.world.damagesource.EpicFightDamageSources;
-import yesman.epicfight.world.entity.eventlistener.AttackEndEvent;
-import yesman.epicfight.world.entity.eventlistener.PlayerEventListener;
-
-import java.util.*;
-import java.util.function.BiFunction;
 
 public class WraithonAttackAnimation extends AttackAnimation {
     public WraithonAttackAnimation(float transitionTime, float antic, float preDelay, float contact, float recovery, @Nullable Collider collider, Joint colliderJoint, AnimationManager.AnimationAccessor<? extends AttackAnimation> accessor, AssetAccessor<? extends Armature> armature) {

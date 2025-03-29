@@ -6,12 +6,6 @@ import com.p1nero.invincible.skill.ComboBasicAttack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.p1nero.ss.client.keymapping.SwordSoaringKeyMappings;
-import net.p1nero.ss.entity.vatansever.VatanseverEntityPatch;
-import net.p1nero.ss.gameassets.SwordSoaringDatakeys;
-import yesman.epicfight.skill.SkillContainer;
-import yesman.epicfight.skill.SkillDataManager;
-import yesman.epicfight.skill.SkillSlots;
-import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 import yesman.epicfight.world.capabilities.item.CapabilityItem;
 
@@ -21,18 +15,6 @@ public class VatanseverWeaponInnateSkill extends ComboBasicAttack {
 
     public VatanseverWeaponInnateSkill(Builder builder) {
         super(builder);
-    }
-
-    @Override
-    public boolean canExecute(SkillContainer container) {
-        PlayerPatch<?> executor = container.getExecutor();
-        SkillDataManager manager = executor.getSkill(SkillSlots.WEAPON_PASSIVE).getDataManager();
-        if (manager.hasData(SwordSoaringDatakeys.ARTIFACT_SPIRIT_ENTITY_ID.get())) {
-            int id = manager.getDataValue(SwordSoaringDatakeys.ARTIFACT_SPIRIT_ENTITY_ID.get());
-            VatanseverEntityPatch vatanseverEntityPatch = EpicFightCapabilities.getEntityPatch(executor.getOriginal().level().getEntity(id), VatanseverEntityPatch.class);
-            return super.canExecute(container) && (vatanseverEntityPatch == null || !vatanseverEntityPatch.getEntityState().movementLocked());
-        }
-        return super.canExecute(container);
     }
 
     @Override

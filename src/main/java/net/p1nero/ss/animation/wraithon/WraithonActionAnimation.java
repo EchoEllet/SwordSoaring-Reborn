@@ -1,22 +1,15 @@
-package net.p1nero.ss.animation.WraithonAnimation;
+package net.p1nero.ss.animation.wraithon;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeMod;
 import net.p1nero.ss.entity.wraithon.WraithonEntityPatch;
 import yesman.epicfight.api.animation.*;
-import yesman.epicfight.api.animation.property.AnimationProperty;
-import yesman.epicfight.api.animation.property.MoveCoordFunctions;
 import yesman.epicfight.api.animation.types.ActionAnimation;
 import yesman.epicfight.api.animation.types.DynamicAnimation;
 import yesman.epicfight.api.animation.types.EntityState;
 import yesman.epicfight.api.asset.AssetAccessor;
 import yesman.epicfight.api.model.Armature;
-import yesman.epicfight.api.utils.TimePairList;
-import yesman.epicfight.api.utils.math.OpenMatrix4f;
-import yesman.epicfight.api.utils.math.Vec3f;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 
 public class WraithonActionAnimation extends ActionAnimation {

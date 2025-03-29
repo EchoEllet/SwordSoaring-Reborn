@@ -5,20 +5,17 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.p1nero.ss.Config;
-import net.p1nero.ss.animation.WraithonAnimation.WraithonActionAnimation;
-import net.p1nero.ss.animation.WraithonAnimation.WraithonAttackAnimation;
+import net.p1nero.ss.animation.wraithon.WraithonActionAnimation;
+import net.p1nero.ss.animation.wraithon.WraithonAttackAnimation;
 import net.p1nero.ss.entity.wraithon.WraithonArmature;
 import net.p1nero.ss.entity.wraithon.WraithonEntityPatch;
 import net.p1nero.ss.gameassets.SwordSoaringArmatures;
 import net.p1nero.ss.gameassets.SwordSoaringColliders;
-import net.p1nero.ss.util.AnimationUtils;
 import net.p1nero.ss.util.vfx.ParticleVFX;
 import yesman.epicfight.api.animation.AnimationManager;
 import yesman.epicfight.api.animation.Joint;
@@ -33,11 +30,9 @@ import yesman.epicfight.api.utils.math.OpenMatrix4f;
 import yesman.epicfight.api.utils.math.Vec3f;
 import yesman.epicfight.gameasset.Armatures;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
-import yesman.epicfight.world.damagesource.EpicFightDamageType;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Supplier;
 
 public class WraithonAnimations {
