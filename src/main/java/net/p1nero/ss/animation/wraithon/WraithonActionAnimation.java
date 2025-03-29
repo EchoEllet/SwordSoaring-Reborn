@@ -15,16 +15,25 @@ import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 public class WraithonActionAnimation extends ActionAnimation {
     public WraithonActionAnimation(float transitionTime, AnimationManager.AnimationAccessor<? extends ActionAnimation> accessor, AssetAccessor<? extends Armature> armature) {
         super(transitionTime, accessor, armature);
+        this.addProperty(AnimationProperty.ActionAnimationProperty.REMOVE_DELTA_MOVEMENT,false);
+        this.addProperty(AnimationProperty.AttackAnimationProperty.FIXED_MOVE_DISTANCE,false);
+        this.addProperty(AnimationProperty.AttackAnimationProperty.MOVE_VERTICAL,false);
     }
 
     public WraithonActionAnimation(float transitionTime, float postDelay, AnimationManager.AnimationAccessor<? extends ActionAnimation> accessor, AssetAccessor<? extends Armature> armature) {
         super(transitionTime, accessor, armature);
+        this.addProperty(AnimationProperty.ActionAnimationProperty.REMOVE_DELTA_MOVEMENT,false);
+        this.addProperty(AnimationProperty.AttackAnimationProperty.FIXED_MOVE_DISTANCE,false);
+        this.addProperty(AnimationProperty.AttackAnimationProperty.MOVE_VERTICAL,false);
     }
 
 
-
-
-
+    public void putOnPlayer(AnimationPlayer animationPlayer, LivingEntityPatch<?> entitypatch) {
+        super.putOnPlayer(animationPlayer, entitypatch);
+        this.addProperty(AnimationProperty.ActionAnimationProperty.REMOVE_DELTA_MOVEMENT,false);
+        this.addProperty(AnimationProperty.AttackAnimationProperty.FIXED_MOVE_DISTANCE,false);
+        this.addProperty(AnimationProperty.AttackAnimationProperty.MOVE_VERTICAL,false);
+    }
 
 
 
