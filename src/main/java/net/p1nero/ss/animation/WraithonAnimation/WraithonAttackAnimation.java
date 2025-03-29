@@ -53,22 +53,37 @@ import java.util.function.BiFunction;
 public class WraithonAttackAnimation extends AttackAnimation {
     public WraithonAttackAnimation(float transitionTime, float antic, float preDelay, float contact, float recovery, @Nullable Collider collider, Joint colliderJoint, AnimationManager.AnimationAccessor<? extends AttackAnimation> accessor, AssetAccessor<? extends Armature> armature) {
         super(transitionTime, antic, preDelay, contact, recovery, collider, colliderJoint, accessor, armature);
+        this.addProperty(AnimationProperty.ActionAnimationProperty.REMOVE_DELTA_MOVEMENT,true);
+        this.addProperty(AnimationProperty.AttackAnimationProperty.FIXED_MOVE_DISTANCE,true);
+        this.addProperty(AnimationProperty.AttackAnimationProperty.MOVE_VERTICAL,false);
     }
 
     public WraithonAttackAnimation(float transitionTime, float antic, float preDelay, float contact, float recovery, InteractionHand hand, @Nullable Collider collider, Joint colliderJoint, AnimationManager.AnimationAccessor<? extends AttackAnimation> accessor, AssetAccessor<? extends Armature> armature) {
         super(transitionTime, antic, preDelay, contact, recovery, hand, collider, colliderJoint, accessor, armature);
+        this.addProperty(AnimationProperty.ActionAnimationProperty.REMOVE_DELTA_MOVEMENT,true);
+        this.addProperty(AnimationProperty.AttackAnimationProperty.FIXED_MOVE_DISTANCE,true);
+        this.addProperty(AnimationProperty.AttackAnimationProperty.MOVE_VERTICAL,false);
     }
 
     public WraithonAttackAnimation(float transitionTime, AnimationManager.AnimationAccessor<? extends AttackAnimation> accessor, AssetAccessor<? extends Armature> armature, Phase... phases) {
         super(transitionTime, accessor, armature, phases);
+        this.addProperty(AnimationProperty.ActionAnimationProperty.REMOVE_DELTA_MOVEMENT,true);
+        this.addProperty(AnimationProperty.AttackAnimationProperty.FIXED_MOVE_DISTANCE,true);
+        this.addProperty(AnimationProperty.AttackAnimationProperty.MOVE_VERTICAL,false);
     }
 
     public WraithonAttackAnimation(float convertTime, float antic, float preDelay, float contact, float recovery, InteractionHand hand, @Nullable Collider collider, Joint colliderJoint, String path, AssetAccessor<? extends Armature> armature) {
         super(convertTime, antic, preDelay, contact, recovery, hand, collider, colliderJoint, path, armature);
+        this.addProperty(AnimationProperty.ActionAnimationProperty.REMOVE_DELTA_MOVEMENT,true);
+        this.addProperty(AnimationProperty.AttackAnimationProperty.FIXED_MOVE_DISTANCE,true);
+        this.addProperty(AnimationProperty.AttackAnimationProperty.MOVE_VERTICAL,false);
     }
 
     public WraithonAttackAnimation(float convertTime, String path, AssetAccessor<? extends Armature> armature, Phase... phases) {
         super(convertTime, path, armature, phases);
+        this.addProperty(AnimationProperty.ActionAnimationProperty.REMOVE_DELTA_MOVEMENT,true);
+        this.addProperty(AnimationProperty.AttackAnimationProperty.FIXED_MOVE_DISTANCE,true);
+        this.addProperty(AnimationProperty.AttackAnimationProperty.MOVE_VERTICAL,false);
     }
 
 
@@ -113,7 +128,7 @@ public class WraithonAttackAnimation extends AttackAnimation {
                 .newTimePair(phase.start, phase.end).addState(EntityState.MOVEMENT_LOCKED, true).addState(EntityState.UPDATE_LIVING_MOTION, true)
                 .addState(EntityState.CAN_BASIC_ATTACK, false)
                 .newTimePair(phase.start, phase.end).addState(EntityState.INACTION, true)
-                .newTimePair(phase.start, phase.end).addState(EntityState.TURNING_LOCKED, true)
+                .newTimePair(phase.start, phase.end).addState(EntityState.TURNING_LOCKED, false)
                 .newTimePair(preDelay, phase.contact).addState(EntityState.ATTACKING, true).addState(EntityState.PHASE_LEVEL, 2)
                 .newTimePair(phase.contact, phase.end).addState(EntityState.PHASE_LEVEL, 3);
     }

@@ -96,7 +96,9 @@ public class WraithonAnimations {
         WRAITHON_JUMP_L = builder.nextAccessor("wraithon/wraithon_jump_l", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
         WRAITHON_JUMP_B = builder.nextAccessor("wraithon/wraithon_jump_b", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
 
-        WRAITHON_LEG_1 = builder.nextAccessor("wraithon/wraithon_legattack_1", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
+        WRAITHON_LEG_1 = builder.nextAccessor("wraithon/wraithon_legattack_1", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)
+                .addEvents(autoWraithonShockAtk(53,55,SwordSoaringArmatures.WRAITHON_ARMATURE.get().leg_F_3_R,5F,300)
+                        ,(autoWraithonShockAtk(53,55,SwordSoaringArmatures.WRAITHON_ARMATURE.get().leg_F_3_L,5F,300)))));
 
         WRAITHON_JUMP_R_ATK = builder.nextAccessor("wraithon/wraithon_jump_r_atk", (accessor -> new WraithonAttackAnimation(0.15F, accessor, armature,
                 createSimplePhase(101,112))
@@ -122,8 +124,7 @@ public class WraithonAnimations {
         WRAITHON_2 = builder.nextAccessor("wraithon/wraithon_attack_2", (accessor -> new WraithonAttackAnimation(0.15F, accessor, armature,
                 createSimplePhase(66,80), createSimplePhase(141,150))
                 .addEvents(autoWraithonGroundSplit(66,80,2.5F,1), autoWraithonGroundSplit(141,150,2.5F,1))
-                .addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWraithonTrails(66,80,141,150))
-                .addProperty(AnimationProperty.AttackAnimationProperty.FIXED_MOVE_DISTANCE,true)));
+                .addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWraithonTrails(66,80,141,150))));
 
         WRAITHON_3 = builder.nextAccessor("wraithon/wraithon_attack_3", (accessor -> new WraithonAttackAnimation(0.15F, accessor, armature,
                 createSimplePhase(70,73))
@@ -137,7 +138,7 @@ public class WraithonAnimations {
 
         WRAITHON_5 = builder.nextAccessor("wraithon/wraithon_attack_5", (accessor -> new WraithonAttackAnimation(0.15F, accessor, armature,
                 createSimplePhase(53,65))
-                .addEvents(autoWraithonGroundSplit(53,65,2.5F,0))
+                .addEvents(autoWraithonGroundSplit(53,65,2.5F,1))
                 .addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWraithonTrails(53,65,0,0))));
 
         WRAITHON_6 = builder.nextAccessor("wraithon/wraithon_attack_6", (accessor -> new WraithonAttackAnimation(0.15F, accessor, armature,
@@ -222,6 +223,14 @@ public class WraithonAnimations {
         return wraithonTrails;
     }
 
+    private static final AnimationEvent.InPeriodEvent autoWraithonShockAtk(int startFrame, int endFrame,Joint joint,float radius,int particleCount ) {
+        float start = startFrame/60F;
+        float end = endFrame/60F;
+        return AnimationEvent.InPeriodEvent.create(start, end, (entityPatch, self, params) ->{
+            wraithonShockAtk(entityPatch,radius,joint,particleCount,start);
+        } , AnimationEvent.Side.BOTH);
+    }
+
     private static final AnimationEvent.InPeriodEvent autoWraithonGroundSplit(int startFrame, int endFrame,float radius,int particleCount ) {
         float start = startFrame/60F;
         float end = endFrame/60F;
@@ -240,6 +249,26 @@ public class WraithonAnimations {
             return atkJoints.toArray(new AttackAnimation.JointColliderPair[0]);};
         return new AttackAnimation.Phase(0, start, start, end, end,Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, supplier.get()
         );
+    }
+
+    private static void wraithonShockAtk(LivingEntityPatch<?> entityPatch, float radius,Joint joint, int particleCount,float starttime) {
+        LivingEntity entity = entityPatch.getOriginal();
+        float time = entityPatch.getAnimator().getPlayerFor(null).getElapsedTime();
+        for (float i = 0; i<=0.005 ; i = i + 0.0001F){
+            time = time - i;
+            if (time > starttime){
+                Vec3 pos = wraithonShockjointRayDetection(entityPatch,joint,time,2F,false,particleCount);
+
+                if (pos != null) {
+                    if (entity.level() instanceof ServerLevel level) {
+                        for (int dy = -1; dy <= 0; dy++) {
+                            Vec3 newPos = pos.add(0, dy, 0);
+                            LevelUtil.circleSlamFracture(entity, level, newPos, radius,false, false, false);
+                        }
+                    }
+                }
+            }
+        }
     }
 
 
@@ -261,6 +290,47 @@ public class WraithonAnimations {
             }
         }
     }
+
+    private static Vec3 wraithonShockjointRayDetection(LivingEntityPatch<?> livingEntityPatch, Joint joint,float time, float distance, boolean defaultEndpoint,int particleCount) {
+        LivingEntity entity = livingEntityPatch.getOriginal();
+        Pose pose = livingEntityPatch.getAnimator().getPlayerFor(null).getAnimation().get().getRawPose(time);
+        OpenMatrix4f transformMatrix = livingEntityPatch.getArmature().getBindedTransformFor(pose, joint);
+        OpenMatrix4f rotation = new OpenMatrix4f().rotate(-(float) Math.toRadians(entity.yBodyRotO + 180.0F), new Vec3f(0.0F, 1.0F, 0.0F));
+        OpenMatrix4f rotatedMatrix = new OpenMatrix4f();
+        OpenMatrix4f.mul(rotation, transformMatrix, rotatedMatrix);
+
+        float sign = Math.signum(distance);
+        float absoluteDistance = Math.abs(distance);
+        for (int i = 0; i * 0.1 < absoluteDistance; i++) {
+            OpenMatrix4f currentTransform = new OpenMatrix4f(rotatedMatrix);
+            currentTransform.translate(new Vec3f(0.0F,  i * 0.1 * sign, 0.5F));
+            Vec3 pos = new Vec3(
+                    currentTransform.m30*WraithonEntityPatch.SCALE + (float) entity.getX(),
+                    currentTransform.m31*WraithonEntityPatch.SCALE + (float) entity.getY(),
+                    currentTransform.m32*WraithonEntityPatch.SCALE + (float) entity.getZ()
+            );
+            ParticleVFX.createRandomInSphereParticles(entity.level(),pos, ParticleTypes.END_ROD,0.1,0,0,1);
+            BlockPos center = new BlockPos((int) pos.x, (int) pos.y, (int) pos.z);
+            if (checkRadiusBlocks(entity, center, 1)) {
+                if (particleCount > 0){
+                    ParticleVFX.createSphereParticles(entity.level(),pos, ParticleTypes.LARGE_SMOKE,1,0.2,0.5,particleCount);
+                }
+                return pos;
+            }
+        }
+        if (defaultEndpoint){
+            OpenMatrix4f endTransform = new OpenMatrix4f(rotatedMatrix);
+            endTransform.translate(new Vec3f(1.0F,  absoluteDistance, 0.0F));
+            Vec3 endPos = new Vec3(
+                    endTransform.m30*WraithonEntityPatch.SCALE + (float) entity.getX(),
+                    endTransform.m31*WraithonEntityPatch.SCALE + (float) entity.getY(),
+                    endTransform.m32*WraithonEntityPatch.SCALE + (float) entity.getZ()
+            );
+            return endPos;
+        }
+        return null;
+    }
+
     private static Vec3 wraithonGroundSplitjointRayDetection(LivingEntityPatch<?> livingEntityPatch, Joint joint,float time, float distance, boolean defaultEndpoint,int particleCount) {
         LivingEntity entity = livingEntityPatch.getOriginal();
         Pose pose = livingEntityPatch.getAnimator().getPlayerFor(null).getAnimation().get().getRawPose(time);
