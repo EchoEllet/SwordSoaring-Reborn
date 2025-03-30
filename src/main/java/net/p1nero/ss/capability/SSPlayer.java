@@ -11,7 +11,10 @@ import net.p1nero.ss.network.PacketRelay;
 import net.p1nero.ss.network.packet.client.SyncBabylonPacket;
 import net.p1nero.ss.util.ItemUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import yesman.epicfight.api.animation.types.AttackAnimation;
+import yesman.epicfight.api.data.reloader.SkillManager;
+import yesman.epicfight.skill.Skill;
 
 import java.util.*;
 
@@ -19,6 +22,17 @@ import java.util.*;
  * 记录飞行和技能使用的状态，被坑了，这玩意儿也分服务端和客户端...
  */
 public class SSPlayer {
+    @Nullable
+    private Skill lastDodgeSkill;
+
+    public void setLastDodgeSkill(@Nullable Skill lastDodgeSkill) {
+        this.lastDodgeSkill = lastDodgeSkill;
+    }
+
+    public @Nullable Skill getLastDodgeSkill() {
+        return lastDodgeSkill;
+    }
+
     private final Map<AttackAnimation.Phase, List<Entity>> phaseListMap = new HashMap<>();
 
     public Map<AttackAnimation.Phase, List<Entity>> getPhaseListMap() {
@@ -90,15 +104,17 @@ public class SSPlayer {
     }
 
     public void saveNBTData(CompoundTag tag){
-
+        if(lastDodgeSkill != null){
+            tag.putString("last_dodge_skill", lastDodgeSkill.toString());
+        }
     }
 
     public void loadNBTData(CompoundTag tag){
-
+        lastDodgeSkill = SkillManager.getSkill(tag.getString("last_dodge_skill"));
     }
 
     public void copyFrom(SSPlayer old){
-
+        this.lastDodgeSkill = old.lastDodgeSkill;
     }
 
 }

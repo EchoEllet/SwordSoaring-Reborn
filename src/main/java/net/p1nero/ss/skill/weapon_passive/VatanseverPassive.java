@@ -13,6 +13,8 @@ import net.p1nero.ss.entity.vatansever.VatanseverEntityPatch;
 import net.p1nero.ss.gameassets.SwordSoaringDatakeys;
 import net.p1nero.ss.gameassets.SwordSoaringSkillSlots;
 import net.p1nero.ss.gameassets.animations.VatanseverAnimations;
+import net.p1nero.ss.gameassets.skills.VatanseverSkills;
+import net.p1nero.ss.item.VatanseverItem;
 import net.p1nero.ss.skill.sword_soaring.SwordSoaringSkill;
 import yesman.epicfight.api.utils.AttackResult;
 import yesman.epicfight.api.utils.LevelUtil;
@@ -31,8 +33,18 @@ public class VatanseverPassive extends ArtifactSpiritPassiveSkill{
     }
 
     @Override
+    public boolean canExecute(SkillContainer container) {
+        return super.canExecute(container) && container.getExecutor().getOriginal().getMainHandItem().getItem() instanceof VatanseverItem;
+    }
+
+    @Override
     public void onInitiate(SkillContainer container) {
         super.onInitiate(container);
+
+        Skill lastDodge = container.getExecutor().getSkill(SkillSlots.DODGE).getSkill();
+        container.getExecutor().getOriginal().getCapability(SSCapabilityProvider.SS_PLAYER).ifPresent(ssPlayer -> ssPlayer.setLastDodgeSkill(lastDodge == VatanseverSkills.VATANSEVER_DODGE ? null : lastDodge));
+        container.getExecutor().getSkill(SkillSlots.DODGE).setSkill(VatanseverSkills.VATANSEVER_DODGE);
+
         container.getDataManager().setData(SwordSoaringDatakeys.SWORD_COUNT.get(), 6);
         
         summonVatansever(container);
@@ -91,6 +103,9 @@ public class VatanseverPassive extends ArtifactSpiritPassiveSkill{
     @Override
     public void onRemoved(SkillContainer container) {
         super.onRemoved(container);
+
+        container.getExecutor().getOriginal().getCapability(SSCapabilityProvider.SS_PLAYER).ifPresent(ssPlayer -> container.getExecutor().getSkill(SkillSlots.DODGE).setSkill(ssPlayer.getLastDodgeSkill()));
+
         int id = getArtifactSpiritId(container);
         if(id != 0 && container.getExecutor().getOriginal().level().getEntity(id) instanceof VatanseverEntity abstractArtifactSpiritEntity){
             if(abstractArtifactSpiritEntity.isAlive()){

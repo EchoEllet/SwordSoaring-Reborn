@@ -8,6 +8,7 @@ import net.minecraft.world.phys.Vec3;
 import net.p1nero.ss.entity.wraithon.WraithonEntityPatch;
 import org.jetbrains.annotations.Nullable;
 import yesman.epicfight.api.animation.*;
+import yesman.epicfight.api.animation.property.AnimationProperty;
 import yesman.epicfight.api.animation.types.*;
 import yesman.epicfight.api.asset.AssetAccessor;
 import yesman.epicfight.api.collider.Collider;
