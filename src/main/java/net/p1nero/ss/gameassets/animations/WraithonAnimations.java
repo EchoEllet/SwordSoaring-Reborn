@@ -1,21 +1,31 @@
 package net.p1nero.ss.gameassets.animations;
 
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.resources.sounds.Sound;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.p1nero.ss.Config;
 import net.p1nero.ss.animation.wraithon.WraithonActionAnimation;
 import net.p1nero.ss.animation.wraithon.WraithonAttackAnimation;
+import net.p1nero.ss.client.CameraShake;
+import net.p1nero.ss.entity.AbstractArtifactSpiritEntity;
 import net.p1nero.ss.entity.wraithon.WraithonArmature;
 import net.p1nero.ss.entity.wraithon.WraithonEntityPatch;
 import net.p1nero.ss.gameassets.SwordSoaringArmatures;
 import net.p1nero.ss.gameassets.SwordSoaringColliders;
+import net.p1nero.ss.util.AnimationUtils;
 import net.p1nero.ss.util.vfx.ParticleVFX;
 import yesman.epicfight.api.animation.AnimationManager;
 import yesman.epicfight.api.animation.Joint;
@@ -29,6 +39,10 @@ import yesman.epicfight.api.utils.LevelUtil;
 import yesman.epicfight.api.utils.math.OpenMatrix4f;
 import yesman.epicfight.api.utils.math.Vec3f;
 import yesman.epicfight.gameasset.Armatures;
+import yesman.epicfight.gameasset.EpicFightSounds;
+import yesman.epicfight.model.armature.HumanoidArmature;
+import yesman.epicfight.particle.EpicFightParticles;
+import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 
 import java.util.ArrayList;
@@ -36,6 +50,8 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public class WraithonAnimations {
+    public static AnimationManager.AnimationAccessor<ActionAnimation> BIPE_KNOCK_FLY;
+
     public static AnimationManager.AnimationAccessor<StaticAnimation> WRAITHON_IDLE;
     public static AnimationManager.AnimationAccessor<StaticAnimation> WRAITHON_WALK;
 
@@ -47,6 +63,8 @@ public class WraithonAnimations {
     public static AnimationManager.AnimationAccessor<WraithonActionAnimation> WRAITHON_ROTATE_L;
 
     public static AnimationManager.AnimationAccessor<WraithonActionAnimation> WRAITHON_LEG_1;
+    public static AnimationManager.AnimationAccessor<WraithonActionAnimation> WRAITHON_LEG_2;
+    public static AnimationManager.AnimationAccessor<WraithonActionAnimation> WRAITHON_LEG_3;
 
     public static AnimationManager.AnimationAccessor<WraithonAttackAnimation> WRAITHON_1;
     public static AnimationManager.AnimationAccessor<WraithonAttackAnimation> WRAITHON_2;
@@ -62,6 +80,9 @@ public class WraithonAnimations {
     public static AnimationManager.AnimationAccessor<WraithonAttackAnimation> WRAITHON_12;
     public static AnimationManager.AnimationAccessor<WraithonAttackAnimation> WRAITHON_13;
 
+    public static AnimationManager.AnimationAccessor<WraithonActionAnimation> WRAITHON_SKILL_1;
+    public static AnimationManager.AnimationAccessor<WraithonAttackAnimation> WRAITHON_SKILL_2;
+
 
 
     public static AnimationManager.AnimationAccessor<WraithonAttackAnimation> WRAITHON_JUMP_R_ATK;
@@ -74,6 +95,14 @@ public class WraithonAnimations {
 
     public static void buildWraithonAnim(AnimationManager.AnimationBuilder builder) {
         Armatures.ArmatureAccessor<WraithonArmature> armature = SwordSoaringArmatures.WRAITHON_ARMATURE;
+        Armatures.ArmatureAccessor<HumanoidArmature> bipe = Armatures.BIPED;
+
+        BIPE_KNOCK_FLY = builder.nextAccessor("biped/living/knock_fly", (accessor -> new ActionAnimation(0.2F, accessor, bipe)));
+
+
+
+
+
 
         Supplier<AttackAnimation.JointColliderPair[]> supplier = ()-> {
             List<AttackAnimation.JointColliderPair> atkJoints = List.of(AttackAnimation.JointColliderPair.of(armature.get().weapon, SwordSoaringColliders.WRAITHON_BASIC_ATTACK_1),
@@ -91,9 +120,17 @@ public class WraithonAnimations {
         WRAITHON_JUMP_L = builder.nextAccessor("wraithon/wraithon_jump_l", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
         WRAITHON_JUMP_B = builder.nextAccessor("wraithon/wraithon_jump_b", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
 
+
+
         WRAITHON_LEG_1 = builder.nextAccessor("wraithon/wraithon_legattack_1", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)
-                .addEvents(autoWraithonShockAtk(53,55,SwordSoaringArmatures.WRAITHON_ARMATURE.get().leg_F_3_R,5F,300)
-                        ,(autoWraithonShockAtk(53,55,SwordSoaringArmatures.WRAITHON_ARMATURE.get().leg_F_3_L,5F,300)))));
+                .addEvents(autoWraithonShockAtk(53,55,SwordSoaringArmatures.WRAITHON_ARMATURE.get().leg_F_3_R,5F)
+                        ,(autoWraithonShockAtk(53,55,SwordSoaringArmatures.WRAITHON_ARMATURE.get().leg_F_3_L,5F)))));
+        WRAITHON_LEG_2 = builder.nextAccessor("wraithon/wraithon_legattack_2", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)
+                .addEvents((autoWraithonShockAtk(52,55,SwordSoaringArmatures.WRAITHON_ARMATURE.get().leg_F_3_R,5F)))));
+        WRAITHON_LEG_3 = builder.nextAccessor("wraithon/wraithon_legattack_3", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)
+                .addEvents((autoWraithonShockAtk(42,45,SwordSoaringArmatures.WRAITHON_ARMATURE.get().leg_F_3_L,5F)))));
+
+
 
         WRAITHON_JUMP_R_ATK = builder.nextAccessor("wraithon/wraithon_jump_r_atk", (accessor -> new WraithonAttackAnimation(0.15F, accessor, armature,
                 createSimplePhase(101,112))
@@ -176,6 +213,59 @@ public class WraithonAnimations {
                 .addEvents(autoWraithonGroundSplit(70,75,5F,1))
                 .addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWraithonTrails(70,75,0,0))));
 
+        WRAITHON_SKILL_1 = builder.nextAccessor("wraithon/wraithon_skill_1", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)
+                .addEvents(
+                        AnimationEvent.InTimeEvent.create(72/60F, ((livingEntityPatch, staticAnimation, objects) ->{
+                            Joint joint = armature.get().hand_l;
+                            Vec3 center = AnimationUtils.getJointWorldPos(livingEntityPatch,joint);
+                            ParticleVFX.createJointDirectionalParticles(livingEntityPatch,joint,ParticleTypes.LARGE_SMOKE,50,2,4,200);
+                            LivingEntity livingEntity = livingEntityPatch.getOriginal();
+                            livingEntity.playSound(SoundEvents.GENERIC_EXPLODE,5,1);
+                            if (livingEntity.level() instanceof ClientLevel clientLevel){
+                                CameraShake.shake(30, 20, 4.2f, center,40);
+                            }
+                        }), AnimationEvent.Side.BOTH))));
+
+        WRAITHON_SKILL_2 = builder.nextAccessor("wraithon/wraithon_skill_2", (accessor -> new WraithonAttackAnimation(0.15F, accessor, armature,
+                createSimplePhase(80,87))
+                .addEvents(
+                        AnimationEvent.InTimeEvent.create(84/60F, ((livingEntityPatch, staticAnimation, objects) ->{
+                            LivingEntity livingEntity = livingEntityPatch.getOriginal();
+                            float radius = 9;
+                            float time = livingEntityPatch.getAnimator().getPlayerFor(null).getElapsedTime();
+                            for (float i = 0; i<=0.005 ; i = i + 0.0001F){
+                                time = time - i;
+                                if (time > 84/60F){
+                                    Vec3 pos = wraithonGroundSplitjointRayDetection(livingEntityPatch,SwordSoaringArmatures.WRAITHON_ARMATURE.get().weapon,time,2F,false,1);
+                                    ParticleVFX.createDirectionalParticles(livingEntityPatch,pos, ParticleTypes.LARGE_SMOKE, 25,1,2,200);
+                                    livingEntity.playSound(EpicFightSounds.GROUND_SLAM.get(),5,1);
+                                    destroyHemisphere(livingEntity.level(), BlockPos.containing(new Vec3(pos.x,livingEntity.getY(), pos.z)),15);
+                                    if (livingEntity.level() instanceof ClientLevel clientLevel){
+                                        CameraShake.shake(30, 3, 4.2f, pos,40);}
+                                    if (pos != null) {
+                                        if (livingEntity.level() instanceof ServerLevel level) {
+                                            LevelUtil.circleSlamFracture(livingEntity, level, pos, radius,true, false, false);
+                                            AABB area = new AABB(pos.x() - radius, pos.y() - radius, pos.z() - radius, pos.x() + radius, pos.y() + radius, pos.z() + radius);
+                                            List<LivingEntity> entities = level.getEntitiesOfClass(LivingEntity.class, area, entity -> entity.isAlive() && entity.distanceToSqr(pos) <= radius * radius && !(entity instanceof Player player && player.isCreative()) && entity != livingEntity && !(entity instanceof AbstractArtifactSpiritEntity) && !(livingEntity instanceof AbstractArtifactSpiritEntity artifactSpiritEntity && entity.equals(artifactSpiritEntity.getOwner())));
+                                            for (LivingEntity entity : new ArrayList<>(entities)) {
+                                                if (livingEntity != null) {
+                                                    if (entity != null) {
+                                                        LivingEntityPatch EntityPatch = EpicFightCapabilities.getEntityPatch(entity, LivingEntityPatch.class);
+                                                        if (EntityPatch != null){
+                                                            if (EntityPatch.getArmature() instanceof HumanoidArmature){
+                                                                EntityPatch.playAnimationSynchronized(WraithonAnimations.BIPE_KNOCK_FLY,0.2F);
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }), AnimationEvent.Side.BOTH))
+                .addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWraithonTrails(80,87,0,0))));
+
 
 
 
@@ -218,11 +308,11 @@ public class WraithonAnimations {
         return wraithonTrails;
     }
 
-    private static final AnimationEvent.InPeriodEvent autoWraithonShockAtk(int startFrame, int endFrame,Joint joint,float radius,int particleCount ) {
+    private static final AnimationEvent.InPeriodEvent autoWraithonShockAtk(int startFrame, int endFrame,Joint joint,float radius) {
         float start = startFrame/60F;
         float end = endFrame/60F;
         return AnimationEvent.InPeriodEvent.create(start, end, (entityPatch, self, params) ->{
-            wraithonShockAtk(entityPatch,radius,joint,particleCount,start);
+            wraithonShockAtk(entityPatch,radius,joint,start);
         } , AnimationEvent.Side.BOTH);
     }
 
@@ -246,19 +336,37 @@ public class WraithonAnimations {
         );
     }
 
-    private static void wraithonShockAtk(LivingEntityPatch<?> entityPatch, float radius,Joint joint, int particleCount,float starttime) {
-        LivingEntity entity = entityPatch.getOriginal();
+    private static void wraithonShockAtk(LivingEntityPatch<?> entityPatch, float radius,Joint joint,float starttime) {
+        LivingEntity livingEntity = entityPatch.getOriginal();
+        float damage = (float) livingEntity.getAttributeValue(Attributes.ATTACK_DAMAGE)*0.3F;
         float time = entityPatch.getAnimator().getPlayerFor(null).getElapsedTime();
         for (float i = 0; i<=0.005 ; i = i + 0.0001F){
             time = time - i;
             if (time > starttime){
-                Vec3 pos = wraithonShockjointRayDetection(entityPatch,joint,time,2F,false,particleCount);
+                Vec3 pos = wraithonShockjointRayDetection(entityPatch,joint,time,2F,false);
 
                 if (pos != null) {
-                    if (entity.level() instanceof ServerLevel level) {
+                    if (livingEntity.level() instanceof ServerLevel level) {
                         for (int dy = -1; dy <= 0; dy++) {
                             Vec3 newPos = pos.add(0, dy, 0);
-                            LevelUtil.circleSlamFracture(entity, level, newPos, radius,false, false, false);
+                            LevelUtil.circleSlamFracture(livingEntity, level, newPos, radius,false, false, false);
+                            AABB area = new AABB(pos.x() - radius, pos.y() - radius, pos.z() - radius, pos.x() + radius, pos.y() + radius, pos.z() + radius);
+                            List<LivingEntity> entities = level.getEntitiesOfClass(LivingEntity.class, area, entity -> entity.isAlive() && entity.distanceToSqr(pos) <= radius * radius && !(entity instanceof Player player && player.isCreative()) && entity != livingEntity && !(entity instanceof AbstractArtifactSpiritEntity) && !(livingEntity instanceof AbstractArtifactSpiritEntity artifactSpiritEntity && entity.equals(artifactSpiritEntity.getOwner())));
+                            for (LivingEntity entity : new ArrayList<>(entities)) {
+                                if (entity.invulnerableTime >= 0 && livingEntity != null) {
+                                    entity.invulnerableTime = 0;
+                                    entity.hurt(entity.damageSources().mobAttack(livingEntity), damage*0.5F);
+                                    entity.invulnerableTime = 0;
+                                    if (entity != null) {
+                                        LivingEntityPatch livingEntityPatch = EpicFightCapabilities.getEntityPatch(entity, LivingEntityPatch.class);
+                                        if (livingEntityPatch != null){
+                                            if (livingEntityPatch.getArmature() instanceof HumanoidArmature){
+                                                livingEntityPatch.playAnimationSynchronized(WraithonAnimations.BIPE_KNOCK_FLY,0.2F);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -286,7 +394,7 @@ public class WraithonAnimations {
         }
     }
 
-    private static Vec3 wraithonShockjointRayDetection(LivingEntityPatch<?> livingEntityPatch, Joint joint,float time, float distance, boolean defaultEndpoint,int particleCount) {
+    private static Vec3 wraithonShockjointRayDetection(LivingEntityPatch<?> livingEntityPatch, Joint joint,float time, float distance, boolean defaultEndpoint) {
         LivingEntity entity = livingEntityPatch.getOriginal();
         Pose pose = livingEntityPatch.getAnimator().getPlayerFor(null).getAnimation().get().getRawPose(time);
         OpenMatrix4f transformMatrix = livingEntityPatch.getArmature().getBindedTransformFor(pose, joint);
@@ -298,24 +406,20 @@ public class WraithonAnimations {
         float absoluteDistance = Math.abs(distance);
         for (int i = 0; i * 0.1 < absoluteDistance; i++) {
             OpenMatrix4f currentTransform = new OpenMatrix4f(rotatedMatrix);
-            currentTransform.translate(new Vec3f(0.0F,  i * 0.1 * sign, 0.5F));
+            currentTransform.translate(new Vec3f(0.0F,  i * 0.1 * sign, 0F));
             Vec3 pos = new Vec3(
                     currentTransform.m30*WraithonEntityPatch.SCALE + (float) entity.getX(),
                     currentTransform.m31*WraithonEntityPatch.SCALE + (float) entity.getY(),
                     currentTransform.m32*WraithonEntityPatch.SCALE + (float) entity.getZ()
             );
-            ParticleVFX.createRandomInSphereParticles(entity.level(),pos, ParticleTypes.END_ROD,0.1,0,0,1);
             BlockPos center = new BlockPos((int) pos.x, (int) pos.y, (int) pos.z);
             if (checkRadiusBlocks(entity, center, 1)) {
-                if (particleCount > 0){
-                    ParticleVFX.createSphereParticles(entity.level(),pos, ParticleTypes.LARGE_SMOKE,1,0.2,0.5,particleCount);
-                }
                 return pos;
             }
         }
         if (defaultEndpoint){
             OpenMatrix4f endTransform = new OpenMatrix4f(rotatedMatrix);
-            endTransform.translate(new Vec3f(1.0F,  absoluteDistance, 0.0F));
+            endTransform.translate(new Vec3f(0.0F,  absoluteDistance, 0.0F));
             Vec3 endPos = new Vec3(
                     endTransform.m30*WraithonEntityPatch.SCALE + (float) entity.getX(),
                     endTransform.m31*WraithonEntityPatch.SCALE + (float) entity.getY(),
@@ -376,6 +480,27 @@ public class WraithonAnimations {
             }
         }
         return false;
+    }
+
+    public static void destroyHemisphere(Level world, BlockPos center, int radius) {
+        if (world.isClientSide) return;
+        int x0 = center.getX();
+        int y0 = center.getY();
+        int z0 = center.getZ();
+        int radiusSquared = radius * radius;
+        for (int dx = -radius; dx <= radius; dx++) {
+            for (int dz = -radius; dz <= radius; dz++) {
+                for (int dy = 0; dy <= radius; dy++) {
+                    int x = x0 + dx;
+                    int y = y0 + dy;
+                    int z = z0 + dz;
+                    if (dx*dx + dy*dy + dz*dz <= radiusSquared) {
+                        BlockPos pos = new BlockPos(x, y, z);
+                        world.destroyBlock(pos, false);
+                    }
+                }
+            }
+        }
     }
 
 

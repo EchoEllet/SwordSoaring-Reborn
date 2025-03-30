@@ -11,6 +11,7 @@ public class WraithonArmature extends Armature {
     public final Joint head;
     public final Joint chest;
     public final Joint tail;
+    public final Joint hand_l;
     public final Joint leg_F_3_R;
     public final Joint leg_M_3_R;
     public final Joint leg_B_3_R;
@@ -29,6 +30,7 @@ public class WraithonArmature extends Armature {
         head = getAndAddToPartJointMap(jointMap, "head");
         chest = getAndAddToPartJointMap(jointMap, "chest");
         tail = getAndAddToPartJointMap(jointMap, "tail_2");
+        hand_l = getAndAddToPartJointMap(jointMap, "hand_L");
         leg_F_3_R = getAndAddToPartJointMap(jointMap, "leg_F_3_R");
         leg_M_3_R = getAndAddToPartJointMap(jointMap, "leg_M_3_R");
         leg_B_3_R = getAndAddToPartJointMap(jointMap, "leg_B_3_R");

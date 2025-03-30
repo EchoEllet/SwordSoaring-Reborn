@@ -341,6 +341,51 @@ public class ParticleVFX {
         }
     }
 
+    public static void createDirectionalParticles(LivingEntityPatch<?> entityPatch,Vec3 center, ParticleOptions particleOptions, double radius, double minSpeed, double maxSpeed, int particleCount) {
+        LivingEntity entity = entityPatch.getOriginal();
+        Level level = entity.level();
+        RandomSource random = level.random;
+        for (int i = 0; i < particleCount; i++) {
+            double theta = random.nextDouble() * 2 * Math.PI;
+            double phi = Math.acos(2 * random.nextDouble() - 1);
+            double dirX = Math.sin(phi) * Math.cos(theta);
+            double dirY = Math.cos(phi);
+            double dirZ = Math.sin(phi) * Math.sin(theta);
+            double posX = center.x() + dirX;
+            double posY = center.y() + dirY;
+            double posZ = center.z() + dirZ;
+            double speed = minSpeed + random.nextDouble() * (maxSpeed - minSpeed);
+            if (level.isClientSide) {
+                level.addParticle(
+                        particleOptions, true, posX, posY, posZ, dirX * speed, dirY * speed, dirZ * speed
+                );
+            }
+        }
+    }
+
+    public static void createJointDirectionalParticles(LivingEntityPatch<?> entityPatch, Joint joint, ParticleOptions particleOptions, double radius, double minSpeed, double maxSpeed, int particleCount) {
+        LivingEntity entity = entityPatch.getOriginal();
+        Level level = entity.level();
+        Vec3 jointPos = AnimationUtils.getJointWorldPos(entityPatch, joint);
+        RandomSource random = level.random;
+        for (int i = 0; i < particleCount; i++) {
+            double theta = random.nextDouble() * 2 * Math.PI;
+            double phi = Math.acos(2 * random.nextDouble() - 1);
+            double dirX = Math.sin(phi) * Math.cos(theta);
+            double dirY = Math.cos(phi);
+            double dirZ = Math.sin(phi) * Math.sin(theta);
+            double posX = jointPos.x() + dirX;
+            double posY = jointPos.y() + dirY;
+            double posZ = jointPos.z() + dirZ;
+            double speed = minSpeed + random.nextDouble() * (maxSpeed - minSpeed);
+            if (level.isClientSide) {
+                level.addParticle(
+                        particleOptions, true, posX, posY, posZ, dirX * speed, dirY * speed, dirZ * speed
+                );
+            }
+        }
+    }
+
     public static void createRingParticles(Level level, Vec3 center, ParticleOptions particleOptions, double radius, double minSpeed, double maxSpeed, int particleCount) {
         RandomSource random = level.random;
         for (int i = 0; i < particleCount; i++) {
