@@ -151,7 +151,7 @@ public class WraithonEntity extends PathfinderMob {
     @Override
     public void tick() {
         super.tick();
-        setYHeadRot(getYRot());
+//        setYHeadRot(getYRot());
     }
 
     /**

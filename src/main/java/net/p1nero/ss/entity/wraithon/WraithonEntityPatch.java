@@ -3,6 +3,7 @@ package net.p1nero.ss.entity.wraithon;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.p1nero.ss.client.sound.SwordSoaringSounds;
@@ -137,10 +138,19 @@ public class WraithonEntityPatch extends MobPatch<WraithonEntity> {
         return super.getMatrix(partialTicks).scale(SCALE, SCALE, SCALE);
     }
 
+
     @Override
     public OpenMatrix4f getModelMatrix(float partialTicks) {
-        return super.getModelMatrix(partialTicks).scale(SCALE, SCALE, SCALE);
+        float scale = SCALE;
+        float yRotO;
+        float yRot;
+
+        yRotO = this.isLogicalClient() ? ((LivingEntity)this.original).yBodyRotO : ((LivingEntity)this.original).getYRot();
+        yRot = this.isLogicalClient() ? ((LivingEntity)this.original).yBodyRot : ((LivingEntity)this.original).getYRot();
+
+        return MathUtils.getModelMatrixIntegral(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, yRotO, yRot, partialTicks, scale, scale, scale);
     }
+
 
     @Override
     public SoundEvent getWeaponHitSound(InteractionHand hand) {
