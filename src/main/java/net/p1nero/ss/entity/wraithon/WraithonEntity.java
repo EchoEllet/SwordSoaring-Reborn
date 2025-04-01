@@ -35,6 +35,8 @@ public class WraithonEntity extends PathfinderMob {
     public static final int MAGIC_STATE = 3;//魔法状态（吸收魔法伤害到一定程度）
     public static final int OUTSIDE_STATE = 4;//虚空状态（吸收虚空伤害到一定程度）真jb有人打虚空伤害？
     public static final int PROJECTILE_STATE = 5;//投掷物伤害（吸收投掷物伤害到一定程度）
+    protected static EntityDataAccessor<Float> Y_ROT_BEFORE_ROTATION = SynchedEntityData.defineId(WraithonEntity.class, EntityDataSerializers.FLOAT);
+
     protected static final EntityDataAccessor<Integer> PHASE = SynchedEntityData.defineId(WraithonEntity.class, EntityDataSerializers.INT);
     protected static final EntityDataAccessor<Integer> STATE = SynchedEntityData.defineId(WraithonEntity.class, EntityDataSerializers.INT);
     protected static final EntityDataAccessor<Float> FIRE_CONTAINER = SynchedEntityData.defineId(WraithonEntity.class, EntityDataSerializers.FLOAT);
@@ -69,11 +71,11 @@ public class WraithonEntity extends PathfinderMob {
         this.chest = new WraithonPartEntity(this, armature.chest, 3.0F, 7.0F, new Vec3(0, -4, 0), 0.2F);
         this.tail = new WraithonPartEntity(this, armature.tail, 6.0F, 5.0F, new Vec3(0, -1.5, 0), 0.7F);
         this.leg_F_3_R = new WraithonPartEntity(this, armature.leg_F_3_R, 2.0F, 5.0F, new Vec3(0, -3, 0), 0.9F);
-        this.leg_M_3_R = new WraithonPartEntity(this, armature.leg_M_3_R, 2.0F, 6.0F, new Vec3(0, -5, 0),0.9F);
-        this.leg_B_3_R = new WraithonPartEntity(this, armature.leg_B_3_R, 2.0F, 5.0F, new Vec3(0, -3, 0),0.9F);
-        this.leg_F_3_L = new WraithonPartEntity(this, armature.leg_F_3_L, 2.0F, 5.0F, new Vec3(0, -3, 0),0.9F);
-        this.leg_M_3_L = new WraithonPartEntity(this, armature.leg_M_3_L, 2.0F, 6.0F, new Vec3(0, -5, 0),0.9F);
-        this.leg_B_3_L = new WraithonPartEntity(this, armature.leg_B_3_L, 2.0F, 5.0F, new Vec3(0, -3, 0),0.9F);
+        this.leg_M_3_R = new WraithonPartEntity(this, armature.leg_M_3_R, 2.0F, 6.0F, new Vec3(0, -5, 0), 0.9F);
+        this.leg_B_3_R = new WraithonPartEntity(this, armature.leg_B_3_R, 2.0F, 5.0F, new Vec3(0, -3, 0), 0.9F);
+        this.leg_F_3_L = new WraithonPartEntity(this, armature.leg_F_3_L, 2.0F, 5.0F, new Vec3(0, -3, 0), 0.9F);
+        this.leg_M_3_L = new WraithonPartEntity(this, armature.leg_M_3_L, 2.0F, 6.0F, new Vec3(0, -5, 0), 0.9F);
+        this.leg_B_3_L = new WraithonPartEntity(this, armature.leg_B_3_L, 2.0F, 5.0F, new Vec3(0, -3, 0), 0.9F);
         subEntities = new WraithonPartEntity[]{head, chest, tail, leg_F_3_R, leg_M_3_R, leg_B_3_R, leg_F_3_L, leg_M_3_L, leg_B_3_L};
     }
 
@@ -91,6 +93,8 @@ public class WraithonEntity extends PathfinderMob {
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
+        this.entityData.define(Y_ROT_BEFORE_ROTATION, 0.0F);
+
         this.entityData.define(PHASE, 0);
         this.entityData.define(STATE, 0);
         this.entityData.define(FIRE_CONTAINER, 0.0F);
@@ -101,42 +105,52 @@ public class WraithonEntity extends PathfinderMob {
         this.entityData.define(LEG_DAMAGE_VALUE, 0.0F);
     }
 
+    public void setYRotBeforeRotation() {
+        if(!level().isClientSide){
+            this.getEntityData().set(Y_ROT_BEFORE_ROTATION, this.getYRot());
+        }
+    }
+
+    public float getYRotBeforeRotation() {
+        return this.getEntityData().get(Y_ROT_BEFORE_ROTATION);
+    }
+
     /**
      * 获取boss当前阶段
      */
-    public int getPhase(){
+    public int getPhase() {
         return this.entityData.get(PHASE);
     }
 
-    public void setPhase(int newPhase){
+    public void setPhase(int newPhase) {
         this.entityData.set(PHASE, newPhase);
     }
 
     /**
      * 获取boss当前状态
      */
-    public int getState(){
+    public int getState() {
         return this.entityData.get(STATE);
     }
 
-    public void setState(int newState){
+    public void setState(int newState) {
         this.entityData.set(STATE, newState);
     }
 
-    public float getLegDamage(){
+    public float getLegDamage() {
         return this.entityData.get(LEG_DAMAGE_VALUE);
     }
 
-    public void damageLegs(float damageValue){
+    public void damageLegs(float damageValue) {
         this.entityData.set(LEG_DAMAGE_VALUE, this.getLegDamage() + damageValue);
         //大于最大值则进入硬直
-        if(this.getLegDamage() > MAX_LEG_DAMAGE){
+        if (this.getLegDamage() > MAX_LEG_DAMAGE) {
             //TODO 进硬直
             clearLegDamage();
         }
     }
 
-    public void clearLegDamage(){
+    public void clearLegDamage() {
         this.entityData.set(LEG_DAMAGE_VALUE, 0.0F);
     }
 
@@ -148,19 +162,13 @@ public class WraithonEntity extends PathfinderMob {
         return false;
     }
 
-    @Override
-    public void tick() {
-        super.tick();
-        setYHeadRot(getYRot());
-    }
-
     /**
      * 以肢体碰撞为准
      */
     @Override
     protected void pushEntities() {
-        for(WraithonPartEntity part : getWraithonParts()) {
-            if(part == null){
+        for (WraithonPartEntity part : getWraithonParts()) {
+            if (part == null) {
                 continue;
             }
             if (this.level().isClientSide()) {
@@ -214,7 +222,7 @@ public class WraithonEntity extends PathfinderMob {
             return true;
         } else {
             pAmount *= wraithonPartEntity.getDamageReduce();
-            if(wraithonPartEntity.isLeg()) {
+            if (wraithonPartEntity.isLeg()) {
                 this.damageLegs(pAmount);
             }
             MobEffectInstance currentDamageResistance = this.getEffect(MobEffects.DAMAGE_RESISTANCE);
@@ -227,16 +235,14 @@ public class WraithonEntity extends PathfinderMob {
      * 判断是否属于火焰，虚空，魔法，爆炸，弹射物伤害
      * 出生设计= =
      */
-    public boolean isDamageTypeInRange(DamageSource damageSource){
-        for(ResourceKey<DamageType> damageTypeResourceKey : damageTypes){
-            if(damageSource.is(damageTypeResourceKey)){
+    public boolean isDamageTypeInRange(DamageSource damageSource) {
+        for (ResourceKey<DamageType> damageTypeResourceKey : damageTypes) {
+            if (damageSource.is(damageTypeResourceKey)) {
                 return true;
             }
         }
         return false;
     }
-
-
 
 
 }

@@ -1,15 +1,23 @@
 package net.p1nero.ss.entity.wraithon;
 
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.p1nero.ss.client.sound.SwordSoaringSounds;
 import net.p1nero.ss.gameassets.animations.WraithonAnimations;
 import net.p1nero.ss.util.AnimationUtils;
+import org.joml.Vector3f;
 import yesman.epicfight.api.animation.Animator;
+import yesman.epicfight.api.animation.JointTransform;
 import yesman.epicfight.api.animation.LivingMotions;
+import yesman.epicfight.api.animation.Pose;
+import yesman.epicfight.api.animation.types.DynamicAnimation;
 import yesman.epicfight.api.animation.types.StaticAnimation;
 import yesman.epicfight.api.asset.AssetAccessor;
 import yesman.epicfight.api.utils.math.MathUtils;
@@ -54,6 +62,12 @@ public class WraithonEntityPatch extends MobPatch<WraithonEntity> {
     public void tick(LivingEvent.LivingTickEvent event) {
         super.tick(event);
         syncPartEntities();
+        if(this.getEntityState().inaction()){
+            System.out.println("inaction");
+        }
+        System.out.println("current anim:" + this.getAnimator().getPlayerFor(null).getAnimation());
+        System.out.println("client:" + isLogicalClient() + " yRot0" + this.getOriginal().yBodyRotO);
+        System.out.println("client:" + isLogicalClient() + " yRot" + this.getOriginal().yBodyRot);
     }
 
     @Override
@@ -134,12 +148,37 @@ public class WraithonEntityPatch extends MobPatch<WraithonEntity> {
 
     @Override
     public OpenMatrix4f getMatrix(float partialTicks) {
+        if(getEntityState().inaction()){
+            return MathUtils.getModelMatrixIntegral(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, this.original.xRotO, this.original.getXRot(), this.getOriginal().getYRotBeforeRotation(), this.getOriginal().getYRotBeforeRotation(), partialTicks, 1.0F, 1.0F, 1.0F).scale(SCALE, SCALE, SCALE);
+        }
         return super.getMatrix(partialTicks).scale(SCALE, SCALE, SCALE);
     }
 
     @Override
     public OpenMatrix4f getModelMatrix(float partialTicks) {
+        if(getEntityState().inaction()){
+            return MathUtils.getModelMatrixIntegral(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, this.original.xRotO, this.original.getXRot(), this.getOriginal().getYRotBeforeRotation(), this.getOriginal().getYRotBeforeRotation(), partialTicks, 1.0F, 1.0F, 1.0F).scale(SCALE, SCALE, SCALE);
+        }
         return super.getModelMatrix(partialTicks).scale(SCALE, SCALE, SCALE);
+    }
+
+    /**
+     * 把旋转同步给yRot
+     */
+    @Override
+    public void poseTick(DynamicAnimation animation, Pose pose, float elapsedTime, float partialTicks) {
+        super.poseTick(animation, pose, elapsedTime, partialTicks);
+        if(this.getEntityState().inaction() && !animation.isLinkAnimation() && elapsedTime <= animation.getTotalTime()){
+            Vector3f euler = new Vector3f();
+            animation.getCoord().getInterpolatedTransform(elapsedTime).rotation().getEulerAnglesXYZ(euler);
+            float yModelRot = (float) (this.getOriginal().getYRotBeforeRotation() + Math.toDegrees(euler.z));
+            this.getOriginal().setYRot(yModelRot);
+            this.getOriginal().setYBodyRot(yModelRot);
+            this.getOriginal().setYHeadRot(yModelRot);
+            this.getOriginal().yRotO = yModelRot;
+            this.getOriginal().yBodyRotO = yModelRot;
+            this.getOriginal().yHeadRotO = yModelRot;
+        }
     }
 
     @Override

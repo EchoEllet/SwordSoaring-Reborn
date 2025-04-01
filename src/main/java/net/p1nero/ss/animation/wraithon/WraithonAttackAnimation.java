@@ -52,7 +52,6 @@ public class WraithonAttackAnimation extends AttackAnimation {
         this.addProperty(AnimationProperty.AttackAnimationProperty.MOVE_VERTICAL,false);
     }
 
-
     @Override
     protected void attackTick(LivingEntityPatch<?> entitypatch, AssetAccessor<? extends DynamicAnimation> animation) {
         AnimationPlayer player = entitypatch.getAnimator().getPlayerFor(this.getAccessor());
