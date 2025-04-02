@@ -33,7 +33,7 @@ public class WraithonActionAnimation extends ActionAnimation {
     public void begin(LivingEntityPatch<?> entityPatch) {
         super.begin(entityPatch);
         if (entityPatch instanceof WraithonEntityPatch wraithonEntityPatch) {
-            wraithonEntityPatch.getOriginal().setYRotBeforeRotation();
+            wraithonEntityPatch.getOriginal().updateYRotBeforeRotation();
         }
     }
 

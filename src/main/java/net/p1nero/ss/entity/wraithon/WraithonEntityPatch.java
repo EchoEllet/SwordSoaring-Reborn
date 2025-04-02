@@ -62,12 +62,12 @@ public class WraithonEntityPatch extends MobPatch<WraithonEntity> {
     public void tick(LivingEvent.LivingTickEvent event) {
         super.tick(event);
         syncPartEntities();
-        if(this.getEntityState().inaction()){
-            System.out.println("inaction");
-        }
-        System.out.println("current anim:" + this.getAnimator().getPlayerFor(null).getAnimation());
-        System.out.println("client:" + isLogicalClient() + " yRot0" + this.getOriginal().yBodyRotO);
-        System.out.println("client:" + isLogicalClient() + " yRot" + this.getOriginal().yBodyRot);
+//        if(this.getEntityState().inaction()){
+//            System.out.println("inaction");
+//        }
+//        System.out.println("current anim:" + this.getAnimator().getPlayerFor(null).getAnimation());
+//        System.out.println("client:" + isLogicalClient() + " yRot0" + this.getOriginal().yBodyRotO);
+//        System.out.println("client:" + isLogicalClient() + " yRot" + this.getOriginal().yBodyRot);
     }
 
     @Override
@@ -168,16 +168,19 @@ public class WraithonEntityPatch extends MobPatch<WraithonEntity> {
     @Override
     public void poseTick(DynamicAnimation animation, Pose pose, float elapsedTime, float partialTicks) {
         super.poseTick(animation, pose, elapsedTime, partialTicks);
-        if(this.getEntityState().inaction() && !animation.isLinkAnimation() && elapsedTime <= animation.getTotalTime()){
+        if(this.getEntityState().inaction() && !this.getAnimator().getPlayerFor(null).getAnimation().get().isLinkAnimation() && elapsedTime < animation.getTotalTime()){
             Vector3f euler = new Vector3f();
             animation.getCoord().getInterpolatedTransform(elapsedTime).rotation().getEulerAnglesXYZ(euler);
-            float yModelRot = (float) (this.getOriginal().getYRotBeforeRotation() + Math.toDegrees(euler.z));
-            this.getOriginal().setYRot(yModelRot);
-            this.getOriginal().setYBodyRot(yModelRot);
-            this.getOriginal().setYHeadRot(yModelRot);
-            this.getOriginal().yRotO = yModelRot;
-            this.getOriginal().yBodyRotO = yModelRot;
-            this.getOriginal().yHeadRotO = yModelRot;
+            float animYRot = (float) Math.toDegrees(euler.z);
+            if(animYRot != 0){
+                float yModelRot = this.getOriginal().getYRotBeforeRotation() + animYRot;
+                this.getOriginal().setYRot(yModelRot);
+                this.getOriginal().setYBodyRot(yModelRot);
+                this.getOriginal().setYHeadRot(yModelRot);
+                this.getOriginal().yRotO = yModelRot;
+                this.getOriginal().yBodyRotO = yModelRot;
+                this.getOriginal().yHeadRotO = yModelRot;
+            }
         }
     }
 

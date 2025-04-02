@@ -64,6 +64,9 @@ public class WraithonAttackAnimation extends AttackAnimation {
     public void begin(LivingEntityPatch<?> entitypatch) {
         super.begin(entitypatch);
         entitypatch.setLastAttackSuccess(false);
+        if(entitypatch instanceof WraithonEntityPatch wraithonEntityPatch){
+            wraithonEntityPatch.getOriginal().updateYRotBeforeRotation();
+        }
     }
 
     @Override

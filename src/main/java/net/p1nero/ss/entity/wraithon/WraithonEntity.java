@@ -105,9 +105,10 @@ public class WraithonEntity extends PathfinderMob {
         this.entityData.define(LEG_DAMAGE_VALUE, 0.0F);
     }
 
-    public void setYRotBeforeRotation() {
+    public void updateYRotBeforeRotation() {
         if(!level().isClientSide){
             this.getEntityData().set(Y_ROT_BEFORE_ROTATION, this.getYRot());
+            System.out.println("record Y:" + this.getYRot());
         }
     }
 
