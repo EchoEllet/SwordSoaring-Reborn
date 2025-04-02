@@ -4,7 +4,9 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.ForgeMod;
 import net.p1nero.ss.entity.wraithon.WraithonArmature;
 import net.p1nero.ss.entity.wraithon.WraithonEntityPatch;
 import net.p1nero.ss.gameassets.SwordSoaringArmatures;
@@ -12,10 +14,12 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import yesman.epicfight.api.animation.*;
 import yesman.epicfight.api.animation.property.AnimationProperty;
+import yesman.epicfight.api.animation.property.MoveCoordFunctions;
 import yesman.epicfight.api.animation.types.*;
 import yesman.epicfight.api.asset.AssetAccessor;
 import yesman.epicfight.api.collider.Collider;
 import yesman.epicfight.api.model.Armature;
+import yesman.epicfight.api.utils.TimePairList;
 import yesman.epicfight.api.utils.math.OpenMatrix4f;
 import yesman.epicfight.api.utils.math.Vec3f;
 import yesman.epicfight.world.capabilities.entitypatch.HumanoidMobPatch;
@@ -60,6 +64,67 @@ public class WraithonAttackAnimation extends AttackAnimation {
         this.addProperty(AnimationProperty.AttackAnimationProperty.FIXED_MOVE_DISTANCE,true);
         this.addProperty(AnimationProperty.AttackAnimationProperty.MOVE_VERTICAL,false);
     }
+
+
+    @Override
+    protected Vec3 getCoordVector(LivingEntityPatch<?> entitypatch, AssetAccessor<? extends DynamicAnimation> animation) {
+        AnimationPlayer player = entitypatch.getAnimator().getPlayerFor(animation);
+        TimePairList coordUpdateTime = (TimePairList)this.getProperty(AnimationProperty.ActionAnimationProperty.COORD_UPDATE_TIME).orElse((TimePairList) null);
+        boolean inUpdateTime = coordUpdateTime == null || coordUpdateTime.isTimeInPairs(player.getElapsedTime());
+        boolean getRawCoord = (Boolean)this.getProperty(AnimationProperty.AttackAnimationProperty.FIXED_MOVE_DISTANCE).orElse(!inUpdateTime);
+        TransformSheet transformSheet = (TransformSheet)entitypatch.getAnimator().getVariables().getSharedVariable(ACTION_ANIMATION_COORD);
+        MoveCoordFunctions.MoveCoordSetter moveCoordsetter = getRawCoord ? MoveCoordFunctions.RAW_COORD : (MoveCoordFunctions.MoveCoordSetter)this.getProperty(AnimationProperty.ActionAnimationProperty.COORD_SET_TICK).orElse((MoveCoordFunctions.MoveCoordSetter) null);
+        if (moveCoordsetter != null) {
+            moveCoordsetter.set((DynamicAnimation)animation.get(), entitypatch, transformSheet);
+        }
+
+        boolean hasNoGravity = ((LivingEntity)entitypatch.getOriginal()).isNoGravity();
+        boolean moveVertical = (Boolean)this.getProperty(AnimationProperty.ActionAnimationProperty.MOVE_VERTICAL).orElse(this.getProperty(AnimationProperty.ActionAnimationProperty.COORD).isPresent());
+        MoveCoordFunctions.MoveCoordGetter moveGetter = getRawCoord ? MoveCoordFunctions.MODEL_COORD : (MoveCoordFunctions.MoveCoordGetter)this.getProperty(AnimationProperty.ActionAnimationProperty.COORD_GET).orElse(MoveCoordFunctions.MODEL_COORD);
+        Vec3f move = moveGetter.get((DynamicAnimation)animation.get(), entitypatch, transformSheet, player.getPrevElapsedTime(), player.getElapsedTime());
+        float MyRot = -entitypatch.getYRot();
+        float radians = (float) Math.toRadians(MyRot);
+        float cos = (float) Math.cos(radians);
+        float sin = (float) Math.sin(radians);
+
+        float originalX = move.x;
+        float originalZ = move.z;
+        float newX = originalX * cos - originalZ * sin;
+        float newZ = originalX * sin + originalZ * cos;
+
+        move = new Vec3f(newX, move.y, newZ); // 更新为旋转后的向量
+        LivingEntity livingentity = (LivingEntity)entitypatch.getOriginal();
+        Vec3 motion = livingentity.getDeltaMovement();
+        Vec3f finalMove = move;
+        Vec3f finalMove1 = move;
+        this.getProperty(AnimationProperty.ActionAnimationProperty.NO_GRAVITY_TIME).ifPresentOrElse((noGravityTime) -> {
+            if (noGravityTime.isTimeInPairs(((DynamicAnimation)animation.get()).isLinkAnimation() ? 0.0F : player.getElapsedTime())) {
+                livingentity.setDeltaMovement(motion.x, 0.0, motion.z);
+            } else {
+                finalMove.y = 0.0F;
+            }
+
+        }, () -> {
+            if (moveVertical && finalMove1.y > 0.0F && !hasNoGravity) {
+                double gravity = livingentity.getAttribute((Attribute) ForgeMod.ENTITY_GRAVITY.get()).getValue();
+                livingentity.setDeltaMovement(motion.x, motion.y < 0.0 ? motion.y + gravity : 0.0, motion.z);
+            }
+
+        });
+        if (!moveVertical) {
+            move.y = 0.0F;
+        }
+
+        if (inUpdateTime) {
+            this.getProperty(AnimationProperty.ActionAnimationProperty.ENTITY_YROT_PROVIDER).ifPresent((entityYRotProvider) -> {
+                float yRot = entityYRotProvider.get((DynamicAnimation)animation.get(), entitypatch);
+                entitypatch.setYRot(yRot);
+            });
+        }
+
+        return move.toDoubleVector();
+    }
+
     @Override
     public void begin(LivingEntityPatch<?> entitypatch) {
         super.begin(entitypatch);
@@ -95,10 +160,6 @@ public class WraithonAttackAnimation extends AttackAnimation {
         AnimationPlayer player = entitypatch.getAnimator().getPlayerFor(this.getAccessor());
         float prevElapsedTime = player.getPrevElapsedTime();
         float elapsedTime = player.getElapsedTime();
-
-        getJointWorldYRotation(entitypatch, SwordSoaringArmatures.WRAITHON_ARMATURE.get().root, elapsedTime);
-
-
         EntityState prevState = ((DynamicAnimation)animation.get()).getState(entitypatch, prevElapsedTime);
         EntityState state = ((DynamicAnimation)animation.get()).getState(entitypatch, elapsedTime);
         Phase phase = this.getPhaseByTime(((DynamicAnimation)animation.get()).isLinkAnimation() ? 0.0F : elapsedTime);
@@ -137,42 +198,6 @@ public class WraithonAttackAnimation extends AttackAnimation {
 
     }
 
-    public static float getJointWorldYRotation(LivingEntityPatch<?> entityPatch, Joint joint, Float time ) {
-        Animator animator = entityPatch.getAnimator();
-        Pose pose = animator.getPlayerFor(null).getAnimation().get().getRawPose(time);
-        // 1. 获取模型到世界的变换矩阵
-        Vec3 entityPos = entityPatch.getOriginal().position();
-        OpenMatrix4f modelMatrix = entityPatch.getModelMatrix(1.0F);
-
-        // 构建包含实体位置、旋转和模型修正的变换矩阵
-        OpenMatrix4f modelToWorld = OpenMatrix4f.createTranslation((float)entityPos.x, (float)entityPos.y, (float)entityPos.z)
-                .mulBack(OpenMatrix4f.createRotatorDeg(180.0F, Vec3f.Y_AXIS)) // 修正模型初始朝向
-                .mulBack(modelMatrix); // 应用实体自身旋转
-
-        // 2. 获取关节的局部变换并转换到世界空间
-        OpenMatrix4f jointLocal = new OpenMatrix4f(entityPatch.getArmature().getBindedTransformFor(pose, joint));
-        OpenMatrix4f jointWorld = jointLocal.mulFront(modelToWorld);
-
-        // 3. 提取纯旋转矩阵（移除平移和缩放）
-        OpenMatrix4f rotationOnly = new OpenMatrix4f(jointWorld);
-        rotationOnly.removeTranslation(); // 移除平移
-        rotationOnly.removeScale();       // 移除缩放
-
-        // 4. 将旋转矩阵转换为四元数
-        Quaternionf quat = rotationOnly.toQuaternion();
-
-        // 5. 从四元数计算绕世界Y轴的旋转角度（yRot）
-        float yawRadians = (float) Math.atan2(
-                2.0f * (quat.w() * quat.y() + quat.x() * quat.z()),
-                1.0f - 2.0f * (quat.y() * quat.y() + quat.z() * quat.z())
-        );
-
-        // 转换为角度并标准化到 [0, 360)
-        float yawDegrees = (float) Math.toDegrees(yawRadians);
-        yawDegrees = (yawDegrees % 360 + 360) % 360;
-
-        return yawDegrees;
-    }
 
 
 
