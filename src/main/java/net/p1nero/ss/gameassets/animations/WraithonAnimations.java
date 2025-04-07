@@ -89,6 +89,8 @@ public class WraithonAnimations {
 
     public static final List<AnimationManager.AnimationAccessor<? extends StaticAnimation>> DEBUG_ANIM_LIST = new ArrayList<>();
 
+    private static int wraithonAtkParticleCount = 0;
+
 
     public static void buildWraithonAnim(AnimationManager.AnimationBuilder builder) {
         Armatures.ArmatureAccessor<WraithonArmature> armature = SwordSoaringArmatures.WRAITHON_ARMATURE;
@@ -102,7 +104,6 @@ public class WraithonAnimations {
                     AttackAnimation.JointColliderPair.of(armature.get().weapon, SwordSoaringColliders.WRAITHON_BASIC_ATTACK_2));
             return atkJoints.toArray(new AttackAnimation.JointColliderPair[0]);
         };
-
 
         WRAITHON_IDLE = builder.nextAccessor("wraithon/wraithon_idle", (accessor -> new StaticAnimation(0.0F, true, accessor, armature)));
         WRAITHON_WALK = builder.nextAccessor("wraithon/wraithon_walk", (accessor -> new StaticAnimation(true, accessor, armature)));
@@ -313,7 +314,7 @@ public class WraithonAnimations {
         float start = startFrame / 60F;
         float end = endFrame / 60F;
         return AnimationEvent.InPeriodEvent.create(start, end, (entityPatch, self, params) -> {
-            wraithonGroundSplit(entityPatch, radius, particleCount, start);
+            wraithonGroundSplit(entityPatch, radius, wraithonAtkParticleCount, start);
         }, AnimationEvent.Side.BOTH);
     }
 
@@ -378,7 +379,7 @@ public class WraithonAnimations {
                     if (entity.level() instanceof ServerLevel level) {
                         for (int dy = -1; dy <= 1; dy++) {
                             Vec3 newPos = pos.add(0, dy, 0);
-                            LevelUtil.circleSlamFracture(entity, level, newPos, radius, false, true, false);
+                            LevelUtil.circleSlamFracture(entity, level, newPos, radius, true, true, false);
                         }
                     }
                 }

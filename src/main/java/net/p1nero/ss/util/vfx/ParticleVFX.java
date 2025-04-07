@@ -444,7 +444,7 @@ public class ParticleVFX {
             double dirY = Math.sin(dirPitch);
             double dirZ = Math.sin(dirAngle) * Math.cos(dirPitch);
 
-            level.addParticle(particleOptions, x, y, z, dirX * speed, dirY * speed, dirZ * speed);
+            level.addParticle(particleOptions,true, x, y, z, dirX * speed, dirY * speed, dirZ * speed);
         }
     }
 

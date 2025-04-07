@@ -86,12 +86,10 @@ public class WraithonAttackAnimation extends AttackAnimation {
         float radians = (float) Math.toRadians(MyRot);
         float cos = (float) Math.cos(radians);
         float sin = (float) Math.sin(radians);
-
         float originalX = move.x;
         float originalZ = move.z;
         float newX = originalX * cos - originalZ * sin;
         float newZ = originalX * sin + originalZ * cos;
-
         move = new Vec3f(newX, move.y, newZ); // 更新为旋转后的向量
         LivingEntity livingentity = (LivingEntity)entitypatch.getOriginal();
         Vec3 motion = livingentity.getDeltaMovement();
