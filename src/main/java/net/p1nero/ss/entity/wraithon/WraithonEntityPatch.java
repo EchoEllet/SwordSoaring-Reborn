@@ -68,9 +68,9 @@ public class WraithonEntityPatch extends MobPatch<WraithonEntity> {
             JointTransform transform = this.getAnimator().getPose(1.0F).get("ROT");
 
             if(transform != null){
-                transform.rotation().getEulerAnglesXYZ(euler);
+                transform.rotation().getEulerAnglesYXZ(euler);
                 float animYRot = (float) Math.toDegrees(euler.y);
-                System.out.print(animYRot);
+
                 float yModelRot = this.getOriginal().getYRotBeforeRotation() + animYRot;
                 this.getOriginal().setYRot(yModelRot);
                 this.getOriginal().setYBodyRot(yModelRot);
@@ -78,6 +78,7 @@ public class WraithonEntityPatch extends MobPatch<WraithonEntity> {
                 this.getOriginal().yRotO = yModelRot;
                 this.getOriginal().yBodyRotO = yModelRot;
                 this.getOriginal().yHeadRotO = yModelRot;
+                System.out.print(yModelRot);
             }
         }
     }
