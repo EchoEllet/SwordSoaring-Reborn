@@ -65,13 +65,12 @@ public class WraithonEntityPatch extends MobPatch<WraithonEntity> {
 
         if(this.getEntityState().inaction() && !this.getAnimator().getPlayerFor(null).getAnimation().get().isLinkAnimation()){
             Vector3f euler = new Vector3f();
-            JointTransform transform = this.getAnimator().getPose(1.0F).get("Coord");
-            if(transform == null){
-                transform = this.getAnimator().getPose(1.0F).get("Root");
-            }
+            JointTransform transform = this.getAnimator().getPose(1.0F).get("ROT");
+
             if(transform != null){
                 transform.rotation().getEulerAnglesXYZ(euler);
-                float animYRot = (float) Math.toDegrees(euler.z);
+                float animYRot = (float) Math.toDegrees(euler.y);
+                System.out.print(animYRot);
                 float yModelRot = this.getOriginal().getYRotBeforeRotation() + animYRot;
                 this.getOriginal().setYRot(yModelRot);
                 this.getOriginal().setYBodyRot(yModelRot);
