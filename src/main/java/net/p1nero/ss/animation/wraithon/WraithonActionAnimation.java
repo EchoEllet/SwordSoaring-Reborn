@@ -38,22 +38,6 @@ public class WraithonActionAnimation extends ActionAnimation {
     }
 
     @Override
-    public void end(LivingEntityPatch<?> entityPatch, AssetAccessor<? extends DynamicAnimation> nextAnimation, boolean isEnd) {
-        super.end(entityPatch, nextAnimation, isEnd);
-        if(entityPatch instanceof WraithonEntityPatch wraithonEntityPatch){
-            Vector3f euler = new Vector3f();
-            this.getCoord().getInterpolatedTransform(this.getTotalTime()).rotation().getEulerAnglesXYZ(euler);
-            float yModelRot = (float) (wraithonEntityPatch.getOriginal().getYRotBeforeRotation() + Math.toDegrees(euler.z));
-            entityPatch.getOriginal().setYRot(yModelRot);
-            entityPatch.getOriginal().setYBodyRot(yModelRot);
-            entityPatch.getOriginal().setYHeadRot(yModelRot);
-            entityPatch.getOriginal().yRotO = yModelRot;
-            entityPatch.getOriginal().yBodyRotO = yModelRot;
-            entityPatch.getOriginal().yHeadRotO = yModelRot;
-        }
-    }
-
-    @Override
     protected void move(LivingEntityPatch<?> entityPatch, AssetAccessor<? extends DynamicAnimation> animation) {
         if (this.validateMovement(entityPatch, animation)) {
             if (this.getState(EntityState.INACTION, entityPatch, entityPatch.getAnimator().getPlayerFor(this.getAccessor()).getElapsedTime())) {

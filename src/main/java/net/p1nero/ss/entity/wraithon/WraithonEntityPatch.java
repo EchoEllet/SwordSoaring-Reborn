@@ -9,6 +9,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.p1nero.ss.animation.wraithon.WraithonActionAnimation;
+import net.p1nero.ss.animation.wraithon.WraithonAttackAnimation;
 import net.p1nero.ss.client.sound.SwordSoaringSounds;
 import net.p1nero.ss.gameassets.animations.WraithonAnimations;
 import net.p1nero.ss.util.AnimationUtils;
@@ -62,12 +64,16 @@ public class WraithonEntityPatch extends MobPatch<WraithonEntity> {
     public void tick(LivingEvent.LivingTickEvent event) {
         super.tick(event);
         syncPartEntities();
+    }
 
-        if(this.getEntityState().inaction() && !this.getAnimator().getPlayerFor(null).getAnimation().get().isLinkAnimation()){
+    @Override
+    public void poseTick(DynamicAnimation animation, Pose pose, float elapsedTime, float partialTicks) {
+        super.poseTick(animation, pose, elapsedTime, partialTicks);
+        if(this.getEntityState().inaction() && elapsedTime <= animation.getTotalTime() && (animation instanceof WraithonActionAnimation || animation instanceof WraithonAttackAnimation)){
             Vector3f euler = new Vector3f();
-            JointTransform transform = this.getAnimator().getPose(1.0F).get("Coord");
+            JointTransform transform = pose.get("Coord");
             if(transform == null){
-                transform = this.getAnimator().getPose(1.0F).get("Root");
+                transform = pose.get("Root");
             }
             if(transform != null){
                 transform.rotation().getEulerAnglesXYZ(euler);
