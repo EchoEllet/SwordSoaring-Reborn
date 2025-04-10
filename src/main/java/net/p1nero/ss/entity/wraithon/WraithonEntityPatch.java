@@ -5,6 +5,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
@@ -13,19 +14,19 @@ import net.p1nero.ss.client.sound.SwordSoaringSounds;
 import net.p1nero.ss.gameassets.animations.WraithonAnimations;
 import net.p1nero.ss.util.AnimationUtils;
 import org.joml.Vector3f;
-import yesman.epicfight.api.animation.Animator;
-import yesman.epicfight.api.animation.JointTransform;
-import yesman.epicfight.api.animation.LivingMotions;
-import yesman.epicfight.api.animation.Pose;
+import yesman.epicfight.api.animation.*;
 import yesman.epicfight.api.animation.types.DynamicAnimation;
 import yesman.epicfight.api.animation.types.StaticAnimation;
 import yesman.epicfight.api.asset.AssetAccessor;
+import yesman.epicfight.api.utils.AttackResult;
 import yesman.epicfight.api.utils.math.MathUtils;
 import yesman.epicfight.api.utils.math.OpenMatrix4f;
 import yesman.epicfight.gameasset.EpicFightSounds;
 import yesman.epicfight.particle.EpicFightParticles;
 import yesman.epicfight.particle.HitParticleType;
 import yesman.epicfight.world.capabilities.entitypatch.MobPatch;
+import yesman.epicfight.world.damagesource.EpicFightDamageSource;
+import yesman.epicfight.world.damagesource.EpicFightDamageSources;
 import yesman.epicfight.world.damagesource.StunType;
 import yesman.epicfight.world.entity.ai.goal.AnimatedAttackGoal;
 
@@ -157,6 +158,24 @@ public class WraithonEntityPatch extends MobPatch<WraithonEntity> {
             this.playAnimationSynchronized(WraithonAnimations.WRAITHON_IDLE, 0.15F);
         }
 
+    }
+
+    @Override
+    public AttackResult attack(EpicFightDamageSource damageSource, Entity target, InteractionHand hand) {
+        //计算附加伤害
+        if(this.getOriginal().fireContainer.isFullState()){
+            super.attack(EpicFightDamageSources.copy(this.getOriginal().damageSources().inFire()), target, hand);
+        } else if(this.getOriginal().explosionContainer.isFullState()) {
+            super.attack(EpicFightDamageSources.copy(this.getOriginal().damageSources().explosion(this.getOriginal(), this.getOriginal())), target, hand);
+        } else if(this.getOriginal().magicContainer.isFullState()) {
+            super.attack(EpicFightDamageSources.copy(this.getOriginal().damageSources().indirectMagic(this.getOriginal(), this.getOriginal())), target, hand);
+        } else if(this.getOriginal().projectileContainer.isFullState()) {
+            super.attack(EpicFightDamageSources.copy(this.getOriginal().damageSources().mobProjectile(this.getOriginal(), this.getOriginal())), target, hand);
+        } else if(this.getOriginal().outsideContainer.isFullState()) {
+            super.attack(EpicFightDamageSources.copy(this.getOriginal().damageSources().outOfBorder()), target, hand);
+        }
+
+        return super.attack(damageSource, target, hand);
     }
 
     @Override

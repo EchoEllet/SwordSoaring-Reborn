@@ -19,6 +19,7 @@ import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.entity.PartEntity;
 import net.p1nero.ss.entity.SwordSoaringEntities;
+import net.p1nero.ss.entity.wraithon.container.DamageContainer;
 import net.p1nero.ss.gameassets.SwordSoaringArmatures;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -29,6 +30,7 @@ import java.util.List;
 public class WraithonEntity extends PathfinderMob {
     public static final int PHASE0 = 0;//阶段0（用血量表示什么的）
     public static final int PHASE1 = 1;//阶段1（用血量表示什么的）
+    public static final int PHASE2 = 2;//阶段2（用血量表示什么的）
     public static final int DEFAULT_STATE = 0;//火状态（吸收火伤到一定程度）
     public static final int FIRE_STATE = 1;//火状态（吸收火伤到一定程度）
     public static final int EXPLOSION_STATE = 2;//爆炸状态（吸收爆炸伤害到一定程度）
@@ -56,12 +58,12 @@ public class WraithonEntity extends PathfinderMob {
     private final WraithonPartEntity leg_F_3_L;
     private final WraithonPartEntity leg_M_3_L;
     private final WraithonPartEntity leg_B_3_L;
-    private final List<ResourceKey<DamageType>> damageTypes = ImmutableList.of(
-            DamageTypes.EXPLOSION,
-            DamageTypes.ARROW, DamageTypes.MOB_PROJECTILE,
-            DamageTypes.FIREBALL, DamageTypes.IN_FIRE, DamageTypes.ON_FIRE,
-            DamageTypes.MAGIC, DamageTypes.INDIRECT_MAGIC,
-            DamageTypes.OUTSIDE_BORDER, DamageTypes.FELL_OUT_OF_WORLD);
+    public final List<DamageContainer> damageContainers;
+    public final DamageContainer fireContainer;
+    public final DamageContainer explosionContainer;
+    public final DamageContainer magicContainer;
+    public final DamageContainer outsideContainer;
+    public final DamageContainer projectileContainer;
 
     public WraithonEntity(EntityType<? extends WraithonEntity> pEntityType, Level pLevel) {
         super(SwordSoaringEntities.WRAITHON.get(), pLevel);
@@ -77,6 +79,14 @@ public class WraithonEntity extends PathfinderMob {
         this.leg_M_3_L = new WraithonPartEntity(this, armature.leg_M_3_L, 2.0F, 6.0F, new Vec3(0, -5, 0), 0.9F);
         this.leg_B_3_L = new WraithonPartEntity(this, armature.leg_B_3_L, 2.0F, 5.0F, new Vec3(0, -3, 0), 0.9F);
         subEntities = new WraithonPartEntity[]{head, chest, tail, leg_F_3_R, leg_M_3_R, leg_B_3_R, leg_F_3_L, leg_M_3_L, leg_B_3_L};
+
+        fireContainer = new DamageContainer(this, List.of(DamageTypes.FIREBALL, DamageTypes.IN_FIRE, DamageTypes.ON_FIRE), FIRE_CONTAINER, 100, FIRE_STATE);
+        explosionContainer = new DamageContainer(this, List.of(DamageTypes.EXPLOSION), EXPLOSION_CONTAINER, 100, EXPLOSION_STATE);
+        magicContainer = new DamageContainer(this, List.of(DamageTypes.MAGIC, DamageTypes.INDIRECT_MAGIC), MAGIC_CONTAINER, 100, MAGIC_STATE);
+        outsideContainer = new DamageContainer(this, List.of(DamageTypes.OUTSIDE_BORDER, DamageTypes.FELL_OUT_OF_WORLD), OUTSIDE_BORDER_CONTAINER, 100, OUTSIDE_STATE);
+        projectileContainer = new DamageContainer(this, List.of(DamageTypes.ARROW, DamageTypes.MOB_PROJECTILE), PROJECTILE_CONTAINER, 100, PROJECTILE_STATE);
+
+        damageContainers = List.of(fireContainer, explosionContainer, magicContainer, outsideContainer, projectileContainer);
     }
 
     public static AttributeSupplier getDefaultAttribute() {
@@ -218,14 +228,14 @@ public class WraithonEntity extends PathfinderMob {
      *
      */
     public boolean hurtFromPartEntity(WraithonPartEntity wraithonPartEntity, DamageSource pSource, float pAmount) {
-        if (isDamageTypeInRange(pSource)) {
-            //TODO 根据伤害判定
+        if (isAnyDamageTypeInRange(pSource, pAmount)) {
             return true;
         } else {
             pAmount *= wraithonPartEntity.getDamageReduce();
             if (wraithonPartEntity.isLeg()) {
                 this.damageLegs(pAmount);
             }
+            //防高频
             MobEffectInstance currentDamageResistance = this.getEffect(MobEffects.DAMAGE_RESISTANCE);
             this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 10, currentDamageResistance == null ? 0 : currentDamageResistance.getAmplifier() + 1));
             return this.hurt(pSource, pAmount);
@@ -236,14 +246,29 @@ public class WraithonEntity extends PathfinderMob {
      * 判断是否属于火焰，虚空，魔法，爆炸，弹射物伤害
      * 出生设计= =
      */
-    public boolean isDamageTypeInRange(DamageSource damageSource) {
-        for (ResourceKey<DamageType> damageTypeResourceKey : damageTypes) {
-            if (damageSource.is(damageTypeResourceKey)) {
-                return true;
+    public boolean isAnyDamageTypeInRange(DamageSource damageSource, float pAmount) {
+        boolean flag = false;
+        for(DamageContainer container : damageContainers) {
+            if(container.containDamage(damageSource)) {
+                container.onHurt(damageSource, pAmount);
+                if(getPhase() == PHASE0){
+                    return true;
+                } else {
+                    flag = true;
+                }
             }
         }
-        return false;
+        return flag;
     }
 
-
+    @Override
+    public void tick() {
+        super.tick();
+        for(DamageContainer container : damageContainers){
+            container.onTick();
+        }
+        if(this.getPhase() == PHASE2){
+            this.hurt(this.damageSources().fellOutOfWorld(), this.getMaxHealth() * 0.01F * 0.05F);
+        }
+    }
 }
