@@ -9,8 +9,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingEvent;
-import net.p1nero.ss.animation.wraithon.WraithonActionAnimation;
-import net.p1nero.ss.animation.wraithon.WraithonAttackAnimation;
 import net.p1nero.ss.client.sound.SwordSoaringSounds;
 import net.p1nero.ss.gameassets.animations.WraithonAnimations;
 import net.p1nero.ss.util.AnimationUtils;
@@ -64,20 +62,15 @@ public class WraithonEntityPatch extends MobPatch<WraithonEntity> {
     public void tick(LivingEvent.LivingTickEvent event) {
         super.tick(event);
         syncPartEntities();
-    }
 
-    @Override
-    public void poseTick(DynamicAnimation animation, Pose pose, float elapsedTime, float partialTicks) {
-        super.poseTick(animation, pose, elapsedTime, partialTicks);
-        if(this.getEntityState().inaction() && elapsedTime <= animation.getTotalTime() && (animation instanceof WraithonActionAnimation || animation instanceof WraithonAttackAnimation)){
+        if(this.getEntityState().inaction() && !this.getAnimator().getPlayerFor(null).getAnimation().get().isLinkAnimation()){
             Vector3f euler = new Vector3f();
-            JointTransform transform = pose.get("Coord");
-            if(transform == null){
-                transform = pose.get("Root");
-            }
+            JointTransform transform = this.getAnimator().getPose(1.0F).get("ROT");
+
             if(transform != null){
-                transform.rotation().getEulerAnglesXYZ(euler);
-                float animYRot = (float) Math.toDegrees(euler.z);
+                transform.rotation().getEulerAnglesYXZ(euler);
+                float animYRot = (float) Math.toDegrees(euler.y);
+
                 float yModelRot = this.getOriginal().getYRotBeforeRotation() + animYRot;
                 this.getOriginal().setYRot(yModelRot);
                 this.getOriginal().setYBodyRot(yModelRot);
@@ -85,6 +78,7 @@ public class WraithonEntityPatch extends MobPatch<WraithonEntity> {
                 this.getOriginal().yRotO = yModelRot;
                 this.getOriginal().yBodyRotO = yModelRot;
                 this.getOriginal().yHeadRotO = yModelRot;
+                System.out.print(yModelRot);
             }
         }
     }

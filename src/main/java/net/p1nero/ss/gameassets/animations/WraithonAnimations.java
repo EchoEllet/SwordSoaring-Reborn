@@ -114,6 +114,7 @@ public class WraithonAnimations {
         WRAITHON_JUMP_B = builder.nextAccessor("wraithon/wraithon_jump_b", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
 
 
+
         WRAITHON_LEG_1 = builder.nextAccessor("wraithon/wraithon_legattack_1", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)
                 .addEvents(autoWraithonShockAtk(53, 55, SwordSoaringArmatures.WRAITHON_ARMATURE.get().leg_F_3_R, 5F)
                         , (autoWraithonShockAtk(53, 55, SwordSoaringArmatures.WRAITHON_ARMATURE.get().leg_F_3_L, 5F)))));
