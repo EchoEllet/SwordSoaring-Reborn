@@ -82,7 +82,8 @@ public class WraithonAttackAnimation extends AttackAnimation {
         boolean moveVertical = (Boolean)this.getProperty(AnimationProperty.ActionAnimationProperty.MOVE_VERTICAL).orElse(this.getProperty(AnimationProperty.ActionAnimationProperty.COORD).isPresent());
         MoveCoordFunctions.MoveCoordGetter moveGetter = getRawCoord ? MoveCoordFunctions.MODEL_COORD : (MoveCoordFunctions.MoveCoordGetter)this.getProperty(AnimationProperty.ActionAnimationProperty.COORD_GET).orElse(MoveCoordFunctions.MODEL_COORD);
         Vec3f move = moveGetter.get((DynamicAnimation)animation.get(), entitypatch, transformSheet, player.getPrevElapsedTime(), player.getElapsedTime());
-        float MyRot = -entitypatch.getYRot();
+        WraithonEntityPatch wraithonEntityPatch = (WraithonEntityPatch) entitypatch;
+        float MyRot = -entitypatch.getYRot() + wraithonEntityPatch.getOriginal().getYRotBeforeRotation();
         float radians = (float) Math.toRadians(MyRot);
         float cos = (float) Math.cos(radians);
         float sin = (float) Math.sin(radians);

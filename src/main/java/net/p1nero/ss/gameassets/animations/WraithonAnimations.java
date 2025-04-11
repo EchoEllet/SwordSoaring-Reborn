@@ -389,7 +389,8 @@ public class WraithonAnimations {
         LivingEntity entity = livingEntityPatch.getOriginal();
         Pose pose = livingEntityPatch.getAnimator().getPlayerFor(null).getAnimation().get().getRawPose(time);
         OpenMatrix4f transformMatrix = livingEntityPatch.getArmature().getBindedTransformFor(pose, joint);
-        OpenMatrix4f rotation = new OpenMatrix4f().rotate(-(float) Math.toRadians(entity.yBodyRotO + 180.0F-entity.getYRot()), new Vec3f(0.0F, 1.0F, 0.0F));
+        WraithonEntityPatch wraithonEntityPatch = (WraithonEntityPatch) livingEntityPatch;
+        OpenMatrix4f rotation = new OpenMatrix4f().rotate(-(float) Math.toRadians(180.0F+wraithonEntityPatch.getOriginal().getYRotBeforeRotation()), new Vec3f(0.0F, 1.0F, 0.0F));
         OpenMatrix4f rotatedMatrix = new OpenMatrix4f();
         OpenMatrix4f.mul(rotation, transformMatrix, rotatedMatrix);
 
@@ -425,7 +426,8 @@ public class WraithonAnimations {
         LivingEntity entity = livingEntityPatch.getOriginal();
         Pose pose = livingEntityPatch.getAnimator().getPlayerFor(null).getAnimation().get().getRawPose(time);
         OpenMatrix4f transformMatrix = livingEntityPatch.getArmature().getBindedTransformFor(pose, joint);
-        OpenMatrix4f rotation = new OpenMatrix4f().rotate(-(float) Math.toRadians(entity.yBodyRotO + 180.0F-entity.getYRot()), new Vec3f(0.0F, 1.0F, 0.0F));
+        WraithonEntityPatch wraithonEntityPatch = (WraithonEntityPatch) livingEntityPatch;
+        OpenMatrix4f rotation = new OpenMatrix4f().rotate(-(float) Math.toRadians(180.0F+wraithonEntityPatch.getOriginal().getYRotBeforeRotation()), new Vec3f(0.0F, 1.0F, 0.0F));
         OpenMatrix4f rotatedMatrix = new OpenMatrix4f();
         OpenMatrix4f.mul(rotation, transformMatrix, rotatedMatrix);
 
