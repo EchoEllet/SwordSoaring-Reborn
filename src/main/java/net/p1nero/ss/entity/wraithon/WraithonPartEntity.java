@@ -33,8 +33,11 @@ public class WraithonPartEntity extends PartEntity<WraithonEntity> {
         this.damageReduce = damageReduce;
     }
 
+    /**
+     * 阶段越高减伤越少
+     */
     public float getDamageReduce() {
-        return damageReduce;
+        return damageReduce / (this.parentMob.getPhase() + 1);
     }
 
     public Vec3 getYOffset() {

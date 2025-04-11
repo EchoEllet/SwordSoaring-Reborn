@@ -87,7 +87,7 @@ public class WraithonAnimations {
     public static AnimationManager.AnimationAccessor<WraithonAttackAnimation> WRAITHON_JUMP_L_ATK;
     public static AnimationManager.AnimationAccessor<WraithonAttackAnimation> WRAITHON_JUMP_B_ATK;
 
-    public static final List<AnimationManager.AnimationAccessor<? extends StaticAnimation>> DEBUG_ANIM_LIST = new ArrayList<>();
+    public static List<AnimationManager.AnimationAccessor<? extends StaticAnimation>> DEBUG_ANIM_LIST;
 
     private static int wraithonAtkParticleCount = 0;
 
@@ -261,10 +261,7 @@ public class WraithonAnimations {
             return animation;
         }));
 
-
-        DEBUG_ANIM_LIST.add(WRAITHON_1);
-        DEBUG_ANIM_LIST.add(WRAITHON_ROTATE_R);
-        DEBUG_ANIM_LIST.add(WRAITHON_ROTATE_L);
+        DEBUG_ANIM_LIST = List.of(WRAITHON_1, WRAITHON_2, WRAITHON_3, WRAITHON_4, WRAITHON_5, WRAITHON_6, WRAITHON_7, WRAITHON_8, WRAITHON_9, WRAITHON_10, WRAITHON_11, WRAITHON_12, WRAITHON_13, WRAITHON_ROTATE_R, WRAITHON_ROTATE_L);
     }
 
 
