@@ -128,7 +128,7 @@ public class WraithonAttackAnimation extends AttackAnimation {
         super.begin(entitypatch);
         entitypatch.setLastAttackSuccess(false);
         if(entitypatch instanceof WraithonEntityPatch wraithonEntityPatch){
-//            wraithonEntityPatch.getOriginal().updateYRotBeforeRotation();
+            wraithonEntityPatch.getOriginal().updateYRotBeforeRotation();
         }
     }
 

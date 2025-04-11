@@ -13,16 +13,24 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.entity.PartEntity;
 import net.p1nero.ss.entity.SwordSoaringEntities;
+import net.p1nero.ss.entity.wraithon.ai.WraithonTargetSelector;
 import net.p1nero.ss.entity.wraithon.container.DamageContainer;
 import net.p1nero.ss.gameassets.SwordSoaringArmatures;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import yesman.epicfight.network.EpicFightNetworkManager;
+import yesman.epicfight.network.server.SPSetAttackTarget;
 import yesman.epicfight.world.entity.ai.attribute.EpicFightAttributes;
 
 import java.util.List;
@@ -46,6 +54,7 @@ public class WraithonEntity extends PathfinderMob {
     protected static final EntityDataAccessor<Float> MAGIC_CONTAINER = SynchedEntityData.defineId(WraithonEntity.class, EntityDataSerializers.FLOAT);
     protected static final EntityDataAccessor<Float> OUTSIDE_BORDER_CONTAINER = SynchedEntityData.defineId(WraithonEntity.class, EntityDataSerializers.FLOAT);
     protected static final EntityDataAccessor<Float> PROJECTILE_CONTAINER = SynchedEntityData.defineId(WraithonEntity.class, EntityDataSerializers.FLOAT);
+    protected static final EntityDataAccessor<Boolean> ROTATING = SynchedEntityData.defineId(WraithonEntity.class, EntityDataSerializers.BOOLEAN);
     public static final int MAX_LEG_DAMAGE = 300;
     protected static final EntityDataAccessor<Float> LEG_DAMAGE_VALUE = SynchedEntityData.defineId(WraithonEntity.class, EntityDataSerializers.FLOAT);
     private final WraithonPartEntity[] subEntities;
@@ -93,6 +102,7 @@ public class WraithonEntity extends PathfinderMob {
         return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 1000F)
                 .add(Attributes.ATTACK_DAMAGE, 99999)
+                .add(Attributes.FOLLOW_RANGE, 72)
                 .add(EpicFightAttributes.MAX_STRIKES.get(), 50.0F)
                 .build();
     }
@@ -105,6 +115,8 @@ public class WraithonEntity extends PathfinderMob {
         super.defineSynchedData();
         this.entityData.define(Y_ROT_BEFORE_ROTATION, 0.0F);
 
+        this.entityData.define(ROTATING, false);
+
         this.entityData.define(PHASE, 0);
         this.entityData.define(STATE, 0);
         this.entityData.define(FIRE_CONTAINER, 0.0F);
@@ -115,10 +127,35 @@ public class WraithonEntity extends PathfinderMob {
         this.entityData.define(LEG_DAMAGE_VALUE, 0.0F);
     }
 
+    @Override
+    protected void registerGoals() {
+        super.registerGoals();
+        this.targetSelector.addGoal(0, new HurtByTargetGoal(this));
+        this.targetSelector.addGoal(1, new WraithonTargetSelector(this));
+        this.goalSelector.addGoal(0, new FloatGoal(this));
+    }
+
+    @Override
+    public void setTarget(@Nullable LivingEntity pTarget) {
+        if (!this.level().isClientSide()) {
+            super.setTarget(pTarget);
+            EpicFightNetworkManager.sendToAllPlayerTrackingThisEntity(new SPSetAttackTarget((this).getId(), pTarget != null ? pTarget.getId() : -1), this);
+        } else {
+            super.setTarget(pTarget);
+        }
+    }
+
+    public boolean isRotating(){
+        return getEntityData().get(ROTATING);
+    }
+
+    public void setRotating(boolean rotating){
+        this.getEntityData().set(ROTATING, rotating);
+    }
+
     public void updateYRotBeforeRotation() {
         if(!level().isClientSide){
             this.getEntityData().set(Y_ROT_BEFORE_ROTATION, this.getYRot());
-            System.out.println("record Y:" + this.getYRot());
         }
     }
 

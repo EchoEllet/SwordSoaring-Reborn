@@ -1,27 +1,24 @@
 package net.p1nero.ss.entity.wraithon;
 
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.p1nero.ss.client.sound.SwordSoaringSounds;
+import net.p1nero.ss.entity.wraithon.ai.WraithonChaseGoal;
+import net.p1nero.ss.entity.wraithon.ai.WraithonCombatBehaviors;
 import net.p1nero.ss.gameassets.animations.WraithonAnimations;
 import net.p1nero.ss.util.AnimationUtils;
 import org.joml.Vector3f;
 import yesman.epicfight.api.animation.*;
-import yesman.epicfight.api.animation.types.DynamicAnimation;
 import yesman.epicfight.api.animation.types.StaticAnimation;
 import yesman.epicfight.api.asset.AssetAccessor;
 import yesman.epicfight.api.utils.AttackResult;
 import yesman.epicfight.api.utils.math.MathUtils;
 import yesman.epicfight.api.utils.math.OpenMatrix4f;
 import yesman.epicfight.gameasset.EpicFightSounds;
+import yesman.epicfight.network.common.AnimatorControlPacket;
 import yesman.epicfight.particle.EpicFightParticles;
 import yesman.epicfight.particle.HitParticleType;
 import yesman.epicfight.world.capabilities.entitypatch.MobPatch;
@@ -35,12 +32,6 @@ import javax.annotation.Nullable;
 public class WraithonEntityPatch extends MobPatch<WraithonEntity> {
 
     public static final float SCALE = 2.0F;
-    //旋转目标
-    @Nullable
-    private Entity rotateTarget;
-    //旋转到距离目标夹角多少时停止
-    private float rangeDegree;
-
     @Override
     protected void initAnimator(Animator animator) {
         super.initAnimator(animator);
@@ -51,7 +42,8 @@ public class WraithonEntityPatch extends MobPatch<WraithonEntity> {
     @Override
     protected void initAI() {
         super.initAI();
-        this.original.goalSelector.addGoal(0, new AnimatedAttackGoal<>(this, WraithonCombatBehaviors.PHASE1.build(this)));
+//        this.original.goalSelector.addGoal(0, new AnimatedAttackGoal<>(this, WraithonCombatBehaviors.PHASE1.build(this)));
+        this.original.goalSelector.addGoal(1, new WraithonChaseGoal(this, 5));
     }
 
     @Override
@@ -63,7 +55,7 @@ public class WraithonEntityPatch extends MobPatch<WraithonEntity> {
     public void tick(LivingEvent.LivingTickEvent event) {
         super.tick(event);
         syncPartEntities();
-
+        checkRotation();
         if(this.getEntityState().inaction() && !this.getAnimator().getPlayerFor(null).getAnimation().get().isLinkAnimation()){
             Vector3f euler = new Vector3f();
             JointTransform transform = this.getAnimator().getPose(1.0F).get("ROT");
@@ -79,15 +71,8 @@ public class WraithonEntityPatch extends MobPatch<WraithonEntity> {
                 this.getOriginal().yRotO = yModelRot;
                 this.getOriginal().yBodyRotO = yModelRot;
                 this.getOriginal().yHeadRotO = yModelRot;
-                System.out.print(yModelRot);
             }
         }
-    }
-
-    @Override
-    protected void serverTick(LivingEvent.LivingTickEvent event) {
-        super.serverTick(event);
-        checkRotation();
     }
 
     public void syncPartEntities(){
@@ -101,61 +86,47 @@ public class WraithonEntityPatch extends MobPatch<WraithonEntity> {
     }
 
     public boolean isTargetInDegree(Entity target){
-        return isTargetInDegree(target, 10);
+        return isTargetInDegree(target, -10, 10);
     }
 
     /**
      * 判断目标是否在一定角度范围内
      * @param target 目标
-     * @param rangeDegree 角度范围
      */
-    public boolean isTargetInDegree(Entity target, float rangeDegree){
+    public boolean isTargetInDegree(Entity target, float min, float max){
         Vec3 targetPos = target.position();
         Vec3 selfPos = this.getOriginal().position();
-        float yRot = this.getYRot();
         double theta = MathUtils.getYRotOfVector(targetPos.subtract(selfPos));
-        theta = (theta + 360) % 360;
-        float bossAngle = (yRot % 360 + 360) % 360;
-        double delta = theta - bossAngle;
-        return Math.abs(delta) < rangeDegree;
+        double delta = theta - MathUtils.getYRotOfVector(this.getOriginal().getViewVector(1.0F));
+        return delta > min && delta < max;
     }
 
     /**
      * 右转向敌人
      */
-    public void turnRight(Entity target){
-        turnRight(target, 10);
-    }
-
-    /**
-     * 右转向敌人
-     * @param target 敌人
-     * @param rangeDegree 距离多少时停止
-     */
-    public void turnRight(Entity target, float rangeDegree){
-        this.rotateTarget = target;
-        this.rangeDegree = rangeDegree;
+    public void turnRight(){
+        this.getOriginal().setRotating(true);
         this.playAnimationSynchronized(WraithonAnimations.WRAITHON_ROTATE_R, 0.15F);
     }
 
-    public void turnLeft(Entity target){
-        turnLeft(target, 10);
-    }
-
-    public void turnLeft(Entity target, float rangeDegree){
-        this.rotateTarget = target;
-        this.rangeDegree = rangeDegree;
+    public void turnLeft(){
+        this.getOriginal().setRotating(true);
         this.playAnimationSynchronized(WraithonAnimations.WRAITHON_ROTATE_L, 0.15F);
     }
 
+    public boolean isRotating() {
+        return this.getOriginal().isRotating();
+    }
+
     public void checkRotation(){
-        if(rotateTarget == null) {
+
+        if(this.getTarget() == null) {
             return;
         }
 
-        if(isTargetInDegree(rotateTarget, rangeDegree)){
-            //打断动画
-            this.playAnimationSynchronized(WraithonAnimations.WRAITHON_IDLE, 0.15F);
+        if(isTargetInDegree(this.getTarget(), -15, 15) && this.isRotating()){
+            this.getOriginal().setRotating(false);
+//            this.playAnimation(WraithonAnimations.WRAITHON_13, 0.15F);
         }
 
     }

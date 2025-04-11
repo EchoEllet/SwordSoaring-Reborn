@@ -38,6 +38,14 @@ public class WraithonActionAnimation extends ActionAnimation {
     }
 
     @Override
+    public void end(LivingEntityPatch<?> entityPatch, AssetAccessor<? extends DynamicAnimation> nextAnimation, boolean isEnd) {
+        super.end(entityPatch, nextAnimation, isEnd);
+        if(entityPatch instanceof WraithonEntityPatch wraithonEntityPatch){
+            wraithonEntityPatch.getOriginal().setRotating(false);
+        }
+    }
+
+    @Override
     protected void move(LivingEntityPatch<?> entityPatch, AssetAccessor<? extends DynamicAnimation> animation) {
         if (this.validateMovement(entityPatch, animation)) {
             if (this.getState(EntityState.INACTION, entityPatch, entityPatch.getAnimator().getPlayerFor(this.getAccessor()).getElapsedTime())) {
