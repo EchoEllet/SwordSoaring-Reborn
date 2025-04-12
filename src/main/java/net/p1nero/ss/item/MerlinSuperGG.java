@@ -56,7 +56,7 @@ public class MerlinSuperGG extends SwordItem {
             );
             if (entityPatch != null) {
                 entityPatch.playAnimation(
-                        WraithonAnimations.WRAITHON_3,
+                        WraithonAnimations.WRAITHON_ROTATE_R_160,
                         0.0F
                 );
             }
