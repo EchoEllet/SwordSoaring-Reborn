@@ -36,10 +36,13 @@ public class WraithonChaseGoal extends Goal {
         if(Math.abs(delta) < 30) {
             wraithonEntityPatch.rotateTo(wraithonEntityPatch.getTarget(), 10, true);
         } else {
-            if(delta > 0 && delta < 180){
-                wraithonEntityPatch.turnRight();
+            // 归一化delta到0~360度范围
+            delta = (delta % 360 + 360) % 360;
+
+            if (delta <= 180) {
+                wraithonEntityPatch.turnRight(delta);
             } else {
-                wraithonEntityPatch.turnLeft();
+                wraithonEntityPatch.turnLeft(360 - delta);
             }
         }
     }

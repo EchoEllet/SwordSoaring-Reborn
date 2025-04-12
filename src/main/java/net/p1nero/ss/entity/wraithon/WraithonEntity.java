@@ -130,8 +130,7 @@ public class WraithonEntity extends PathfinderMob {
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.targetSelector.addGoal(0, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(1, new WraithonTargetSelector(this));
+        this.targetSelector.addGoal(0, new WraithonTargetSelector(this));
         this.goalSelector.addGoal(0, new FloatGoal(this));
     }
 
@@ -261,10 +260,11 @@ public class WraithonEntity extends PathfinderMob {
         return super.hurt(pSource, pAmount);
     }
 
-    /**
-     *
-     */
     public boolean hurtFromPartEntity(WraithonPartEntity wraithonPartEntity, DamageSource pSource, float pAmount) {
+        if(pSource.getEntity() != null && pSource.getEntity().distanceTo(this) >= this.getAttributeBaseValue(Attributes.FOLLOW_RANGE)){
+            return false;
+        }
+
         if (isAnyDamageTypeInRange(pSource, pAmount)) {
             return true;
         } else {

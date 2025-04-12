@@ -58,8 +58,22 @@ public class WraithonAnimations {
     public static AnimationManager.AnimationAccessor<WraithonActionAnimation> WRAITHON_JUMP_L;
     public static AnimationManager.AnimationAccessor<WraithonActionAnimation> WRAITHON_JUMP_B;
 
-    public static AnimationManager.AnimationAccessor<WraithonActionAnimation> WRAITHON_ROTATE_R;
-    public static AnimationManager.AnimationAccessor<WraithonActionAnimation> WRAITHON_ROTATE_L;
+    public static AnimationManager.AnimationAccessor<WraithonActionAnimation> WRAITHON_ROTATE_R_40;
+    public static AnimationManager.AnimationAccessor<WraithonActionAnimation> WRAITHON_ROTATE_R_60;
+    public static AnimationManager.AnimationAccessor<WraithonActionAnimation> WRAITHON_ROTATE_R_80;
+    public static AnimationManager.AnimationAccessor<WraithonActionAnimation> WRAITHON_ROTATE_R_100;
+    public static AnimationManager.AnimationAccessor<WraithonActionAnimation> WRAITHON_ROTATE_R_120;
+    public static AnimationManager.AnimationAccessor<WraithonActionAnimation> WRAITHON_ROTATE_R_140;
+    public static AnimationManager.AnimationAccessor<WraithonActionAnimation> WRAITHON_ROTATE_R_160;
+    public static AnimationManager.AnimationAccessor<WraithonActionAnimation> WRAITHON_ROTATE_R_180;
+    public static AnimationManager.AnimationAccessor<WraithonActionAnimation> WRAITHON_ROTATE_L_40;
+    public static AnimationManager.AnimationAccessor<WraithonActionAnimation> WRAITHON_ROTATE_L_60;
+    public static AnimationManager.AnimationAccessor<WraithonActionAnimation> WRAITHON_ROTATE_L_80;
+    public static AnimationManager.AnimationAccessor<WraithonActionAnimation> WRAITHON_ROTATE_L_100;
+    public static AnimationManager.AnimationAccessor<WraithonActionAnimation> WRAITHON_ROTATE_L_120;
+    public static AnimationManager.AnimationAccessor<WraithonActionAnimation> WRAITHON_ROTATE_L_140;
+    public static AnimationManager.AnimationAccessor<WraithonActionAnimation> WRAITHON_ROTATE_L_160;
+    public static AnimationManager.AnimationAccessor<WraithonActionAnimation> WRAITHON_ROTATE_L_180;
 
     public static AnimationManager.AnimationAccessor<WraithonActionAnimation> WRAITHON_LEG_1;
     public static AnimationManager.AnimationAccessor<WraithonActionAnimation> WRAITHON_LEG_2;
@@ -107,8 +121,23 @@ public class WraithonAnimations {
 
         WRAITHON_IDLE = builder.nextAccessor("wraithon/wraithon_idle", (accessor -> new StaticAnimation(0.0F, true, accessor, armature)));
         WRAITHON_WALK = builder.nextAccessor("wraithon/wraithon_walk", (accessor -> new StaticAnimation(true, accessor, armature)));
-        WRAITHON_ROTATE_R = builder.nextAccessor("wraithon/wraithon_rotate_r", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
-        WRAITHON_ROTATE_L = builder.nextAccessor("wraithon/wraithon_rotate_l", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
+        
+        WRAITHON_ROTATE_R_40 = builder.nextAccessor("wraithon/wraithon_rotate_r_40", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
+        WRAITHON_ROTATE_R_60 = builder.nextAccessor("wraithon/wraithon_rotate_r_60", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
+        WRAITHON_ROTATE_R_80 = builder.nextAccessor("wraithon/wraithon_rotate_r_80", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
+        WRAITHON_ROTATE_R_100 = builder.nextAccessor("wraithon/wraithon_rotate_r_100", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
+        WRAITHON_ROTATE_R_120 = builder.nextAccessor("wraithon/wraithon_rotate_r_120", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
+        WRAITHON_ROTATE_R_140 = builder.nextAccessor("wraithon/wraithon_rotate_r_140", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
+        WRAITHON_ROTATE_R_160 = builder.nextAccessor("wraithon/wraithon_rotate_r_160", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
+        WRAITHON_ROTATE_R_180 = builder.nextAccessor("wraithon/wraithon_rotate_r_180", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
+        WRAITHON_ROTATE_L_40 = builder.nextAccessor("wraithon/wraithon_rotate_l_40", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
+        WRAITHON_ROTATE_L_60 = builder.nextAccessor("wraithon/wraithon_rotate_l_60", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
+        WRAITHON_ROTATE_L_80 = builder.nextAccessor("wraithon/wraithon_rotate_l_80", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
+        WRAITHON_ROTATE_L_100 = builder.nextAccessor("wraithon/wraithon_rotate_l_100", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
+        WRAITHON_ROTATE_L_120 = builder.nextAccessor("wraithon/wraithon_rotate_l_120", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
+        WRAITHON_ROTATE_L_140 = builder.nextAccessor("wraithon/wraithon_rotate_l_140", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
+        WRAITHON_ROTATE_L_160 = builder.nextAccessor("wraithon/wraithon_rotate_l_160", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
+        WRAITHON_ROTATE_L_180 = builder.nextAccessor("wraithon/wraithon_rotate_l_180", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
         WRAITHON_JUMP_R = builder.nextAccessor("wraithon/wraithon_jump_r", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
         WRAITHON_JUMP_L = builder.nextAccessor("wraithon/wraithon_jump_l", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
         WRAITHON_JUMP_B = builder.nextAccessor("wraithon/wraithon_jump_b", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
@@ -261,7 +290,7 @@ public class WraithonAnimations {
             return animation;
         }));
 
-        DEBUG_ANIM_LIST = List.of(WRAITHON_1, WRAITHON_2, WRAITHON_3, WRAITHON_4, WRAITHON_5, WRAITHON_6, WRAITHON_7, WRAITHON_8, WRAITHON_9, WRAITHON_10, WRAITHON_11, WRAITHON_12, WRAITHON_13, WRAITHON_ROTATE_R, WRAITHON_ROTATE_L);
+        DEBUG_ANIM_LIST = List.of(WRAITHON_1, WRAITHON_2, WRAITHON_3, WRAITHON_4, WRAITHON_5, WRAITHON_6, WRAITHON_7, WRAITHON_8, WRAITHON_9, WRAITHON_10, WRAITHON_11, WRAITHON_12, WRAITHON_13, WRAITHON_ROTATE_R_180, WRAITHON_ROTATE_L_180);
     }
 
 

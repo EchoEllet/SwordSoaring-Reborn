@@ -6,6 +6,7 @@ import net.p1nero.ss.entity.wraithon.WraithonEntity;
 
 public class WraithonTargetSelector extends NearestAttackableTargetGoal<Player> {
 
+    private int timer = 0;
     public WraithonTargetSelector(WraithonEntity wraithonEntity) {
         super(wraithonEntity, Player.class, false);
     }
@@ -18,7 +19,17 @@ public class WraithonTargetSelector extends NearestAttackableTargetGoal<Player> 
 
     @Override
     protected void findTarget() {
-        this.target = this.mob.level().getNearestPlayer(this.targetConditions, this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());
+        Player player = this.mob.level().getNearestPlayer(this.targetConditions, this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());
+        timer++;
+        if(this.target == null || !this.target.isAlive()){
+            this.target = player;
+            return;
+        }
+        if(player != this.target && timer >= 600){
+            this.target = player;
+            timer = 0;
+        }
+
     }
 
 }
