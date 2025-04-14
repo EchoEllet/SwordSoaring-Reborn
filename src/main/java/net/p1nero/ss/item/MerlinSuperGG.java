@@ -45,7 +45,7 @@ public class MerlinSuperGG extends SwordItem {
                     spawnPos.x(),
                     spawnPos.y(),
                     spawnPos.z(),
-                    90,
+                    0,
                     newWraithon.getXRot()
             );
             world.addFreshEntity(newWraithon);
@@ -56,7 +56,7 @@ public class MerlinSuperGG extends SwordItem {
             );
             if (entityPatch != null) {
                 entityPatch.playAnimation(
-                        WraithonAnimations.WRAITHON_ROTATE_R_160,
+                        WraithonAnimations.WRAITHON_3,
                         0.0F
                 );
             }
