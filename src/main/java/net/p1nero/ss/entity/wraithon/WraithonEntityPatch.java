@@ -3,6 +3,7 @@ package net.p1nero.ss.entity.wraithon;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.p1nero.ss.animation.wraithon.WraithonActionAnimation;
@@ -50,8 +51,28 @@ public class WraithonEntityPatch extends MobPatch<WraithonEntity> {
     }
 
     @Override
-    public void updateMotion(boolean b) {
-        commonAggressiveMobUpdateMotion(b);
+    public void updateMotion(boolean considerInaction) {
+        if (this.original.getHealth() <= 0.0F) {
+            this.currentLivingMotion = LivingMotions.DEATH;
+        } else if (this.state.inaction() && considerInaction) {
+            this.currentLivingMotion = LivingMotions.IDLE;
+        } else if (this.original.getVehicle() != null) {
+            this.currentLivingMotion = LivingMotions.MOUNT;
+        } else if (!(this.original.getDeltaMovement().y < -0.550000011920929) && !this.isAirborneState()) {
+            if (this.original.walkAnimation.speed() > 0.16F) {
+                if (this.original.isAggressive()) {
+                    this.currentLivingMotion = LivingMotions.CHASE;
+                } else {
+                    this.currentLivingMotion = LivingMotions.WALK;
+                }
+            } else {
+                this.currentLivingMotion = LivingMotions.IDLE;
+            }
+        } else {
+            this.currentLivingMotion = LivingMotions.FALL;
+        }
+
+        this.currentCompositeMotion = this.currentLivingMotion;
     }
 
     @Override

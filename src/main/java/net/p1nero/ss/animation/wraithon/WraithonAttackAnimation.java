@@ -65,19 +65,19 @@ public class WraithonAttackAnimation extends AttackAnimation {
     @Override
     protected Vec3 getCoordVector(LivingEntityPatch<?> entitypatch, AssetAccessor<? extends DynamicAnimation> animation) {
         AnimationPlayer player = entitypatch.getAnimator().getPlayerFor(animation);
-        TimePairList coordUpdateTime = (TimePairList)this.getProperty(AnimationProperty.ActionAnimationProperty.COORD_UPDATE_TIME).orElse((TimePairList) null);
+        TimePairList coordUpdateTime = this.getProperty(AnimationProperty.ActionAnimationProperty.COORD_UPDATE_TIME).orElse(null);
         boolean inUpdateTime = coordUpdateTime == null || coordUpdateTime.isTimeInPairs(player.getElapsedTime());
-        boolean getRawCoord = (Boolean)this.getProperty(AnimationProperty.AttackAnimationProperty.FIXED_MOVE_DISTANCE).orElse(!inUpdateTime);
-        TransformSheet transformSheet = (TransformSheet)entitypatch.getAnimator().getVariables().getSharedVariable(ACTION_ANIMATION_COORD);
-        MoveCoordFunctions.MoveCoordSetter moveCoordsetter = getRawCoord ? MoveCoordFunctions.RAW_COORD : (MoveCoordFunctions.MoveCoordSetter)this.getProperty(AnimationProperty.ActionAnimationProperty.COORD_SET_TICK).orElse((MoveCoordFunctions.MoveCoordSetter) null);
+        boolean getRawCoord = this.getProperty(AnimationProperty.AttackAnimationProperty.FIXED_MOVE_DISTANCE).orElse(!inUpdateTime);
+        TransformSheet transformSheet = entitypatch.getAnimator().getVariables().getSharedVariable(ACTION_ANIMATION_COORD);
+        MoveCoordFunctions.MoveCoordSetter moveCoordsetter = getRawCoord ? MoveCoordFunctions.RAW_COORD : this.getProperty(AnimationProperty.ActionAnimationProperty.COORD_SET_TICK).orElse(null);
         if (moveCoordsetter != null) {
-            moveCoordsetter.set((DynamicAnimation)animation.get(), entitypatch, transformSheet);
+            moveCoordsetter.set(animation.get(), entitypatch, transformSheet);
         }
 
-        boolean hasNoGravity = ((LivingEntity)entitypatch.getOriginal()).isNoGravity();
-        boolean moveVertical = (Boolean)this.getProperty(AnimationProperty.ActionAnimationProperty.MOVE_VERTICAL).orElse(this.getProperty(AnimationProperty.ActionAnimationProperty.COORD).isPresent());
-        MoveCoordFunctions.MoveCoordGetter moveGetter = getRawCoord ? MoveCoordFunctions.MODEL_COORD : (MoveCoordFunctions.MoveCoordGetter)this.getProperty(AnimationProperty.ActionAnimationProperty.COORD_GET).orElse(MoveCoordFunctions.MODEL_COORD);
-        Vec3f move = moveGetter.get((DynamicAnimation)animation.get(), entitypatch, transformSheet, player.getPrevElapsedTime(), player.getElapsedTime());
+        boolean hasNoGravity = entitypatch.getOriginal().isNoGravity();
+        boolean moveVertical = this.getProperty(AnimationProperty.ActionAnimationProperty.MOVE_VERTICAL).orElse(this.getProperty(AnimationProperty.ActionAnimationProperty.COORD).isPresent());
+        MoveCoordFunctions.MoveCoordGetter moveGetter = getRawCoord ? MoveCoordFunctions.MODEL_COORD : this.getProperty(AnimationProperty.ActionAnimationProperty.COORD_GET).orElse(MoveCoordFunctions.MODEL_COORD);
+        Vec3f move = moveGetter.get(animation.get(), entitypatch, transformSheet, player.getPrevElapsedTime(), player.getElapsedTime());
         WraithonEntityPatch wraithonEntityPatch = (WraithonEntityPatch) entitypatch;
         float MyRot = -entitypatch.getYRot() + wraithonEntityPatch.getOriginal().getCorrectYRot(1.0F);
         float radians = (float) Math.toRadians(MyRot);
@@ -88,12 +88,12 @@ public class WraithonAttackAnimation extends AttackAnimation {
         float newX = originalX * cos - originalZ * sin;
         float newZ = originalX * sin + originalZ * cos;
         move = new Vec3f(newX, move.y, newZ); // 更新为旋转后的向量
-        LivingEntity livingentity = (LivingEntity)entitypatch.getOriginal();
+        LivingEntity livingentity = entitypatch.getOriginal();
         Vec3 motion = livingentity.getDeltaMovement();
         Vec3f finalMove = move;
         Vec3f finalMove1 = move;
         this.getProperty(AnimationProperty.ActionAnimationProperty.NO_GRAVITY_TIME).ifPresentOrElse((noGravityTime) -> {
-            if (noGravityTime.isTimeInPairs(((DynamicAnimation)animation.get()).isLinkAnimation() ? 0.0F : player.getElapsedTime())) {
+            if (noGravityTime.isTimeInPairs(animation.get().isLinkAnimation() ? 0.0F : player.getElapsedTime())) {
                 livingentity.setDeltaMovement(motion.x, 0.0, motion.z);
             } else {
                 finalMove.y = 0.0F;
@@ -101,7 +101,7 @@ public class WraithonAttackAnimation extends AttackAnimation {
 
         }, () -> {
             if (moveVertical && finalMove1.y > 0.0F && !hasNoGravity) {
-                double gravity = livingentity.getAttribute((Attribute) ForgeMod.ENTITY_GRAVITY.get()).getValue();
+                double gravity = livingentity.getAttribute(ForgeMod.ENTITY_GRAVITY.get()).getValue();
                 livingentity.setDeltaMovement(motion.x, motion.y < 0.0 ? motion.y + gravity : 0.0, motion.z);
             }
 
@@ -112,7 +112,7 @@ public class WraithonAttackAnimation extends AttackAnimation {
 
         if (inUpdateTime) {
             this.getProperty(AnimationProperty.ActionAnimationProperty.ENTITY_YROT_PROVIDER).ifPresent((entityYRotProvider) -> {
-                float yRot = entityYRotProvider.get((DynamicAnimation)animation.get(), entitypatch);
+                float yRot = entityYRotProvider.get(animation.get(), entitypatch);
                 entitypatch.setYRot(yRot);
             });
         }
@@ -155,12 +155,12 @@ public class WraithonAttackAnimation extends AttackAnimation {
         AnimationPlayer player = entitypatch.getAnimator().getPlayerFor(this.getAccessor());
         float prevElapsedTime = player.getPrevElapsedTime();
         float elapsedTime = player.getElapsedTime();
-        EntityState prevState = ((DynamicAnimation)animation.get()).getState(entitypatch, prevElapsedTime);
-        EntityState state = ((DynamicAnimation)animation.get()).getState(entitypatch, elapsedTime);
-        Phase phase = this.getPhaseByTime(((DynamicAnimation)animation.get()).isLinkAnimation() ? 0.0F : elapsedTime);
+        EntityState prevState = animation.get().getState(entitypatch, prevElapsedTime);
+        EntityState state = animation.get().getState(entitypatch, elapsedTime);
+        Phase phase = this.getPhaseByTime(animation.get().isLinkAnimation() ? 0.0F : elapsedTime);
         if (state.getLevel() == 1 && !state.turningLocked() && entitypatch instanceof MobPatch<?> mobpatch) {
-            ((Mob)mobpatch.getOriginal()).getNavigation().stop();
-            ((LivingEntity)entitypatch.getOriginal()).attackAnim = 2.0F;
+            mobpatch.getOriginal().getNavigation().stop();
+            entitypatch.getOriginal().attackAnim = 2.0F;
         }
 
         if (prevState.attacking() || state.attacking() || prevState.getLevel() <= 2 && state.getLevel() > 2) {
@@ -173,30 +173,14 @@ public class WraithonAttackAnimation extends AttackAnimation {
         }
 
     }
+
     @Override
-    public void end(LivingEntityPatch<?> entitypatch, AssetAccessor<? extends DynamicAnimation> nextAnimation, boolean isEnd) {
-        super.end(entitypatch, nextAnimation, isEnd);
-
-        if (entitypatch instanceof ServerPlayerPatch playerpatch) {
-            if (isEnd) {
-                playerpatch.getEventListener().triggerEvents(PlayerEventListener.EventType.ATTACK_ANIMATION_END_EVENT, new AttackEndEvent(playerpatch, this.getAccessor()));
-            }
+    public void end(LivingEntityPatch<?> entityPatch, AssetAccessor<? extends DynamicAnimation> nextAnimation, boolean isEnd) {
+        super.end(entityPatch, nextAnimation, isEnd);
+        if(entityPatch instanceof WraithonEntityPatch wraithonEntityPatch){
+            wraithonEntityPatch.getOriginal().setRotating(false);
         }
-        if (entitypatch instanceof HumanoidMobPatch<?> mobpatch) {
-            if (entitypatch.isLogicalClient()) {
-                Mob entity = (Mob)mobpatch.getOriginal();
-                if (entity.getTarget() != null && !entity.getTarget().isAlive()) {
-                    entity.setTarget((LivingEntity)null);
-                }
-            }
-        }
-
     }
-
-
-
-
-
 
     @Override
     protected void bindPhaseState(Phase phase) {
@@ -206,7 +190,7 @@ public class WraithonAttackAnimation extends AttackAnimation {
                 .newTimePair(phase.start, phase.contact).addState(EntityState.CAN_SKILL_EXECUTION, false)
                 .newTimePair(phase.start, phase.end).addState(EntityState.MOVEMENT_LOCKED, true).addState(EntityState.UPDATE_LIVING_MOTION, true)
                 .addState(EntityState.CAN_BASIC_ATTACK, false)
-                .newTimePair(phase.start, phase.end).addState(EntityState.INACTION, true)
+                .newTimePair(0.0F, Float.MAX_VALUE).addState(EntityState.INACTION, true)
                 .newTimePair(0, Float.MAX_VALUE).addState(EntityState.TURNING_LOCKED, true)
                 .newTimePair(preDelay, phase.contact).addState(EntityState.ATTACKING, true).addState(EntityState.PHASE_LEVEL, 2)
                 .newTimePair(phase.contact, phase.end).addState(EntityState.PHASE_LEVEL, 3);
@@ -217,8 +201,8 @@ public class WraithonAttackAnimation extends AttackAnimation {
     @Override
     protected void move(LivingEntityPatch<?> entitypatch, AssetAccessor<? extends DynamicAnimation> animation) {
         if (this.validateMovement(entitypatch, animation)) {
-            if ((Boolean)this.getState(EntityState.INACTION, entitypatch, entitypatch.getAnimator().getPlayerFor(this.getAccessor()).getElapsedTime())) {
-                LivingEntity livingentity = (LivingEntity)entitypatch.getOriginal();
+            if (this.getState(EntityState.INACTION, entitypatch, entitypatch.getAnimator().getPlayerFor(this.getAccessor()).getElapsedTime())) {
+                LivingEntity livingentity = entitypatch.getOriginal();
                 Vec3 vec3o = this.getCoordVector(entitypatch, animation);
                 Vec3 vec3 = vec3o.scale(WraithonEntityPatch.SCALE);
                 livingentity.move(MoverType.SELF, vec3);

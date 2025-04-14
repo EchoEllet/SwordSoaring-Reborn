@@ -155,8 +155,10 @@ public class WraithonEntity extends PathfinderMob {
     public float getCorrectYRot(float partialTick) {
         WraithonEntityPatch wraithonEntityPatch = EpicFightCapabilities.getEntityPatch(this, WraithonEntityPatch.class);
         if(wraithonEntityPatch.getEntityState().inaction() && !wraithonEntityPatch.getAnimator().getPlayerFor(null).getAnimation().get().isLinkAnimation()){
+//            System.out.println(this.getEntityData().get(Y_ROT_BEFORE_ROTATION) + " " + wraithonEntityPatch.getAnimator().getPlayerFor(null).getAnimation().get().isLinkAnimation() + wraithonEntityPatch.getAnimator().getPlayerFor(null).getAnimation());
             return this.getEntityData().get(Y_ROT_BEFORE_ROTATION);
         } else {
+//            System.out.println(this.getViewYRot(partialTick) + " " + wraithonEntityPatch.getAnimator().getPlayerFor(null).getAnimation().get().isLinkAnimation() + wraithonEntityPatch.getAnimator().getPlayerFor(null).getAnimation());
             return this.getViewYRot(partialTick);
         }
     }
