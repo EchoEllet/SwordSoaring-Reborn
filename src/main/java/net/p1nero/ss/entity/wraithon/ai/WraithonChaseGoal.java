@@ -1,6 +1,5 @@
 package net.p1nero.ss.entity.wraithon.ai;
 
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.phys.Vec3;
 import net.p1nero.ss.entity.wraithon.WraithonEntityPatch;
@@ -30,15 +29,14 @@ public class WraithonChaseGoal extends Goal {
         Vec3 targetPosition = wraithonEntityPatch.getTarget().position();
         double yaw = MathUtils.getYRotOfVector(targetPosition.subtract(playerPosition));
         double delta = yaw - MathUtils.getYRotOfVector(wraithonEntityPatch.getOriginal().getViewVector(1.0F));
-        if(Math.abs(delta) < 10) {
+        delta = (delta % 360 + 360) % 360;
+        if(delta < 10 || delta > 350) {
             wraithonEntityPatch.getOriginal().setDeltaMovement(wraithonEntityPatch.getTarget().position().subtract(wraithonEntityPatch.getOriginal().position()).normalize().scale(0.4F));
         }
-        if(Math.abs(delta) < 30) {
+        if(delta < 30 || delta > 330) {
             wraithonEntityPatch.rotateTo(wraithonEntityPatch.getTarget(), 10, true);
         } else {
             // 归一化delta到0~360度范围
-            delta = (delta % 360 + 360) % 360;
-
             if (delta <= 180) {
                 wraithonEntityPatch.turnRight(delta);
             } else {

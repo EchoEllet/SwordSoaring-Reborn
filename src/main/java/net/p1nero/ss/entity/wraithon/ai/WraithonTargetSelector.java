@@ -1,6 +1,7 @@
 package net.p1nero.ss.entity.wraithon.ai;
 
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.player.Player;
 import net.p1nero.ss.entity.wraithon.WraithonEntity;
 
@@ -9,6 +10,9 @@ public class WraithonTargetSelector extends NearestAttackableTargetGoal<Player> 
     private int timer = 0;
     public WraithonTargetSelector(WraithonEntity wraithonEntity) {
         super(wraithonEntity, Player.class, false);
+        this.targetConditions = TargetingConditions.forCombat().range(this.getFollowDistance()).selector((livingEntity -> {
+            return livingEntity instanceof Player player && !player.isCreative() && !player.isSpectator();
+        }));
     }
 
     @Override

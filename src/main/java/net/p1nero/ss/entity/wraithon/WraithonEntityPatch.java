@@ -12,6 +12,7 @@ import net.p1nero.ss.gameassets.animations.WraithonAnimations;
 import net.p1nero.ss.util.AnimationUtils;
 import org.joml.Vector3f;
 import yesman.epicfight.api.animation.*;
+import yesman.epicfight.api.animation.types.DynamicAnimation;
 import yesman.epicfight.api.animation.types.StaticAnimation;
 import yesman.epicfight.api.asset.AssetAccessor;
 import yesman.epicfight.api.utils.AttackResult;
@@ -57,7 +58,6 @@ public class WraithonEntityPatch extends MobPatch<WraithonEntity> {
     public void tick(LivingEvent.LivingTickEvent event) {
         super.tick(event);
         syncPartEntities();
-        checkRotation();
         if (this.getEntityState().inaction() && !this.getAnimator().getPlayerFor(null).getAnimation().get().isLinkAnimation()) {
             Vector3f euler = new Vector3f();
             JointTransform transform = this.getAnimator().getPose(1.0F).get("ROT");
@@ -66,7 +66,7 @@ public class WraithonEntityPatch extends MobPatch<WraithonEntity> {
                 transform.rotation().getEulerAnglesYXZ(euler);
                 float animYRot = (float) Math.toDegrees(euler.y);
 
-                float yModelRot = this.getOriginal().getYRotBeforeRotation() + animYRot;
+                float yModelRot = this.getOriginal().getCorrectYRot(1.0F) + animYRot;
                 this.getOriginal().setYRot(yModelRot);
                 this.getOriginal().setYBodyRot(yModelRot);
                 this.getOriginal().setYHeadRot(yModelRot);
@@ -146,7 +146,6 @@ public class WraithonEntityPatch extends MobPatch<WraithonEntity> {
         int roundedDegree = (int) Math.round(degree);
         int index = Arrays.binarySearch(breakpoints, roundedDegree);
         int insertionPoint = index >= 0 ? index + 1 : -(index + 1);
-        System.out.println("Right " + degree + rightRotAnimations.get(insertionPoint));
         this.playAnimationSynchronized(rightRotAnimations.get(insertionPoint), 0.15F);
     }
 
@@ -170,25 +169,11 @@ public class WraithonEntityPatch extends MobPatch<WraithonEntity> {
         int index = Arrays.binarySearch(breakpoints, roundedDegree);
         int insertionPoint = index >= 0 ? index + 1 : -(index + 1);
 
-        System.out.println("Left " + degree + rightRotAnimations.get(insertionPoint));
         this.playAnimationSynchronized(leftRotAnimations.get(insertionPoint), 0.15F);
     }
 
     public boolean isRotating() {
         return this.getOriginal().isRotating();
-    }
-
-    public void checkRotation() {
-
-        if (this.getTarget() == null) {
-            return;
-        }
-
-        if (isTargetInDegree(this.getTarget(), -15, 15) && this.isRotating()) {
-            this.getOriginal().setRotating(false);
-//            this.playAnimation(WraithonAnimations.WRAITHON_13, 0.15F);
-        }
-
     }
 
     @Override
@@ -211,18 +196,12 @@ public class WraithonEntityPatch extends MobPatch<WraithonEntity> {
 
     @Override
     public OpenMatrix4f getMatrix(float partialTicks) {
-        if (getEntityState().inaction()) {
-            return MathUtils.getModelMatrixIntegral(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, this.original.xRotO, this.original.getXRot(), this.getOriginal().getYRotBeforeRotation(), this.getOriginal().getYRotBeforeRotation(), partialTicks, 1.0F, 1.0F, 1.0F).scale(SCALE, SCALE, SCALE);
-        }
-        return super.getMatrix(partialTicks).scale(SCALE, SCALE, SCALE);
+        return MathUtils.getModelMatrixIntegral(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, this.original.xRotO, this.original.getXRot(), this.getOriginal().getCorrectYRot(partialTicks), this.getOriginal().getCorrectYRot(partialTicks), partialTicks, 1.0F, 1.0F, 1.0F).scale(SCALE, SCALE, SCALE);
     }
 
     @Override
     public OpenMatrix4f getModelMatrix(float partialTicks) {
-        if (getEntityState().inaction()) {
-            return MathUtils.getModelMatrixIntegral(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, this.original.xRotO, this.original.getXRot(), this.getOriginal().getYRotBeforeRotation(), this.getOriginal().getYRotBeforeRotation(), partialTicks, 1.0F, 1.0F, 1.0F).scale(SCALE, SCALE, SCALE);
-        }
-        return super.getModelMatrix(partialTicks).scale(SCALE, SCALE, SCALE);
+        return MathUtils.getModelMatrixIntegral(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, this.original.xRotO, this.original.getXRot(), this.getOriginal().getCorrectYRot(partialTicks), this.getOriginal().getCorrectYRot(partialTicks), partialTicks, 1.0F, 1.0F, 1.0F).scale(SCALE, SCALE, SCALE);
     }
 
     @Override

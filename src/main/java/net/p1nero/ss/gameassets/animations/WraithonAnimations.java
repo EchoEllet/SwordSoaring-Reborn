@@ -103,7 +103,7 @@ public class WraithonAnimations {
 
     public static List<AnimationManager.AnimationAccessor<? extends StaticAnimation>> DEBUG_ANIM_LIST;
 
-    private static int wraithonAtkParticleCount = 0;
+    private static final int WRAITHON_ATK_PARTICLE_COUNT = 0;
 
 
     public static void buildWraithonAnim(AnimationManager.AnimationBuilder builder) {
@@ -121,27 +121,42 @@ public class WraithonAnimations {
 
         WRAITHON_IDLE = builder.nextAccessor("wraithon/wraithon_idle", (accessor -> new StaticAnimation(0.0F, true, accessor, armature)));
         WRAITHON_WALK = builder.nextAccessor("wraithon/wraithon_walk", (accessor -> new StaticAnimation(true, accessor, armature)));
-        
-        WRAITHON_ROTATE_R_40 = builder.nextAccessor("wraithon/wraithon_rotate_r_40", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
-        WRAITHON_ROTATE_R_60 = builder.nextAccessor("wraithon/wraithon_rotate_r_60", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
-        WRAITHON_ROTATE_R_80 = builder.nextAccessor("wraithon/wraithon_rotate_r_80", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
-        WRAITHON_ROTATE_R_100 = builder.nextAccessor("wraithon/wraithon_rotate_r_100", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
-        WRAITHON_ROTATE_R_120 = builder.nextAccessor("wraithon/wraithon_rotate_r_120", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
-        WRAITHON_ROTATE_R_140 = builder.nextAccessor("wraithon/wraithon_rotate_r_140", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
-        WRAITHON_ROTATE_R_160 = builder.nextAccessor("wraithon/wraithon_rotate_r_160", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
-        WRAITHON_ROTATE_R_180 = builder.nextAccessor("wraithon/wraithon_rotate_r_180", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
-        WRAITHON_ROTATE_L_40 = builder.nextAccessor("wraithon/wraithon_rotate_l_40", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
-        WRAITHON_ROTATE_L_60 = builder.nextAccessor("wraithon/wraithon_rotate_l_60", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
-        WRAITHON_ROTATE_L_80 = builder.nextAccessor("wraithon/wraithon_rotate_l_80", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
-        WRAITHON_ROTATE_L_100 = builder.nextAccessor("wraithon/wraithon_rotate_l_100", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
-        WRAITHON_ROTATE_L_120 = builder.nextAccessor("wraithon/wraithon_rotate_l_120", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
-        WRAITHON_ROTATE_L_140 = builder.nextAccessor("wraithon/wraithon_rotate_l_140", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
-        WRAITHON_ROTATE_L_160 = builder.nextAccessor("wraithon/wraithon_rotate_l_160", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
-        WRAITHON_ROTATE_L_180 = builder.nextAccessor("wraithon/wraithon_rotate_l_180", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
+
+        WRAITHON_ROTATE_R_40 = builder.nextAccessor("wraithon/wraithon_rotate_r_40", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, RESET_ROT_STATE)));
+        WRAITHON_ROTATE_R_60 = builder.nextAccessor("wraithon/wraithon_rotate_r_60", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, RESET_ROT_STATE)));
+        WRAITHON_ROTATE_R_80 = builder.nextAccessor("wraithon/wraithon_rotate_r_80", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, RESET_ROT_STATE)));
+        WRAITHON_ROTATE_R_100 = builder.nextAccessor("wraithon/wraithon_rotate_r_100", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, RESET_ROT_STATE)));
+        WRAITHON_ROTATE_R_120 = builder.nextAccessor("wraithon/wraithon_rotate_r_120", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, RESET_ROT_STATE)));
+        WRAITHON_ROTATE_R_140 = builder.nextAccessor("wraithon/wraithon_rotate_r_140", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, RESET_ROT_STATE)));
+        WRAITHON_ROTATE_R_160 = builder.nextAccessor("wraithon/wraithon_rotate_r_160", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, RESET_ROT_STATE)));
+        WRAITHON_ROTATE_R_180 = builder.nextAccessor("wraithon/wraithon_rotate_r_180", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, RESET_ROT_STATE)));
+        WRAITHON_ROTATE_L_40 = builder.nextAccessor("wraithon/wraithon_rotate_l_40", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, RESET_ROT_STATE)));
+        WRAITHON_ROTATE_L_60 = builder.nextAccessor("wraithon/wraithon_rotate_l_60", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, RESET_ROT_STATE)));
+        WRAITHON_ROTATE_L_80 = builder.nextAccessor("wraithon/wraithon_rotate_l_80", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, RESET_ROT_STATE)));
+        WRAITHON_ROTATE_L_100 = builder.nextAccessor("wraithon/wraithon_rotate_l_100", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, RESET_ROT_STATE)));
+        WRAITHON_ROTATE_L_120 = builder.nextAccessor("wraithon/wraithon_rotate_l_120", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, RESET_ROT_STATE)));
+        WRAITHON_ROTATE_L_140 = builder.nextAccessor("wraithon/wraithon_rotate_l_140", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, RESET_ROT_STATE)));
+        WRAITHON_ROTATE_L_160 = builder.nextAccessor("wraithon/wraithon_rotate_l_160", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, RESET_ROT_STATE)));
+        WRAITHON_ROTATE_L_180 = builder.nextAccessor("wraithon/wraithon_rotate_l_180", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)
+                .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, RESET_ROT_STATE)));
         WRAITHON_JUMP_R = builder.nextAccessor("wraithon/wraithon_jump_r", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
         WRAITHON_JUMP_L = builder.nextAccessor("wraithon/wraithon_jump_l", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
         WRAITHON_JUMP_B = builder.nextAccessor("wraithon/wraithon_jump_b", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
-
 
 
         WRAITHON_LEG_1 = builder.nextAccessor("wraithon/wraithon_legattack_1", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)
@@ -257,7 +272,7 @@ public class WraithonAnimations {
                                     time = time - i;
                                     if (time > 84 / 60F) {
                                         Vec3 pos = wraithonGroundSplitjointRayDetection(livingEntityPatch, SwordSoaringArmatures.WRAITHON_ARMATURE.get().weapon, time, 2F, false, 1);
-                                        if(pos == null){
+                                        if (pos == null) {
                                             return;
                                         }
                                         ParticleVFX.createDirectionalParticles(livingEntityPatch, pos, ParticleTypes.LARGE_SMOKE, 25, 1, 2, 200);
@@ -284,15 +299,20 @@ public class WraithonAnimations {
                                     }
                                 }
                             }), AnimationEvent.Side.BOTH));
-            if(FMLEnvironment.dist == Dist.CLIENT){
+            if (FMLEnvironment.dist == Dist.CLIENT) {
                 animation.addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWraithonTrails(80, 87, 0, 0));
             }
             return animation;
         }));
 
-        DEBUG_ANIM_LIST = List.of(WRAITHON_1, WRAITHON_2, WRAITHON_3, WRAITHON_4, WRAITHON_5, WRAITHON_6, WRAITHON_7, WRAITHON_8, WRAITHON_9, WRAITHON_10, WRAITHON_11, WRAITHON_12, WRAITHON_13, WRAITHON_ROTATE_R_180, WRAITHON_ROTATE_L_180);
+        DEBUG_ANIM_LIST = List.of(WRAITHON_1, WRAITHON_2, WRAITHON_3, WRAITHON_4, WRAITHON_5, WRAITHON_6, WRAITHON_7, WRAITHON_8, WRAITHON_9, WRAITHON_10, WRAITHON_11, WRAITHON_12, WRAITHON_13, WRAITHON_ROTATE_R_40, WRAITHON_ROTATE_R_60, WRAITHON_ROTATE_R_80, WRAITHON_ROTATE_R_100, WRAITHON_ROTATE_R_120, WRAITHON_ROTATE_R_140, WRAITHON_ROTATE_R_160, WRAITHON_ROTATE_R_180, WraithonAnimations.WRAITHON_ROTATE_L_40, WraithonAnimations.WRAITHON_ROTATE_L_60, WraithonAnimations.WRAITHON_ROTATE_L_80, WraithonAnimations.WRAITHON_ROTATE_L_100, WraithonAnimations.WRAITHON_ROTATE_L_120, WraithonAnimations.WRAITHON_ROTATE_L_140, WraithonAnimations.WRAITHON_ROTATE_L_160, WraithonAnimations.WRAITHON_ROTATE_L_180);
     }
 
+    public static final AnimationEvent.SimpleEvent<?> RESET_ROT_STATE = AnimationEvent.SimpleEvent.create((livingEntityPatch, assetAccessor, animationParameters) -> {
+        if (livingEntityPatch instanceof WraithonEntityPatch wraithonEntityPatch) {
+            wraithonEntityPatch.getOriginal().setRotating(false);
+        }
+    }, AnimationEvent.Side.SERVER);
 
     private static List<TrailInfo> getWraithonTrails(int startFrame1, int endFrame1, int startFrame2, int endFrame2) {
         float start1 = startFrame1 / 60F;
@@ -341,7 +361,7 @@ public class WraithonAnimations {
         float start = startFrame / 60F;
         float end = endFrame / 60F;
         return AnimationEvent.InPeriodEvent.create(start, end, (entityPatch, self, params) -> {
-            wraithonGroundSplit(entityPatch, radius, wraithonAtkParticleCount, start);
+            wraithonGroundSplit(entityPatch, radius, WRAITHON_ATK_PARTICLE_COUNT, start);
         }, AnimationEvent.Side.BOTH);
     }
 
@@ -419,7 +439,7 @@ public class WraithonAnimations {
         Pose pose = livingEntityPatch.getAnimator().getPlayerFor(null).getAnimation().get().getRawPose(time);
         OpenMatrix4f transformMatrix = livingEntityPatch.getArmature().getBindedTransformFor(pose, joint);
         WraithonEntityPatch wraithonEntityPatch = (WraithonEntityPatch) livingEntityPatch;
-        OpenMatrix4f rotation = new OpenMatrix4f().rotate(-(float) Math.toRadians(180.0F+wraithonEntityPatch.getOriginal().getYRotBeforeRotation()), new Vec3f(0.0F, 1.0F, 0.0F));
+        OpenMatrix4f rotation = new OpenMatrix4f().rotate(-(float) Math.toRadians(180.0F + wraithonEntityPatch.getOriginal().getCorrectYRot(1.0F)), new Vec3f(0.0F, 1.0F, 0.0F));
         OpenMatrix4f rotatedMatrix = new OpenMatrix4f();
         OpenMatrix4f.mul(rotation, transformMatrix, rotatedMatrix);
 
@@ -456,7 +476,7 @@ public class WraithonAnimations {
         Pose pose = livingEntityPatch.getAnimator().getPlayerFor(null).getAnimation().get().getRawPose(time);
         OpenMatrix4f transformMatrix = livingEntityPatch.getArmature().getBindedTransformFor(pose, joint);
         WraithonEntityPatch wraithonEntityPatch = (WraithonEntityPatch) livingEntityPatch;
-        OpenMatrix4f rotation = new OpenMatrix4f().rotate(-(float) Math.toRadians(180.0F+wraithonEntityPatch.getOriginal().getYRotBeforeRotation()), new Vec3f(0.0F, 1.0F, 0.0F));
+        OpenMatrix4f rotation = new OpenMatrix4f().rotate(-(float) Math.toRadians(180.0F + wraithonEntityPatch.getOriginal().getCorrectYRot(1.0F)), new Vec3f(0.0F, 1.0F, 0.0F));
         OpenMatrix4f rotatedMatrix = new OpenMatrix4f();
         OpenMatrix4f.mul(rotation, transformMatrix, rotatedMatrix);
 

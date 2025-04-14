@@ -1,12 +1,9 @@
 package net.p1nero.ss.entity.wraithon;
 
-import com.google.common.collect.ImmutableList;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -14,10 +11,6 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
-import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.entity.EntityTypeTest;
@@ -31,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import yesman.epicfight.network.EpicFightNetworkManager;
 import yesman.epicfight.network.server.SPSetAttackTarget;
+import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.entity.ai.attribute.EpicFightAttributes;
 
 import java.util.List;
@@ -158,8 +152,13 @@ public class WraithonEntity extends PathfinderMob {
         }
     }
 
-    public float getYRotBeforeRotation() {
-        return this.getEntityData().get(Y_ROT_BEFORE_ROTATION);
+    public float getCorrectYRot(float partialTick) {
+        WraithonEntityPatch wraithonEntityPatch = EpicFightCapabilities.getEntityPatch(this, WraithonEntityPatch.class);
+        if(wraithonEntityPatch.getEntityState().inaction() && !wraithonEntityPatch.getAnimator().getPlayerFor(null).getAnimation().get().isLinkAnimation()){
+            return this.getEntityData().get(Y_ROT_BEFORE_ROTATION);
+        } else {
+            return this.getViewYRot(partialTick);
+        }
     }
 
     /**
