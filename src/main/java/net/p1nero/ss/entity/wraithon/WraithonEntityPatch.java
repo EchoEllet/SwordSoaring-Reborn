@@ -9,6 +9,7 @@ import net.minecraftforge.event.entity.living.LivingEvent;
 import net.p1nero.ss.animation.wraithon.WraithonActionAnimation;
 import net.p1nero.ss.client.sound.SwordSoaringSounds;
 import net.p1nero.ss.entity.wraithon.ai.WraithonChaseGoal;
+import net.p1nero.ss.entity.wraithon.ai.WraithonCombatBehaviors;
 import net.p1nero.ss.gameassets.animations.WraithonAnimations;
 import net.p1nero.ss.util.AnimationUtils;
 import org.joml.Vector3f;
@@ -26,6 +27,7 @@ import yesman.epicfight.world.capabilities.entitypatch.MobPatch;
 import yesman.epicfight.world.damagesource.EpicFightDamageSource;
 import yesman.epicfight.world.damagesource.EpicFightDamageSources;
 import yesman.epicfight.world.damagesource.StunType;
+import yesman.epicfight.world.entity.ai.goal.AnimatedAttackGoal;
 
 import java.util.Arrays;
 import java.util.List;
@@ -46,8 +48,8 @@ public class WraithonEntityPatch extends MobPatch<WraithonEntity> {
     @Override
     protected void initAI() {
         super.initAI();
-//        this.original.goalSelector.addGoal(0, new AnimatedAttackGoal<>(this, WraithonCombatBehaviors.PHASE1.build(this)));
-        this.original.goalSelector.addGoal(1, new WraithonChaseGoal(this, 5));
+        this.original.goalSelector.addGoal(0, new AnimatedAttackGoal<>(this, WraithonCombatBehaviors.PHASE1.build(this)));
+//        this.original.goalSelector.addGoal(1, new WraithonChaseGoal(this, 5));
     }
 
     @Override

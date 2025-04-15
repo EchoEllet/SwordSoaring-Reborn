@@ -16,6 +16,8 @@ import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
 public class AnimationUtils {
 
     public static Vec3 getJointWorldPos(LivingEntityPatch<?> entityPatch, Joint joint) {
@@ -67,7 +69,6 @@ public class AnimationUtils {
         OpenMatrix4f rotatedMatrix = new OpenMatrix4f();
         OpenMatrix4f.mul(rotation, transformMatrix, rotatedMatrix);
 
-        // 根据 distance 的正负决定方向
         float sign = Math.signum(distance);
         float absoluteDistance = Math.abs(distance);
         for (int i = 0; i * 0.03 < absoluteDistance; i++) {
