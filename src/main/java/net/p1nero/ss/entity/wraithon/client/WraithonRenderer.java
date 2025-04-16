@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class WraithonRenderer extends MobRenderer<WraithonEntity, EmptyEntityModel<WraithonEntity>> {
     public static final ResourceLocation TEXTURE = new ResourceLocation(SwordSoaringMod.MOD_ID, "textures/entity/wraithon.png");
+    public static final ResourceLocation TEXTURE_R = new ResourceLocation(SwordSoaringMod.MOD_ID, "textures/entity/wraithon_1.png");
     public WraithonRenderer(EntityRendererProvider.Context context) {
         super(context, new EmptyEntityModel<>(), 1);
     }
@@ -28,6 +29,10 @@ public class WraithonRenderer extends MobRenderer<WraithonEntity, EmptyEntityMod
 
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull WraithonEntity wraithonEntity) {
+        if(wraithonEntity.getState() == WraithonEntity.FIRE_STATE){
+            return TEXTURE_R;
+        }
+
         return TEXTURE;
     }
 }
