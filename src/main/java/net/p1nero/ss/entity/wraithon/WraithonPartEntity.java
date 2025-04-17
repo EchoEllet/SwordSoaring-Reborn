@@ -74,7 +74,7 @@ public class WraithonPartEntity extends PartEntity<WraithonEntity> {
      * 根据部位衰减伤害在主体里做
      */
     public boolean hurt(@NotNull DamageSource pSource, float pAmount) {
-        return !this.isInvulnerableTo(pSource) && this.parentMob.hurtFromPartEntity(this, pSource, pAmount);
+        return this.parentMob.hurtFromPartEntity(this, pSource, pAmount);
     }
 
     public boolean is(@NotNull Entity pEntity) {

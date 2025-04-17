@@ -3,6 +3,7 @@ package net.p1nero.ss.entity.wraithon;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -83,11 +84,11 @@ public class WraithonEntity extends PathfinderMob {
         this.leg_B_3_L = new WraithonPartEntity(this, armature.leg_B_3_L, 2.0F, 5.0F, new Vec3(0, -3, 0), 0.9F);
         subEntities = new WraithonPartEntity[]{head, chest, tail, leg_F_3_R, leg_M_3_R, leg_B_3_R, leg_F_3_L, leg_M_3_L, leg_B_3_L};
 
-        fireContainer = new DamageContainer(this, List.of(DamageTypes.FIREBALL, DamageTypes.IN_FIRE, DamageTypes.ON_FIRE), FIRE_CONTAINER, 100, FIRE_STATE);
-        explosionContainer = new DamageContainer(this, List.of(DamageTypes.EXPLOSION), EXPLOSION_CONTAINER, 100, EXPLOSION_STATE);
+        fireContainer = new DamageContainer(this, DamageTypeTags.IS_FIRE, FIRE_CONTAINER, 10, FIRE_STATE);
+        explosionContainer = new DamageContainer(this, DamageTypeTags.IS_EXPLOSION, EXPLOSION_CONTAINER, 100, EXPLOSION_STATE);
         magicContainer = new DamageContainer(this, List.of(DamageTypes.MAGIC, DamageTypes.INDIRECT_MAGIC), MAGIC_CONTAINER, 100, MAGIC_STATE);
         outsideContainer = new DamageContainer(this, List.of(DamageTypes.OUTSIDE_BORDER, DamageTypes.FELL_OUT_OF_WORLD), OUTSIDE_BORDER_CONTAINER, 100, OUTSIDE_STATE);
-        projectileContainer = new DamageContainer(this, List.of(DamageTypes.ARROW, DamageTypes.MOB_PROJECTILE), PROJECTILE_CONTAINER, 100, PROJECTILE_STATE);
+        projectileContainer = new DamageContainer(this, DamageTypeTags.IS_PROJECTILE, PROJECTILE_CONTAINER, 100, PROJECTILE_STATE);
 
         damageContainers = List.of(fireContainer, explosionContainer, magicContainer, outsideContainer, projectileContainer);
     }
@@ -308,5 +309,15 @@ public class WraithonEntity extends PathfinderMob {
         if(this.getPhase() == PHASE2){
             this.hurt(this.damageSources().fellOutOfWorld(), this.getMaxHealth() * 0.01F * 0.05F);
         }
+    }
+
+    public void updateState() {
+        for(DamageContainer container : damageContainers) {
+            if(container.isFullState()) {
+                this.setState(container.stateCode);
+                return;
+            }
+        }
+        this.setState(DEFAULT_STATE);
     }
 }
