@@ -49,7 +49,7 @@ public class WraithonEntityPatch extends MobPatch<WraithonEntity> {
     protected void initAI() {
         super.initAI();
         this.original.goalSelector.addGoal(0, new AnimatedAttackGoal<>(this, WraithonCombatBehaviors.PHASE1.build(this)));
-//        this.original.goalSelector.addGoal(1, new WraithonChaseGoal(this, 5));
+        this.original.goalSelector.addGoal(1, new WraithonChaseGoal(this, 5));
     }
 
     @Override
@@ -217,10 +217,7 @@ public class WraithonEntityPatch extends MobPatch<WraithonEntity> {
         return super.attack(damageSource, target, hand);
     }
 
-    @Override
-    public OpenMatrix4f getMatrix(float partialTicks) {
-        return MathUtils.getModelMatrixIntegral(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, this.original.xRotO, this.original.getXRot(), this.getOriginal().getCorrectYRot(partialTicks), this.getOriginal().getCorrectYRot(partialTicks), partialTicks, 1.0F, 1.0F, 1.0F).scale(SCALE, SCALE, SCALE);
-    }
+
 
     @Override
     public OpenMatrix4f getModelMatrix(float partialTicks) {

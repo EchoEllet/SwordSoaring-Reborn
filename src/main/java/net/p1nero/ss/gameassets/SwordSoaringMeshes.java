@@ -7,7 +7,6 @@ import net.p1nero.ss.entity.sword.screen_sword.client.ScreenSwordMesh;
 import net.p1nero.ss.entity.sword.wan.client.WanMesh;
 import net.p1nero.ss.entity.vatansever.client.VatanseverMesh;
 import net.p1nero.ss.entity.vatansever_storm.client.VatanseverStormMesh;
-import net.p1nero.ss.entity.wraithon.WraithonArmature;
 import net.p1nero.ss.entity.wraithon.client.WraithonMesh;
 import yesman.epicfight.api.client.model.Meshes;
 

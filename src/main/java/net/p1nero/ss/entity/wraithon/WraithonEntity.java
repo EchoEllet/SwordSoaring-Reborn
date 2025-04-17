@@ -33,7 +33,7 @@ public class WraithonEntity extends PathfinderMob {
     public static final int PHASE0 = 0;//阶段0（用血量表示什么的）
     public static final int PHASE1 = 1;//阶段1（用血量表示什么的）
     public static final int PHASE2 = 2;//阶段2（用血量表示什么的）
-    public static final int DEFAULT_STATE = 0;//火状态（吸收火伤到一定程度）
+    public static final int DEFAULT_STATE = 0;
     public static final int FIRE_STATE = 1;//火状态（吸收火伤到一定程度）
     public static final int EXPLOSION_STATE = 2;//爆炸状态（吸收爆炸伤害到一定程度）
     public static final int MAGIC_STATE = 3;//魔法状态（吸收魔法伤害到一定程度）
@@ -95,7 +95,7 @@ public class WraithonEntity extends PathfinderMob {
     public static AttributeSupplier getDefaultAttribute() {
         return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 1000F)
-                .add(Attributes.ATTACK_DAMAGE, 99999)
+                .add(Attributes.ATTACK_DAMAGE, 15)
                 .add(Attributes.FOLLOW_RANGE, 72)
                 .add(EpicFightAttributes.MAX_STRIKES.get(), 50.0F)
                 .build();
