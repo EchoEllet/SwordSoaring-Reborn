@@ -52,13 +52,13 @@ public class WraithonAnimations {
     public static AnimationManager.AnimationAccessor<ActionAnimation> BIPE_KNOCK_FLY;
 
     public static AnimationManager.AnimationAccessor<StaticAnimation> WRAITHON_IDLE;
-    public static AnimationManager.AnimationAccessor<StaticAnimation> WRAITHON_KNOCKDOWN;
+
     public static AnimationManager.AnimationAccessor<StaticAnimation> WRAITHON_WALK;
 
     public static AnimationManager.AnimationAccessor<WraithonActionAnimation> WRAITHON_JUMP_R;
     public static AnimationManager.AnimationAccessor<WraithonActionAnimation> WRAITHON_JUMP_L;
     public static AnimationManager.AnimationAccessor<WraithonActionAnimation> WRAITHON_JUMP_B;
-
+    public static AnimationManager.AnimationAccessor<WraithonActionAnimation> WRAITHON_KNOCKDOWN;
     public static AnimationManager.AnimationAccessor<WraithonActionAnimation> WRAITHON_ROTATE_R_40;
     public static AnimationManager.AnimationAccessor<WraithonActionAnimation> WRAITHON_ROTATE_R_60;
     public static AnimationManager.AnimationAccessor<WraithonActionAnimation> WRAITHON_ROTATE_R_80;
@@ -121,9 +121,10 @@ public class WraithonAnimations {
         };
 
         WRAITHON_IDLE = builder.nextAccessor("wraithon/wraithon_idle", (accessor -> new StaticAnimation(0.0F, true, accessor, armature)));
-        WRAITHON_KNOCKDOWN = builder.nextAccessor("wraithon/wraithon_knockdown", (accessor -> new StaticAnimation(0.15F, true, accessor, armature)));
+
         WRAITHON_WALK = builder.nextAccessor("wraithon/wraithon_walk", (accessor -> new StaticAnimation(0.15F,true, accessor, armature)));
 
+        WRAITHON_KNOCKDOWN = builder.nextAccessor("wraithon/wraithon_knockdown", (accessor -> new WraithonActionAnimation(0.15F,  accessor, armature)));
         WRAITHON_ROTATE_R_40 = builder.nextAccessor("wraithon/wraithon_rotate_r_40", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
         WRAITHON_ROTATE_R_60 = builder.nextAccessor("wraithon/wraithon_rotate_r_60", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
         WRAITHON_ROTATE_R_80 = builder.nextAccessor("wraithon/wraithon_rotate_r_80", (accessor -> new WraithonActionAnimation(0.15F, accessor, armature)));
