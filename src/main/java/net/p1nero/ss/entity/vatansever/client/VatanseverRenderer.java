@@ -12,7 +12,7 @@ import net.p1nero.ss.entity.vatansever.VatanseverEntity;
 import org.jetbrains.annotations.NotNull;
 
 public class VatanseverRenderer extends MobRenderer<VatanseverEntity, EmptyEntityModel<VatanseverEntity>> {
-    public static final ResourceLocation TEXTURE = new ResourceLocation(SwordSoaringMod.MOD_ID, "textures/entity/vatansever.png");
+    public static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(SwordSoaringMod.MOD_ID, "textures/entity/vatansever.png");
     public VatanseverRenderer(EntityRendererProvider.Context context) {
         super(context, new EmptyEntityModel<>(), 1);
     }

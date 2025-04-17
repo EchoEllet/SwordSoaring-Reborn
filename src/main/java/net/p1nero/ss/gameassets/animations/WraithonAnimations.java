@@ -312,7 +312,7 @@ public class WraithonAnimations {
                 .joint(SwordSoaringArmatures.WRAITHON_ARMATURE.get().weapon.getName())
                 .itemSkinHand(InteractionHand.MAIN_HAND)
                 .texture("sword_soaring:textures/particle/wraithon.png")
-                .type((SimpleParticleType) ForgeRegistries.PARTICLE_TYPES.getValue(new ResourceLocation(Config.TRAIL_PARTICLE_TYPE.get())))
+                .type((SimpleParticleType) ForgeRegistries.PARTICLE_TYPES.getValue(ResourceLocation.parse(Config.TRAIL_PARTICLE_TYPE.get())))
                 .create());
         wraithonTrails.add(TrailInfo.builder()
                 .r(1.0F).b(1.0F).g(1.0F)
@@ -325,7 +325,7 @@ public class WraithonAnimations {
                 .joint(SwordSoaringArmatures.WRAITHON_ARMATURE.get().weapon.getName())
                 .itemSkinHand(InteractionHand.MAIN_HAND)
                 .texture("sword_soaring:textures/particle/wraithon.png")
-                .type((SimpleParticleType) ForgeRegistries.PARTICLE_TYPES.getValue(new ResourceLocation(Config.TRAIL_PARTICLE_TYPE.get())))
+                .type((SimpleParticleType) ForgeRegistries.PARTICLE_TYPES.getValue(ResourceLocation.parse(Config.TRAIL_PARTICLE_TYPE.get())))
                 .create());
         return wraithonTrails;
     }

@@ -31,7 +31,7 @@ public record SyncBabylonPacket(int id, int size, ArrayList<ItemStack> itemStack
     }
 
     @Override
-    public void execute(@Nullable ServerPlayer player) {
+    public void execute(@Nullable Player player) {
         if(Minecraft.getInstance().player != null && Minecraft.getInstance().level != null){
             Entity entity = Minecraft.getInstance().level.getEntity(id);
             if(entity instanceof Player localPlayer){

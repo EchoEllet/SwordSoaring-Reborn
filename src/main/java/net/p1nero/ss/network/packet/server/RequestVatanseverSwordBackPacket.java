@@ -1,7 +1,6 @@
 package net.p1nero.ss.network.packet.server;
 
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.p1nero.ss.capability.SSCapabilityProvider;
 import net.p1nero.ss.entity.sword.fly_sword.FlySwordEntity;
@@ -19,7 +18,7 @@ public record RequestVatanseverSwordBackPacket() implements BasePacket {
     }
 
     @Override
-    public void execute(@Nullable ServerPlayer player) {
+    public void execute(@Nullable Player player) {
         if(player != null){
             player.getCapability(SSCapabilityProvider.SS_PLAYER).ifPresent(ssPlayer -> {
                 Iterator<FlySwordEntity> iterator = ssPlayer.getVatanseverShootEntities().iterator();

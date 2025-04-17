@@ -1,7 +1,6 @@
 package net.p1nero.ss.network.packet.server;
 
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.p1nero.ss.entity.sword.gate_of_babylon.BabylonEntity;
@@ -21,7 +20,7 @@ public record RequestBabylonSyncPacket(int entityId) implements BasePacket {
     }
 
     @Override
-    public void execute(@Nullable ServerPlayer player) {
+    public void execute(@Nullable Player player) {
         if(player != null){
             Entity entity = player.level().getEntity(entityId);
             if(entity instanceof BabylonEntity babylonEntity){

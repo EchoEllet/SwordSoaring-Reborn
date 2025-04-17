@@ -3,7 +3,10 @@ package net.p1nero.ss.entity.wraithon;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerBossEvent;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.world.BossEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -21,6 +24,10 @@ import net.p1nero.ss.entity.SwordSoaringEntities;
 import net.p1nero.ss.entity.wraithon.ai.WraithonTargetSelector;
 import net.p1nero.ss.entity.wraithon.container.DamageContainer;
 import net.p1nero.ss.gameassets.SwordSoaringArmatures;
+import net.p1nero.ss.gameassets.animations.WraithonAnimations;
+import net.p1nero.ss.network.PacketHandler;
+import net.p1nero.ss.network.PacketRelay;
+import net.p1nero.ss.network.packet.client.SyncBossBarPacket;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import yesman.epicfight.network.EpicFightNetworkManager;
@@ -50,7 +57,7 @@ public class WraithonEntity extends PathfinderMob {
     protected static final EntityDataAccessor<Float> OUTSIDE_BORDER_CONTAINER = SynchedEntityData.defineId(WraithonEntity.class, EntityDataSerializers.FLOAT);
     protected static final EntityDataAccessor<Float> PROJECTILE_CONTAINER = SynchedEntityData.defineId(WraithonEntity.class, EntityDataSerializers.FLOAT);
     protected static final EntityDataAccessor<Boolean> ROTATING = SynchedEntityData.defineId(WraithonEntity.class, EntityDataSerializers.BOOLEAN);
-    public static final int MAX_LEG_DAMAGE = 300;
+    public static final int MAX_LEG_DAMAGE = 300; //TODO 修改合适值
     protected static final EntityDataAccessor<Float> LEG_DAMAGE_VALUE = SynchedEntityData.defineId(WraithonEntity.class, EntityDataSerializers.FLOAT);
     private final WraithonPartEntity[] subEntities;
     private final WraithonPartEntity head;
@@ -68,6 +75,7 @@ public class WraithonEntity extends PathfinderMob {
     public final DamageContainer magicContainer;
     public final DamageContainer outsideContainer;
     public final DamageContainer projectileContainer;
+    protected final ServerBossEvent bossInfo;
 
     public WraithonEntity(EntityType<? extends WraithonEntity> pEntityType, Level pLevel) {
         super(SwordSoaringEntities.WRAITHON.get(), pLevel);
@@ -91,6 +99,31 @@ public class WraithonEntity extends PathfinderMob {
         projectileContainer = new DamageContainer(this, DamageTypeTags.IS_PROJECTILE, PROJECTILE_CONTAINER, 100, PROJECTILE_STATE);
 
         damageContainers = List.of(fireContainer, explosionContainer, magicContainer, outsideContainer, projectileContainer);
+
+        bossInfo = new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.PURPLE, BossEvent.BossBarOverlay.PROGRESS);
+        if(!level().isClientSide){
+            PacketRelay.sendToAll(PacketHandler.INSTANCE, new SyncBossBarPacket(bossInfo.getId(), getId()));
+        }
+    }
+
+    @Override
+    protected void customServerAiStep() {
+        super.customServerAiStep();
+        if (!this.level().isClientSide()) {
+            bossInfo.setProgress(this.getHealth() / this.getMaxHealth());
+        }
+    }
+
+    @Override
+    public void startSeenByPlayer(@NotNull ServerPlayer player) {
+        super.startSeenByPlayer(player);
+        bossInfo.addPlayer(player);
+    }
+
+    @Override
+    public void stopSeenByPlayer(@NotNull ServerPlayer player) {
+        super.stopSeenByPlayer(player);
+        bossInfo.removePlayer(player);
     }
 
     public static AttributeSupplier getDefaultAttribute() {
@@ -194,9 +227,13 @@ public class WraithonEntity extends PathfinderMob {
         this.entityData.set(LEG_DAMAGE_VALUE, this.getLegDamage() + damageValue);
         //大于最大值则进入硬直
         if (this.getLegDamage() > MAX_LEG_DAMAGE) {
-            //TODO 进硬直
             clearLegDamage();
+            this.getPatch().playAnimationSynchronized(WraithonAnimations.WRAITHON_KNOCKDOWN, 0.15F);
         }
+    }
+
+    public WraithonEntityPatch getPatch(){
+        return EpicFightCapabilities.getEntityPatch(this, WraithonEntityPatch.class);
     }
 
     public void clearLegDamage() {
@@ -309,6 +346,8 @@ public class WraithonEntity extends PathfinderMob {
         if(this.getPhase() == PHASE2){
             this.hurt(this.damageSources().fellOutOfWorld(), this.getMaxHealth() * 0.01F * 0.05F);
         }
+
+        System.out.println(this.getHealth());
     }
 
     public void updateState() {

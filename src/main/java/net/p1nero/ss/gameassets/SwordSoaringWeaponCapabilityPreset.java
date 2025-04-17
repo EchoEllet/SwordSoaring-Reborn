@@ -47,7 +47,7 @@ SwordSoaringWeaponCapabilityPreset {
                     .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.SNEAK, VatanseverAnimations.VATANSEVER_SNEAK);
     @SubscribeEvent
     public static void register(WeaponCapabilityPresetRegistryEvent event) {
-        event.getTypeEntry().put(new ResourceLocation(SwordSoaringMod.MOD_ID, "vatansever"), VATANSEVER);
+        event.getTypeEntry().put(ResourceLocation.fromNamespaceAndPath(SwordSoaringMod.MOD_ID, "vatansever"), VATANSEVER);
     }
 
 }

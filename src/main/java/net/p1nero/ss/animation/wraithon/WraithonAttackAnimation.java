@@ -68,7 +68,7 @@ public class WraithonAttackAnimation extends AttackAnimation {
         TimePairList coordUpdateTime = this.getProperty(AnimationProperty.ActionAnimationProperty.COORD_UPDATE_TIME).orElse(null);
         boolean inUpdateTime = coordUpdateTime == null || coordUpdateTime.isTimeInPairs(player.getElapsedTime());
         boolean getRawCoord = this.getProperty(AnimationProperty.AttackAnimationProperty.FIXED_MOVE_DISTANCE).orElse(!inUpdateTime);
-        TransformSheet transformSheet = entitypatch.getAnimator().getVariables().getSharedVariable(ACTION_ANIMATION_COORD);
+        TransformSheet transformSheet = entitypatch.getAnimator().getVariables().getOrDefaultSharedVariable(ACTION_ANIMATION_COORD);
         MoveCoordFunctions.MoveCoordSetter moveCoordsetter = getRawCoord ? MoveCoordFunctions.RAW_COORD : this.getProperty(AnimationProperty.ActionAnimationProperty.COORD_SET_TICK).orElse(null);
         if (moveCoordsetter != null) {
             moveCoordsetter.set(animation.get(), entitypatch, transformSheet);

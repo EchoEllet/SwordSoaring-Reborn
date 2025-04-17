@@ -37,7 +37,7 @@ public class SwordSoaringEntities {
             EntityType.Builder.of(RayEntity::new, MobCategory.MISC).sized(5, 5).clientTrackingRange(64).updateInterval(1).noSave());
 
     private static <T extends Entity> RegistryObject<EntityType<T>> register(String name, EntityType.Builder<T> entityTypeBuilder) {
-        return ENTITIES.register(name, () -> entityTypeBuilder.build(new ResourceLocation(SwordSoaringMod.MOD_ID, name).toString()));
+        return ENTITIES.register(name, () -> entityTypeBuilder.build(ResourceLocation.fromNamespaceAndPath(SwordSoaringMod.MOD_ID, name).toString()));
     }
 
 }

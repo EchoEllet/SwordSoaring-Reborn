@@ -2,11 +2,14 @@ package net.p1nero.ss.events;
 
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.p1nero.ss.SwordSoaringMod;
+import net.p1nero.ss.client.gui.BossBar;
 import net.p1nero.ss.command.WraithonDebugCommand;
+import net.p1nero.ss.network.PacketRelay;
 import net.p1nero.ss.skill.sword_soaring.SwordSoaringSkill;
 import net.p1nero.ss.skill.weapon_passive.VatanseverPassive;
 
@@ -22,6 +25,11 @@ public class ForgeEvents {
     @SubscribeEvent
     public static void registerCommand(RegisterCommandsEvent event){
         WraithonDebugCommand.register(event.getDispatcher());
+    }
+
+
+    @SubscribeEvent
+    public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
     }
 
 }

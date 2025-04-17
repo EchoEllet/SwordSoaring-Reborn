@@ -158,7 +158,7 @@ public class WanJianGuiZongSkill extends Skill {
         poseStack.pushPose();
         poseStack.translate(0.0F, (float)gui.getSlidingProgression(), 0.0F);
         guiGraphics.blit(getSkillTexture(), (int) x, (int) y, 24, 24, 0.0F, 0.0F, 1, 1, 1, 1);
-        guiGraphics.drawString(gui.font, String.format("%.1f", (container.getDataManager().getDataValue(SwordSoaringDatakeys.COOLDOWN_TIMER.get()) / 20.0)), x + 6.0F, y + 8.0F, 16777215, true);
+        guiGraphics.drawString(gui.getFont(), String.format("%.1f", (container.getDataManager().getDataValue(SwordSoaringDatakeys.COOLDOWN_TIMER.get()) / 20.0)), x + 6.0F, y + 8.0F, 16777215, true);
         poseStack.popPose();
     }
 

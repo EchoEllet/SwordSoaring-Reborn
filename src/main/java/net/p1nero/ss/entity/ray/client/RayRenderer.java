@@ -17,27 +17,25 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.p1nero.ss.SwordSoaringMod;
 import net.p1nero.ss.entity.ray.RayEntity;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
 @OnlyIn(Dist.CLIENT)
 public class RayRenderer extends EntityRenderer<RayEntity> {
 
-    public static final ResourceLocation RAY = new ResourceLocation(SwordSoaringMod.MOD_ID,"textures/entity/ray.png");
+    public static final ResourceLocation RAY = ResourceLocation.fromNamespaceAndPath(SwordSoaringMod.MOD_ID,"textures/entity/ray.png");
 
     public RayRenderer(EntityRendererProvider.Context pContext) {
         super(pContext);
     }
     @Override
-    public ResourceLocation getTextureLocation(RayEntity pEntity) {
+    public @NotNull ResourceLocation getTextureLocation(@NotNull RayEntity pEntity) {
         return RAY;
     }
 
-
-
-
     @Override
-    public void render(RayEntity entity, float yaw, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
+    public void render(RayEntity entity, float yaw, float partialTicks, @NotNull PoseStack poseStack, @NotNull MultiBufferSource buffer, int packedLight) {
         Vec3 start = entity.getStartPos();
         Vec3 end = entity.getEndPos();
         renderRay(entity, start, end, poseStack, buffer, partialTicks);

@@ -15,5 +15,5 @@ public interface BasePacket {
         return true;
     }
 
-    void execute(ServerPlayer var1);
+    void execute(Player var1);
 }

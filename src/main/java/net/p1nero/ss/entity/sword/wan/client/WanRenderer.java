@@ -11,7 +11,7 @@ import net.p1nero.ss.entity.client.model.EmptyEntityModel;
 import org.jetbrains.annotations.NotNull;
 
 public class WanRenderer extends MobRenderer<AbstractArtifactSpiritEntity, EmptyEntityModel<AbstractArtifactSpiritEntity>> {
-    public static final ResourceLocation TEXTURE = new ResourceLocation(SwordSoaringMod.MOD_ID, "textures/entity/vatansever_swordgroup.png");
+    public static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(SwordSoaringMod.MOD_ID, "textures/entity/vatansever_swordgroup.png");
     public WanRenderer(EntityRendererProvider.Context context) {
         super(context, new EmptyEntityModel<>(), 1);
         this.addLayer(new ReplaceableRenderLayer<>(this));

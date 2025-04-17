@@ -62,10 +62,10 @@ public class SwordSoaringMod {
     public static boolean isValidSword(ItemStack sword) {
         if (Config.swordItems.isEmpty()) {
             Config.swordItems = Config.ITEMS_CAN_FLY.get().stream()
-                    .map(itemName -> ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemName)))
+                    .map(itemName -> ForgeRegistries.ITEMS.getValue(ResourceLocation.parse(itemName)))
                     .collect(Collectors.toSet());
             Config.notSwordItems = Config.ITEMS_CAN_NOT_FLY.get().stream()
-                    .map(itemName -> ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemName)))
+                    .map(itemName -> ForgeRegistries.ITEMS.getValue(ResourceLocation.parse(itemName)))
                     .collect(Collectors.toSet());
         }
         if (Config.notSwordItems.contains(sword.getItem())) {

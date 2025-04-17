@@ -44,7 +44,7 @@ public class ClientModEvents {
         EntityRenderers.register(SwordSoaringEntities.VATANSEVER_STORM.get(), VatanseverStormRenderer::new);
         EntityRenderers.register(SwordSoaringEntities.RAY_ENTITY.get(), RayRenderer::new);
 
-        ItemProperties.register(EpicFightItems.SKILLBOOK.get(), new ResourceLocation(SwordSoaringMod.MOD_ID,"skill"), (pStack, pLevel, pEntity, pSeed) -> {
+        ItemProperties.register(EpicFightItems.SKILLBOOK.get(), ResourceLocation.fromNamespaceAndPath(SwordSoaringMod.MOD_ID,"skill"), (pStack, pLevel, pEntity, pSeed) -> {
             Skill skill = SkillBookItem.getContainSkill(pStack);
 
             if (skill != null) {

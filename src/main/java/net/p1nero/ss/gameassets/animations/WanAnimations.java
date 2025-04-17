@@ -92,7 +92,7 @@ public class WanAnimations {
                     .joint(joint.getName())
                     .itemSkinHand(InteractionHand.MAIN_HAND)
                     .texture("epicfight:textures/particle/swing_trail.png")
-                    .type((SimpleParticleType)ForgeRegistries.PARTICLE_TYPES.getValue(new ResourceLocation(Config.TRAIL_PARTICLE_TYPE.get())))
+                    .type((SimpleParticleType)ForgeRegistries.PARTICLE_TYPES.getValue(ResourceLocation.parse(Config.TRAIL_PARTICLE_TYPE.get())))
                     .create());
         }
         return wanTrails;

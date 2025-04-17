@@ -7,6 +7,7 @@ import net.minecraftforge.network.simple.SimpleChannel;
 import net.p1nero.ss.SwordSoaringMod;
 import net.p1nero.ss.network.packet.BasePacket;
 import net.p1nero.ss.network.packet.client.SyncBabylonPacket;
+import net.p1nero.ss.network.packet.client.SyncBossBarPacket;
 import net.p1nero.ss.network.packet.server.RequestBabylonSyncPacket;
 import net.p1nero.ss.network.packet.server.RequestEntityPlayAnimationPacket;
 import net.p1nero.ss.network.packet.server.RequestVatanseverSwordBackPacket;
@@ -16,7 +17,7 @@ import java.util.function.Function;
 public class PacketHandler {
     private static final String PROTOCOL_VERSION = "1";
     public static final SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(
-            new ResourceLocation(SwordSoaringMod.MOD_ID, "main"),
+            ResourceLocation.fromNamespaceAndPath(SwordSoaringMod.MOD_ID, "main"),
             () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals
     );
 
@@ -28,6 +29,7 @@ public class PacketHandler {
         register(RequestBabylonSyncPacket.class, RequestBabylonSyncPacket::decode);
 
         register(SyncBabylonPacket.class, SyncBabylonPacket::decode);
+        register(SyncBossBarPacket.class, SyncBossBarPacket::decode);
     }
 
     private static <MSG extends BasePacket> void register(final Class<MSG> packet, Function<FriendlyByteBuf, MSG> decoder) {

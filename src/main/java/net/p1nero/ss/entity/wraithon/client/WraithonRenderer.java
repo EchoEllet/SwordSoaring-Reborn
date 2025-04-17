@@ -9,9 +9,10 @@ import net.p1nero.ss.entity.client.model.EmptyEntityModel;
 import net.p1nero.ss.entity.wraithon.WraithonEntity;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 public class WraithonRenderer extends MobRenderer<WraithonEntity, EmptyEntityModel<WraithonEntity>> {
-    public static final ResourceLocation TEXTURE = new ResourceLocation(SwordSoaringMod.MOD_ID, "textures/entity/wraithon.png");
-    public static final ResourceLocation TEXTURE_R = new ResourceLocation(SwordSoaringMod.MOD_ID, "textures/entity/wraithon_1.png");
+    public static final List<ResourceLocation> TEXTURES = List.of(ResourceLocation.fromNamespaceAndPath(SwordSoaringMod.MOD_ID, "textures/entity/wraithon.png"), ResourceLocation.fromNamespaceAndPath(SwordSoaringMod.MOD_ID, "textures/entity/wraithon1.png"), ResourceLocation.fromNamespaceAndPath(SwordSoaringMod.MOD_ID, "textures/entity/wraithon2.png"), ResourceLocation.fromNamespaceAndPath(SwordSoaringMod.MOD_ID, "textures/entity/wraithon3.png"), ResourceLocation.fromNamespaceAndPath(SwordSoaringMod.MOD_ID, "textures/entity/wraithon4.png"), ResourceLocation.fromNamespaceAndPath(SwordSoaringMod.MOD_ID, "textures/entity/wraithon5.png"));
     public WraithonRenderer(EntityRendererProvider.Context context) {
         super(context, new EmptyEntityModel<>(), 1);
     }
@@ -21,18 +22,8 @@ public class WraithonRenderer extends MobRenderer<WraithonEntity, EmptyEntityMod
         return true;
     }
 
-//    @Override
-//    public void render(@NotNull WraithonEntity pEntity, float pEntityYaw, float pPartialTicks, @NotNull PoseStack pMatrixStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
-//        this.shadowRadius = 10;//TODO
-//        super.render(pEntity, pEntityYaw, pPartialTicks, pMatrixStack, pBuffer, pPackedLight);
-//    }
-
     @Override
     public @NotNull ResourceLocation getTextureLocation(@NotNull WraithonEntity wraithonEntity) {
-        if(wraithonEntity.getState() == WraithonEntity.FIRE_STATE){
-            return TEXTURE_R;
-        }
-
-        return TEXTURE;
+        return TEXTURES.get(wraithonEntity.getState());
     }
 }

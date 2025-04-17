@@ -14,7 +14,7 @@ import yesman.epicfight.main.EpicFightMod;
 import yesman.epicfight.skill.SkillDataKey;
 
 public class SwordSoaringDatakeys {
-    public static final DeferredRegister<SkillDataKey<?>> DATA_KEYS = DeferredRegister.create(new ResourceLocation(EpicFightMod.MODID, "skill_data_keys"), SwordSoaringMod.MOD_ID);
+    public static final DeferredRegister<SkillDataKey<?>> DATA_KEYS = DeferredRegister.create(ResourceLocation.fromNamespaceAndPath(EpicFightMod.MODID, "skill_data_keys"), SwordSoaringMod.MOD_ID);
 
     //Artifact
     //器灵id

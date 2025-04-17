@@ -133,9 +133,9 @@ public class ScreenSwordSkill extends KillAuraSkill {
         int currentCooldown = container.getDataManager().getDataValue(SwordSoaringDatakeys.COOLDOWN_TIMER.get());
         int currentLifetime = this.cooldown - currentCooldown;
         if(protectCount > 0 && currentLifetime < this.lifeTime) {
-            guiGraphics.drawString(gui.font, container.getDataManager().getDataValue(SwordSoaringDatakeys.PROTECT_COUNT.get()).toString(), x + 6.0F, y + 8.0F, 16777215, true);
+            guiGraphics.drawString(gui.getFont(), container.getDataManager().getDataValue(SwordSoaringDatakeys.PROTECT_COUNT.get()).toString(), x + 6.0F, y + 8.0F, 16777215, true);
         } else {
-            guiGraphics.drawString(gui.font, String.format("%.1f", (container.getDataManager().getDataValue(SwordSoaringDatakeys.COOLDOWN_TIMER.get()) / 20.0)), x + 6.0F, y + 8.0F, 16777215, true);
+            guiGraphics.drawString(gui.getFont(), String.format("%.1f", (container.getDataManager().getDataValue(SwordSoaringDatakeys.COOLDOWN_TIMER.get()) / 20.0)), x + 6.0F, y + 8.0F, 16777215, true);
         }
         poseStack.popPose();
     }

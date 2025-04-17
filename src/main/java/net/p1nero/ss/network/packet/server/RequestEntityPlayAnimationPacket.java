@@ -1,8 +1,8 @@
 package net.p1nero.ss.network.packet.server;
 
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.p1nero.ss.network.packet.BasePacket;
 import org.jetbrains.annotations.Nullable;
 import yesman.epicfight.api.animation.AnimationManager;
@@ -21,7 +21,7 @@ public record RequestEntityPlayAnimationPacket(int entityId, int animationId, fl
     }
 
     @Override
-    public void execute(@Nullable ServerPlayer player) {
+    public void execute(@Nullable Player player) {
         if(player != null){
             Entity entity = player.level().getEntity(entityId);
             LivingEntityPatch<?> entityPatch = EpicFightCapabilities.getEntityPatch(entity, LivingEntityPatch.class);

@@ -16,6 +16,7 @@ import net.p1nero.ss.SwordSoaringMod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("ALL")
 @Mod.EventBusSubscriber(modid = SwordSoaringMod.MOD_ID)
 public class SSCapabilityProvider implements ICapabilityProvider, INBTSerializable<CompoundTag> {
 
@@ -58,7 +59,7 @@ public class SSCapabilityProvider implements ICapabilityProvider, INBTSerializab
     public static void attachEntityCapabilities(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof Player player) {
             if(!player.getCapability(SSCapabilityProvider.SS_PLAYER).isPresent()){
-                event.addCapability(new ResourceLocation(SwordSoaringMod.MOD_ID, "ss_player"), new SSCapabilityProvider());
+                event.addCapability(ResourceLocation.fromNamespaceAndPath(SwordSoaringMod.MOD_ID, "ss_player"), new SSCapabilityProvider());
             }
         }
     }

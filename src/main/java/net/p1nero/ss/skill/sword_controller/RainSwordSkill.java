@@ -168,9 +168,9 @@ public class RainSwordSkill extends Skill {
         int currentCooldown = container.getDataManager().getDataValue(SwordSoaringDatakeys.COOLDOWN_TIMER.get());
         int currentLifetime = this.cooldown - currentCooldown;
         if (currentLifetime > this.lifeTime) {
-            guiGraphics.drawString(gui.font, String.format("%.1f", currentCooldown / 20.0), x + 6.0F, y + 8.0F, 16777215, true);
+            guiGraphics.drawString(gui.getFont(), String.format("%.1f", currentCooldown / 20.0), x + 6.0F, y + 8.0F, 16777215, true);
         } else {
-            guiGraphics.drawString(gui.font, String.format("%.1f", (this.lifeTime - currentLifetime) / 20.0), x + 6.0F, y + 8.0F, 16777215, true);
+            guiGraphics.drawString(gui.getFont(), String.format("%.1f", (this.lifeTime - currentLifetime) / 20.0), x + 6.0F, y + 8.0F, 16777215, true);
         }
         poseStack.popPose();
     }

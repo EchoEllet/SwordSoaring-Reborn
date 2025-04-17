@@ -29,8 +29,8 @@ import java.util.List;
 @OnlyIn(Dist.CLIENT)
 public class PatchedBabylonRandomReplaceableLayer<E extends BabylonEntity, T extends AbstractArtifactSpiritPatch<E>, M extends EntityModel<E>> extends PatchedLayer<E, T, M, RenderLayer<E, M>> {
     public static final int FADE_TIME = 20, LIFE_TIME = 130;
-    public static final ResourceLocation LIGHT_TEXTURE = new ResourceLocation(SwordSoaringMod.MOD_ID, "textures/entity/light_new.png");
-    public static final ResourceLocation PORTAL_TEXTURE = new ResourceLocation(SwordSoaringMod.MOD_ID, "textures/entity/portal_new.png");
+    public static final ResourceLocation LIGHT_TEXTURE = ResourceLocation.fromNamespaceAndPath(SwordSoaringMod.MOD_ID, "textures/entity/light_new.png");
+    public static final ResourceLocation PORTAL_TEXTURE = ResourceLocation.fromNamespaceAndPath(SwordSoaringMod.MOD_ID, "textures/entity/portal_new.png");
 
     @Override
     protected void renderLayer(T entityPatch, E entity, RenderLayer<E, M> vanillaLayer, PoseStack postStack, MultiBufferSource buffer, int packedLightIn, OpenMatrix4f[] poses, float bob, float yRot, float xRot, float partialTicks) {
