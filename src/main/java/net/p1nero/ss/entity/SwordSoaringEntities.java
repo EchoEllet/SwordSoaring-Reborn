@@ -15,13 +15,10 @@ import net.p1nero.ss.entity.sword.screen_sword.ScreenSwordEntity;
 import net.p1nero.ss.entity.sword.wan.WanEntity;
 import net.p1nero.ss.entity.vatansever.VatanseverEntity;
 import net.p1nero.ss.entity.vatansever_storm.VatanseverStormEntity;
-import net.p1nero.ss.entity.wraithon.WraithonEntity;
 
 public class SwordSoaringEntities {
     public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, SwordSoaringMod.MOD_ID);
-    public static final RegistryObject<EntityType<WraithonEntity>> WRAITHON = register("wraithon",
-            EntityType.Builder.<WraithonEntity>of(WraithonEntity::new, MobCategory.MONSTER).fireImmune().sized(2F, 2F).clientTrackingRange(20).updateInterval(1));
-    public static final RegistryObject<EntityType<WanEntity>> WAN_ENTITY = register("sword_convergence_entity",
+   public static final RegistryObject<EntityType<WanEntity>> WAN_ENTITY = register("sword_convergence_entity",
             EntityType.Builder.<WanEntity>of(WanEntity::new, MobCategory.MISC).sized(0, 0).clientTrackingRange(64).updateInterval(1).noSave());
     public static final RegistryObject<EntityType<BabylonEntity>> BABYLON = register("babylon",
             EntityType.Builder.<BabylonEntity>of(BabylonEntity::new, MobCategory.MISC).sized(0, 0).clientTrackingRange(64).updateInterval(1).noSave());

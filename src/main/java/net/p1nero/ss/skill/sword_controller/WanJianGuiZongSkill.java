@@ -7,11 +7,10 @@ import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.p1nero.ss.Config;
+import net.p1nero.ss.SwordSoaringConfig;
 import net.p1nero.ss.SwordSoaringMod;
 import net.p1nero.ss.capability.SSCapabilityProvider;
 import net.p1nero.ss.client.keymapping.SwordSoaringKeyMappings;
@@ -22,7 +21,7 @@ import net.p1nero.ss.gameassets.SwordSoaringDatakeys;
 import net.p1nero.ss.gameassets.animations.FlySwordAnimations;
 import net.p1nero.ss.gameassets.animations.WanAnimations;
 import net.p1nero.ss.util.ItemUtils;
-import yesman.epicfight.client.events.engine.ControllEngine;
+import yesman.epicfight.client.events.engine.ControlEngine;
 import yesman.epicfight.client.gui.BattleModeGui;
 import yesman.epicfight.skill.Skill;
 import yesman.epicfight.skill.SkillBuilder;
@@ -59,7 +58,7 @@ public class WanJianGuiZongSkill extends Skill {
         super.onInitiate(container);
         //蓄力禁移动
         container.getExecutor().getEventListener().addEventListener(PlayerEventListener.EventType.MOVEMENT_INPUT_EVENT, EVENT_UUID, (event -> {
-            if (event.getPlayerPatch().isBattleMode() && SwordSoaringKeyMappings.SWORD_SKILL.isDown()) {
+            if (event.getPlayerPatch().getPlayerMode() == PlayerPatch.PlayerMode.EPICFIGHT && SwordSoaringKeyMappings.SWORD_SKILL.isDown()) {
                 Input input = event.getMovementInput();
                 input.forwardImpulse = 0.0F;
                 input.leftImpulse = 0.0F;
@@ -73,7 +72,7 @@ public class WanJianGuiZongSkill extends Skill {
                 clientPlayer.setSprinting(false);
                 clientPlayer.sprintTriggerTime = -1;
                 Minecraft mc = Minecraft.getInstance();
-                ControllEngine.setKeyBind(mc.options.keySprint, false);
+                ControlEngine.setKeyBind(mc.options.keySprint, false);
             }
         }));
     }
@@ -88,7 +87,7 @@ public class WanJianGuiZongSkill extends Skill {
     public void executeOnServer(SkillContainer container, FriendlyByteBuf args) {
         ServerPlayerPatch executer = container.getServerExecutor();
         super.executeOnServer(container, args);
-        container.getDataManager().setDataSync(SwordSoaringDatakeys.COOLDOWN_TIMER.get(), cooldown, executer.getOriginal());
+        container.getDataManager().setDataSync(SwordSoaringDatakeys.COOLDOWN_TIMER.get(), cooldown);
         executer.playAnimationSynchronized(WanAnimations.WAN1_PLAYER, 0.15F);
         ArrayList<ItemStack> list = ItemUtils.calculateValidBabylonItems(executer.getOriginal(), false, (SwordSoaringMod::isValidSword));
         executer.getOriginal().getCapability(SSCapabilityProvider.SS_PLAYER).ifPresent(ssPlayer -> ssPlayer.setWanSwordList(list));
@@ -122,15 +121,15 @@ public class WanJianGuiZongSkill extends Skill {
         if(container.getExecutor().isLogicalClient()){
             boolean isKeyDown = SwordSoaringKeyMappings.SWORD_SKILL.isDown();
             if(isKeyDown != container.getDataManager().getDataValue(SwordSoaringDatakeys.IS_PRESSING.get())){
-                container.getDataManager().setDataSync(SwordSoaringDatakeys.IS_PRESSING.get(), isKeyDown, ((LocalPlayer) container.getExecutor().getOriginal()));
+                container.getDataManager().setDataSync(SwordSoaringDatakeys.IS_PRESSING.get(), isKeyDown);
             }
         }
         int currentCooldown = container.getDataManager().getDataValue(SwordSoaringDatakeys.COOLDOWN_TIMER.get());
         if (currentCooldown > 0 && !container.getExecutor().isLogicalClient()) {
-            container.getDataManager().setDataSync(SwordSoaringDatakeys.COOLDOWN_TIMER.get(), currentCooldown - 1, ((ServerPlayer) container.getExecutor().getOriginal()));
+            container.getDataManager().setDataSync(SwordSoaringDatakeys.COOLDOWN_TIMER.get(), currentCooldown - 1);
         }
         if(!container.getExecutor().isLogicalClient() && cooldown - currentCooldown <= 128){
-            for(int i = 0; i < Config.SWORD_EFFECT_PER_TICK.get(); i++){
+            for(int i = 0; i < SwordSoaringConfig.SWORD_EFFECT_PER_TICK.get(); i++){
                 FlySwordEntity flySwordEntity = new FlySwordEntity(container.getExecutor().getOriginal(), 200, container.getExecutor().getOriginal());
                 flySwordEntity.setAnimationToPlay(FlySwordAnimations.WAN_ANIMATIONS.get(currentCooldown % FlySwordAnimations.WAN_ANIMATIONS.size()));
                 flySwordEntity.setRotationLock(false);
@@ -152,8 +151,7 @@ public class WanJianGuiZongSkill extends Skill {
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
-    public void drawOnGui(BattleModeGui gui, SkillContainer container, GuiGraphics guiGraphics, float x, float y) {
+    public void drawOnGui(BattleModeGui gui, SkillContainer container, GuiGraphics guiGraphics, float x, float y, float partialTick) {
         PoseStack poseStack = guiGraphics.pose();
         poseStack.pushPose();
         poseStack.translate(0.0F, (float)gui.getSlidingProgression(), 0.0F);

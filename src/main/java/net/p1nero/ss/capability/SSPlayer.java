@@ -4,7 +4,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
-import net.p1nero.ss.Config;
+import net.p1nero.ss.SwordSoaringConfig;
 import net.p1nero.ss.entity.sword.fly_sword.FlySwordEntity;
 import net.p1nero.ss.network.PacketHandler;
 import net.p1nero.ss.network.PacketRelay;
@@ -80,7 +80,7 @@ public class SSPlayer {
      * 初始化王财列表，并返回物品数
      */
     public int initBabylonItems(ServerPlayer player){
-        validBabylonItems = ItemUtils.calculateValidBabylonItems(player, Config.REMOVE_ITEM.get());
+        validBabylonItems = ItemUtils.calculateValidBabylonItems(player, SwordSoaringConfig.REMOVE_ITEM.get());
         PacketRelay.sendToPlayer(PacketHandler.INSTANCE, new SyncBabylonPacket(player.getId(), validBabylonItems.size(), validBabylonItems), player);
         return validBabylonItems.size();
     }

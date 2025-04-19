@@ -11,7 +11,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.p1nero.ss.gameassets.SwordSoaringDatakeys;
 import yesman.epicfight.client.world.capabilites.entitypatch.player.LocalPlayerPatch;
 import yesman.epicfight.gameasset.EpicFightSounds;
-import yesman.epicfight.network.client.CPExecuteSkill;
+import yesman.epicfight.network.client.CPSkillRequest;
 import yesman.epicfight.particle.EpicFightParticles;
 import yesman.epicfight.skill.SkillContainer;
 import yesman.epicfight.skill.SkillSlots;
@@ -34,8 +34,8 @@ public class VatanseverDodgeSkill extends DodgeSkill {
             weaponInnate.getSkill().setStackSynchronize(weaponInnate, weaponInnate.getStack() + 1);
             ServerPlayer serverPlayer = event.getPlayerPatch().getOriginal();
             int vatanseverId = event.getPlayerPatch().getSkill(SkillSlots.WEAPON_PASSIVE).getDataManager().getDataValue(SwordSoaringDatakeys.ARTIFACT_SPIRIT_ENTITY_ID.get());
-            serverPlayer.serverLevel().sendParticles(EpicFightParticles.ENTITY_AFTER_IMAGE.get(), serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 1, serverPlayer.getId(), 1, 1, serverPlayer.getId());
-            serverPlayer.serverLevel().sendParticles(EpicFightParticles.ENTITY_AFTER_IMAGE.get(), serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 1, vatanseverId, 1, 1, vatanseverId);
+            serverPlayer.serverLevel().sendParticles(EpicFightParticles.WHITE_AFTERIMAGE.get(), serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 1, serverPlayer.getId(), 1, 1, serverPlayer.getId());
+            serverPlayer.serverLevel().sendParticles(EpicFightParticles.WHITE_AFTERIMAGE.get(), serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 1, vatanseverId, 1, 1, vatanseverId);
         });
     }
 
@@ -68,7 +68,7 @@ public class VatanseverDodgeSkill extends DodgeSkill {
             animation = vertic >= 0 ? 0 : 1;
         }
 
-        CPExecuteSkill packet = new CPExecuteSkill(container.getSlotId());
+        CPSkillRequest packet = new CPSkillRequest(container.getSlot());
         packet.getBuffer().writeInt(animation);
         packet.getBuffer().writeFloat((vertic == 0 && horizon != 0) ? yRot : degree);
         return packet;

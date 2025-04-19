@@ -40,7 +40,6 @@ public class SwordSoaringSkillElytra extends SwordSoaringSkill {
     public void flyingTick(SkillContainer container) {
         if (container.getExecutor().isLogicalClient()) {
             if (container.getDataManager().getDataValue(SwordSoaringDatakeys.FLYING.get()) && container.getExecutor().hasStamina(consumption + 0.1F) && SwordSoaringMod.isValidSword(container.getExecutor().getOriginal().getMainHandItem())) {
-                LocalPlayer localPlayer = ((LocalPlayer) container.getExecutor().getOriginal());
                 boolean accelerating = SwordSoaringKeyMappings.ACCELERATION.isDown();
                 
                 if (accelerating != container.getDataManager().getDataValue(SwordSoaringDatakeys.ACCELERATING.get())) {
@@ -49,7 +48,7 @@ public class SwordSoaringSkillElytra extends SwordSoaringSkill {
                     } else {
                         container.getExecutor().playAnimationSynchronized(flying, 0.0F);
                     }
-                    container.getDataManager().setDataSync(SwordSoaringDatakeys.ACCELERATING.get(), accelerating, localPlayer);
+                    container.getDataManager().setDataSync(SwordSoaringDatakeys.ACCELERATING.get(), accelerating);
                 }
             }
         } else {
@@ -76,9 +75,9 @@ public class SwordSoaringSkillElytra extends SwordSoaringSkill {
     }
     
     public void stopFlying(SkillContainer container, ServerPlayer serverPlayer){
-        container.getDataManager().setDataSync(SwordSoaringDatakeys.FLYING.get(), false, serverPlayer);
-        container.getDataManager().setDataSync(SwordSoaringDatakeys.ACCELERATING.get(), false, serverPlayer);
-        container.getDataManager().setDataSync(SwordSoaringDatakeys.COOLDOWN_TIMER.get(), cooldown, serverPlayer);
+        container.getDataManager().setDataSync(SwordSoaringDatakeys.FLYING.get(), false);
+        container.getDataManager().setDataSync(SwordSoaringDatakeys.ACCELERATING.get(), false);
+        container.getDataManager().setDataSync(SwordSoaringDatakeys.COOLDOWN_TIMER.get(), cooldown);
         serverPlayer.stopFallFlying();
     }
 

@@ -36,7 +36,7 @@ public class ScreenSwordEntity extends AbstractSwordEntity {
                 //时间到了或次数用尽就紫砂
                 if(dataManager.hasData(SwordSoaringDatakeys.PROTECT_COUNT.get())){
                     if(dataManager.getDataValue(SwordSoaringDatakeys.PROTECT_COUNT.get()) <= 0){
-                        dataManager.setDataSync(SwordSoaringDatakeys.PROTECT_COUNT.get(), 0, serverPlayerPatch.getOriginal());
+                        dataManager.setDataSync(SwordSoaringDatakeys.PROTECT_COUNT.get(), 0);
                         if(getOwner().isCurrentlyGlowing()){
                             getOwner().setGlowingTag(false);
                         }

@@ -29,6 +29,7 @@ public class SwordFlyingSoundInstance extends AbstractTickableSoundInstance {
         this.volume = 0.1F;
     }
 
+    @Override
     public void tick() {
         ++this.time;
         if(playerPatch.getSkill(SwordSoaringSkillSlots.SWORD_SOARING).getSkill() instanceof SwordSoaringSkillElytra){

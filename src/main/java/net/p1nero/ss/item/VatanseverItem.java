@@ -19,6 +19,7 @@ import org.jetbrains.annotations.Nullable;
 import yesman.epicfight.skill.SkillDataManager;
 import yesman.epicfight.skill.SkillSlots;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
+import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 import yesman.epicfight.world.item.WeaponItem;
 
@@ -34,7 +35,7 @@ public class VatanseverItem extends WeaponItem {
         if (!pLevel.isClientSide) {
             if (pPlayer.onGround && !pPlayer.isFallFlying() && !pPlayer.isInWater() && !pPlayer.hasEffect(MobEffects.LEVITATION)) {
                 ServerPlayerPatch serverPlayerPatch = EpicFightCapabilities.getEntityPatch(pPlayer, ServerPlayerPatch.class);
-                if(serverPlayerPatch.isBattleMode() && !serverPlayerPatch.getEntityState().inaction()){
+                if(serverPlayerPatch.getPlayerMode() == PlayerPatch.PlayerMode.EPICFIGHT && !serverPlayerPatch.getEntityState().inaction()){
                     SkillDataManager manager = serverPlayerPatch.getSkill(SkillSlots.WEAPON_PASSIVE).getDataManager();
                     if(manager.hasData(SwordSoaringDatakeys.SWORD_COUNT.get()) && manager.getDataValue(SwordSoaringDatakeys.SWORD_COUNT.get()) >= 4){
                         serverPlayerPatch.playAnimationSynchronized(VatanseverAnimations.PLAYER_FLY_BEGIN, 0.15F);
@@ -61,7 +62,7 @@ public class VatanseverItem extends WeaponItem {
 
     @Override
     public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, @NotNull List<Component> pTooltipComponents, @NotNull TooltipFlag pIsAdvanced) {
-        pTooltipComponents.add(Component.literal("item.sword_soaring.vatansever.description1"));
-        pTooltipComponents.add(Component.literal("item.sword_soaring.vatansever.description2"));
+        pTooltipComponents.add(Component.translatable("item.sword_soaring.vatansever.description1"));
+        pTooltipComponents.add(Component.translatable("item.sword_soaring.vatansever.description2"));
     }
 }

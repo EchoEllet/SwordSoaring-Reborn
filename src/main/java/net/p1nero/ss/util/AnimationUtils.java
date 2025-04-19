@@ -27,7 +27,7 @@ public class AnimationUtils {
         OpenMatrix4f modelTf = OpenMatrix4f.createTranslation((float) pos.x, (float) pos.y, (float) pos.z)
                 .mulBack(OpenMatrix4f.createRotatorDeg(180.0F, Vec3f.Y_AXIS)
                         .mulBack(entityPatch.getModelMatrix(1)));
-        OpenMatrix4f JointTf = new OpenMatrix4f(entityPatch.getArmature().getBindedTransformFor(pose, joint)).mulFront(modelTf);
+        OpenMatrix4f JointTf = new OpenMatrix4f(entityPatch.getArmature().getBoundTransformFor(pose, joint)).mulFront(modelTf);
 
         return OpenMatrix4f.transform(JointTf, Vec3.ZERO);
     }
@@ -39,7 +39,7 @@ public class AnimationUtils {
         OpenMatrix4f modelTf = OpenMatrix4f.createTranslation((float) pos.x, (float) pos.y, (float) pos.z)
                 .mulBack(OpenMatrix4f.createRotatorDeg(180.0F, Vec3f.Y_AXIS)
                         .mulBack(entityPatch.getModelMatrix(1)));
-        OpenMatrix4f JointTf = new OpenMatrix4f(entityPatch.getArmature().getBindedTransformFor(pose, joint)).mulFront(modelTf);
+        OpenMatrix4f JointTf = new OpenMatrix4f(entityPatch.getArmature().getBoundTransformFor(pose, joint)).mulFront(modelTf);
 
         return OpenMatrix4f.transform(JointTf, Vec3.ZERO);
     }
@@ -64,7 +64,7 @@ public class AnimationUtils {
 
     public static Vec3 jointRayDetectionX(LivingEntityPatch<?> livingEntityPatch, Joint joint, float distance,boolean defaultEndpoint) {
         LivingEntity entity = livingEntityPatch.getOriginal();
-        OpenMatrix4f transformMatrix = livingEntityPatch.getArmature().getBindedTransformFor(livingEntityPatch.getAnimator().getPose(1.0F), joint);
+        OpenMatrix4f transformMatrix = livingEntityPatch.getArmature().getBoundTransformFor(livingEntityPatch.getAnimator().getPose(1.0F), joint);
         OpenMatrix4f rotation = new OpenMatrix4f().rotate(-(float) Math.toRadians(entity.yBodyRotO + 180.0F), new Vec3f(0.0F, 1.0F, 0.0F));
         OpenMatrix4f rotatedMatrix = new OpenMatrix4f();
         OpenMatrix4f.mul(rotation, transformMatrix, rotatedMatrix);
@@ -99,7 +99,7 @@ public class AnimationUtils {
 
     public static Vec3 jointRayDetectionY(LivingEntityPatch<?> livingEntityPatch, Joint joint, float distance,boolean defaultEndpoint) {
         LivingEntity entity = livingEntityPatch.getOriginal();
-        OpenMatrix4f transformMatrix = livingEntityPatch.getArmature().getBindedTransformFor(livingEntityPatch.getAnimator().getPose(1.0F), joint);
+        OpenMatrix4f transformMatrix = livingEntityPatch.getArmature().getBoundTransformFor(livingEntityPatch.getAnimator().getPose(1.0F), joint);
         OpenMatrix4f rotation = new OpenMatrix4f().rotate(-(float) Math.toRadians(entity.yBodyRotO + 180.0F), new Vec3f(0.0F, 1.0F, 0.0F));
         OpenMatrix4f rotatedMatrix = new OpenMatrix4f();
         OpenMatrix4f.mul(rotation, transformMatrix, rotatedMatrix);
@@ -137,7 +137,7 @@ public class AnimationUtils {
 
     public static Vec3 jointRayDetectionZ(LivingEntityPatch<?> livingEntityPatch, Joint joint, float distance,boolean defaultEndpoint) {
         LivingEntity entity = livingEntityPatch.getOriginal();
-        OpenMatrix4f transformMatrix = livingEntityPatch.getArmature().getBindedTransformFor(livingEntityPatch.getAnimator().getPose(1.0F), joint);
+        OpenMatrix4f transformMatrix = livingEntityPatch.getArmature().getBoundTransformFor(livingEntityPatch.getAnimator().getPose(1.0F), joint);
         OpenMatrix4f rotation = new OpenMatrix4f().rotate(-(float) Math.toRadians(entity.yBodyRotO + 180.0F), new Vec3f(0.0F, 1.0F, 0.0F));
         OpenMatrix4f rotatedMatrix = new OpenMatrix4f();
         OpenMatrix4f.mul(rotation, transformMatrix, rotatedMatrix);

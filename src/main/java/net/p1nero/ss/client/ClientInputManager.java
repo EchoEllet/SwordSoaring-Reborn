@@ -8,7 +8,7 @@ import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.p1nero.ss.Config;
+import net.p1nero.ss.SwordSoaringConfig;
 import net.p1nero.ss.SwordSoaringMod;
 import net.p1nero.ss.client.keymapping.SwordSoaringKeyMappings;
 import net.p1nero.ss.gameassets.SwordSoaringSkillCategories;
@@ -24,6 +24,7 @@ import yesman.epicfight.network.client.CPChangeSkill;
 import yesman.epicfight.skill.Skill;
 import yesman.epicfight.skill.SkillContainer;
 import yesman.epicfight.skill.SkillSlot;
+import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 
 import java.util.List;
 
@@ -49,7 +50,7 @@ public class ClientInputManager {
         if(event.phase.equals(TickEvent.Phase.END)){
             while (SwordSoaringKeyMappings.TAKE_OFF.consumeClick()){
                 long currentTime = System.currentTimeMillis();
-                if(currentTime - lastPressTime < Config.FLY_DELAY.get()) {
+                if(currentTime - lastPressTime < SwordSoaringConfig.FLY_DELAY.get()) {
                     sendSkillPacket(SwordSoaringSkillSlots.SWORD_SOARING, SwordSoaringKeyMappings.TAKE_OFF);
                 }
                 lastPressTime = System.currentTimeMillis();
@@ -83,7 +84,8 @@ public class ClientInputManager {
             LocalPlayerPatch localPlayerPatch = ClientEngine.getInstance().getPlayerPatch();
             if(localPlayerPatch != null){
                 SkillContainer skillContainer = localPlayerPatch.getSkill(SwordSoaringSkillSlots.SWORD_SOARING);
-                List<Skill> learnedSkills = localPlayerPatch.getSkillCapability().getLearnedSkills(SwordSoaringSkillCategories.SWORD_SOARING).stream().toList();
+                List<Skill> learnedSkills = localPlayerPatch.getSkillCapability().listAcquiredSkills().filter(skill ->
+                    skill.getCategory() == SwordSoaringSkillCategories.SWORD_SOARING).toList();
                 if(learnedSkills.isEmpty()){
                     return;
                 }
@@ -91,7 +93,7 @@ public class ClientInputManager {
                 int next = (index + 1) % learnedSkills.size();
                 Skill nextSkill = learnedSkills.get(next);
                 skillContainer.setSkill(nextSkill);
-                EpicFightNetworkManager.sendToServer(new CPChangeSkill(SwordSoaringSkillSlots.SWORD_SOARING.universalOrdinal(), -1, nextSkill.toString(), false));
+                EpicFightNetworkManager.sendToServer(new CPChangeSkill(SwordSoaringSkillSlots.SWORD_SOARING, -1, false, nextSkill));
                 localPlayerPatch.getOriginal().displayClientMessage(Component.translatable("tips.sword_soaring.style_change").append(nextSkill.getDisplayName()), true);
             }
         }
@@ -100,8 +102,8 @@ public class ClientInputManager {
     public static void sendSkillPacket(SkillSlot slot, KeyMapping key){
         LocalPlayerPatch localPlayerPatch = ClientEngine.getInstance().getPlayerPatch();
         if(localPlayerPatch != null){
-            if(localPlayerPatch.isBattleMode() && localPlayerPatch.getSkill(slot) != null && localPlayerPatch.getSkill(slot).sendExecuteRequest(localPlayerPatch, ClientEngine.getInstance().controllEngine).shouldReserverKey()){
-                ControlEngineAccessor controlEngine = (ControlEngineAccessor) ClientEngine.getInstance().controllEngine;
+            if(localPlayerPatch.getPlayerMode() == PlayerPatch.PlayerMode.EPICFIGHT && localPlayerPatch.getSkill(slot) != null && localPlayerPatch.getSkill(slot).sendCastRequest(localPlayerPatch, ClientEngine.getInstance().controlEngine).shouldReserveKey()){
+                ControlEngineAccessor controlEngine = (ControlEngineAccessor) ClientEngine.getInstance().controlEngine;
                 controlEngine.setReserveCounter(8);
                 controlEngine.setReservedOrChargingSkillSlot(slot);
                 controlEngine.setReservedKey(key);

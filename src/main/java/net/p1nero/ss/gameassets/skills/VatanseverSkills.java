@@ -76,12 +76,12 @@ public class VatanseverSkills {
         ComboNode shootR2 = ComboNode.createNode(VatanseverAnimations.PLAYER_SHOOT_R2).addCondition(checkSwordCount(3)).addCondition(checkIsNotInaction()).setPriority(3).setCanBeInterrupt(false);
         ComboNode shootL1 = ComboNode.createNode(VatanseverAnimations.PLAYER_SHOOT_L1).addCondition(checkSwordCount(2)).addCondition(checkIsNotInaction()).setPriority(2).setCanBeInterrupt(false);
         ComboNode shootR1 = ComboNode.createNode(VatanseverAnimations.PLAYER_SHOOT_R1).addCondition(checkSwordCount(1)).addCondition(checkIsNotInaction()).setPriority(1).setCanBeInterrupt(false);
-        ComboNode shoot = ComboNode.create().addConditionAnimation(shootL1)
-                .addConditionAnimation(shootL2)
-                .addConditionAnimation(shootL3)
-                .addConditionAnimation(shootR1)
-                .addConditionAnimation(shootR2)
-                .addConditionAnimation(shootR3);
+        ComboNode shoot = ComboNode.create().addConditionNode(shootL1)
+                .addConditionNode(shootL2)
+                .addConditionNode(shootL3)
+                .addConditionNode(shootR1)
+                .addConditionNode(shootR2)
+                .addConditionNode(shootR3);
         root.key1(a);
         a.key1(aa_1);
         aa_1.key1(aa_2);

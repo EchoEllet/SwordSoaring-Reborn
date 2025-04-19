@@ -49,7 +49,7 @@ public class ScreenSwordAnimations {
 
     public static AnimationEvent.InTimeEvent spawnSummonParticle(float time, Supplier<ParticleOptions> particleOptionsSupplier1, Supplier<ParticleOptions> particleOptionsSupplier2) {
         return AnimationEvent.InTimeEvent.create(time, (entityPatch, self, params) -> {
-            OpenMatrix4f transformMatrix = entityPatch.getArmature().getBindedTransformFor(entityPatch.getAnimator().getPose(0.0F), entityPatch.getArmature() instanceof HumanoidArmature ? Armatures.BIPED.get().toolR : Armatures.BIPED.get().rootJoint);
+            OpenMatrix4f transformMatrix = entityPatch.getArmature().getBoundTransformFor(entityPatch.getAnimator().getPose(0.0F), entityPatch.getArmature() instanceof HumanoidArmature ? Armatures.BIPED.get().toolR : Armatures.BIPED.get().rootJoint);
             transformMatrix.translate(new Vec3f(0.0F, 0.0F, 0.0F));
             OpenMatrix4f.mul((new OpenMatrix4f()).rotate(-((float) Math.toRadians(entityPatch.getOriginal().yBodyRotO + 180.0F)), new Vec3f(0.0F, 1.0F, 0.0F)), transformMatrix, transformMatrix);
             int n = 70;

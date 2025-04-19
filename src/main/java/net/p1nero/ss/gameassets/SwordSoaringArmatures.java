@@ -8,11 +8,9 @@ import net.p1nero.ss.entity.sword.screen_sword.ScreenSwordArmature;
 import net.p1nero.ss.entity.sword.wan.WanArmature;
 import net.p1nero.ss.entity.vatansever.VatanseverArmature;
 import net.p1nero.ss.entity.vatansever_storm.VatanseverStormArmature;
-import net.p1nero.ss.entity.wraithon.WraithonArmature;
 import yesman.epicfight.gameasset.Armatures;
 
 public class SwordSoaringArmatures {
-    public static Armatures.ArmatureAccessor<WraithonArmature> WRAITHON_ARMATURE = Armatures.ArmatureAccessor.create(SwordSoaringMod.MOD_ID, "entity/wraithon", WraithonArmature::new);
     public static Armatures.ArmatureAccessor<WanArmature> WAN_ARMATURE = Armatures.ArmatureAccessor.create(SwordSoaringMod.MOD_ID, "entity/wan", WanArmature::new);
     public static Armatures.ArmatureAccessor<BabylonArmature> BABYLON_ARMATURE = Armatures.ArmatureAccessor.create(SwordSoaringMod.MOD_ID, "entity/babylon", BabylonArmature::new);
     public static Armatures.ArmatureAccessor<FlySwordArmature> FLY_SWORD_ARMATURE = Armatures.ArmatureAccessor.create(SwordSoaringMod.MOD_ID, "entity/fly_sword", FlySwordArmature::new);
@@ -21,7 +19,6 @@ public class SwordSoaringArmatures {
     public static Armatures.ArmatureAccessor<VatanseverStormArmature> VATANSEVER_STORM_ARMATURE = Armatures.ArmatureAccessor.create(SwordSoaringMod.MOD_ID, "entity/vatansever_swordgroup", VatanseverStormArmature::new);
 
     public static void registerArmatures(){
-        Armatures.registerEntityTypeArmature(SwordSoaringEntities.WRAITHON.get(), WRAITHON_ARMATURE);
         Armatures.registerEntityTypeArmature(SwordSoaringEntities.WAN_ENTITY.get(), WAN_ARMATURE);
         Armatures.registerEntityTypeArmature(SwordSoaringEntities.BABYLON.get(), BABYLON_ARMATURE);
         Armatures.registerEntityTypeArmature(SwordSoaringEntities.FLY_SWORD.get(), FLY_SWORD_ARMATURE);

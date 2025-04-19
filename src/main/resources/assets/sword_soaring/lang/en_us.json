@@ -1,6 +1,7 @@
 {
   "itemGroup.sword_soaring.items": "Sword Soaring Items",
   "item.sword_soaring.vatansever": "Vatansever",
+  "item.sword_soaring.wraithon_spawn_egg": "Wraithon Spawn Egg",
   "item.sword_soaring.vatansever.description1": " —— §b§lIts frost's chill guards realms serene;§r§c§lThrough slaughter's maze, purges taint unclean§r",
   "item.sword_soaring.vatansever.description2": "Forged post-Celestial War by Kunwu's master smith, this blade consumed century-cured Netheriron and divine bones within Guixu's crucible. At its birth, heaven wept stardust tears. Its edge bears Celestial Array sigils, while draconic essence coils along its spine - not mere steel, but destiny's answer when cataclysm demands blood to preserve mortal hearths. Now awakened, its glacial arrays shatter mountains yet shelter cooking-smoke villages.",
   "skill.sword_soaring.vatansever.tooltip1": "§3§lXuanming: Soulfrost Circle§r —— ",
@@ -59,5 +60,8 @@
   "key.sword_soaring.take_off": "Initiate Flight",
   "key.sword_soaring.acceleration": "Boost",
   "key.sword_soaring.switch_mode": "Toggle Mode",
-  "tips.sword_soaring.style_change": "Current Flight Mode:"
+  "tips.sword_soaring.style_change": "Current Flight Mode:",
+  "biome.sword_soaring.the_wraithium_battlegrounds": "The Wraithium Battlegrounds",
+
+  "skill_tree.sword_soaring.sword_soaring_skills": "Sword Skills"
 }

@@ -9,7 +9,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.p1nero.ss.Config;
+import net.p1nero.ss.SwordSoaringConfig;
 import net.p1nero.ss.animation.BabylonMultiPhaseAttackAnimation;
 import net.p1nero.ss.client.CameraAnim;
 import net.p1nero.ss.entity.sword.wan.WanEntity;
@@ -75,7 +75,7 @@ public class WanAnimations {
 
     @OnlyIn(Dist.CLIENT)
     public static List<TrailInfo> getWanTrails(){
-        int updateInterVal =  Config.WAN_TRAIL_UPDATE_TICK.get();
+        int updateInterVal =  SwordSoaringConfig.WAN_TRAIL_UPDATE_TICK.get();
         if(updateInterVal <= 0){
             return List.of();
         }
@@ -92,7 +92,7 @@ public class WanAnimations {
                     .joint(joint.getName())
                     .itemSkinHand(InteractionHand.MAIN_HAND)
                     .texture("epicfight:textures/particle/swing_trail.png")
-                    .type((SimpleParticleType)ForgeRegistries.PARTICLE_TYPES.getValue(ResourceLocation.parse(Config.TRAIL_PARTICLE_TYPE.get())))
+                    .type((SimpleParticleType)ForgeRegistries.PARTICLE_TYPES.getValue(ResourceLocation.parse(SwordSoaringConfig.TRAIL_PARTICLE_TYPE.get())))
                     .create());
         }
         return wanTrails;
@@ -111,7 +111,7 @@ public class WanAnimations {
                         }, AnimationEvent.Side.CLIENT),
                         AnimationEvent.SimpleEvent.create((livingEntityPatch, staticAnimation, objects) -> {
                             if(livingEntityPatch instanceof ServerPlayerPatch serverPlayerPatch){
-                                serverPlayerPatch.getSkill(SwordSoaringSkillSlots.SWORD_CONTROLLER).getDataManager().setDataSync(SwordSoaringDatakeys.IS_CHARGING.get(), true, serverPlayerPatch.getOriginal());
+                                serverPlayerPatch.getSkill(SwordSoaringSkillSlots.SWORD_CONTROLLER).getDataManager().setDataSync(SwordSoaringDatakeys.IS_CHARGING.get(), true);
                             }
                         }, AnimationEvent.Side.SERVER)
                 )
@@ -146,7 +146,7 @@ public class WanAnimations {
                         }, AnimationEvent.Side.CLIENT),
                         AnimationEvent.SimpleEvent.create((livingEntityPatch, staticAnimation, objects) -> {
                             if(livingEntityPatch instanceof ServerPlayerPatch serverPlayerPatch){
-                                serverPlayerPatch.getSkill(SwordSoaringSkillSlots.SWORD_CONTROLLER).getDataManager().setDataSync(SwordSoaringDatakeys.IS_CHARGING.get(), false, serverPlayerPatch.getOriginal());
+                                serverPlayerPatch.getSkill(SwordSoaringSkillSlots.SWORD_CONTROLLER).getDataManager().setDataSync(SwordSoaringDatakeys.IS_CHARGING.get(), false);
                             }
                         }, AnimationEvent.Side.SERVER)
                 )

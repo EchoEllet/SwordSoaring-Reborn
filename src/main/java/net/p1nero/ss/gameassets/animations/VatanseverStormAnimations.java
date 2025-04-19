@@ -91,7 +91,7 @@ public class VatanseverStormAnimations {
         float rzv = minSpeed + (maxSpeed - minSpeed) * random.nextFloat();
         // 获取变换矩阵
         OpenMatrix4f transformMatrix = vatanseverStormEntityPatch.getArmature()
-                .getBindedTransformFor(vatanseverStormEntityPatch.getAnimator().getPose(1.0F), toolJoint);
+                .getBoundTransformFor(vatanseverStormEntityPatch.getAnimator().getPose(1.0F), toolJoint);
         // 应用旋转
         OpenMatrix4f rotation = new OpenMatrix4f().rotate(
                 -(float) Math.toRadians(vatanseverStormEntity.yBodyRot + 180.0F),

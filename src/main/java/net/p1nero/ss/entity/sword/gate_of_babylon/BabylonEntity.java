@@ -10,7 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.p1nero.ss.Config;
+import net.p1nero.ss.SwordSoaringConfig;
 import net.p1nero.ss.entity.AbstractArtifactSpiritEntity;
 import net.p1nero.ss.entity.ReplaceableArmature;
 import net.p1nero.ss.entity.SwordSoaringEntities;
@@ -76,7 +76,7 @@ public class BabylonEntity extends AbstractSwordEntity {
 
     @Override
     public boolean isCurrentlyGlowing() {
-        return Config.ITEMS_BLOOM.get();
+        return SwordSoaringConfig.ITEMS_BLOOM.get();
     }
 
     /**
@@ -118,7 +118,7 @@ public class BabylonEntity extends AbstractSwordEntity {
                     if(jointPos.y() <= getY() + 0.5F){
                         LevelUtil.circleSlamFracture(getOwner(), level(), jointPos.add(0, -1, 0), 2.5, false);
                         jointsHittenGroundMap.put(id, true);
-                        if(Config.REMOVE_ITEM.get()){
+                        if(SwordSoaringConfig.REMOVE_ITEM.get()){
                             ItemEntity itemEntity = new ItemEntity(level(), jointPos.x, jointPos.y, jointPos.z, validBabylonItems.get(getArmature().joints.indexOf(joint)));
                             level().addFreshEntity(itemEntity);
                         }

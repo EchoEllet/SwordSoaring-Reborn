@@ -15,14 +15,15 @@ public class WanSoundInstance extends AbstractTickableSoundInstance {
     private final LocalPlayerPatch playerPatch;
     private int time = 0;
 
-    public WanSoundInstance(LocalPlayerPatch pPlayer) {
+    public WanSoundInstance(LocalPlayerPatch localPlayerPatch) {
         super(SwordSoaringSounds.WAN_GATHERING.get(), SoundSource.PLAYERS, SoundInstance.createUnseededRandom());
-        this.playerPatch = pPlayer;
+        this.playerPatch = localPlayerPatch;
         this.looping = true;
         this.delay = 0;
         this.volume = 0.5F;
     }
 
+    @Override
     public void tick() {
         ++this.time;
         if(playerPatch == null){

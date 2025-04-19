@@ -22,5 +22,11 @@
     "sounds": [
       "sword_soaring:sword_convergence"
     ]
+  },
+  "no_sound": {
+    "subtitle": "sounds.sword_soaring.no_sound",
+    "sounds": [
+      "sword_soaring:no_sound"
+    ]
   }
 }

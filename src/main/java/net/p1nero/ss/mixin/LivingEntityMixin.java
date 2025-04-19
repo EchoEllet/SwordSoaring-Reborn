@@ -10,6 +10,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.p1nero.ss.SwordSoaringMod;
+import net.p1nero.ss.client.sound.SwordSoaringSounds;
 import net.p1nero.ss.gameassets.SwordSoaringDatakeys;
 import net.p1nero.ss.gameassets.SwordSoaringSkillSlots;
 import net.p1nero.ss.item.VatanseverItem;
@@ -83,7 +84,7 @@ public abstract class LivingEntityMixin extends Entity {
     @Inject(method = "getFallDamageSound", at = @At("HEAD"), cancellable = true)
     private void sword_soaring$getFallDamageSound(int pHeight, CallbackInfoReturnable<SoundEvent> cir) {
         if (this.getMainHandItem().getItem() instanceof VatanseverItem) {
-            cir.setReturnValue(EpicFightSounds.NO_SOUND.get());
+            cir.setReturnValue(SwordSoaringSounds.NO_SOUND.get());
         }
     }
 

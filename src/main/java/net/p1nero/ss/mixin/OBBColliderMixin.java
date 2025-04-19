@@ -57,7 +57,7 @@ public abstract class OBBColliderMixin extends Collider {
             jt.rotation().w = 1.0F;
             poseMatrix = jt.getAnimationBoundMatrix(armature.rootJoint, new OpenMatrix4f()).removeTranslation();
         } else {
-            poseMatrix = armature.getBindedTransformFor(interpolatedPose, joint);
+            poseMatrix = armature.getBoundTransformFor(interpolatedPose, joint);
         }
 
         poseMatrix.rotateDeg(90, Vec3f.X_AXIS);

@@ -1,6 +1,7 @@
 {
   "itemGroup.sword_soaring.items": "御剑凌虚 物品",
   "item.sword_soaring.vatansever": "卫国者",
+  "item.sword_soaring.wraithon_spawn_egg": "Wraithon Spawn Egg",
   "item.sword_soaring.vatansever.description1": "上古神兵",
   "item.sword_soaring.vatansever.description2": "古籍（文言-华夏）之中，或许藏有此至宝由来的线索",
   "skill.sword_soaring.vatansever.tooltip1": "§3§l吸星法§r ——",
@@ -50,5 +51,9 @@
   "key.sword_soaring.take_off": "开始飞行",
   "key.sword_soaring.acceleration": "加速",
   "key.sword_soaring.switch_mode": "切换模式",
-  "tips.sword_soaring.style_change": "当前飞行模式："
+  "tips.sword_soaring.style_change": "当前飞行模式：",
+  "skill.sword_soaring.vatansever_dodge": "Vatansever Dodge",
+  "skill.sword_soaring.vatansever_dodge.tooltip": "Dodge Skill for Vatansever. This skill will be learned automatically when you equip Vatansever. And the skill is invalid when holding other weapon.",
+
+  "skill_tree.sword_soaring.sword_soaring_skills": "御剑术"
 }

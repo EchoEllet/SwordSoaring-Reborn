@@ -1,7 +1,7 @@
 package net.p1nero.ss.client.keymapping;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import com.p1nero.invincible.client.events.InputManager;
+import com.p1nero.invincible.client.InputManager;
 import net.minecraft.client.KeyMapping;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;

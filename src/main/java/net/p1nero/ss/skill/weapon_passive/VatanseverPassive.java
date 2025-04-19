@@ -18,6 +18,7 @@ import net.p1nero.ss.item.VatanseverItem;
 import net.p1nero.ss.skill.sword_soaring.SwordSoaringSkill;
 import yesman.epicfight.api.utils.AttackResult;
 import yesman.epicfight.api.utils.LevelUtil;
+import yesman.epicfight.api.utils.math.ValueModifier;
 import yesman.epicfight.skill.*;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
@@ -48,10 +49,10 @@ public class VatanseverPassive extends ArtifactSpiritPassiveSkill{
         container.getDataManager().setData(SwordSoaringDatakeys.SWORD_COUNT.get(), 6);
         
         summonVatansever(container);
-        container.getExecutor().getEventListener().addEventListener(PlayerEventListener.EventType.SKILL_EXECUTE_EVENT, EVENT_UUID, skillExecuteEvent -> {
+        container.getExecutor().getEventListener().addEventListener(PlayerEventListener.EventType.SKILL_CAST_EVENT, EVENT_UUID, skillExecuteEvent -> {
             if(!skillExecuteEvent.getPlayerPatch().isLogicalClient() && !(skillExecuteEvent.getPlayerPatch().getOriginal().level().getEntity(getArtifactSpiritId(container)) instanceof VatanseverEntity)){
                 if(!summonVatansever(container)){
-                    container.getDataManager().setDataSync(SwordSoaringDatakeys.SWORD_COUNT.get(), 0, ((ServerPlayer) container.getExecutor().getOriginal()));
+                    container.getDataManager().setDataSync(SwordSoaringDatakeys.SWORD_COUNT.get(), 0);
                 }
             }
         });
@@ -65,15 +66,14 @@ public class VatanseverPassive extends ArtifactSpiritPassiveSkill{
                 indicatorCheckEvent.setCanceled(true);
             }
         });
-        container.getExecutor().getEventListener().addEventListener(PlayerEventListener.EventType.HURT_EVENT_PRE, EVENT_UUID, hurtEvent -> {
+        container.getExecutor().getEventListener().addEventListener(PlayerEventListener.EventType.TAKE_DAMAGE_EVENT_HURT, EVENT_UUID, hurtEvent -> {
             Player player = hurtEvent.getPlayerPatch().getOriginal();
             if(player.isFallFlying()){
                 double power = player.getDeltaMovement().length();
                 if(power > 1){
                     LevelUtil.circleSlamFracture(player, player.level(), player.position().add(0, -1, 0), power * 2);
                 }
-                hurtEvent.setResult(AttackResult.ResultType.MISSED);
-                hurtEvent.setAmount(0);
+                hurtEvent.attachValueModifier(ValueModifier.multiplier(0));
                 hurtEvent.setCanceled(true);
             }
         });
@@ -93,8 +93,8 @@ public class VatanseverPassive extends ArtifactSpiritPassiveSkill{
             VatanseverEntity vatanseverEntity = new VatanseverEntity(container.getExecutor().getOriginal().level(), container.getExecutor().getOriginal());
             boolean success = container.getExecutor().getOriginal().level().addFreshEntity(vatanseverEntity);
             container.getExecutor().playAnimationSynchronized(VatanseverAnimations.PLAYER_INIT, 0.15F);
-            container.getDataManager().setDataSync(SwordSoaringDatakeys.ARTIFACT_SPIRIT_ENTITY_ID.get(), vatanseverEntity.getId(), ((ServerPlayer) container.getExecutor().getOriginal()));
-            container.getDataManager().setDataSync(SwordSoaringDatakeys.SWORD_COUNT.get(), 6, ((ServerPlayer) container.getExecutor().getOriginal()));
+            container.getDataManager().setDataSync(SwordSoaringDatakeys.ARTIFACT_SPIRIT_ENTITY_ID.get(), vatanseverEntity.getId());
+            container.getDataManager().setDataSync(SwordSoaringDatakeys.SWORD_COUNT.get(), 6);
             return success;
         }
         return false;
@@ -114,10 +114,10 @@ public class VatanseverPassive extends ArtifactSpiritPassiveSkill{
         }
         container.getExecutor().getOriginal().getCapability(SSCapabilityProvider.SS_PLAYER).ifPresent(SSPlayer::clearVatanseverShootEntities);
         container.getDataManager().setData(SwordSoaringDatakeys.ARTIFACT_SPIRIT_ENTITY_ID.get(), 0);
-        container.getExecutor().getEventListener().removeListener(PlayerEventListener.EventType.SKILL_EXECUTE_EVENT, EVENT_UUID);
+        container.getExecutor().getEventListener().removeListener(PlayerEventListener.EventType.SKILL_CAST_EVENT, EVENT_UUID);
         container.getExecutor().getEventListener().removeListener(PlayerEventListener.EventType.TARGET_INDICATOR_ALERT_CHECK_EVENT, EVENT_UUID);
         container.getExecutor().getEventListener().removeListener(PlayerEventListener.EventType.SET_TARGET_EVENT, EVENT_UUID);
-        container.getExecutor().getEventListener().removeListener(PlayerEventListener.EventType.HURT_EVENT_PRE, EVENT_UUID);
+        container.getExecutor().getEventListener().removeListener(PlayerEventListener.EventType.TAKE_DAMAGE_EVENT_HURT, EVENT_UUID);
         container.getExecutor().getEventListener().removeListener(PlayerEventListener.EventType.FALL_EVENT, EVENT_UUID);
     }
 

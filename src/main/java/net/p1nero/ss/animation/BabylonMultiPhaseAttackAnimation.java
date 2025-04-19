@@ -84,7 +84,7 @@ public class BabylonMultiPhaseAttackAnimation extends ArtifactSpiritMultiPhaseAt
                             ssPlayer.getCurrentlyHurtEntities(phase).add(trueEntity);
 
                             if (attackResult.resultType.shouldCount()) {
-                                entityPatch.getCurrenltyHurtEntities().add(trueEntity);
+                                entityPatch.getCurrentlyAttackTriedEntities().add(trueEntity);
                             }
                         }
                     }

@@ -5,7 +5,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.p1nero.ss.SwordSoaringMod;
-import net.p1nero.ss.compat.ArmourersWorkshopCompat;
+//import net.p1nero.ss.compat.ArmourersWorkshopCompat;
 import net.p1nero.ss.entity.AbstractArtifactSpiritEntity;
 import net.p1nero.ss.entity.SwordSoaringEntities;
 import net.p1nero.ss.entity.sword.fly_sword.FlySwordPatch;
@@ -14,9 +14,6 @@ import net.p1nero.ss.entity.sword.screen_sword.ScreenSwordPatch;
 import net.p1nero.ss.entity.sword.wan.WanPatch;
 import net.p1nero.ss.entity.vatansever.VatanseverEntityPatch;
 import net.p1nero.ss.entity.vatansever_storm.VatanseverStormEntityPatch;
-import net.p1nero.ss.entity.wraithon.WraithonEntity;
-import net.p1nero.ss.entity.wraithon.WraithonEntityPatch;
-import net.p1nero.ss.entity.wraithon.WraithonPartEntity;
 import net.p1nero.ss.gameassets.SwordSoaringArmatures;
 import net.p1nero.ss.network.PacketHandler;
 import yesman.epicfight.api.forgeevent.EntityPatchRegistryEvent;
@@ -26,7 +23,6 @@ public class ModEvents{
 
     @SubscribeEvent
     public static void entityAttributeEvent(EntityAttributeCreationEvent event) {
-        event.put(SwordSoaringEntities.WRAITHON.get(), WraithonEntity.getDefaultAttribute());
         event.put(SwordSoaringEntities.WAN_ENTITY.get(), AbstractArtifactSpiritEntity.getDefaultAttribute());
         event.put(SwordSoaringEntities.BABYLON.get(), AbstractArtifactSpiritEntity.getDefaultAttribute());
         event.put(SwordSoaringEntities.FLY_SWORD.get(), AbstractArtifactSpiritEntity.getDefaultAttribute());
@@ -37,13 +33,6 @@ public class ModEvents{
 
     @SubscribeEvent
     public static void setPatch(EntityPatchRegistryEvent event) {
-        //防止子实体干扰
-        event.getTypeEntry().put(SwordSoaringEntities.WRAITHON.get(), (entity) -> {
-            if(entity instanceof WraithonEntity){
-                return WraithonEntityPatch::new;
-            }
-            return () -> null;
-        });
         event.getTypeEntry().put(SwordSoaringEntities.WAN_ENTITY.get(), (entity) -> WanPatch::new);
         event.getTypeEntry().put(SwordSoaringEntities.BABYLON.get(), (entity) -> BabylonPatch::new);
         event.getTypeEntry().put(SwordSoaringEntities.FLY_SWORD.get(), (entity) -> FlySwordPatch::new);
@@ -58,6 +47,6 @@ public class ModEvents{
 
         event.enqueueWork(SwordSoaringArmatures::registerArmatures);
 
-        SwordSoaringMod.runInArmourersWorkshopLoaded(() -> ArmourersWorkshopCompat::registerSwordSoaringItemProvider);
+//        SwordSoaringMod.runInArmourersWorkshopLoaded(() -> ArmourersWorkshopCompat::registerSwordSoaringItemProvider);
     }
 }

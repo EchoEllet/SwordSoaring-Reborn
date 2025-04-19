@@ -11,7 +11,7 @@ version = mod_version
 group = mod_group_id
 
 base {
-    archivesName = mod_id
+    archivesName = mod_id + "-forge1.20.1"
 }
 
 // Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
@@ -86,15 +86,16 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-    implementation fg.deobf("libs:armourersworkshop:3.3.0")
-    implementation fg.deobf("libs:EpicFight:20.10.1.311")
-    implementation fg.deobf("libs:invincible:20.10.0")
+    implementation fg.deobf("curse.maven:epic-fight-mod-405076:6854306")
+    implementation fg.deobf("curse.maven:epic-fight-skill-tree-1295882:6854381")
+    implementation fg.deobf("curse.maven:epic-fight-invincible-1184379:6855750")
     implementation fg.deobf("curse.maven:mmmmmmmmmmmm-225738:6237015")
     implementation fg.deobf("curse.maven:selene-499980:6283242")
     implementation fg.deobf("curse.maven:sophisticated-core-618298:6266807")
     implementation fg.deobf("curse.maven:sophisticated-backpacks-422301:6246607")
-    implementation fg.deobf("curse.maven:embeddium-908741:5681725")
-    implementation fg.deobf("curse.maven:oculus-581495:6020952")
+//    implementation fg.deobf("curse.maven:embeddium-908741:5681725")
+//    implementation fg.deobf("curse.maven:oculus-581495:6020952")
+    implementation fg.deobf("curse.maven:xaeros-world-map-317780:6538337")
 }
 
 tasks.named('processResources', ProcessResources).configure {

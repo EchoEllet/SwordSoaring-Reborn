@@ -50,13 +50,13 @@ public class ScreenSwordSkill extends KillAuraSkill {
     public void onInitiate(SkillContainer container) {
         super.onInitiate(container);
         container.getExecutor().getOriginal().setGlowingTag(false);
-        container.getExecutor().getEventListener().addEventListener(PlayerEventListener.EventType.HURT_EVENT_PRE, EVENT_UUID, hurtEvent -> {
+        container.getExecutor().getEventListener().addEventListener(PlayerEventListener.EventType.TAKE_DAMAGE_EVENT_ATTACK, EVENT_UUID, hurtEvent -> {
             if(hurtEvent.getPlayerPatch().getOriginal().level().getEntity(container.getDataManager().getDataValue(SwordSoaringDatakeys.SWORD_ENTITY_ID.get())) instanceof ScreenSwordEntity screenSwordEntity){
                 int protectCountLeft = container.getDataManager().getDataValue(SwordSoaringDatakeys.PROTECT_COUNT.get());
                 if(protectCountLeft <= 0) {
                     return;
                 }
-                container.getDataManager().setDataSync(SwordSoaringDatakeys.PROTECT_COUNT.get(), protectCountLeft - 1, hurtEvent.getPlayerPatch().getOriginal());
+                container.getDataManager().setDataSync(SwordSoaringDatakeys.PROTECT_COUNT.get(), protectCountLeft - 1);
                 if((protectCountLeft - 1) % (maxProtectCount / 6) == 0){
                     hurtEvent.getPlayerPatch().playSound(EpicFightSounds.NEUTRALIZE_MOBS.get(), 0.0F, 0.0F);
                     hurtEvent.getPlayerPatch().getOriginal().heal(healCount);
@@ -66,12 +66,11 @@ public class ScreenSwordSkill extends KillAuraSkill {
                 }
                 //免疫硬直
                 if(hurtEvent.getDamageSource() instanceof EpicFightDamageSource epicFightDamageSource){
-                    epicFightDamageSource.setImpact(0);
+                    epicFightDamageSource.setBaseImpact(0);
                     epicFightDamageSource.setStunType(StunType.NONE);
                 }
                 //免疫远程
                 if(hurtEvent.getDamageSource().isIndirect()){
-                    hurtEvent.setAmount(0);
                     hurtEvent.setResult(AttackResult.ResultType.MISSED);
                     hurtEvent.setParried(true);
                     hurtEvent.setCanceled(true);
@@ -82,12 +81,12 @@ public class ScreenSwordSkill extends KillAuraSkill {
                         //难道没有直接获取某个武器的伤害的办法吗。。
                         double total = ItemUtils.getItemAttackDamage(hurtEvent.getPlayerPatch().getOriginal(), screenSwordEntity.getItemStack(null));
                         //反击伤害不超过武器最大伤害
-                        float counterattackDamage = hurtEvent.getAmount() * 0.5F > total ? (float) total : hurtEvent.getAmount() * 0.5F;
+                        float counterattackDamage = hurtEvent.getBaseDamage() * 0.5F > total ? (float) total : hurtEvent.getBaseDamage() * 0.5F;
                         hurtEvent.getDamageSource().getEntity().hurt(hurtEvent.getDamageSource(), counterattackDamage);
                     }
                 }
             } else {
-                container.getDataManager().setDataSync(SwordSoaringDatakeys.PROTECT_COUNT.get(), 0, hurtEvent.getPlayerPatch().getOriginal());
+                container.getDataManager().setDataSync(SwordSoaringDatakeys.PROTECT_COUNT.get(), 0);
                 if(container.getExecutor().getOriginal().isCurrentlyGlowing()){
                     container.getExecutor().getOriginal().setGlowingTag(false);
                 }
@@ -99,14 +98,14 @@ public class ScreenSwordSkill extends KillAuraSkill {
     public void onRemoved(SkillContainer container) {
         super.onRemoved(container);
         container.getExecutor().getOriginal().setGlowingTag(false);
-        container.getExecutor().getEventListener().removeListener(PlayerEventListener.EventType.HURT_EVENT_PRE, EVENT_UUID);
+        container.getExecutor().getEventListener().removeListener(PlayerEventListener.EventType.TAKE_DAMAGE_EVENT_ATTACK, EVENT_UUID);
     }
 
     @Override
     public void executeOnServer(SkillContainer container, FriendlyByteBuf args) {
         super.executeOnServer(container, args);
         ServerPlayerPatch executer = container.getServerExecutor();
-        container.getDataManager().setDataSync(SwordSoaringDatakeys.PROTECT_COUNT.get(), maxProtectCount, executer.getOriginal());
+        container.getDataManager().setDataSync(SwordSoaringDatakeys.PROTECT_COUNT.get(), maxProtectCount);
     }
 
     @Override
@@ -123,7 +122,7 @@ public class ScreenSwordSkill extends KillAuraSkill {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void drawOnGui(BattleModeGui gui, SkillContainer container, GuiGraphics guiGraphics, float x, float y) {
+    public void drawOnGui(BattleModeGui gui, SkillContainer container, GuiGraphics guiGraphics, float x, float y, float partialTick) {
         PoseStack poseStack = guiGraphics.pose();
         poseStack.pushPose();
         poseStack.translate(0.0F, (float)gui.getSlidingProgression(), 0.0F);

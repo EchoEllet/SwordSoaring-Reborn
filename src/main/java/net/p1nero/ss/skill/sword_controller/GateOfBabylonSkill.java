@@ -56,17 +56,18 @@ public class GateOfBabylonSkill extends Skill {
         }
         return (container.getDataManager().getDataValue(SwordSoaringDatakeys.COOLDOWN_TIMER.get()) <= 0 || executer.getOriginal().isCreative()) && !executer.getOriginal().getMainHandItem().isEmpty() && executer.getOriginal().onGround();
     }
+
     @Override
     public void executeOnServer(SkillContainer container, FriendlyByteBuf args) {
         super.executeOnServer(container, args);
         perShootCount = SwordSoaringArmatures.BABYLON_ARMATURE.get().joints.size();//这个时候joints才初始化了= =byd新版本
         ServerPlayerPatch executor = container.getServerExecutor();
-        container.getDataManager().setDataSync(SwordSoaringDatakeys.COOLDOWN_TIMER.get(), cooldown, executor.getOriginal());
+        container.getDataManager().setDataSync(SwordSoaringDatakeys.COOLDOWN_TIMER.get(), cooldown);
         executor.playAnimationSynchronized(BabylonAnimations.BABYLON_SUMMON_PLAYER, 0.15F);
         executor.getOriginal().getCapability(SSCapabilityProvider.SS_PLAYER).ifPresent(ssPlayer -> {
             int size = ssPlayer.initBabylonItems(executor.getOriginal());
             count = size / (perShootCount + 1) + 1;
-            container.getDataManager().setDataSync(SwordSoaringDatakeys.CAMERA_TIMER.get(), count * interval, executor.getOriginal());
+            container.getDataManager().setDataSync(SwordSoaringDatakeys.CAMERA_TIMER.get(), count * interval);
         });
         startPos = executor.getOriginal().position();
         startYRot = executor.getOriginal().getYRot();
@@ -115,7 +116,7 @@ public class GateOfBabylonSkill extends Skill {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void drawOnGui(BattleModeGui gui, SkillContainer container, GuiGraphics guiGraphics, float x, float y) {
+    public void drawOnGui(BattleModeGui gui, SkillContainer container, GuiGraphics guiGraphics, float x, float y, float partialTick) {
         PoseStack poseStack = guiGraphics.pose();
         poseStack.pushPose();
         poseStack.translate(0.0F, (float)gui.getSlidingProgression(), 0.0F);

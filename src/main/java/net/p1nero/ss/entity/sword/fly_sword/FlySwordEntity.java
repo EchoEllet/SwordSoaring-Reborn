@@ -165,7 +165,7 @@ public class FlySwordEntity extends AbstractSwordEntity {
             SkillDataManager manager = serverPlayerPatch.getSkill(SkillSlots.WEAPON_PASSIVE).getDataManager();
             if (manager.hasData(SwordSoaringDatakeys.SWORD_COUNT.get())) {
                 int currentCnt = manager.getDataValue(SwordSoaringDatakeys.SWORD_COUNT.get());
-                manager.setDataSync(SwordSoaringDatakeys.SWORD_COUNT.get(), Math.min(currentCnt + 1, 6), serverPlayerPatch.getOriginal());
+                manager.setDataSync(SwordSoaringDatakeys.SWORD_COUNT.get(), Math.min(currentCnt + 1, 6));
             }
         }
     }

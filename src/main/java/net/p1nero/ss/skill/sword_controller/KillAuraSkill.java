@@ -85,7 +85,7 @@ public class KillAuraSkill extends Skill {
         super.executeOnServer(container, args);
         ServerPlayerPatch executor = container.getServerExecutor();
         executor.playAnimationSynchronized(playerSummonAnim, 0.15F);
-        container.getDataManager().setDataSync(SwordSoaringDatakeys.COOLDOWN_TIMER.get(), cooldown, executor.getOriginal());
+        container.getDataManager().setDataSync(SwordSoaringDatakeys.COOLDOWN_TIMER.get(), cooldown);
     }
 
     /**
@@ -101,7 +101,7 @@ public class KillAuraSkill extends Skill {
         if(cooldown == this.cooldown - (int) (playerSummonAnim.get().getTotalTime() * 10) && !container.getExecutor().isLogicalClient()){
             ScreenSwordEntity screenSwordEntity = new ScreenSwordEntity(container.getExecutor().getOriginal(), lifeTime);
             container.getExecutor().getOriginal().level().addFreshEntity(screenSwordEntity);
-            container.getDataManager().setDataSync(SwordSoaringDatakeys.SWORD_ENTITY_ID.get(), screenSwordEntity.getId(), ((ServerPlayer) container.getExecutor().getOriginal()));
+            container.getDataManager().setDataSync(SwordSoaringDatakeys.SWORD_ENTITY_ID.get(), screenSwordEntity.getId());
         }
     }
 
@@ -120,7 +120,7 @@ public class KillAuraSkill extends Skill {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void drawOnGui(BattleModeGui gui, SkillContainer container, GuiGraphics guiGraphics, float x, float y) {
+    public void drawOnGui(BattleModeGui gui, SkillContainer container, GuiGraphics guiGraphics, float x, float y, float partialTick) {
         PoseStack poseStack = guiGraphics.pose();
         poseStack.pushPose();
         poseStack.translate(0.0F, (float)gui.getSlidingProgression(), 0.0F);

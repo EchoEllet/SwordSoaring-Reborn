@@ -7,7 +7,6 @@ import net.minecraftforge.network.simple.SimpleChannel;
 import net.p1nero.ss.SwordSoaringMod;
 import net.p1nero.ss.network.packet.BasePacket;
 import net.p1nero.ss.network.packet.client.SyncBabylonPacket;
-import net.p1nero.ss.network.packet.client.SyncBossBarPacket;
 import net.p1nero.ss.network.packet.server.RequestBabylonSyncPacket;
 import net.p1nero.ss.network.packet.server.RequestEntityPlayAnimationPacket;
 import net.p1nero.ss.network.packet.server.RequestVatanseverSwordBackPacket;
@@ -29,7 +28,6 @@ public class PacketHandler {
         register(RequestBabylonSyncPacket.class, RequestBabylonSyncPacket::decode);
 
         register(SyncBabylonPacket.class, SyncBabylonPacket::decode);
-        register(SyncBossBarPacket.class, SyncBossBarPacket::decode);
     }
 
     private static <MSG extends BasePacket> void register(final Class<MSG> packet, Function<FriendlyByteBuf, MSG> decoder) {

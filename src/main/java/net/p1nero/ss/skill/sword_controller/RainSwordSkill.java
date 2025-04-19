@@ -58,12 +58,12 @@ public class RainSwordSkill extends Skill {
             int currentLifeTime = cooldown - container.getDataManager().getDataValue(SwordSoaringDatakeys.COOLDOWN_TIMER.get());
             if (currentLifeTime < this.lifeTime && target != null) {
                 int count = basicAttackEvent.getPlayerPatch().getOriginal().getRandom().nextInt(minCount, maxCount);
-                container.getDataManager().setDataSync(SwordSoaringDatakeys.DELAY_TIMER.get(), count * interval, basicAttackEvent.getPlayerPatch().getOriginal());
+                container.getDataManager().setDataSync(SwordSoaringDatakeys.DELAY_TIMER.get(), count * interval);
             }
         });
         //造成伤害就画一次
-        container.getExecutor().getEventListener().addEventListener(PlayerEventListener.EventType.DEALT_DAMAGE_EVENT_ATTACK, EVENT_UUID, skillExecuteEvent -> {
-            container.getDataManager().setDataSync(SwordSoaringDatakeys.PLAY_BIG_DIPPER.get(), true, skillExecuteEvent.getPlayerPatch().getOriginal());
+        container.getExecutor().getEventListener().addEventListener(PlayerEventListener.EventType.DEAL_DAMAGE_EVENT_ATTACK, EVENT_UUID, skillExecuteEvent -> {
+            container.getDataManager().setDataSync(SwordSoaringDatakeys.PLAY_BIG_DIPPER.get(), true);
         });
     }
 
@@ -71,8 +71,7 @@ public class RainSwordSkill extends Skill {
     public void onRemoved(SkillContainer container) {
         super.onRemoved(container);
         container.getExecutor().getEventListener().removeListener(PlayerEventListener.EventType.BASIC_ATTACK_EVENT, EVENT_UUID);
-        container.getExecutor().getEventListener().removeListener(PlayerEventListener.EventType.DEALT_DAMAGE_EVENT_DAMAGE, EVENT_UUID);
-        container.getExecutor().getEventListener().removeListener(PlayerEventListener.EventType.DEALT_DAMAGE_EVENT_ATTACK, EVENT_UUID);
+        container.getExecutor().getEventListener().removeListener(PlayerEventListener.EventType.DEAL_DAMAGE_EVENT_ATTACK, EVENT_UUID);
     }
 
     @Override
@@ -85,7 +84,7 @@ public class RainSwordSkill extends Skill {
     public void executeOnServer(SkillContainer container, FriendlyByteBuf args) {
         super.executeOnServer(container, args);
         ServerPlayerPatch executer = container.getServerExecutor();
-        container.getDataManager().setDataSync(SwordSoaringDatakeys.COOLDOWN_TIMER.get(), cooldown, executer.getOriginal());
+        container.getDataManager().setDataSync(SwordSoaringDatakeys.COOLDOWN_TIMER.get(), cooldown);
         executer.playAnimationSynchronized(ScreenSwordAnimations.PLAYER_SUMMON_RAIN_SWORD, 0.15F);
         executer.playSound(SoundEvents.EVOKER_PREPARE_SUMMON, 0.0F, 0.0F);
     }
@@ -139,7 +138,7 @@ public class RainSwordSkill extends Skill {
             ParticleVFX.createBigDipperXYParticle(ParticleTypes.END_ROD, player.level(), player.getEyePosition().add(0, 1, 0), -1, 0.8F, player.getYRot(), currentLifetime, 0, 0, 0);
             ParticleVFX.createBigDipperXYParticle(ParticleTypes.WAX_ON, player.level(), player.getEyePosition().add(0, 1, 0), b ? -1 : 0.1F, 0.8F, player.getYRot(), currentLifetime, 0, 0, 0);
             ParticleVFX.createBigDipperXYParticle(ParticleTypes.WAX_OFF, player.level(), player.getEyePosition().add(0, 1, 0), b ? 0.1F : -1, 0.8F, player.getYRot(), currentLifetime, 0, 0.00F, 0);
-            container.getDataManager().setDataSync(SwordSoaringDatakeys.PLAY_BIG_DIPPER.get(), false, ((LocalPlayer) player));
+            container.getDataManager().setDataSync(SwordSoaringDatakeys.PLAY_BIG_DIPPER.get(), false);
         }
 
     }
@@ -160,7 +159,7 @@ public class RainSwordSkill extends Skill {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void drawOnGui(BattleModeGui gui, SkillContainer container, GuiGraphics guiGraphics, float x, float y) {
+    public void drawOnGui(BattleModeGui gui, SkillContainer container, GuiGraphics guiGraphics, float x, float y, float partialTick) {
         PoseStack poseStack = guiGraphics.pose();
         poseStack.pushPose();
         poseStack.translate(0.0F, (float)gui.getSlidingProgression(), 0.0F);

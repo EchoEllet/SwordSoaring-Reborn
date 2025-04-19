@@ -98,7 +98,7 @@ public class WrappedCollider<T extends Collider> extends Collider {
                     transformMatrix = rootPose.get("Root").getAnimationBoundMatrix(entityPatch.getArmature().rootJoint, new OpenMatrix4f()).removeTranslation();
                 } else {
                     float interpolateTime = prevElapsedTime + (elapsedTime - prevElapsedTime) * interpolation;
-                    transformMatrix = armature.getBindedTransformFor(attackAnimation.getPoseByTime(entityPatch, interpolateTime, 1.0F), joint);
+                    transformMatrix = armature.getBoundTransformFor(attackAnimation.getPoseByTime(entityPatch, interpolateTime, 1.0F), joint);
                 }
 
                 double x = entityPatch.getXOld() + (original.getX() - entityPatch.getXOld()) * (double) interpolation;

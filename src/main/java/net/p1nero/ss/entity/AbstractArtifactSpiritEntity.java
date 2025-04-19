@@ -20,7 +20,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.p1nero.ss.SwordSoaringMod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import yesman.epicfight.client.gui.HealthBarIndicator;
 import yesman.epicfight.client.world.capabilites.entitypatch.player.LocalPlayerPatch;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.EntityPatch;
@@ -39,7 +38,7 @@ public abstract class AbstractArtifactSpiritEntity extends PathfinderMob impleme
 
     /**
      * 取消血条渲染
-     * {@link HealthBarIndicator#shouldDraw(LivingEntity, LivingEntityPatch, LocalPlayerPatch)}
+     * {@link yesman.epicfight.client.gui.HealthBar#shouldDraw(LivingEntity, LivingEntityPatch, LocalPlayerPatch, float)}
      */
     @Override
     public boolean canChangeDimensions() {

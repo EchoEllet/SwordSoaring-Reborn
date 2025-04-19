@@ -1,6 +1,0 @@
-{
-  "parent": "block/cube_all",
-  "textures": {
-    "all": "sword_soaring:block/merlin_dd"
-  }
-}

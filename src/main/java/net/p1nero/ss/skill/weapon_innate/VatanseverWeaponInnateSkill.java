@@ -1,7 +1,7 @@
 package net.p1nero.ss.skill.weapon_innate;
 
 import com.google.common.collect.Lists;
-import com.p1nero.invincible.client.keymappings.InvincibleKeyMappings;
+import com.p1nero.invincible.client.InvincibleKeyMappings;
 import com.p1nero.invincible.skill.ComboBasicAttack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;

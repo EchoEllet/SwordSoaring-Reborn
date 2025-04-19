@@ -7,9 +7,9 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.OwnableEntity;
@@ -19,7 +19,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.p1nero.ss.Config;
+import net.p1nero.ss.SwordSoaringConfig;
 import net.p1nero.ss.animation.*;
 import net.p1nero.ss.capability.SSCapabilityProvider;
 import net.p1nero.ss.client.sound.SwordSoaringSounds;
@@ -55,13 +55,11 @@ import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 import yesman.epicfight.world.damagesource.EpicFightDamageSources;
-import yesman.epicfight.world.damagesource.EpicFightDamageType;
+import yesman.epicfight.world.damagesource.EpicFightDamageTypeTags;
 import yesman.epicfight.world.damagesource.StunType;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Supplier;
 
 @SuppressWarnings("rawtypes")
@@ -195,7 +193,7 @@ public class VatanseverAnimations {
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F))));
         VATANSEVER_AUTO3 = builder.nextAccessor("biped/vatansever/vatansever_auto3", accessor -> new AttackAnimation(0.15F, accessor, vatanseverArmature,
                 new AttackAnimation.Phase(0.0F, 0.01F, 0.01F, 0.01F, 0.01F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, right.get())
-                        .addProperty(AnimationProperty.AttackPhaseProperty.SWING_SOUND, EpicFightSounds.NO_SOUND.get())
+                        .addProperty(AnimationProperty.AttackPhaseProperty.SWING_SOUND, SwordSoaringSounds.NO_SOUND.get())
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F))));
 
         VATANSEVER_AUTO3_B = builder.nextAccessor("biped/vatansever/vatansever_auto3_b", accessor -> new AttackAnimation(0.15F, accessor, vatanseverArmature,
@@ -208,7 +206,7 @@ public class VatanseverAnimations {
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F))));
         VATANSEVER_AUTO4_B = builder.nextAccessor("biped/vatansever/vatansever_auto4_b", accessor -> new AttackAnimation(0.15F, accessor, vatanseverArmature,
                 new AttackAnimation.Phase(0.0F, 1.33F, 1.33F, 1.43F, 4.0F, Float.MAX_VALUE, false, InteractionHand.MAIN_HAND, all.get())
-                        .addProperty(AnimationProperty.AttackPhaseProperty.SWING_SOUND, EpicFightSounds.NO_SOUND.get())
+                        .addProperty(AnimationProperty.AttackPhaseProperty.SWING_SOUND, SwordSoaringSounds.NO_SOUND.get())
                         .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.setter(10.0F))));
         VATANSEVER_STORM_START = builder.nextAccessor("biped/vatansever/skill/vatansever_storm_start", accessor -> new ActionAnimation(0.15F, accessor, vatanseverArmature));
 
@@ -432,13 +430,13 @@ public class VatanseverAnimations {
                                 ssPlayer.addVatanseverShootEntity(flySwordEntity);
                                 SkillDataManager manager = serverPlayerPatch.getSkill(SkillSlots.WEAPON_PASSIVE).getDataManager();
                                 if (manager.hasData(SwordSoaringDatakeys.SWORD_COUNT.get())) {
-                                    manager.setDataSync(SwordSoaringDatakeys.SWORD_COUNT.get(), Math.max(vatanseverEntityPatch.getLeftSwordCount() - 1, 0), serverPlayerPatch.getOriginal());
+                                    manager.setDataSync(SwordSoaringDatakeys.SWORD_COUNT.get(), Math.max(vatanseverEntityPatch.getLeftSwordCount() - 1, 0));
                                 }
                             }
                         } else {
                             //否则重置状态
                             ssPlayer.getVatanseverShootEntities().clear();
-                            serverPlayerPatch.getSkill(SkillSlots.WEAPON_PASSIVE).getDataManager().setDataSync(SwordSoaringDatakeys.SWORD_COUNT.get(), 6, serverPlayerPatch.getOriginal());
+                            serverPlayerPatch.getSkill(SkillSlots.WEAPON_PASSIVE).getDataManager().setDataSync(SwordSoaringDatakeys.SWORD_COUNT.get(), 6);
                         }
                     });
                 }
@@ -455,7 +453,7 @@ public class VatanseverAnimations {
 
     private static void shootVFX(LivingEntityPatch<?> livingEntityPatch, Joint toolJoint) {
         LivingEntity entity = livingEntityPatch.getOriginal();
-        OpenMatrix4f transformMatrix = livingEntityPatch.getArmature().getBindedTransformFor(livingEntityPatch.getAnimator().getPose(1.0F), toolJoint);
+        OpenMatrix4f transformMatrix = livingEntityPatch.getArmature().getBoundTransformFor(livingEntityPatch.getAnimator().getPose(1.0F), toolJoint);
         transformMatrix.translate(new Vec3f(0.0F, 0.0F, 0.0F));
         OpenMatrix4f rotation = new OpenMatrix4f().rotate(-(float) Math.toRadians(entity.yBodyRotO + 180.0F), new Vec3f(0.0F, 1.0F, 0.0F));
         OpenMatrix4f.mul(rotation, transformMatrix, transformMatrix);
@@ -475,7 +473,6 @@ public class VatanseverAnimations {
             serverPlayer.level().addFreshEntity(stormEntity);
             stormEntity.setYRot(serverPlayer.getYRot());
             VatanseverStormEntityPatch vatanseverStormEntityPatch = EpicFightCapabilities.getEntityPatch(stormEntity, VatanseverStormEntityPatch.class);
-            System.out.println(vatanseverStormEntityPatch.getArmature().getClass());
             vatanseverStormEntityPatch.playAnimationSynchronized(staticAnimation, 0.05F);
         }
     }
@@ -528,7 +525,7 @@ public class VatanseverAnimations {
                     .joint(joint.getName())
                     .itemSkinHand(InteractionHand.MAIN_HAND)
                     .texture("epicfight:textures/particle/swing_trail.png")
-                    .type((SimpleParticleType) ForgeRegistries.PARTICLE_TYPES.getValue(ResourceLocation.parse(Config.TRAIL_PARTICLE_TYPE.get())))
+                    .type((SimpleParticleType) ForgeRegistries.PARTICLE_TYPES.getValue(ResourceLocation.parse(SwordSoaringConfig.TRAIL_PARTICLE_TYPE.get())))
                     .create());
         }
         return jetTrails;
@@ -618,8 +615,7 @@ public class VatanseverAnimations {
                 LivingEntityPatch<?> entityPatch = EpicFightCapabilities.getEntityPatch(source, LivingEntityPatch.class);
                 if (entityPatch != null) {
                     entity.invulnerableTime = 0;
-                    EpicFightDamageSources damageSources = EpicFightDamageSources.of(entity.level());
-                    entity.hurt(damageSources.shockwave(trueSource).setAnimation(Animations.EMPTY_ANIMATION).setInitialPosition(center).addRuntimeTag(EpicFightDamageType.FINISHER).setStunType(stunType).setImpact(damage / 5.0F).addRuntimeTag(DamageTypes.EXPLOSION), damage);
+                    entity.hurt(EpicFightDamageSources.shockwave(trueSource).setAnimation(Animations.EMPTY_ANIMATION).setInitialPosition(center).addRuntimeTag(EpicFightDamageTypeTags.FINISHER).setStunType(stunType).setBaseImpact(damage / 5.0F).addRuntimeTag(DamageTypeTags.IS_EXPLOSION), damage);
                 }
                 entity.invulnerableTime = 0;
                 entity.hurt(trueSource.damageSources().indirectMagic(trueSource, trueSource), damage);
