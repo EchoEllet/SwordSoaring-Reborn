@@ -26,10 +26,10 @@ public class SwordSoaringConfig {
     static {
         ITEMS_CAN_FLY = BUILDER
                 .comment("A list of items considered as sword.", "被视为剑的物品")
-                .defineListAllowEmpty(List.of("items considered as sword"), List.of(), SwordSoaringConfig::validateItemName);
+                .defineListAllowEmpty(List.of("items_considered_as_sword"), List.of(), SwordSoaringConfig::validateItemName);
         ITEMS_CAN_NOT_FLY = BUILDER
                 .comment("A list of items not considered as sword.", "不被视为剑的物品")
-                .defineListAllowEmpty(List.of("items not considered as sword."), List.of("sword_soaring:vatansever"), SwordSoaringConfig::validateItemName);
+                .defineListAllowEmpty(List.of("items_not_considered_as_sword"), List.of("sword_soaring:vatansever"), SwordSoaringConfig::validateItemName);
         BUILDER.push("Sword Soaring 御剑凌虚");
         FLY_DELAY = createInt("fly_delay", 200, "time mills between double click of starting flying", "起飞的双击间隔的毫秒数");
         BUILDER.pop();
