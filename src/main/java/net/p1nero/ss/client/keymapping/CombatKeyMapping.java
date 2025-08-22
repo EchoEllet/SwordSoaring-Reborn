@@ -2,8 +2,8 @@ package net.p1nero.ss.client.keymapping;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
-import net.minecraftforge.client.settings.IKeyConflictContext;
-import net.minecraftforge.client.settings.KeyModifier;
+import net.neoforged.neoforge.client.settings.IKeyConflictContext;
+import net.neoforged.neoforge.client.settings.KeyModifier;
 import org.jetbrains.annotations.NotNull;
 import yesman.epicfight.client.ClientEngine;
 
@@ -33,7 +33,7 @@ public class CombatKeyMapping extends KeyMapping {
     }
 
     public boolean isActiveAndMatches(InputConstants.@NotNull Key keyCode) {
-        return super.isActiveAndMatches(keyCode) && ClientEngine.getInstance().isBattleMode();
+        return super.isActiveAndMatches(keyCode) && ClientEngine.getInstance().isEpicFightMode();
     }
 
 }

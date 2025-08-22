@@ -9,8 +9,8 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.p1nero.ss.SwordSoaringMod;
 import net.p1nero.ss.entity.AbstractArtifactSpiritPatch;
 import net.p1nero.ss.entity.ReplaceableArmature;
@@ -107,10 +107,10 @@ public class PatchedBabylonRandomReplaceableLayer<E extends BabylonEntity, T ext
         Matrix4f pMatrix = poseStack.last().pose();
         Matrix3f normal = poseStack.last().normal();
         VertexConsumer consumer = buffer.getBuffer(RenderType.entityTranslucent(portalTexture, false));
-        consumer.vertex(pMatrix, -1, -1, 0).color(r, g, b, alpha).uv(0, 0.05F*frame-0.05F).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(LightTexture.FULL_BRIGHT).normal(0, 0,1).endVertex();
-        consumer.vertex(pMatrix, 1, -1, 0).color(r, g, b, alpha).uv(1, 0.05F*frame-0.05F).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(LightTexture.FULL_BRIGHT).normal(0, 0,1).endVertex();
-        consumer.vertex(pMatrix, 1, 1, 0).color(r, g, b, alpha).uv(1, 0.05F*frame).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(LightTexture.FULL_BRIGHT).normal(0, 0,1).endVertex();
-        consumer.vertex(pMatrix, -1, 1, 0).color(r, g, b, alpha).uv(0, 0.05F*frame).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(LightTexture.FULL_BRIGHT).normal( 0, 0,1).endVertex();
+        consumer.addVertex(pMatrix, -1, -1, 0).setColor(r, g, b, alpha).setUv(0, 0.05F*frame-0.05F).setOverlay(OverlayTexture.NO_OVERLAY).setLight(LightTexture.FULL_BRIGHT).setNormal(0, 0,1);
+        consumer.addVertex(pMatrix, 1, -1, 0).setColor(r, g, b, alpha).setUv(1, 0.05F*frame-0.05F).setOverlay(OverlayTexture.NO_OVERLAY).setLight(LightTexture.FULL_BRIGHT).setNormal(0, 0,1);
+        consumer.addVertex(pMatrix, 1, 1, 0).setColor(r, g, b, alpha).setUv(1, 0.05F*frame).setOverlay(OverlayTexture.NO_OVERLAY).setLight(LightTexture.FULL_BRIGHT).setNormal(0, 0,1);
+        consumer.addVertex(pMatrix, -1, 1, 0).setColor(r, g, b, alpha).setUv(0, 0.05F*frame).setOverlay(OverlayTexture.NO_OVERLAY).setLight(LightTexture.FULL_BRIGHT).setNormal( 0, 0,1);
 
         poseStack.popPose();
     }

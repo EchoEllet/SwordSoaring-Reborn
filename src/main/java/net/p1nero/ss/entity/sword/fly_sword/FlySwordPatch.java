@@ -3,13 +3,12 @@ package net.p1nero.ss.entity.sword.fly_sword;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.event.entity.living.LivingEvent;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 import net.p1nero.ss.entity.AbstractArtifactSpiritPatch;
 import net.p1nero.ss.gameassets.animations.FlySwordAnimations;
-import net.p1nero.ss.network.PacketHandler;
-import net.p1nero.ss.network.PacketRelay;
 import net.p1nero.ss.network.packet.server.RequestEntityPlayAnimationPacket;
 import yesman.epicfight.api.animation.AnimationManager;
 import yesman.epicfight.api.animation.Animator;
@@ -27,20 +26,24 @@ public class FlySwordPatch extends AbstractArtifactSpiritPatch<FlySwordEntity> {
     private boolean played;
     public List<AnimationManager.AnimationAccessor<? extends StaticAnimation>> list = List.of(FlySwordAnimations.FLY_SWORD_ATK_4_1, FlySwordAnimations.FLY_SWORD_ATK_4_2, FlySwordAnimations.FLY_SWORD_ATK_4_3, FlySwordAnimations.FLY_SWORD_ATK_4_4, FlySwordAnimations.FLY_SWORD_ATK_3);
 
+    public FlySwordPatch(FlySwordEntity entity) {
+        super(entity);
+    }
+
     /**
      * 播放初始动画
      */
-    @Override
     @OnlyIn(Dist.CLIENT)
-    protected void clientTick(LivingEvent.LivingTickEvent event) {
-        super.clientTick(event);
+    @Override
+    public void postTickClient(EntityTickEvent.Post event) {
+        super.postTickClient(event);
         if (!played) {
             if (this.isLogicalClient() && this.getOwnerPatch() != null) {
                 if(!this.getOwnerPatch().getOriginal().equals(Minecraft.getInstance().player)){
                     return;
                 }
                 AnimationManager.AnimationAccessor<? extends StaticAnimation> toPlay = getInitAnimation(this.getOwnerPatch());
-                PacketRelay.sendToServer(PacketHandler.INSTANCE, new RequestEntityPlayAnimationPacket(this.getOriginal().getId(), toPlay.id(), 0.0001F));
+                PacketDistributor.sendToServer(new RequestEntityPlayAnimationPacket(this.getOriginal().getId(), toPlay.id(), 0.0001F));
                 played = true;
             }
         }

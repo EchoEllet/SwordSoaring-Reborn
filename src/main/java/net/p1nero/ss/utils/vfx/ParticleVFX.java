@@ -1,11 +1,11 @@
-package net.p1nero.ss.util.vfx;
+package net.p1nero.ss.utils.vfx;
 
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.p1nero.ss.util.AnimationUtils;
+import net.p1nero.ss.utils.AnimationUtils;
 import yesman.epicfight.api.animation.Joint;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 

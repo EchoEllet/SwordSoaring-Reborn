@@ -3,7 +3,7 @@ package net.p1nero.ss.animation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.entity.PartEntity;
+import net.neoforged.neoforge.entity.PartEntity;
 import net.p1nero.ss.entity.AbstractArtifactSpiritEntity;
 import net.p1nero.ss.entity.vatansever.VatanseverEntityPatch;
 import net.p1nero.ss.gameassets.SwordSoaringDatakeys;
@@ -65,7 +65,7 @@ public class VatanseverPlayerShootAnimation extends PlayerScanAnimation{
                             continue;
                         }
                         SkillDataManager manager = serverPlayerPatch.getSkill(SkillSlots.WEAPON_PASSIVE).getDataManager();
-                        VatanseverEntityPatch vatanseverEntityPatch = EpicFightCapabilities.getEntityPatch(serverPlayerPatch.getOriginal().level().getEntity(manager.getDataValue(SwordSoaringDatakeys.ARTIFACT_SPIRIT_ENTITY_ID.get())), VatanseverEntityPatch.class);
+                        VatanseverEntityPatch vatanseverEntityPatch = EpicFightCapabilities.getEntityPatch(serverPlayerPatch.getOriginal().level().getEntity(manager.getDataValue(SwordSoaringDatakeys.ARTIFACT_SPIRIT_ENTITY_ID)), VatanseverEntityPatch.class);
                         if(vatanseverEntityPatch != null){
                             vatanseverEntityPatch.setAttakTargetSync(trueEntity);
                             break;

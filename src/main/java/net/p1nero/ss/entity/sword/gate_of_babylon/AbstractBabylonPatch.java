@@ -2,13 +2,12 @@ package net.p1nero.ss.entity.sword.gate_of_babylon;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.InteractionHand;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.event.entity.living.LivingEvent;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 import net.p1nero.ss.entity.AbstractArtifactSpiritPatch;
 import net.p1nero.ss.gameassets.SwordSoaringColliders;
-import net.p1nero.ss.network.PacketHandler;
-import net.p1nero.ss.network.PacketRelay;
 import net.p1nero.ss.network.packet.server.RequestEntityPlayAnimationPacket;
 import yesman.epicfight.api.animation.AnimationManager;
 import yesman.epicfight.api.animation.types.StaticAnimation;
@@ -20,13 +19,17 @@ public abstract class AbstractBabylonPatch<T extends BabylonEntity> extends Abst
 
     protected float baseDamage;
 
+    public AbstractBabylonPatch(T entity) {
+        super(entity);
+    }
+
     /**
      * Join World的时候主人还没初始化，只能换这里操作
      */
-    @Override
     @OnlyIn(Dist.CLIENT)
-    protected void clientTick(LivingEvent.LivingTickEvent event) {
-        super.clientTick(event);
+    @Override
+    public void postTickClient(EntityTickEvent.Post event) {
+        super.postTickClient(event);
         if(!played){
             if(this.isLogicalClient() && this.getOwnerPatch() != null){
                 //排除其他玩家干扰
@@ -36,7 +39,7 @@ public abstract class AbstractBabylonPatch<T extends BabylonEntity> extends Abst
 
                 AnimationManager.AnimationAccessor<? extends StaticAnimation> toPlay = getOriginal().getAnimationToPlay();
                 if(toPlay != null){
-                    PacketRelay.sendToServer(PacketHandler.INSTANCE, new RequestEntityPlayAnimationPacket(this.getOriginal().getId(), toPlay.id(), 0.0001F));
+                    PacketDistributor.sendToServer(new RequestEntityPlayAnimationPacket(this.getOriginal().getId(), toPlay.id(), 0.0001F));
                     played = true;
                 }
             }

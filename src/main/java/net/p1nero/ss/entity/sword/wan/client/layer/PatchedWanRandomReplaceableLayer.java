@@ -8,8 +8,8 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.p1nero.ss.entity.AbstractArtifactSpiritPatch;
 import net.p1nero.ss.entity.ReplaceableArmature;
 import net.p1nero.ss.entity.sword.wan.WanEntity;
@@ -49,8 +49,8 @@ public class PatchedWanRandomReplaceableLayer<E extends WanEntity, T extends Abs
             int lifeTime = 0;
             if(entity.getOwnerPatch() instanceof PlayerPatch<?> playerPatch){
                 SkillDataManager manager = playerPatch.getSkill(SwordSoaringSkillSlots.SWORD_CONTROLLER).getDataManager();
-                if(manager.hasData(SwordSoaringDatakeys.COOLDOWN_TIMER.get())){
-                    int cooldown = manager.getDataValue(SwordSoaringDatakeys.COOLDOWN_TIMER.get());
+                if(manager.hasData(SwordSoaringDatakeys.COOLDOWN_TIMER)){
+                    int cooldown = manager.getDataValue(SwordSoaringDatakeys.COOLDOWN_TIMER);
                     lifeTime = WanJianGuiZongSkill.getMaxCooldown() - cooldown;
                 }
             }

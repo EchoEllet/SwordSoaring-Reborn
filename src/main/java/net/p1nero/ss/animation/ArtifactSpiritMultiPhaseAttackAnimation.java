@@ -9,10 +9,10 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.entity.PartEntity;
-import net.p1nero.ss.capability.SSCapabilityProvider;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.entity.PartEntity;
+import net.p1nero.ss.capability.SwordSoaringAttachments;
 import net.p1nero.ss.capability.SSPlayer;
 import net.p1nero.ss.collider.WrappedCollider;
 import net.p1nero.ss.entity.AbstractArtifactSpiritPatch;
@@ -60,7 +60,7 @@ public class ArtifactSpiritMultiPhaseAttackAnimation extends AttackAnimation {
     public void begin(LivingEntityPatch<?> entityPatch) {
         super.begin(entityPatch);
         if(entityPatch instanceof AbstractArtifactSpiritPatch<?> artifactSpiritPatch && artifactSpiritPatch.getOwnerPatch() != null){
-            artifactSpiritPatch.getOwnerPatch().getOriginal().getCapability(SSCapabilityProvider.SS_PLAYER).ifPresent(SSPlayer::clearMap);
+            artifactSpiritPatch.getOwnerPatch().getOriginal().getData(SwordSoaringAttachments.SS_PLAYER).clearMap();
         }
     }
 
@@ -102,7 +102,7 @@ public class ArtifactSpiritMultiPhaseAttackAnimation extends AttackAnimation {
         if (!list.isEmpty()) {
             HitEntityList hitEntities = new HitEntityList(entityPatch, list, phase.getProperty(AnimationProperty.AttackPhaseProperty.HIT_PRIORITY).orElse(HitEntityList.Priority.DISTANCE));
             if(entityPatch instanceof AbstractArtifactSpiritPatch<?> artifactSpiritPatch && artifactSpiritPatch.getOwnerPatch() != null) {
-                SSPlayer ssPlayer = artifactSpiritPatch.getOwnerPatch().getOriginal().getCapability(SSCapabilityProvider.SS_PLAYER).orElse(new SSPlayer());
+                SSPlayer ssPlayer = artifactSpiritPatch.getOwnerPatch().getOriginal().getData(SwordSoaringAttachments.SS_PLAYER);
                 while (hitEntities.next()) {
                     Entity hit = hitEntities.getEntity();
                     LivingEntity trueEntity = this.getTrueEntity(hit);
@@ -118,7 +118,7 @@ public class ArtifactSpiritMultiPhaseAttackAnimation extends AttackAnimation {
                             if (attackResult.resultType.dealtDamage()) {
 //                                artifactSpiritPatch.getOwnerPatch().getEventListener().triggerEvents(PlayerEventListener.EventType.DEALT_DAMAGE_EVENT_DAMAGE, new DealtDamageEvent.Damage((ServerPlayerPatch) artifactSpiritPatch.getOwnerPatch(), trueEntity, source, event));
                                 if(this.equals(ScreenSwordAnimations.KILL_AURA_2.get())){
-                                    trueEntity.setSecondsOnFire(5);
+                                    trueEntity.setRemainingFireTicks(100);
                                 }
                                 hit.level().playSound(null, hit.getX(), hit.getY(), hit.getZ(), this.getHitSound(entityPatch, phase), hit.getSoundSource(), 1.0F, 1.0F);
                                 this.spawnHitParticle((ServerLevel)hit.level(), entityPatch, hit, phase);

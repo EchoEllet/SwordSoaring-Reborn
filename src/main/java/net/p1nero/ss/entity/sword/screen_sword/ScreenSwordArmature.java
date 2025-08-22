@@ -37,8 +37,8 @@ public class ScreenSwordArmature extends ReplaceableArmature {
         if(livingEntityPatch instanceof AbstractArtifactSpiritPatch<?> artifactSpiritPatch && artifactSpiritPatch.getOwnerPatch() != null){
             if(artifactSpiritPatch.getOwnerPatch().getSkill(SwordSoaringSkillSlots.SWORD_CONTROLLER).getSkill() instanceof ScreenSwordSkill skill){
                 SkillDataManager manager = artifactSpiritPatch.getOwnerPatch().getSkill(SwordSoaringSkillSlots.SWORD_CONTROLLER).getDataManager();
-                if(manager.hasData(SwordSoaringDatakeys.PROTECT_COUNT.get())){
-                    float maxJoint = (manager.getDataValue(SwordSoaringDatakeys.PROTECT_COUNT.get()) * 1.0F / skill.getMaxProtectCount()) * 6;
+                if(manager.hasData(SwordSoaringDatakeys.PROTECT_COUNT)){
+                    float maxJoint = (manager.getDataValue(SwordSoaringDatakeys.PROTECT_COUNT) * 1.0F / skill.getMaxProtectCount()) * 6;
                     ArrayList<Joint> toReturn = new ArrayList<>();
                     for(int i = 0; i < maxJoint; i++){
                         if(i < joints.size()){

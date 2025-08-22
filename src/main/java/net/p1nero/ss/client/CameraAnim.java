@@ -9,10 +9,10 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ViewportEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.ViewportEvent;
 import net.p1nero.ss.SwordSoaringMod;
 import yesman.epicfight.api.utils.math.OpenMatrix4f;
 import yesman.epicfight.api.utils.math.Vec3f;
@@ -21,7 +21,7 @@ import yesman.epicfight.client.ClientEngine;
 /**
  * 抄ef原版的调视角，改了个方向，注意要取消动画的turning lock才不会被打断
  */
-@Mod.EventBusSubscriber(modid = SwordSoaringMod.MOD_ID, value = Dist.CLIENT)
+@EventBusSubscriber(modid = SwordSoaringMod.MOD_ID, value = Dist.CLIENT)
 public class CameraAnim {
     public static final Vec3f DEFAULT_AIMING_CORRECTION = new Vec3f(1.5F, 0.0F, 1.25F);
     private static Vec3f aimingCorrection = DEFAULT_AIMING_CORRECTION;

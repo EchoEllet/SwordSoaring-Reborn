@@ -2,13 +2,12 @@ package net.p1nero.ss.data;
 
 import com.yesman.epicskills.common.data.SkillTreeProvider;
 import net.minecraft.data.DataProvider;
-import net.minecraftforge.data.event.GatherDataEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.p1nero.ss.SwordSoaringMod;
 
-@EventBusSubscriber(modid = SwordSoaringMod.MOD_ID, bus = Bus.MOD)
+@EventBusSubscriber(modid = SwordSoaringMod.MOD_ID)
 public final class DataEvents {
 
     @SubscribeEvent

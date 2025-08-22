@@ -3,16 +3,17 @@ package net.p1nero.ss.client.keymapping;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.p1nero.invincible.client.InputManager;
 import net.minecraft.client.KeyMapping;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
-import net.minecraftforge.client.settings.KeyConflictContext;
-import net.minecraftforge.client.settings.KeyModifier;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
+import net.neoforged.neoforge.client.settings.KeyConflictContext;
+import net.neoforged.neoforge.client.settings.KeyModifier;
+import net.p1nero.ss.SwordSoaringMod;
 import net.p1nero.ss.gameassets.SwordSoaringComboTypes;
 import org.lwjgl.glfw.GLFW;
 
-@Mod.EventBusSubscriber(value = {Dist.CLIENT},bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = SwordSoaringMod.MOD_ID, value = Dist.CLIENT)
 public class SwordSoaringKeyMappings {
     public static final KeyMapping TAKE_OFF = new CombatKeyMapping("key.sword_soaring.take_off", KeyConflictContext.IN_GAME, KeyModifier.NONE, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_SPACE, "key.sword_soaring.common");
     public static final KeyMapping SWITCH_MODE = new CombatKeyMapping("key.sword_soaring.switch_mode", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_TAB, "key.sword_soaring.common");

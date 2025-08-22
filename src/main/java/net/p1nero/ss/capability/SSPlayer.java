@@ -1,27 +1,29 @@
 package net.p1nero.ss.capability;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.neoforged.neoforge.network.PacketDistributor;
 import net.p1nero.ss.SwordSoaringConfig;
 import net.p1nero.ss.entity.sword.fly_sword.FlySwordEntity;
-import net.p1nero.ss.network.PacketHandler;
-import net.p1nero.ss.network.PacketRelay;
 import net.p1nero.ss.network.packet.client.SyncBabylonPacket;
-import net.p1nero.ss.util.ItemUtils;
+import net.p1nero.ss.utils.ItemUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import yesman.epicfight.api.animation.types.AttackAnimation;
-import yesman.epicfight.api.data.reloader.SkillManager;
+import yesman.epicfight.registry.EpicFightRegistries;
 import yesman.epicfight.skill.Skill;
 
 import java.util.*;
 
 /**
- * 记录飞行和技能使用的状态，被坑了，这玩意儿也分服务端和客户端...
+ * 记录飞行和技能使用的状态
  */
-public class SSPlayer {
+public class SSPlayer implements INBTSerializable<CompoundTag> {
     @Nullable
     private Skill lastDodgeSkill;
 
@@ -81,7 +83,7 @@ public class SSPlayer {
      */
     public int initBabylonItems(ServerPlayer player){
         validBabylonItems = ItemUtils.calculateValidBabylonItems(player, SwordSoaringConfig.REMOVE_ITEM.get());
-        PacketRelay.sendToPlayer(PacketHandler.INSTANCE, new SyncBabylonPacket(player.getId(), validBabylonItems.size(), validBabylonItems), player);
+        PacketDistributor.sendToPlayer(player, new SyncBabylonPacket(player.getId(), validBabylonItems));
         return validBabylonItems.size();
     }
 
@@ -110,11 +112,22 @@ public class SSPlayer {
     }
 
     public void loadNBTData(CompoundTag tag){
-        lastDodgeSkill = SkillManager.getSkill(tag.getString("last_dodge_skill"));
+        lastDodgeSkill = EpicFightRegistries.SKILL.get(ResourceLocation.parse(tag.getString("last_dodge_skill")));
     }
 
     public void copyFrom(SSPlayer old){
         this.lastDodgeSkill = old.lastDodgeSkill;
     }
 
+    @Override
+    public CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
+        CompoundTag tag = new CompoundTag();
+        saveNBTData(tag);
+        return tag;
+    }
+
+    @Override
+    public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag compoundTag) {
+        loadNBTData(compoundTag);
+    }
 }

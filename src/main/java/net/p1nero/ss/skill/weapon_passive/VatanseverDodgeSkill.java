@@ -2,53 +2,45 @@ package net.p1nero.ss.skill.weapon_passive;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.Input;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Mth;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.p1nero.ss.gameassets.SwordSoaringDatakeys;
+import yesman.epicfight.api.neoevent.playerpatch.DodgeSuccessEvent;
+import yesman.epicfight.client.events.engine.ControlEngine;
 import yesman.epicfight.client.world.capabilites.entitypatch.player.LocalPlayerPatch;
-import yesman.epicfight.gameasset.EpicFightSounds;
-import yesman.epicfight.network.client.CPSkillRequest;
-import yesman.epicfight.particle.EpicFightParticles;
+import yesman.epicfight.registry.entries.EpicFightParticles;
+import yesman.epicfight.registry.entries.EpicFightSounds;
 import yesman.epicfight.skill.SkillContainer;
+import yesman.epicfight.skill.SkillEvent;
 import yesman.epicfight.skill.SkillSlots;
 import yesman.epicfight.skill.dodge.DodgeSkill;
-import yesman.epicfight.world.entity.eventlistener.PlayerEventListener;
-
-import java.util.UUID;
 
 public class VatanseverDodgeSkill extends DodgeSkill {
 
-    private static final UUID EVENT_UUID = UUID.fromString("23bd5c76-fe77-11ed-be56-0242ac114514");
-
-    public VatanseverDodgeSkill(Builder builder) {
+    public VatanseverDodgeSkill(DodgeSkill.Builder<?> builder) {
         super(builder);
     }
 
-    public void onInitiate(SkillContainer container) {
-        container.getExecutor().getEventListener().addEventListener(PlayerEventListener.EventType.DODGE_SUCCESS_EVENT, EVENT_UUID, (event) -> {
-            SkillContainer weaponInnate = event.getPlayerPatch().getSkill(SkillSlots.WEAPON_INNATE);
-            weaponInnate.getSkill().setStackSynchronize(weaponInnate, weaponInnate.getStack() + 1);
-            ServerPlayer serverPlayer = event.getPlayerPatch().getOriginal();
-            int vatanseverId = event.getPlayerPatch().getSkill(SkillSlots.WEAPON_PASSIVE).getDataManager().getDataValue(SwordSoaringDatakeys.ARTIFACT_SPIRIT_ENTITY_ID.get());
-            serverPlayer.serverLevel().sendParticles(EpicFightParticles.WHITE_AFTERIMAGE.get(), serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 1, serverPlayer.getId(), 1, 1, serverPlayer.getId());
-            serverPlayer.serverLevel().sendParticles(EpicFightParticles.WHITE_AFTERIMAGE.get(), serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 1, vatanseverId, 1, 1, vatanseverId);
-        });
+    @SkillEvent(side = SkillEvent.Side.SERVER)
+    public void onDodgeSuccess(DodgeSuccessEvent event, SkillContainer container) {
+        SkillContainer weaponInnate = event.getPlayerPatch().getSkill(SkillSlots.WEAPON_INNATE);
+        weaponInnate.getSkill().setStackSynchronize(weaponInnate, weaponInnate.getStack() + 1);
+        ServerPlayer serverPlayer = event.getPlayerPatch().getOriginal();
+        int vatanseverId = event.getPlayerPatch().getSkill(SkillSlots.WEAPON_PASSIVE).getDataManager().getDataValue(SwordSoaringDatakeys.ARTIFACT_SPIRIT_ENTITY_ID);
+        serverPlayer.serverLevel().sendParticles(EpicFightParticles.WHITE_AFTERIMAGE.get(), serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 1, serverPlayer.getId(), 1, 1, serverPlayer.getId());
+        serverPlayer.serverLevel().sendParticles(EpicFightParticles.WHITE_AFTERIMAGE.get(), serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 1, vatanseverId, 1, 1, vatanseverId);
     }
 
-    public void onRemoved(SkillContainer container) {
-        container.getExecutor().getEventListener().removeListener(PlayerEventListener.EventType.DODGE_SUCCESS_EVENT, EVENT_UUID);
-    }
-
+    @Override
     @OnlyIn(Dist.CLIENT)
-    public Object getExecutionPacket(SkillContainer container, FriendlyByteBuf args) {
+    public void gatherArguments(SkillContainer container, ControlEngine controlEngine, CompoundTag arguments) {
         LocalPlayerPatch executor = container.getClientExecutor();
         Input input = executor.getOriginal().input;
-        float pulse = Mth.clamp(0.3F + EnchantmentHelper.getSneakingSpeedBonus(executor.getOriginal()), 0.0F, 1.0F);
-        input.tick(false, pulse);
+        float sneakingSpeed = (float) executor.getOriginal().getAttributeValue(Attributes.SNEAKING_SPEED);
+        input.tick(false, sneakingSpeed);
         int forward = input.up ? 1 : 0;
         int backward = input.down ? -1 : 0;
         int left = input.left ? 1 : 0;
@@ -67,16 +59,14 @@ public class VatanseverDodgeSkill extends DodgeSkill {
         } else {
             animation = vertic >= 0 ? 0 : 1;
         }
-
-        CPSkillRequest packet = new CPSkillRequest(container.getSlot());
-        packet.getBuffer().writeInt(animation);
-        packet.getBuffer().writeFloat((vertic == 0 && horizon != 0) ? yRot : degree);
-        return packet;
+        arguments.putInt("direction", animation);
+        arguments.putFloat("yRot", (vertic == 0 && horizon != 0) ? yRot : degree);
     }
 
     @Override
-    public void executeOnServer(SkillContainer skillContainer, FriendlyByteBuf args) {
+    public void executeOnServer(SkillContainer skillContainer, CompoundTag args) {
         super.executeOnServer(skillContainer, args);
         skillContainer.getExecutor().playSound(EpicFightSounds.ENTITY_MOVE.get(), 1.0F, 1.0F);
     }
+
 }

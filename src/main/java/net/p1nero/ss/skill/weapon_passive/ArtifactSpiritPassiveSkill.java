@@ -7,13 +7,13 @@ import yesman.epicfight.skill.SkillContainer;
 
 public abstract class ArtifactSpiritPassiveSkill extends Skill {
 
-    public ArtifactSpiritPassiveSkill(SkillBuilder<? extends Skill> builder) {
+    public ArtifactSpiritPassiveSkill(SkillBuilder<?> builder) {
         super(builder);
     }
 
     public int getArtifactSpiritId(SkillContainer container){
-        if(container.getDataManager().hasData(SwordSoaringDatakeys.ARTIFACT_SPIRIT_ENTITY_ID.get())){
-            return container.getDataManager().getDataValue(SwordSoaringDatakeys.ARTIFACT_SPIRIT_ENTITY_ID.get());
+        if(container.getDataManager().hasData(SwordSoaringDatakeys.ARTIFACT_SPIRIT_ENTITY_ID)){
+            return container.getDataManager().getDataValue(SwordSoaringDatakeys.ARTIFACT_SPIRIT_ENTITY_ID);
         }
         return 0;
     }

@@ -22,8 +22,9 @@ import net.p1nero.ss.entity.sword.AbstractSwordEntity;
 import net.p1nero.ss.gameassets.SwordSoaringArmatures;
 import net.p1nero.ss.gameassets.SwordSoaringDatakeys;
 import net.p1nero.ss.gameassets.animations.FlySwordAnimations;
-import net.p1nero.ss.util.AnimationUtils;
-import net.p1nero.ss.util.vfx.ParticleVFX;
+import net.p1nero.ss.utils.AnimationUtils;
+import net.p1nero.ss.utils.vfx.ParticleVFX;
+import org.jetbrains.annotations.NotNull;
 import yesman.epicfight.skill.SkillDataManager;
 import yesman.epicfight.skill.SkillSlots;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
@@ -54,12 +55,12 @@ public class FlySwordEntity extends AbstractSwordEntity {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        getEntityData().define(ROTATION_LOCK, true);
-        getEntityData().define(FLYING_BACK, false);
-        getEntityData().define(READY_TO_FLY_BACK, false);
-        getEntityData().define(ANIMATION_END, false);
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(ROTATION_LOCK, true);
+        builder.define(FLYING_BACK, false);
+        builder.define(READY_TO_FLY_BACK, false);
+        builder.define(ANIMATION_END, false);
     }
 
     public boolean isRotationLock() {
@@ -163,9 +164,9 @@ public class FlySwordEntity extends AbstractSwordEntity {
     public void addOwnerSwordCount() {
         if (getOwnerPatch() instanceof ServerPlayerPatch serverPlayerPatch) {
             SkillDataManager manager = serverPlayerPatch.getSkill(SkillSlots.WEAPON_PASSIVE).getDataManager();
-            if (manager.hasData(SwordSoaringDatakeys.SWORD_COUNT.get())) {
-                int currentCnt = manager.getDataValue(SwordSoaringDatakeys.SWORD_COUNT.get());
-                manager.setDataSync(SwordSoaringDatakeys.SWORD_COUNT.get(), Math.min(currentCnt + 1, 6));
+            if (manager.hasData(SwordSoaringDatakeys.SWORD_COUNT)) {
+                int currentCnt = manager.getDataValue(SwordSoaringDatakeys.SWORD_COUNT);
+                manager.setDataSync(SwordSoaringDatakeys.SWORD_COUNT, Math.min(currentCnt + 1, 6));
             }
         }
     }

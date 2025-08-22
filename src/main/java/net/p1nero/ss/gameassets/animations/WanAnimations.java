@@ -2,13 +2,13 @@ package net.p1nero.ss.gameassets.animations;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforgespi.Environment;
 import net.p1nero.ss.SwordSoaringConfig;
 import net.p1nero.ss.animation.BabylonMultiPhaseAttackAnimation;
 import net.p1nero.ss.client.CameraAnim;
@@ -17,7 +17,7 @@ import net.p1nero.ss.entity.sword.wan.WanArmature;
 import net.p1nero.ss.gameassets.SwordSoaringArmatures;
 import net.p1nero.ss.gameassets.SwordSoaringDatakeys;
 import net.p1nero.ss.gameassets.SwordSoaringSkillSlots;
-import net.p1nero.ss.util.AnimationUtils;
+import net.p1nero.ss.utils.AnimationUtils;
 import yesman.epicfight.api.animation.AnimationManager;
 import yesman.epicfight.api.animation.Joint;
 import yesman.epicfight.api.animation.property.AnimationEvent;
@@ -92,7 +92,7 @@ public class WanAnimations {
                     .joint(joint.getName())
                     .itemSkinHand(InteractionHand.MAIN_HAND)
                     .texture("epicfight:textures/particle/swing_trail.png")
-                    .type((SimpleParticleType)ForgeRegistries.PARTICLE_TYPES.getValue(ResourceLocation.parse(SwordSoaringConfig.TRAIL_PARTICLE_TYPE.get())))
+                    .type((SimpleParticleType) BuiltInRegistries.PARTICLE_TYPE.get(ResourceLocation.parse(SwordSoaringConfig.TRAIL_PARTICLE_TYPE.get())))
                     .create());
         }
         return wanTrails;
@@ -111,7 +111,7 @@ public class WanAnimations {
                         }, AnimationEvent.Side.CLIENT),
                         AnimationEvent.SimpleEvent.create((livingEntityPatch, staticAnimation, objects) -> {
                             if(livingEntityPatch instanceof ServerPlayerPatch serverPlayerPatch){
-                                serverPlayerPatch.getSkill(SwordSoaringSkillSlots.SWORD_CONTROLLER).getDataManager().setDataSync(SwordSoaringDatakeys.IS_CHARGING.get(), true);
+                                serverPlayerPatch.getSkill(SwordSoaringSkillSlots.SWORD_CONTROLLER).getDataManager().setDataSync(SwordSoaringDatakeys.IS_CHARGING, true);
                             }
                         }, AnimationEvent.Side.SERVER)
                 )
@@ -128,7 +128,7 @@ public class WanAnimations {
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.SimpleEvent.create((livingEntityPatch, staticAnimation, objects) -> {
                     if (livingEntityPatch instanceof ServerPlayerPatch serverPlayerPatch) {
                         SkillDataManager manager = serverPlayerPatch.getSkill(SwordSoaringSkillSlots.SWORD_CONTROLLER).getDataManager();
-                        if (manager.hasData(SwordSoaringDatakeys.IS_PRESSING.get()) && manager.getDataValue(SwordSoaringDatakeys.IS_PRESSING.get())) {
+                        if (manager.hasData(SwordSoaringDatakeys.IS_PRESSING) && manager.getDataValue(SwordSoaringDatakeys.IS_PRESSING)) {
                             serverPlayerPatch.reserveAnimation(WAN2_PLAYER);
                         } else {
                             serverPlayerPatch.reserveAnimation(WAN3_PLAYER);
@@ -146,7 +146,7 @@ public class WanAnimations {
                         }, AnimationEvent.Side.CLIENT),
                         AnimationEvent.SimpleEvent.create((livingEntityPatch, staticAnimation, objects) -> {
                             if(livingEntityPatch instanceof ServerPlayerPatch serverPlayerPatch){
-                                serverPlayerPatch.getSkill(SwordSoaringSkillSlots.SWORD_CONTROLLER).getDataManager().setDataSync(SwordSoaringDatakeys.IS_CHARGING.get(), false);
+                                serverPlayerPatch.getSkill(SwordSoaringSkillSlots.SWORD_CONTROLLER).getDataManager().setDataSync(SwordSoaringDatakeys.IS_CHARGING, false);
                             }
                         }, AnimationEvent.Side.SERVER)
                 )
@@ -159,7 +159,7 @@ public class WanAnimations {
                     .addEvents(summonAndPlay(2.30F, WAN2_L))
                     .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF)
                     .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1, v2) -> 0.5F));
-            if(FMLEnvironment.dist == Dist.CLIENT){
+            if(Environment.get().getDist() == Dist.CLIENT){
                 animation.addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWanTrails());
             }
             return animation;
@@ -175,7 +175,7 @@ public class WanAnimations {
                             }
                         }
                     }, AnimationEvent.Side.SERVER));
-            if(FMLEnvironment.dist == Dist.CLIENT){
+            if(Environment.get().getDist() == Dist.CLIENT){
                 animation.addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWanTrails());
             }
             return animation;
@@ -184,7 +184,7 @@ public class WanAnimations {
             BabylonMultiPhaseAttackAnimation animation = new BabylonMultiPhaseAttackAnimation(0.0001F, accessor, wanArmature, AnimationUtils.getPhases(wanArmature.get().wanJoints, 0, 2.667F))
                     .addEvents(summonAndPlay(1.13F, WAN4_L))
                     .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF);
-            if(FMLEnvironment.dist == Dist.CLIENT){
+            if(Environment.get().getDist() == Dist.CLIENT){
                 animation.addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWanTrails());
             }
             return animation;
@@ -194,7 +194,7 @@ public class WanAnimations {
                     .addEvents(summonAndPlay(1.13F, WAN_SHOOT_L))
                     .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1, v2) -> 1F))
                     .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF);
-            if(FMLEnvironment.dist == Dist.CLIENT){
+            if(Environment.get().getDist() == Dist.CLIENT){
                 animation.addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWanTrails());
             }
             return animation;
@@ -202,7 +202,7 @@ public class WanAnimations {
         WAN_SHOOT_L = builder.nextAccessor("wan/wan_shoot_l", accessor ->  {
             BabylonMultiPhaseAttackAnimation animation = new BabylonMultiPhaseAttackAnimation(0.0001F, accessor, wanArmature, AnimationUtils.getPhases(wanArmature.get().wanJoints, 0, 2.667F))
                     .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF);
-            if(FMLEnvironment.dist == Dist.CLIENT){
+            if(Environment.get().getDist() == Dist.CLIENT){
                 animation.addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWanTrails());
             }
             return animation;
@@ -213,7 +213,7 @@ public class WanAnimations {
                     .addEvents( summonAndPlay(2.30F, WAN2_R))
                     .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF)
                     .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1, v2) -> 0.5F));
-            if(FMLEnvironment.dist == Dist.CLIENT){
+            if(Environment.get().getDist() == Dist.CLIENT){
                 animation.addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWanTrails());
             }
             return animation;
@@ -229,7 +229,7 @@ public class WanAnimations {
                             }
                         }
                     }, AnimationEvent.Side.SERVER));
-            if(FMLEnvironment.dist == Dist.CLIENT){
+            if(Environment.get().getDist() == Dist.CLIENT){
                 animation.addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWanTrails());
             }
             return animation;
@@ -238,7 +238,7 @@ public class WanAnimations {
             BabylonMultiPhaseAttackAnimation animation = new BabylonMultiPhaseAttackAnimation(0.0001F, accessor, wanArmature, AnimationUtils.getPhases(wanArmature.get().wanJoints, 0, 2.667F))
                     .addEvents(summonAndPlay(1.13F, WAN4_R))
                     .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF);
-            if(FMLEnvironment.dist == Dist.CLIENT){
+            if(Environment.get().getDist() == Dist.CLIENT){
                 animation.addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWanTrails());
             }
             return animation;
@@ -248,7 +248,7 @@ public class WanAnimations {
                     .addEvents(summonAndPlay(1.13F, WAN_SHOOT_R))
                     .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1, v2) -> 1F))
                     .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF);
-            if(FMLEnvironment.dist == Dist.CLIENT){
+            if(Environment.get().getDist() == Dist.CLIENT){
                 animation.addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWanTrails());
             }
             return animation;
@@ -256,7 +256,7 @@ public class WanAnimations {
         WAN_SHOOT_R = builder.nextAccessor("wan/wan_shoot_r", accessor -> {
             BabylonMultiPhaseAttackAnimation animation = new BabylonMultiPhaseAttackAnimation(0.0001F, accessor, wanArmature, AnimationUtils.getPhases(wanArmature.get().wanJoints, 0, 2.667F))
                     .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, DISCARD_SELF);
-            if(FMLEnvironment.dist == Dist.CLIENT){
+            if(Environment.get().getDist() == Dist.CLIENT){
                 animation.addProperty(ClientAnimationProperties.TRAIL_EFFECT, getWanTrails());
             }
             return animation;

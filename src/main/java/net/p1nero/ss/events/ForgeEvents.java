@@ -1,19 +1,23 @@
 package net.p1nero.ss.events;
 
-import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraft.world.entity.player.Player;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.p1nero.ss.SwordSoaringMod;
-import net.p1nero.ss.skill.sword_soaring.SwordSoaringSkill;
-import net.p1nero.ss.skill.weapon_passive.VatanseverPassive;
+import yesman.epicfight.world.capabilities.EpicFightCapabilities;
+import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 
-@Mod.EventBusSubscriber(modid = SwordSoaringMod.MOD_ID)
+@EventBusSubscriber(modid = SwordSoaringMod.MOD_ID)
 public class ForgeEvents {
 
     @SubscribeEvent
     public static void onLivingEquipmentChange(LivingEquipmentChangeEvent event){
-        SwordSoaringSkill.onLivingEquipmentChange(event);
-        VatanseverPassive.onLivingEquipmentChange(event);
+        if(event.getEntity() instanceof Player player) {
+            EpicFightCapabilities.getUnparameterizedEntityPatch(player, PlayerPatch.class).ifPresent(playerPatch -> {
+                playerPatch.getPlayerSkills().fireSkillEvents(SwordSoaringMod.MOD_ID, event);
+            });
+        }
     }
 
 }

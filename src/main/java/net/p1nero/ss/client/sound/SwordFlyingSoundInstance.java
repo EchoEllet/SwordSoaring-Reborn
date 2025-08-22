@@ -6,11 +6,10 @@ import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.p1nero.ss.gameassets.SwordSoaringDatakeys;
 import net.p1nero.ss.gameassets.SwordSoaringSkillSlots;
-import net.p1nero.ss.skill.sword_soaring.SwordSoaringSkill;
 import net.p1nero.ss.skill.sword_soaring.SwordSoaringSkillElytra;
 import yesman.epicfight.client.world.capabilites.entitypatch.player.LocalPlayerPatch;
 
@@ -36,7 +35,7 @@ public class SwordFlyingSoundInstance extends AbstractTickableSoundInstance {
             this.stop();
             return;
         }
-        if (!this.player.isRemoved() && (this.time <= 20 || playerPatch.getSkill(SwordSoaringSkillSlots.SWORD_SOARING).getDataManager().getDataValue(SwordSoaringDatakeys.FLYING.get()))) {
+        if (!this.player.isRemoved() && (this.time <= 20 || playerPatch.getSkill(SwordSoaringSkillSlots.SWORD_SOARING).getDataManager().getDataValue(SwordSoaringDatakeys.FLYING))) {
             this.x = (float)this.player.getX();
             this.y = (float)this.player.getY();
             this.z = (float)this.player.getZ();

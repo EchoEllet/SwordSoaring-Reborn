@@ -1,35 +1,29 @@
 package net.p1nero.ss.skill.weapon_passive;
 
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
-import net.minecraftforge.eventbus.api.Event;
-import net.p1nero.ss.capability.SSCapabilityProvider;
+import net.neoforged.neoforge.event.entity.living.LivingEquipmentChangeEvent;
+import net.neoforged.neoforge.event.entity.living.LivingFallEvent;
+import net.p1nero.ss.SwordSoaringMod;
+import net.p1nero.ss.capability.SwordSoaringAttachments;
 import net.p1nero.ss.capability.SSPlayer;
-import net.p1nero.ss.entity.AbstractArtifactSpiritEntity;
 import net.p1nero.ss.entity.vatansever.VatanseverEntity;
 import net.p1nero.ss.entity.vatansever.VatanseverEntityPatch;
 import net.p1nero.ss.gameassets.SwordSoaringDatakeys;
-import net.p1nero.ss.gameassets.SwordSoaringSkillSlots;
+import net.p1nero.ss.gameassets.SwordSoaringSkills;
 import net.p1nero.ss.gameassets.animations.VatanseverAnimations;
-import net.p1nero.ss.gameassets.skills.VatanseverSkills;
 import net.p1nero.ss.item.VatanseverItem;
-import net.p1nero.ss.skill.sword_soaring.SwordSoaringSkill;
-import yesman.epicfight.api.utils.AttackResult;
+import yesman.epicfight.api.neoevent.playerpatch.SetTargetEvent;
+import yesman.epicfight.api.neoevent.playerpatch.SkillCastEvent;
+import yesman.epicfight.api.neoevent.playerpatch.TakeDamageEvent;
 import yesman.epicfight.api.utils.LevelUtil;
 import yesman.epicfight.api.utils.math.ValueModifier;
 import yesman.epicfight.skill.*;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
-import yesman.epicfight.world.entity.eventlistener.PlayerEventListener;
-
-import java.util.UUID;
 
 public class VatanseverPassive extends ArtifactSpiritPassiveSkill{
-    private static final UUID EVENT_UUID = UUID.fromString("d1d114cc-f30f-11ed-a05b-0242ac114514");
 
-    public VatanseverPassive(SkillBuilder<? extends Skill> builder) {
+    public VatanseverPassive(SkillBuilder<?> builder) {
         super(builder);
     }
 
@@ -38,63 +32,63 @@ public class VatanseverPassive extends ArtifactSpiritPassiveSkill{
         return super.canExecute(container) && container.getExecutor().getOriginal().getMainHandItem().getItem() instanceof VatanseverItem;
     }
 
-    @Override
-    public void onInitiate(SkillContainer container) {
-        super.onInitiate(container);
+    @SkillEvent(side = SkillEvent.Side.SERVER)
+    public void onSkillCast(SkillCastEvent skillCastEvent, SkillContainer container) {
+        if(!(skillCastEvent.getPlayerPatch().getOriginal().level().getEntity(getArtifactSpiritId(container)) instanceof VatanseverEntity)){
+            if(!summonVatansever(container)){
+                container.getDataManager().setDataSync(SwordSoaringDatakeys.SWORD_COUNT, 0);
+            }
+        }
+    }
 
-        Skill lastDodge = container.getExecutor().getSkill(SkillSlots.DODGE).getSkill();
-        container.getExecutor().getOriginal().getCapability(SSCapabilityProvider.SS_PLAYER).ifPresent(ssPlayer -> ssPlayer.setLastDodgeSkill(lastDodge == VatanseverSkills.VATANSEVER_DODGE ? null : lastDodge));
-        container.getExecutor().getSkill(SkillSlots.DODGE).setSkill(VatanseverSkills.VATANSEVER_DODGE);
+    @SkillEvent(side = SkillEvent.Side.SERVER)
+    public void onTargetSet(SetTargetEvent setTargetEvent, SkillContainer container) {
+        if(setTargetEvent.getTarget() instanceof VatanseverEntity){
+            setTargetEvent.getPlayerPatch().setAttackTarget(null);
+        }
+    }
 
-        container.getDataManager().setData(SwordSoaringDatakeys.SWORD_COUNT.get(), 6);
-        
-        summonVatansever(container);
-        container.getExecutor().getEventListener().addEventListener(PlayerEventListener.EventType.SKILL_CAST_EVENT, EVENT_UUID, skillExecuteEvent -> {
-            if(!skillExecuteEvent.getPlayerPatch().isLogicalClient() && !(skillExecuteEvent.getPlayerPatch().getOriginal().level().getEntity(getArtifactSpiritId(container)) instanceof VatanseverEntity)){
-                if(!summonVatansever(container)){
-                    container.getDataManager().setDataSync(SwordSoaringDatakeys.SWORD_COUNT.get(), 0);
-                }
-            }
-        });
-        container.getExecutor().getEventListener().addEventListener(PlayerEventListener.EventType.SET_TARGET_EVENT, EVENT_UUID, setTargetEvent -> {
-            if(setTargetEvent.getTarget() instanceof VatanseverEntity){
-                setTargetEvent.getPlayerPatch().setAttackTarget(null);
-            }
-        });
-        container.getExecutor().getEventListener().addEventListener(PlayerEventListener.EventType.TARGET_INDICATOR_ALERT_CHECK_EVENT, EVENT_UUID, indicatorCheckEvent -> {
-            if(indicatorCheckEvent.getTarget() instanceof VatanseverEntityPatch){
-                indicatorCheckEvent.setCanceled(true);
-            }
-        });
-        container.getExecutor().getEventListener().addEventListener(PlayerEventListener.EventType.TAKE_DAMAGE_EVENT_HURT, EVENT_UUID, hurtEvent -> {
-            Player player = hurtEvent.getPlayerPatch().getOriginal();
-            if(player.isFallFlying()){
-                double power = player.getDeltaMovement().length();
-                if(power > 1){
-                    LevelUtil.circleSlamFracture(player, player.level(), player.position().add(0, -1, 0), power * 2);
-                }
-                hurtEvent.attachValueModifier(ValueModifier.multiplier(0));
-                hurtEvent.setCanceled(true);
-            }
-        });
-        container.getExecutor().getEventListener().addEventListener(PlayerEventListener.EventType.FALL_EVENT, EVENT_UUID, fallEvent -> {
-            Player player = fallEvent.getPlayerPatch().getOriginal();
+
+    @SkillEvent(side = SkillEvent.Side.SERVER)
+    public void onHurtEventPre(TakeDamageEvent.Pre event, SkillContainer container) {
+        Player player = event.getPlayerPatch().getOriginal();
+        if(player.isFallFlying()){
             double power = player.getDeltaMovement().length();
             if(power > 1){
                 LevelUtil.circleSlamFracture(player, player.level(), player.position().add(0, -1, 0), power * 2);
             }
-            fallEvent.getForgeEvent().setCanceled(true);
-            player.stopFallFlying();
-        });
+            event.attachValueModifier(ValueModifier.setter(0));
+        }
+    }
+
+    @SkillEvent(side = SkillEvent.Side.SERVER)
+    public void onFallEvent(LivingFallEvent fallEvent, SkillContainer container) {
+        Player player = container.getServerExecutor().getOriginal();
+        double power = player.getDeltaMovement().length();
+        if(power > 1){
+            LevelUtil.circleSlamFracture(player, player.level(), player.position().add(0, -1, 0), power * 2);
+        }
+        fallEvent.setCanceled(true);
+        player.stopFallFlying();
+    }
+
+    @Override
+    public void onInitiate(SkillContainer container) {
+        super.onInitiate(container);
+        Skill lastDodge = container.getExecutor().getSkill(SkillSlots.DODGE).getSkill();
+        container.getExecutor().getOriginal().getData(SwordSoaringAttachments.SS_PLAYER).setLastDodgeSkill(lastDodge == SwordSoaringSkills.VATANSEVER_DODGE.get() ? null : lastDodge);
+        container.getExecutor().getSkill(SkillSlots.DODGE).setSkill(SwordSoaringSkills.VATANSEVER_DODGE.get());
+        container.getDataManager().setData(SwordSoaringDatakeys.SWORD_COUNT, 6);
+        summonVatansever(container);
     }
 
     public boolean summonVatansever(SkillContainer container){
-        if(!container.getExecutor().isLogicalClient() && container.getDataManager().getDataValue(SwordSoaringDatakeys.ARTIFACT_SPIRIT_ENTITY_ID.get()) == 0){
+        if(!container.getExecutor().isLogicalClient() && container.getDataManager().getDataValue(SwordSoaringDatakeys.ARTIFACT_SPIRIT_ENTITY_ID) == 0){
             VatanseverEntity vatanseverEntity = new VatanseverEntity(container.getExecutor().getOriginal().level(), container.getExecutor().getOriginal());
             boolean success = container.getExecutor().getOriginal().level().addFreshEntity(vatanseverEntity);
             container.getExecutor().playAnimationSynchronized(VatanseverAnimations.PLAYER_INIT, 0.15F);
-            container.getDataManager().setDataSync(SwordSoaringDatakeys.ARTIFACT_SPIRIT_ENTITY_ID.get(), vatanseverEntity.getId());
-            container.getDataManager().setDataSync(SwordSoaringDatakeys.SWORD_COUNT.get(), 6);
+            container.getDataManager().setDataSync(SwordSoaringDatakeys.ARTIFACT_SPIRIT_ENTITY_ID, vatanseverEntity.getId());
+            container.getDataManager().setDataSync(SwordSoaringDatakeys.SWORD_COUNT, 6);
             return success;
         }
         return false;
@@ -104,7 +98,8 @@ public class VatanseverPassive extends ArtifactSpiritPassiveSkill{
     public void onRemoved(SkillContainer container) {
         super.onRemoved(container);
 
-        container.getExecutor().getOriginal().getCapability(SSCapabilityProvider.SS_PLAYER).ifPresent(ssPlayer -> container.getExecutor().getSkill(SkillSlots.DODGE).setSkill(ssPlayer.getLastDodgeSkill()));
+        SSPlayer ssPlayer = container.getExecutor().getOriginal().getData(SwordSoaringAttachments.SS_PLAYER);
+        container.getExecutor().getSkill(SkillSlots.DODGE).setSkill(ssPlayer.getLastDodgeSkill());
 
         int id = getArtifactSpiritId(container);
         if(id != 0 && container.getExecutor().getOriginal().level().getEntity(id) instanceof VatanseverEntity abstractArtifactSpiritEntity){
@@ -112,26 +107,9 @@ public class VatanseverPassive extends ArtifactSpiritPassiveSkill{
                 abstractArtifactSpiritEntity.discard();
             }
         }
-        container.getExecutor().getOriginal().getCapability(SSCapabilityProvider.SS_PLAYER).ifPresent(SSPlayer::clearVatanseverShootEntities);
-        container.getDataManager().setData(SwordSoaringDatakeys.ARTIFACT_SPIRIT_ENTITY_ID.get(), 0);
-        container.getExecutor().getEventListener().removeListener(PlayerEventListener.EventType.SKILL_CAST_EVENT, EVENT_UUID);
-        container.getExecutor().getEventListener().removeListener(PlayerEventListener.EventType.TARGET_INDICATOR_ALERT_CHECK_EVENT, EVENT_UUID);
-        container.getExecutor().getEventListener().removeListener(PlayerEventListener.EventType.SET_TARGET_EVENT, EVENT_UUID);
-        container.getExecutor().getEventListener().removeListener(PlayerEventListener.EventType.TAKE_DAMAGE_EVENT_HURT, EVENT_UUID);
-        container.getExecutor().getEventListener().removeListener(PlayerEventListener.EventType.FALL_EVENT, EVENT_UUID);
-    }
+        ssPlayer.clearVatanseverShootEntities();
+        container.getDataManager().setData(SwordSoaringDatakeys.ARTIFACT_SPIRIT_ENTITY_ID, 0);
 
-    public static void onLivingEquipmentChange(LivingEquipmentChangeEvent event){
-        if(event.getEntity() instanceof ServerPlayer serverPlayer && serverPlayer.isAlive()){
-            ServerPlayerPatch serverPlayerPatch = EpicFightCapabilities.getEntityPatch(serverPlayer, ServerPlayerPatch.class);
-            SkillDataManager manager = serverPlayerPatch.getSkill(SkillSlots.WEAPON_PASSIVE).getDataManager();
-            if(manager.hasData(SwordSoaringDatakeys.ARTIFACT_SPIRIT_ENTITY_ID.get())){
-                VatanseverEntityPatch vatanseverEntityPatch = EpicFightCapabilities.getEntityPatch(serverPlayer.level().getEntity(manager.getDataValue(SwordSoaringDatakeys.ARTIFACT_SPIRIT_ENTITY_ID.get())), VatanseverEntityPatch.class);
-                if(vatanseverEntityPatch != null && vatanseverEntityPatch.getEntityState().inaction()){
-                    event.setResult(Event.Result.DENY);
-                }
-            }
-        }
     }
 
 }

@@ -1,6 +1,6 @@
 package net.p1nero.ss.entity.vatansever;
 
-import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.p1nero.ss.entity.AbstractArtifactSpiritPatch;
 import net.p1nero.ss.gameassets.SwordSoaringDatakeys;
 import net.p1nero.ss.gameassets.animations.VatanseverAnimations;
@@ -11,6 +11,10 @@ import yesman.epicfight.skill.SkillDataManager;
 import yesman.epicfight.skill.SkillSlots;
 
 public class VatanseverEntityPatch extends AbstractArtifactSpiritPatch<VatanseverEntity> {
+
+    public VatanseverEntityPatch(VatanseverEntity entity) {
+        super(entity);
+    }
 
     /**
      * 刚加入时服务端调用playSync客户端会来不及播，不知为何WitherClone可以我不行。只能手动修
@@ -50,8 +54,8 @@ public class VatanseverEntityPatch extends AbstractArtifactSpiritPatch<Vatanseve
     public int getLeftSwordCount(){
         if (getOwnerPatch() != null) {
             SkillDataManager manager = getOwnerPatch().getSkill(SkillSlots.WEAPON_PASSIVE).getDataManager();
-            if (manager.hasData(SwordSoaringDatakeys.SWORD_COUNT.get())) {
-                return manager.getDataValue(SwordSoaringDatakeys.SWORD_COUNT.get());
+            if (manager.hasData(SwordSoaringDatakeys.SWORD_COUNT)) {
+                return manager.getDataValue(SwordSoaringDatakeys.SWORD_COUNT);
             }
         }
         return 6;

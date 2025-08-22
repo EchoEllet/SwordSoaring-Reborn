@@ -15,8 +15,8 @@ public interface ILinkArtifactSpiritAnimation {
     default void callArtifactSpiritAnimation(LivingEntityPatch<?> ownerPatch){
         if(ownerPatch instanceof ServerPlayerPatch serverPlayerPatch){
             SkillDataManager manager = serverPlayerPatch.getSkill(SkillSlots.WEAPON_PASSIVE).getDataManager();
-            if(manager.hasData(SwordSoaringDatakeys.ARTIFACT_SPIRIT_ENTITY_ID.get())){
-                Entity entity = serverPlayerPatch.getOriginal().level().getEntity(manager.getDataValue(SwordSoaringDatakeys.ARTIFACT_SPIRIT_ENTITY_ID.get()));
+            if(manager.hasData(SwordSoaringDatakeys.ARTIFACT_SPIRIT_ENTITY_ID)){
+                Entity entity = serverPlayerPatch.getOriginal().level().getEntity(manager.getDataValue(SwordSoaringDatakeys.ARTIFACT_SPIRIT_ENTITY_ID));
                 if(entity != null){
                     AbstractArtifactSpiritPatch<?> spiritPatch = EpicFightCapabilities.getEntityPatch(entity, AbstractArtifactSpiritPatch.class);
                     if(spiritPatch != null && getArtifactSpiritAnimation() != null){

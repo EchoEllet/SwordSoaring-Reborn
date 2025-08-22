@@ -20,11 +20,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.p1nero.ss.SwordSoaringMod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import yesman.epicfight.client.world.capabilites.entitypatch.player.LocalPlayerPatch;
+import yesman.epicfight.registry.entries.EpicFightAttributes;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.EntityPatch;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
-import yesman.epicfight.world.entity.ai.attribute.EpicFightAttributes;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -36,19 +35,10 @@ public abstract class AbstractArtifactSpiritEntity extends PathfinderMob impleme
         super(entityType, level);
     }
 
-    /**
-     * 取消血条渲染
-     * {@link yesman.epicfight.client.gui.HealthBar#shouldDraw(LivingEntity, LivingEntityPatch, LocalPlayerPatch, float)}
-     */
     @Override
-    public boolean canChangeDimensions() {
-        return false;
-    }
-
-    @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(DATA_OWNER_UUID, Optional.empty());
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(DATA_OWNER_UUID, Optional.empty());
     }
 
     @Nullable
@@ -116,7 +106,7 @@ public abstract class AbstractArtifactSpiritEntity extends PathfinderMob impleme
     }
 
     protected void moveToOwner(LivingEntity owner){
-        if(!getOwnerPatch().getEntityState().lockonRotate()){
+        if(!getOwnerPatch().getEntityState().turningLocked()){
             setYRot(owner.yBodyRot);
             setYBodyRot(owner.yBodyRot);
             setYHeadRot(owner.yBodyRot);
@@ -138,7 +128,7 @@ public abstract class AbstractArtifactSpiritEntity extends PathfinderMob impleme
         return Animal.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 19.9F)
                 .add(Attributes.ATTACK_DAMAGE, 3.0f)
-                .add(EpicFightAttributes.MAX_STRIKES.get(), 10.0F)
+                .add(EpicFightAttributes.MAX_STRIKES, 10.0F)
                 .build();
     }
 

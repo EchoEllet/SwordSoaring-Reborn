@@ -1,5 +1,6 @@
 package net.p1nero.ss.mixin;
 
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.effect.MobEffect;
@@ -21,7 +22,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import yesman.epicfight.gameasset.EpicFightSounds;
 import yesman.epicfight.skill.SkillContainer;
 import yesman.epicfight.skill.SkillDataManager;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
@@ -29,8 +29,6 @@ import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
-    @Shadow
-    public abstract boolean hasEffect(MobEffect pEffect);
 
     @Shadow
     public abstract ItemStack getMainHandItem();
@@ -41,6 +39,9 @@ public abstract class LivingEntityMixin extends Entity {
     @Shadow
     protected int fallFlyTicks;
 
+    @Shadow
+    public abstract boolean hasEffect(Holder<MobEffect> effect);
+
     public LivingEntityMixin(EntityType<?> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
@@ -49,7 +50,7 @@ public abstract class LivingEntityMixin extends Entity {
     private void sword_soaring$updateFallFlying(CallbackInfo ci) {
         if (this.getMainHandItem().getItem() instanceof VatanseverItem) {
             boolean flag = this.getSharedFlag(7);
-            if (flag && !this.onGround && !this.isPassenger() && !this.hasEffect(MobEffects.LEVITATION)) {
+            if (flag && !this.onGround() && !this.isPassenger() && !this.hasEffect(MobEffects.LEVITATION)) {
                 flag = this.getMainHandItem().elytraFlightTick((LivingEntity) (Object) this, this.fallFlyTicks);
             } else {
                 flag = false;
@@ -67,7 +68,7 @@ public abstract class LivingEntityMixin extends Entity {
             }
             SkillContainer container = serverPlayerPatch.getSkill(SwordSoaringSkillSlots.SWORD_SOARING);
             SkillDataManager manager = container.getDataManager();
-            if(container.getSkill() instanceof SwordSoaringSkillElytra && manager.hasData(SwordSoaringDatakeys.FLYING.get()) && manager.getDataValue(SwordSoaringDatakeys.FLYING.get())){
+            if(container.getSkill() instanceof SwordSoaringSkillElytra && manager.hasData(SwordSoaringDatakeys.FLYING) && manager.getDataValue(SwordSoaringDatakeys.FLYING)){
                 this.setSharedFlag(7, true);
             }
             ci.cancel();

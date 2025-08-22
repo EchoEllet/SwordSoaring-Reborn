@@ -14,6 +14,7 @@ import net.p1nero.ss.gameassets.SwordSoaringArmatures;
 import net.p1nero.ss.gameassets.SwordSoaringDatakeys;
 import net.p1nero.ss.gameassets.SwordSoaringSkillSlots;
 import net.p1nero.ss.gameassets.animations.WanAnimations;
+import org.jetbrains.annotations.NotNull;
 import yesman.epicfight.api.animation.Joint;
 import yesman.epicfight.api.animation.types.DynamicAnimation;
 import yesman.epicfight.api.asset.AssetAccessor;
@@ -37,9 +38,9 @@ public class WanEntity extends BabylonEntity {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        getEntityData().define(SEED, 0);
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(SEED, 0);
     }
 
     public long getSeed() {
@@ -62,7 +63,7 @@ public class WanEntity extends BabylonEntity {
     public boolean isOwnerKeyPressing(){
         if(getOwnerPatch() instanceof ServerPlayerPatch serverPlayerPatch){
             SkillDataManager manager = serverPlayerPatch.getSkill(SwordSoaringSkillSlots.SWORD_CONTROLLER).getDataManager();
-            return manager.hasData(SwordSoaringDatakeys.IS_PRESSING.get()) && manager.getDataValue(SwordSoaringDatakeys.IS_PRESSING.get());
+            return manager.hasData(SwordSoaringDatakeys.IS_PRESSING) && manager.getDataValue(SwordSoaringDatakeys.IS_PRESSING);
         }
         return false;
     }

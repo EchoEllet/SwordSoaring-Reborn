@@ -2,7 +2,7 @@ package net.p1nero.ss.mixin;
 
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.event.entity.living.LivingEvent;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.p1nero.ss.entity.AbstractArtifactSpiritEntity;
 import net.p1nero.ss.item.VatanseverItem;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,8 +18,13 @@ public abstract class LocalPlayerPatchMixin extends AbstractClientPlayerPatch<Lo
 
     @Shadow
     private LivingEntity rayTarget;
-    @Inject(method = "clientTick",at = @At(value = "INVOKE", target = "Lyesman/epicfight/network/EpicFightNetworkManager;sendToServer(Ljava/lang/Object;)V"), cancellable = true)
-    public void tick(LivingEvent.LivingTickEvent event, CallbackInfo ci) {
+
+    public LocalPlayerPatchMixin(LocalPlayer entity) {
+        super(entity);
+    }
+
+    @Inject(method = "preTickClient",at = @At(value = "INVOKE", target = "Lyesman/epicfight/network/EpicFightNetworkManager;sendToServer(Lnet/minecraft/network/protocol/common/custom/CustomPacketPayload;[Lnet/minecraft/network/protocol/common/custom/CustomPacketPayload;)V"), cancellable = true)
+    public void tick(EntityTickEvent.Pre event, CallbackInfo ci) {
         if(this.getOriginal().getMainHandItem().getItem() instanceof VatanseverItem){
             if(rayTarget instanceof AbstractArtifactSpiritEntity){
                 rayTarget = null;

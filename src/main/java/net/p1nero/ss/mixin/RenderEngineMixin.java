@@ -1,7 +1,8 @@
 package net.p1nero.ss.mixin;
 
+import net.minecraft.client.Camera;
 import net.minecraft.client.CameraType;
-import net.minecraftforge.client.event.ViewportEvent;
+import net.neoforged.neoforge.client.event.ViewportEvent;
 import net.p1nero.ss.client.CameraAnim;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -23,7 +24,7 @@ public class RenderEngineMixin {
     }
 
     @Inject(method = "setRangedWeaponThirdPerson", at = @At("HEAD"), cancellable = true)
-    private void sword_soaring$setRangedWeaponThirdPerson(ViewportEvent.ComputeCameraAngles event, CameraType pov, double partialTicks, CallbackInfo ci){
+    private void sword_soaring$setRangedWeaponThirdPerson(Camera camera, CameraType pov, double partialTicks, CallbackInfo ci){
         if(CameraAnim.isZooming()){
             ci.cancel();
         }

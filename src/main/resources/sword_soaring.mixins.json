@@ -6,8 +6,10 @@
   "client": [
     "ControlEngineAccessor",
     "GameRendererMixin",
+    "HealthBarMixin",
     "LocalPlayerPatchMixin",
     "RenderEngineMixin",
+    "TargetIndicatorMixin",
     "TrailParticleMixin"
   ],
   "mixins": [

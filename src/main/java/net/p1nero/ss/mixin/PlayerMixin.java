@@ -23,7 +23,7 @@ public abstract class PlayerMixin extends LivingEntity {
 
     @Inject(method = "tryToStartFallFlying", at = @At("HEAD"), cancellable = true)
     private void sword_soaring$tryToStartFallFlying(CallbackInfoReturnable<Boolean> cir){
-        if (!this.onGround && !this.isFallFlying() && !this.isInWater() && !this.hasEffect(MobEffects.LEVITATION)) {
+        if (!this.onGround() && !this.isFallFlying() && !this.isInWater() && !this.hasEffect(MobEffects.LEVITATION)) {
             if(getMainHandItem().getItem() instanceof VatanseverItem){
                 this.startFallFlying();
                 cir.setReturnValue(true);

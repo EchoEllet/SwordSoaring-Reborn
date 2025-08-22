@@ -2,14 +2,13 @@ package net.p1nero.ss.entity.sword.screen_sword;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.InteractionHand;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.event.entity.living.LivingEvent;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 import net.p1nero.ss.entity.AbstractArtifactSpiritPatch;
 import net.p1nero.ss.gameassets.SwordSoaringSkillSlots;
 import net.p1nero.ss.gameassets.animations.ScreenSwordAnimations;
-import net.p1nero.ss.network.PacketHandler;
-import net.p1nero.ss.network.PacketRelay;
 import net.p1nero.ss.network.packet.server.RequestEntityPlayAnimationPacket;
 import net.p1nero.ss.skill.sword_controller.KillAuraSkill;
 import yesman.epicfight.api.animation.AnimationManager;
@@ -23,13 +22,17 @@ import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 public class ScreenSwordPatch extends AbstractArtifactSpiritPatch<ScreenSwordEntity> {
     private boolean played;
 
+    public ScreenSwordPatch(ScreenSwordEntity entity) {
+        super(entity);
+    }
+
     /**
      * Join World的时候主人还没初始化，只能换这里操作
      */
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void clientTick(LivingEvent.LivingTickEvent event) {
-        super.clientTick(event);
+    public void preTickClient(EntityTickEvent.Pre event) {
+        super.preTickClient(event);
         if(!played){
             if(this.isLogicalClient() && this.getOwnerPatch() != null){
                 if(!this.getOwnerPatch().getOriginal().equals(Minecraft.getInstance().player)){
@@ -38,7 +41,7 @@ public class ScreenSwordPatch extends AbstractArtifactSpiritPatch<ScreenSwordEnt
                 SkillContainer container = this.getOwnerPatch().getSkill(SwordSoaringSkillSlots.SWORD_CONTROLLER);
                 if(container.getSkill() instanceof KillAuraSkill killAuraSkill){
                     AnimationManager.AnimationAccessor<? extends StaticAnimation> toPlay = killAuraSkill.getSwordSummonAnim();
-                    PacketRelay.sendToServer(PacketHandler.INSTANCE, new RequestEntityPlayAnimationPacket(this.getOriginal().getId(), toPlay.id(), 0.0001F));
+                    PacketDistributor.sendToServer(new RequestEntityPlayAnimationPacket(this.getOriginal().getId(), toPlay.id(), 0.0001F));
                     played = true;
                 }
             }

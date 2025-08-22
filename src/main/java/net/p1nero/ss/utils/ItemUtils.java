@@ -1,4 +1,4 @@
-package net.p1nero.ss.util;
+package net.p1nero.ss.utils;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -7,7 +7,8 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.inventory.PlayerEnderChestContainer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.items.IItemHandler;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
@@ -24,11 +25,13 @@ public class ItemUtils {
         } else {
             totalDamage = new AtomicReference<>(0.0);
         }
-        itemStack.getAttributeModifiers(EquipmentSlot.MAINHAND).get(Attributes.ATTACK_DAMAGE).forEach(attributeModifier -> {
-            if(attributeModifier.getOperation().equals(AttributeModifier.Operation.ADDITION)){
-                totalDamage.updateAndGet(v -> v + attributeModifier.getAmount());
+        itemStack.getAttributeModifiers().forEach(EquipmentSlot.MAINHAND, ((attributeHolder, attributeModifier) -> {
+            if(attributeHolder == Attributes.ATTACK_DAMAGE){
+                if(attributeModifier.operation().equals(AttributeModifier.Operation.ADD_VALUE)){
+                    totalDamage.updateAndGet(v -> v + attributeModifier.amount());
+                }
             }
-        });
+        }));
         return totalDamage.get();
     }
 
@@ -44,19 +47,17 @@ public class ItemUtils {
         player.getInventory().items.forEach(itemStack -> {
 
             //包括背包，潜影贝等
-            boolean isItemHandler = itemStack.getCapability(ForgeCapabilities.ITEM_HANDLER).isPresent();
-            if (isItemHandler) {
-                itemStack.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(iItemHandler -> {
-                    for (int i = 0; i < iItemHandler.getSlots(); i++) {
-                        ItemStack inSideItem = iItemHandler.getStackInSlot(i);
-                        if (!inSideItem.isEmpty() && predicate.test(inSideItem)) {
-                            validBabylonItems.add(inSideItem.copy());
-                            if(shouldDelete){
-                                inSideItem.setCount(0);
-                            }
+            IItemHandler itemHandler = itemStack.getCapability(Capabilities.ItemHandler.ITEM);
+            if (itemHandler != null) {
+                for (int i = 0; i < itemHandler.getSlots(); i++) {
+                    ItemStack inSideItem = itemHandler.getStackInSlot(i);
+                    if (!inSideItem.isEmpty() && predicate.test(inSideItem)) {
+                        validBabylonItems.add(inSideItem.copy());
+                        if(shouldDelete){
+                            inSideItem.setCount(0);
                         }
                     }
-                });
+                }
             } else {
                 if (!itemStack.isEmpty() && predicate.test(itemStack)) {
                     validBabylonItems.add(itemStack.copy());

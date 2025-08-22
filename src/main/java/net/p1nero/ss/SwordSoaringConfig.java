@@ -1,42 +1,35 @@
 package net.p1nero.ss;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Mod.EventBusSubscriber(modid = SwordSoaringMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class SwordSoaringConfig {
-    private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
-    public static final ForgeConfigSpec.BooleanValue ENABLE_LOOT_TABLE;
-    public static final ForgeConfigSpec.BooleanValue ARACHNOPHOBIA_MODE;
-    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> ITEMS_CAN_FLY;
-    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> ITEMS_CAN_NOT_FLY;
-    public static final ForgeConfigSpec.IntValue FLY_DELAY;
-    public static final ForgeConfigSpec.BooleanValue ITEMS_BLOOM;
-    public static final ForgeConfigSpec.BooleanValue REMOVE_ITEM;
-    public static final ForgeConfigSpec.IntValue SWORD_EFFECT_PER_TICK;
-    public static final ForgeConfigSpec.IntValue WAN_TRAIL_UPDATE_TICK;
-    public static final ForgeConfigSpec.ConfigValue<String> TRAIL_PARTICLE_TYPE;
+    private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> ITEMS_CAN_FLY;
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> ITEMS_CAN_NOT_FLY;
+    public static final ModConfigSpec.IntValue FLY_DELAY;
+    public static final ModConfigSpec.BooleanValue ITEMS_BLOOM;
+    public static final ModConfigSpec.BooleanValue REMOVE_ITEM;
+    public static final ModConfigSpec.IntValue SWORD_EFFECT_PER_TICK;
+    public static final ModConfigSpec.IntValue WAN_TRAIL_UPDATE_TICK;
+    public static final ModConfigSpec.ConfigValue<String> TRAIL_PARTICLE_TYPE;
 
 
-    static final ForgeConfigSpec SPEC;
+    static final ModConfigSpec SPEC;
 
     static {
-        ENABLE_LOOT_TABLE = createBool("enable_loot_table", true, "If true, you will get the skill book when defeat the boss.", "若为true，击败boss将可获取技能书。否则你将自己添加技能书获取方式。");
-        ARACHNOPHOBIA_MODE = createBool("arachnophobia_mode", false, "Arachnophobia mode, if true, the boss will have no legs.", "蜘蛛恐惧症模式：true时boss将不会有腿");
-        BUILDER.push("Sword Properties 剑配置");
         ITEMS_CAN_FLY = BUILDER
                 .comment("A list of items considered as sword.", "被视为剑的物品")
-                .defineListAllowEmpty(List.of("items considered as sword"), List::of, SwordSoaringConfig::validateItemName);
+                .defineListAllowEmpty(List.of("items considered as sword"), List.of(), SwordSoaringConfig::validateItemName);
         ITEMS_CAN_NOT_FLY = BUILDER
                 .comment("A list of items not considered as sword.", "不被视为剑的物品")
-                .defineListAllowEmpty(List.of("items not considered as sword."), () -> List.of("sword_soaring:vatansever"), SwordSoaringConfig::validateItemName);
+                .defineListAllowEmpty(List.of("items not considered as sword."), List.of("sword_soaring:vatansever"), SwordSoaringConfig::validateItemName);
         BUILDER.push("Sword Soaring 御剑凌虚");
         FLY_DELAY = createInt("fly_delay", 200, "time mills between double click of starting flying", "起飞的双击间隔的毫秒数");
         BUILDER.pop();
@@ -56,21 +49,21 @@ public class SwordSoaringConfig {
     public static Set<Item> swordItems = new HashSet<>();
     public static Set<Item> notSwordItems = new HashSet<>();
 
-    private static ForgeConfigSpec.BooleanValue createBool(String key, boolean defaultValue, String... comment) {
+    private static ModConfigSpec.BooleanValue createBool(String key, boolean defaultValue, String... comment) {
         return BUILDER
                 .comment(comment)
                 .translation("config." + SwordSoaringMod.MOD_ID + "." + key)
                 .define(key, defaultValue);
     }
 
-    private static ForgeConfigSpec.DoubleValue createDouble(String key, double defaultValue, String... comment) {
+    private static ModConfigSpec.DoubleValue createDouble(String key, double defaultValue, String... comment) {
         return BUILDER
                 .comment(comment)
                 .translation("config." + SwordSoaringMod.MOD_ID + "." + key)
                 .defineInRange(key, defaultValue, Double.MIN_VALUE, Double.MAX_VALUE);
     }
 
-    private static ForgeConfigSpec.IntValue createInt(String key, int defaultValue, String... comment) {
+    private static ModConfigSpec.IntValue createInt(String key, int defaultValue, String... comment) {
         return BUILDER
                 .comment(comment)
                 .translation("config." + SwordSoaringMod.MOD_ID + "." + key)
@@ -78,7 +71,7 @@ public class SwordSoaringConfig {
     }
 
     private static boolean validateItemName(final Object obj) {
-        return obj instanceof final String itemName && ForgeRegistries.ITEMS.containsKey(ResourceLocation.parse(itemName));
+        return obj instanceof final String itemName && BuiltInRegistries.ITEM.containsKey(ResourceLocation.parse(itemName));
     }
 
 }

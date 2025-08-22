@@ -1,32 +1,41 @@
 package net.p1nero.ss.network.packet.server;
 
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
-import net.p1nero.ss.network.packet.BasePacket;
-import org.jetbrains.annotations.Nullable;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
+import net.p1nero.ss.SwordSoaringMod;
+import org.jetbrains.annotations.NotNull;
 import yesman.epicfight.api.animation.AnimationManager;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 
-public record RequestEntityPlayAnimationPacket(int entityId, int animationId, float modifyTime) implements BasePacket {
-    @Override
-    public void encode(FriendlyByteBuf buf) {
-        buf.writeInt(entityId);
-        buf.writeInt(animationId);
-        buf.writeFloat(modifyTime);
-    }
-    public static RequestEntityPlayAnimationPacket decode(FriendlyByteBuf buf){
-        return new RequestEntityPlayAnimationPacket(buf.readInt(), buf.readInt(), buf.readFloat());
-    }
+public record RequestEntityPlayAnimationPacket(int entityId, int animationId, float modifyTime) implements CustomPacketPayload {
+    public static final CustomPacketPayload.Type<RequestEntityPlayAnimationPacket> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(SwordSoaringMod.MOD_ID, "requestentityplayanimationpacket"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, RequestEntityPlayAnimationPacket> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.INT,
+            RequestEntityPlayAnimationPacket::entityId,
+            ByteBufCodecs.INT,
+            RequestEntityPlayAnimationPacket::animationId,
+            ByteBufCodecs.FLOAT,
+            RequestEntityPlayAnimationPacket::modifyTime,
+            RequestEntityPlayAnimationPacket::new);
 
     @Override
-    public void execute(@Nullable Player player) {
-        if(player != null){
-            Entity entity = player.level().getEntity(entityId);
+    public @NotNull Type<? extends CustomPacketPayload> type() {
+        return TYPE;
+    }
+
+    public static void execute(RequestEntityPlayAnimationPacket packet, IPayloadContext context) {
+        if(context.player() instanceof ServerPlayer player){
+            Entity entity = player.level().getEntity(packet.entityId);
             LivingEntityPatch<?> entityPatch = EpicFightCapabilities.getEntityPatch(entity, LivingEntityPatch.class);
             if(entityPatch != null){
-                entityPatch.playAnimationSynchronized(AnimationManager.byId(animationId), modifyTime);
+                entityPatch.playAnimationSynchronized(AnimationManager.byId(packet.animationId), packet.modifyTime);
             }
         }
     }

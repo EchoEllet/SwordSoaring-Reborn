@@ -1,26 +1,27 @@
 package net.p1nero.ss;
 
 import com.mojang.logging.LogUtils;
-import com.p1nero.invincible.api.skill.ComboType;
-import com.yesman.epicskills.client.gui.screen.CategorySlotTexture;
+import com.p1nero.invincible.api.combo.ComboType;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.p1nero.ss.block.SwordSoaringBlocks;
-import net.p1nero.ss.client.SwordSoaringCategorySlotTextures;
-import net.p1nero.ss.client.particle.SwordSoaringParticles;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.ModList;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+import net.p1nero.ss.capability.SwordSoaringAttachments;
 import net.p1nero.ss.client.sound.SwordSoaringSounds;
 import net.p1nero.ss.compat.EpicSkillsCompat;
 import net.p1nero.ss.entity.SwordSoaringEntities;
 import net.p1nero.ss.gameassets.*;
 import net.p1nero.ss.item.SwordSoaringItems;
+import net.p1nero.ss.network.packet.client.SyncBabylonPacket;
+import net.p1nero.ss.network.packet.server.RequestBabylonSyncPacket;
+import net.p1nero.ss.network.packet.server.RequestEntityPlayAnimationPacket;
+import net.p1nero.ss.network.packet.server.RequestVatanseverSwordBackPacket;
 import org.slf4j.Logger;
 import yesman.epicfight.main.EpicFightExtensions;
 import yesman.epicfight.main.EpicFightSharedConstants;
@@ -37,7 +38,7 @@ public class SwordSoaringMod {
     public static final String MOD_ID = "sword_soaring";
     public static final Logger LOGGER = LogUtils.getLogger();
 
-    public SwordSoaringMod(FMLJavaModLoadingContext context) {
+    public SwordSoaringMod(net.neoforged.bus.api.IEventBus bus, ModContainer modContainer) {
         SkillCategories.ENUM_MANAGER.registerEnumCls(SwordSoaringMod.MOD_ID, SwordSoaringSkillCategories.class);
         SkillSlot.ENUM_MANAGER.registerEnumCls(SwordSoaringMod.MOD_ID, SwordSoaringSkillSlots.class);
         CapabilityItem.WeaponCategories.ENUM_MANAGER.registerEnumCls(SwordSoaringMod.MOD_ID, SwordSoaringCategories.class);
@@ -47,18 +48,28 @@ public class SwordSoaringMod {
             EpicSkillsCompat.registerCategorySlotTexture();
         }
 
-        context.registerExtensionPoint(EpicFightExtensions.class, () -> new EpicFightExtensions(SwordSoaringItems.DEFAULT_TAB.get()));
-
-        IEventBus bus = context.getModEventBus();
+        SwordSoaringSkills.REGISTRY.register(bus);
+        SwordSoaringAttachments.ATTACHMENT_TYPES.register(bus);
         SwordSoaringDatakeys.DATA_KEYS.register(bus);
         SwordSoaringItems.ITEMS.register(bus);
-        SwordSoaringItems.SWORD_SOARING_ITEM_TAB.register(bus);
+        SwordSoaringItems.CREATIVE_TABS.register(bus);
         SwordSoaringEntities.ENTITIES.register(bus);
         SwordSoaringSounds.SOUND_EVENTS.register(bus);
-        SwordSoaringBlocks.BLOCKS.register(bus);
-        SwordSoaringParticles.PARTICLES.register(bus);
+        bus.addListener(this::registerPackets);
 
-        context.registerConfig(ModConfig.Type.COMMON, SwordSoaringConfig.SPEC);
+        modContainer.registerConfig(ModConfig.Type.COMMON, SwordSoaringConfig.SPEC);
+    }
+
+    public void registerPackets(RegisterPayloadHandlersEvent event) {
+        PayloadRegistrar registrar = event.registrar(MOD_ID).versioned("1.0.0").optional();
+
+        // CLIENTBOUND
+        registrar.playToClient(SyncBabylonPacket.TYPE, SyncBabylonPacket.STREAM_CODEC, SyncBabylonPacket::execute);
+        // SERVERBOUND
+        registrar.playToServer(RequestBabylonSyncPacket.TYPE, RequestBabylonSyncPacket.STREAM_CODEC, RequestBabylonSyncPacket::execute);
+        registrar.playToServer(RequestEntityPlayAnimationPacket.TYPE, RequestEntityPlayAnimationPacket.STREAM_CODEC, RequestEntityPlayAnimationPacket::execute);
+        registrar.playToServer(RequestVatanseverSwordBackPacket.TYPE, RequestVatanseverSwordBackPacket.STREAM_CODEC, RequestVatanseverSwordBackPacket::execute);
+
     }
 
     public static boolean isArmourersWorkshopLoaded() {
@@ -72,10 +83,10 @@ public class SwordSoaringMod {
     public static boolean isValidSword(ItemStack sword) {
         if (SwordSoaringConfig.swordItems.isEmpty()) {
             SwordSoaringConfig.swordItems = SwordSoaringConfig.ITEMS_CAN_FLY.get().stream()
-                    .map(itemName -> ForgeRegistries.ITEMS.getValue(ResourceLocation.parse(itemName)))
+                    .map(itemName -> BuiltInRegistries.ITEM.get(ResourceLocation.parse(itemName)))
                     .collect(Collectors.toSet());
             SwordSoaringConfig.notSwordItems = SwordSoaringConfig.ITEMS_CAN_NOT_FLY.get().stream()
-                    .map(itemName -> ForgeRegistries.ITEMS.getValue(ResourceLocation.parse(itemName)))
+                    .map(itemName -> BuiltInRegistries.ITEM.get(ResourceLocation.parse(itemName)))
                     .collect(Collectors.toSet());
         }
         if (SwordSoaringConfig.notSwordItems.contains(sword.getItem())) {

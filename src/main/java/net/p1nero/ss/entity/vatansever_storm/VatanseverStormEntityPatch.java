@@ -7,6 +7,10 @@ import yesman.epicfight.api.animation.LivingMotions;
 
 public class VatanseverStormEntityPatch extends AbstractArtifactSpiritPatch<VatanseverStormEntity> {
 
+    public VatanseverStormEntityPatch(VatanseverStormEntity entity) {
+        super(entity);
+    }
+
     @Override
     protected void initAnimator(Animator animator) {
         super.initAnimator(animator);

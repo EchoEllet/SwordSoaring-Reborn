@@ -43,10 +43,10 @@ public abstract class AbstractSwordEntity extends AbstractArtifactSpiritEntity i
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.getEntityData().define(ITEM_STACK, ItemStack.EMPTY);
-        getEntityData().define(ANIMATION_TO_PLAY, -1);
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(ITEM_STACK, ItemStack.EMPTY);
+        builder.define(ANIMATION_TO_PLAY, -1);
     }
 
     public void setAnimationToPlay(AnimationManager.AnimationAccessor<? extends StaticAnimation> staticAnimation) {
@@ -67,12 +67,12 @@ public abstract class AbstractSwordEntity extends AbstractArtifactSpiritEntity i
 
     @Override
     public void readAdditionalSaveData(@NotNull CompoundTag tag) {
-        this.getEntityData().set(ITEM_STACK, ItemStack.of(tag.getCompound("item_stack")));
+        this.getEntityData().set(ITEM_STACK, ItemStack.parse(level().registryAccess(), tag.getCompound("item_stack")).orElse(ItemStack.EMPTY));
     }
 
     @Override
     public void addAdditionalSaveData(@NotNull CompoundTag tag) {
-        tag.put("item_stack", this.getEntityData().get(ITEM_STACK).serializeNBT());
+        tag.put("item_stack", this.getEntityData().get(ITEM_STACK).saveOptional(level().registryAccess()));
     }
 
     @Override

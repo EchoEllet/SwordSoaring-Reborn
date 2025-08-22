@@ -4,17 +4,13 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 import yesman.epicfight.api.animation.AnimationManager;
 import yesman.epicfight.api.animation.LivingMotions;
 import yesman.epicfight.api.animation.types.StaticAnimation;
 import yesman.epicfight.api.asset.AssetAccessor;
 import yesman.epicfight.api.utils.AttackResult;
-import yesman.epicfight.client.world.capabilites.entitypatch.player.LocalPlayerPatch;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
-import yesman.epicfight.world.capabilities.entitypatch.Faction;
 import yesman.epicfight.world.capabilities.entitypatch.MobPatch;
 import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 import yesman.epicfight.world.damagesource.EpicFightDamageSource;
@@ -22,16 +18,12 @@ import yesman.epicfight.world.damagesource.StunType;
 
 public abstract class AbstractArtifactSpiritPatch<T extends AbstractArtifactSpiritEntity> extends MobPatch<T> {
 
-    public AbstractArtifactSpiritPatch() {
-        super();
-    }
-
-    public AbstractArtifactSpiritPatch(Faction faction) {
-        super(faction);
-    }
-
     @Nullable
     private PlayerPatch<?> ownerPatch;
+
+    public AbstractArtifactSpiritPatch(T entity) {
+        super(entity);
+    }
 
     @Override
     public void updateMotion(boolean considerInaction) {
@@ -135,12 +127,6 @@ public abstract class AbstractArtifactSpiritPatch<T extends AbstractArtifactSpir
         if(entity instanceof AbstractArtifactSpiritEntity artifactSpiritEntity && getOwnerPatch() != null){
             return getOwnerPatch().getOriginal().equals(artifactSpiritEntity.getOwner());
         }
-        return false;
-    }
-
-    @Override
-    @OnlyIn(Dist.CLIENT)
-    public boolean flashTargetIndicator(LocalPlayerPatch playerPatch) {
         return false;
     }
 

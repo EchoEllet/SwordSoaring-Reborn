@@ -1,12 +1,12 @@
 package net.p1nero.ss.gameassets;
 
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.p1nero.ss.SwordSoaringMod;
 import net.p1nero.ss.gameassets.animations.*;
 import yesman.epicfight.api.animation.AnimationManager;
 
-@Mod.EventBusSubscriber(modid = SwordSoaringMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = SwordSoaringMod.MOD_ID)
 public class SwordSoaringAnimations {
 
     @SubscribeEvent

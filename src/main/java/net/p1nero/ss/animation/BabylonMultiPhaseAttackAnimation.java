@@ -5,8 +5,8 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraftforge.entity.PartEntity;
-import net.p1nero.ss.capability.SSCapabilityProvider;
+import net.neoforged.neoforge.entity.PartEntity;
+import net.p1nero.ss.capability.SwordSoaringAttachments;
 import net.p1nero.ss.capability.SSPlayer;
 import net.p1nero.ss.entity.sword.gate_of_babylon.AbstractBabylonPatch;
 import net.p1nero.ss.entity.sword.wan.WanEntity;
@@ -55,7 +55,7 @@ public class BabylonMultiPhaseAttackAnimation extends ArtifactSpiritMultiPhaseAt
         if (!list.isEmpty()) {
             HitEntityList hitEntities = new HitEntityList(entityPatch, list, phase.getProperty(AnimationProperty.AttackPhaseProperty.HIT_PRIORITY).orElse(HitEntityList.Priority.DISTANCE));
             if (entityPatch instanceof AbstractBabylonPatch<?> babylonPatch && babylonPatch.getOwnerPatch() != null) {
-                SSPlayer ssPlayer = babylonPatch.getOwnerPatch().getOriginal().getCapability(SSCapabilityProvider.SS_PLAYER).orElse(new SSPlayer());
+                SSPlayer ssPlayer = babylonPatch.getOwnerPatch().getOriginal().getData(SwordSoaringAttachments.SS_PLAYER);
                 while (hitEntities.next()) {
                     Entity hit = hitEntities.getEntity();
                     LivingEntity trueEntity = this.getTrueEntity(hit);

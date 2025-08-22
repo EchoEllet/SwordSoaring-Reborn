@@ -1,15 +1,12 @@
 package net.p1nero.ss.skill.sword_controller;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.event.entity.living.LivingEvent;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.p1nero.ss.SwordSoaringMod;
 import net.p1nero.ss.entity.sword.screen_sword.ScreenSwordEntity;
 import net.p1nero.ss.entity.sword.screen_sword.ScreenSwordPatch;
@@ -23,6 +20,7 @@ import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 
 import java.util.List;
+import java.util.function.Function;
 
 public class KillAuraSkill extends Skill {
     protected int lifeTime, cooldown;
@@ -37,8 +35,8 @@ public class KillAuraSkill extends Skill {
     }
 
     @Override
-    public void setParams(CompoundTag parameters) {
-        super.setParams(parameters);
+    public void loadDatapackParameters(CompoundTag parameters) {
+        super.loadDatapackParameters(parameters);
         lifeTime = parameters.getInt("life_time");
         cooldown = parameters.getInt("cooldown");
         cooldown += lifeTime;
@@ -52,8 +50,8 @@ public class KillAuraSkill extends Skill {
         return swordSummonAnim;
     }
 
-    public static Builder createKillAuraBuilder() {
-        return new Builder().setCategory(SwordSoaringSkillCategories.SWORD_CONTROLLER).setResource(Resource.NONE);
+    public static Builder createKillAuraBuilder(Function<Builder, ? extends KillAuraSkill> constructor) {
+        return new Builder(constructor).setCategory(SwordSoaringSkillCategories.SWORD_CONTROLLER).setResource(Resource.NONE);
     }
 
     @Override
@@ -68,8 +66,8 @@ public class KillAuraSkill extends Skill {
     }
 
     public int getSwordEntityId(SkillContainer container){
-        if(container.getDataManager().hasData(SwordSoaringDatakeys.SWORD_ENTITY_ID.get())){
-            return container.getDataManager().getDataValue(SwordSoaringDatakeys.SWORD_ENTITY_ID.get());
+        if(container.getDataManager().hasData(SwordSoaringDatakeys.SWORD_ENTITY_ID)){
+            return container.getDataManager().getDataValue(SwordSoaringDatakeys.SWORD_ENTITY_ID);
         }
         return 0;
     }
@@ -77,31 +75,31 @@ public class KillAuraSkill extends Skill {
     @Override
     public boolean canExecute(SkillContainer container) {
         PlayerPatch<?> executor = container.getExecutor();
-        return executor.getOriginal().onGround() && SwordSoaringMod.isValidSword(executor.getValidItemInHand(InteractionHand.MAIN_HAND)) && container.getDataManager().getDataValue(SwordSoaringDatakeys.COOLDOWN_TIMER.get()) <= 0 || executor.getOriginal().isCreative();
+        return executor.getOriginal().onGround() && SwordSoaringMod.isValidSword(executor.getValidItemInHand(InteractionHand.MAIN_HAND)) && container.getDataManager().getDataValue(SwordSoaringDatakeys.COOLDOWN_TIMER) <= 0 || executor.getOriginal().isCreative();
     }
 
     @Override
-    public void executeOnServer(SkillContainer container, FriendlyByteBuf args) {
+    public void executeOnServer(SkillContainer container, CompoundTag args) {
         super.executeOnServer(container, args);
         ServerPlayerPatch executor = container.getServerExecutor();
         executor.playAnimationSynchronized(playerSummonAnim, 0.15F);
-        container.getDataManager().setDataSync(SwordSoaringDatakeys.COOLDOWN_TIMER.get(), cooldown);
+        container.getDataManager().setDataSync(SwordSoaringDatakeys.COOLDOWN_TIMER, cooldown);
     }
 
     /**
-     * 延迟生剑， 动画播放在{@link ScreenSwordPatch#clientTick(LivingEvent.LivingTickEvent)}
+     * 延迟生剑， 动画播放在{@link ScreenSwordPatch#preTickClient(EntityTickEvent.Pre)}
      */
     @Override
     public void updateContainer(SkillContainer container) {
         super.updateContainer(container);
-        int cooldown = container.getDataManager().getDataValue(SwordSoaringDatakeys.COOLDOWN_TIMER.get());
+        int cooldown = container.getDataManager().getDataValue(SwordSoaringDatakeys.COOLDOWN_TIMER);
         if(cooldown > 0){
-            container.getDataManager().setData(SwordSoaringDatakeys.COOLDOWN_TIMER.get(), cooldown - 1);
+            container.getDataManager().setData(SwordSoaringDatakeys.COOLDOWN_TIMER, cooldown - 1);
         }
         if(cooldown == this.cooldown - (int) (playerSummonAnim.get().getTotalTime() * 10) && !container.getExecutor().isLogicalClient()){
             ScreenSwordEntity screenSwordEntity = new ScreenSwordEntity(container.getExecutor().getOriginal(), lifeTime);
             container.getExecutor().getOriginal().level().addFreshEntity(screenSwordEntity);
-            container.getDataManager().setDataSync(SwordSoaringDatakeys.SWORD_ENTITY_ID.get(), screenSwordEntity.getId());
+            container.getDataManager().setDataSync(SwordSoaringDatakeys.SWORD_ENTITY_ID, screenSwordEntity.getId());
         }
     }
 
@@ -115,29 +113,26 @@ public class KillAuraSkill extends Skill {
     @Override
     @OnlyIn(Dist.CLIENT)
     public boolean shouldDraw(SkillContainer container) {
-        return container.getDataManager().getDataValue(SwordSoaringDatakeys.COOLDOWN_TIMER.get()) > 0;
+        return container.getDataManager().getDataValue(SwordSoaringDatakeys.COOLDOWN_TIMER) > 0;
     }
 
     @Override
     @OnlyIn(Dist.CLIENT)
     public void drawOnGui(BattleModeGui gui, SkillContainer container, GuiGraphics guiGraphics, float x, float y, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-        poseStack.pushPose();
-        poseStack.translate(0.0F, (float)gui.getSlidingProgression(), 0.0F);
         guiGraphics.blit(getSkillTexture(), (int) x, (int) y, 24, 24, 0.0F, 0.0F, 1, 1, 1, 1);
-        int currentCooldown = container.getDataManager().getDataValue(SwordSoaringDatakeys.COOLDOWN_TIMER.get());
+        int currentCooldown = container.getDataManager().getDataValue(SwordSoaringDatakeys.COOLDOWN_TIMER);
         int currentLifetime = this.cooldown - currentCooldown;
         if (currentLifetime > this.lifeTime) {
             guiGraphics.drawString(gui.getFont(), String.format("%.1f", currentCooldown / 20.0), x + 6.0F, y + 8.0F, 16777215, true);
         } else {
             guiGraphics.drawString(gui.getFont(), String.format("%.1f", (this.lifeTime - currentLifetime) / 20.0), x + 6.0F, y + 8.0F, 16777215, true);
         }
-        poseStack.popPose();
     }
 
-    public static class Builder extends SkillBuilder<KillAuraSkill> {
+    public static class Builder extends SkillBuilder<Builder> {
         protected AnimationManager.AnimationAccessor<? extends StaticAnimation> playerSummonAnim, swordSummonAnim;
-        public Builder() {
+        public Builder(Function<Builder, ? extends KillAuraSkill> constructor) {
+            super(constructor);
         }
 
         public Builder setCategory(SkillCategory category) {

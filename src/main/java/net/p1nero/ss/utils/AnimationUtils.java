@@ -1,11 +1,11 @@
-package net.p1nero.ss.util;
+package net.p1nero.ss.utils;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import net.p1nero.ss.animation.ArtifactSpiritMultiPhaseAttackAnimation;
-import net.p1nero.ss.util.vfx.ParticleVFX;
+import net.p1nero.ss.utils.vfx.ParticleVFX;
 import yesman.epicfight.api.animation.Animator;
 import yesman.epicfight.api.animation.Joint;
 import yesman.epicfight.api.animation.Pose;

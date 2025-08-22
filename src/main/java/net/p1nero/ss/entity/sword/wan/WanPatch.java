@@ -7,6 +7,10 @@ import yesman.epicfight.api.animation.LivingMotions;
 
 public class WanPatch extends AbstractBabylonPatch<WanEntity> {
 
+    public WanPatch(WanEntity entity) {
+        super(entity);
+    }
+
     @Override
     protected void initAnimator(Animator animator) {
         super.initAnimator(animator);

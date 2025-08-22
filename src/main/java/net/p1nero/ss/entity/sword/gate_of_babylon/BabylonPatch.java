@@ -5,6 +5,10 @@ import yesman.epicfight.api.animation.Animator;
 import yesman.epicfight.api.animation.LivingMotions;
 
 public class BabylonPatch extends AbstractBabylonPatch<BabylonEntity> {
+    public BabylonPatch(BabylonEntity entity) {
+        super(entity);
+    }
+
     @Override
     public void initAnimator(Animator animator) {
         super.initAnimator(animator);

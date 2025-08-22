@@ -2,6 +2,7 @@ package net.p1nero.ss.gameassets.animations;
 
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -18,10 +19,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.p1nero.ss.SwordSoaringConfig;
 import net.p1nero.ss.animation.*;
-import net.p1nero.ss.capability.SSCapabilityProvider;
+import net.p1nero.ss.capability.SSPlayer;
+import net.p1nero.ss.capability.SwordSoaringAttachments;
 import net.p1nero.ss.client.sound.SwordSoaringSounds;
 import net.p1nero.ss.entity.AbstractArtifactSpiritEntity;
 import net.p1nero.ss.entity.sword.fly_sword.FlySwordEntity;
@@ -33,8 +34,8 @@ import net.p1nero.ss.entity.vatansever_storm.VatanseverStormEntityPatch;
 import net.p1nero.ss.gameassets.SwordSoaringArmatures;
 import net.p1nero.ss.gameassets.SwordSoaringColliders;
 import net.p1nero.ss.gameassets.SwordSoaringDatakeys;
-import net.p1nero.ss.util.AnimationUtils;
-import net.p1nero.ss.util.vfx.ParticleVFX;
+import net.p1nero.ss.utils.AnimationUtils;
+import net.p1nero.ss.utils.vfx.ParticleVFX;
 import yesman.epicfight.api.animation.AnimationManager;
 import yesman.epicfight.api.animation.Joint;
 import yesman.epicfight.api.animation.property.AnimationEvent;
@@ -47,8 +48,8 @@ import yesman.epicfight.api.utils.math.ValueModifier;
 import yesman.epicfight.api.utils.math.Vec3f;
 import yesman.epicfight.gameasset.Animations;
 import yesman.epicfight.gameasset.Armatures;
-import yesman.epicfight.gameasset.EpicFightSounds;
 import yesman.epicfight.model.armature.HumanoidArmature;
+import yesman.epicfight.registry.entries.EpicFightSounds;
 import yesman.epicfight.skill.SkillDataManager;
 import yesman.epicfight.skill.SkillSlots;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
@@ -421,24 +422,23 @@ public class VatanseverAnimations {
         return AnimationEvent.SimpleEvent.create((livingEntityPatch, staticAnimation, objects) -> {
             if (livingEntityPatch instanceof VatanseverEntityPatch vatanseverEntityPatch && vatanseverEntityPatch.getOwnerPatch() instanceof ServerPlayerPatch serverPlayerPatch) {
                 if (vatanseverEntityPatch.getTarget() != null) {
-                    vatanseverEntityPatch.getOwnerPatch().getOriginal().getCapability(SSCapabilityProvider.SS_PLAYER).ifPresent(ssPlayer -> {
-                        //确保没有多余的剑
-                        if (ssPlayer.getVatanseverShootEntities().size() == 6 - vatanseverEntityPatch.getLeftSwordCount()) {
-                            FlySwordEntity flySwordEntity = new FlySwordEntity(vatanseverEntityPatch.getOwnerPatch().getOriginal(), 500, vatanseverEntityPatch.getTarget());
-                            flySwordEntity.setAnimationToPlay(vatanseverEntityPatch.getOriginal().getRandom().nextBoolean() ? FlySwordAnimations.FLY_SWORD_ATK_1 : FlySwordAnimations.FLY_SWORD_ATK_2);
-                            if (vatanseverEntityPatch.getOriginal().level().addFreshEntity(flySwordEntity)) {
-                                ssPlayer.addVatanseverShootEntity(flySwordEntity);
-                                SkillDataManager manager = serverPlayerPatch.getSkill(SkillSlots.WEAPON_PASSIVE).getDataManager();
-                                if (manager.hasData(SwordSoaringDatakeys.SWORD_COUNT.get())) {
-                                    manager.setDataSync(SwordSoaringDatakeys.SWORD_COUNT.get(), Math.max(vatanseverEntityPatch.getLeftSwordCount() - 1, 0));
-                                }
+                    SSPlayer ssPlayer = vatanseverEntityPatch.getOwnerPatch().getOriginal().getData(SwordSoaringAttachments.SS_PLAYER);
+                    //确保没有多余的剑
+                    if (ssPlayer.getVatanseverShootEntities().size() == 6 - vatanseverEntityPatch.getLeftSwordCount()) {
+                        FlySwordEntity flySwordEntity = new FlySwordEntity(vatanseverEntityPatch.getOwnerPatch().getOriginal(), 500, vatanseverEntityPatch.getTarget());
+                        flySwordEntity.setAnimationToPlay(vatanseverEntityPatch.getOriginal().getRandom().nextBoolean() ? FlySwordAnimations.FLY_SWORD_ATK_1 : FlySwordAnimations.FLY_SWORD_ATK_2);
+                        if (vatanseverEntityPatch.getOriginal().level().addFreshEntity(flySwordEntity)) {
+                            ssPlayer.addVatanseverShootEntity(flySwordEntity);
+                            SkillDataManager manager = serverPlayerPatch.getSkill(SkillSlots.WEAPON_PASSIVE).getDataManager();
+                            if (manager.hasData(SwordSoaringDatakeys.SWORD_COUNT)) {
+                                manager.setDataSync(SwordSoaringDatakeys.SWORD_COUNT, Math.max(vatanseverEntityPatch.getLeftSwordCount() - 1, 0));
                             }
-                        } else {
-                            //否则重置状态
-                            ssPlayer.getVatanseverShootEntities().clear();
-                            serverPlayerPatch.getSkill(SkillSlots.WEAPON_PASSIVE).getDataManager().setDataSync(SwordSoaringDatakeys.SWORD_COUNT.get(), 6);
                         }
-                    });
+                    } else {
+                        //否则重置状态
+                        ssPlayer.getVatanseverShootEntities().clear();
+                        serverPlayerPatch.getSkill(SkillSlots.WEAPON_PASSIVE).getDataManager().setDataSync(SwordSoaringDatakeys.SWORD_COUNT, 6);
+                    }
                 }
             }
         }, AnimationEvent.Side.SERVER);
@@ -525,7 +525,7 @@ public class VatanseverAnimations {
                     .joint(joint.getName())
                     .itemSkinHand(InteractionHand.MAIN_HAND)
                     .texture("epicfight:textures/particle/swing_trail.png")
-                    .type((SimpleParticleType) ForgeRegistries.PARTICLE_TYPES.getValue(ResourceLocation.parse(SwordSoaringConfig.TRAIL_PARTICLE_TYPE.get())))
+                    .type((SimpleParticleType) BuiltInRegistries.PARTICLE_TYPE.get(ResourceLocation.parse(SwordSoaringConfig.TRAIL_PARTICLE_TYPE.get())))
                     .create());
         }
         return jetTrails;
@@ -634,8 +634,8 @@ public class VatanseverAnimations {
         if (ownerPatch instanceof ServerPlayerPatch serverPlayerPatch) {
             if (serverPlayerPatch.getSkill(SkillSlots.WEAPON_PASSIVE) != null) {
                 SkillDataManager manager = serverPlayerPatch.getSkill(SkillSlots.WEAPON_PASSIVE).getDataManager();
-                if (manager.hasData(SwordSoaringDatakeys.ARTIFACT_SPIRIT_ENTITY_ID.get())) {
-                    Entity entity = serverPlayerPatch.getOriginal().level().getEntity(manager.getDataValue(SwordSoaringDatakeys.ARTIFACT_SPIRIT_ENTITY_ID.get()));
+                if (manager.hasData(SwordSoaringDatakeys.ARTIFACT_SPIRIT_ENTITY_ID)) {
+                    Entity entity = serverPlayerPatch.getOriginal().level().getEntity(manager.getDataValue(SwordSoaringDatakeys.ARTIFACT_SPIRIT_ENTITY_ID));
                     if (entity != null) {
                         return EpicFightCapabilities.getEntityPatch(entity, VatanseverEntityPatch.class);
                     }

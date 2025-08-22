@@ -1,53 +1,51 @@
 package net.p1nero.ss.skill.sword_soaring;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.client.event.MovementInputUpdateEvent;
+import net.neoforged.neoforge.event.entity.living.LivingEquipmentChangeEvent;
+import net.neoforged.neoforge.event.entity.living.LivingFallEvent;
 import net.p1nero.ss.SwordSoaringMod;
 import net.p1nero.ss.client.keymapping.SwordSoaringKeyMappings;
 import net.p1nero.ss.client.sound.SwordFlyingSoundInstance;
 import net.p1nero.ss.gameassets.SwordSoaringDatakeys;
 import net.p1nero.ss.gameassets.SwordSoaringSkillCategories;
 import net.p1nero.ss.gameassets.SwordSoaringSkillSlots;
-import net.p1nero.ss.gameassets.skills.FlyingSkills;
+import net.p1nero.ss.gameassets.SwordSoaringSkills;
 import net.p1nero.ss.item.SwordSoaringItems;
 import org.jetbrains.annotations.Nullable;
 import yesman.epicfight.api.animation.AnimationManager;
 import yesman.epicfight.api.animation.types.StaticAnimation;
+import yesman.epicfight.api.neoevent.playerpatch.SkillCastEvent;
+import yesman.epicfight.api.neoevent.playerpatch.TakeDamageEvent;
 import yesman.epicfight.client.events.engine.ControlEngine;
 import yesman.epicfight.client.gui.BattleModeGui;
 import yesman.epicfight.client.world.capabilites.entitypatch.player.LocalPlayerPatch;
 import yesman.epicfight.skill.*;
-import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
-import yesman.epicfight.world.entity.eventlistener.PlayerEventListener;
 
 import java.util.Collection;
-import java.util.UUID;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class SwordSoaringSkill extends Skill {
-
-    private static final UUID EVENT_UUID = UUID.fromString("051a9bb2-7541-11ee-b962-0242ac114514");
     protected int cooldown;
     protected double speed;
     protected final AnimationManager.AnimationAccessor<? extends StaticAnimation> init, flying, acceleration;
     protected final Supplier<Skill> priorSkill;
     
-    public static Builder createSwordSoaringSkill() {
-        return new Builder().setCreativeTab(SwordSoaringItems.DEFAULT_TAB.get()).setCategory(SwordSoaringSkillCategories.SWORD_SOARING).setResource(Resource.NONE);
+    public static Builder createSwordSoaringSkill(Function<Builder, SwordSoaringSkill> constructor) {
+        return new Builder(constructor).setCreativeTab(SwordSoaringItems.DEFAULT_TAB.get()).setCategory(SwordSoaringSkillCategories.SWORD_SOARING).setResource(Resource.NONE);
     }
 
     @Override
@@ -64,8 +62,8 @@ public class SwordSoaringSkill extends Skill {
     }
 
     @Override
-    public void setParams(CompoundTag parameters) {
-        super.setParams(parameters);
+    public void loadDatapackParameters(CompoundTag parameters) {
+        super.loadDatapackParameters(parameters);
         cooldown = parameters.getInt("cooldown");
         speed = parameters.getDouble("speed");
     }
@@ -77,131 +75,122 @@ public class SwordSoaringSkill extends Skill {
             return false;
         }
         SkillDataManager dataManager = executer.getSkill(SwordSoaringSkillSlots.SWORD_SOARING).getDataManager();
-        return !dataManager.getDataValue(SwordSoaringDatakeys.FLYING.get()) && (dataManager.getDataValue(SwordSoaringDatakeys.COOLDOWN_TIMER.get()) <= 0 || executer.getOriginal().isCreative()) && SwordSoaringMod.isValidSword(executer.getOriginal().getMainHandItem()) && executer.hasStamina(consumption + 0.1F);
+        return !dataManager.getDataValue(SwordSoaringDatakeys.FLYING) && (dataManager.getDataValue(SwordSoaringDatakeys.COOLDOWN_TIMER) <= 0 || executer.getOriginal().isCreative()) && SwordSoaringMod.isValidSword(executer.getOriginal().getMainHandItem()) && executer.hasStamina(consumption + 0.1F);
     }
 
     @Override
-    public void executeOnServer(SkillContainer container, FriendlyByteBuf args) {
+    public void executeOnServer(SkillContainer container, CompoundTag args) {
         super.executeOnServer(container, args);
         ServerPlayerPatch executor = container.getServerExecutor();
         SkillDataManager dataManager = executor.getSkill(SwordSoaringSkillSlots.SWORD_SOARING).getDataManager();
         Vec3 view = executor.getOriginal().getViewVector(1.0F);
         executor.getOriginal().push(view.x, 2, view.z);
         executor.playAnimationSynchronized(init, 0.15F);
-        dataManager.setDataSync(SwordSoaringDatakeys.FLYING.get(), true);
+        dataManager.setDataSync(SwordSoaringDatakeys.FLYING, true);
     }
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void executeOnClient(SkillContainer container, FriendlyByteBuf args) {
+    public void executeOnClient(SkillContainer container, CompoundTag args) {
         LocalPlayerPatch executer = container.getClientExecutor();
         Minecraft.getInstance().getSoundManager().play(new SwordFlyingSoundInstance(executer));
+    }
+
+    @SkillEvent(side = SkillEvent.Side.CLIENT)
+    public void onMovementInput(MovementInputUpdateEvent event, SkillContainer container) {
+        if (container.getDataManager().getDataValue(SwordSoaringDatakeys.FLYING)) {
+            Input input = event.getInput();
+            input.forwardImpulse = 0.0F;
+            input.leftImpulse = 0.0F;
+            input.down = false;
+            input.up = false;
+            input.left = false;
+            input.right = false;
+            input.jumping = false;
+            input.shiftKeyDown = false;
+            LocalPlayer clientPlayer = container.getClientExecutor().getOriginal();
+            clientPlayer.setSprinting(false);
+            clientPlayer.sprintTriggerTime = -1;
+            Minecraft mc = Minecraft.getInstance();
+            ControlEngine.setKeyBind(mc.options.keySprint, false);
+        }
+    }
+
+    @SkillEvent(side = SkillEvent.Side.SERVER)
+    public void onHurtEventPost(TakeDamageEvent.Post event, SkillContainer container) {
+        if (container.getDataManager().getDataValue(SwordSoaringDatakeys.FLYING)) {
+            stopFlying(container, container.getServerExecutor().getOriginal());
+        }
+    }
+
+    @SkillEvent(side = SkillEvent.Side.SERVER)
+    public void onFallEvent(LivingFallEvent fallEvent, SkillContainer container) {
+        if (container.getDataManager().getDataValue(SwordSoaringDatakeys.FLYING)) {
+            if (!container.getExecutor().isLogicalClient()) {
+                stopFlying(container, container.getServerExecutor().getOriginal());
+            }
+            fallEvent.setDamageMultiplier(0);
+            fallEvent.setCanceled(true);
+            container.getServerExecutor().updateMotion(false);
+        }
+    }
+
+    @SkillEvent(side = SkillEvent.Side.BOTH)
+    public void onSkillCast(SkillCastEvent event, SkillContainer container) {
+        if (container.getDataManager().getDataValue(SwordSoaringDatakeys.FLYING)) {
+            if(event.getSkillContainer().getSlot() == SkillSlots.WEAPON_INNATE) {
+                event.setCanceled(true);
+            } else if(!container.getExecutor().isLogicalClient()) {
+                stopFlying(container, container.getServerExecutor().getOriginal());
+            }
+        }
+    }
+
+    @SkillEvent(caller = SwordSoaringMod.MOD_ID, side = SkillEvent.Side.SERVER)
+    public void onLivingEquipmentChange(LivingEquipmentChangeEvent event, SkillContainer container){
+        if(container.getSkill() instanceof SwordSoaringSkill skill && event.getSlot() == EquipmentSlot.MAINHAND){
+            if(container.getDataManager().hasData(SwordSoaringDatakeys.FLYING) && container.getDataManager().getDataValue(SwordSoaringDatakeys.FLYING)){
+                skill.stopFlying(container, container.getServerExecutor().getOriginal());
+            }
+        }
     }
 
     @Override
     public void onInitiate(SkillContainer container) {
         super.onInitiate(container);
-        container.getExecutor().getEventListener().addEventListener(PlayerEventListener.EventType.MOVEMENT_INPUT_EVENT, EVENT_UUID, event -> {
-            if (container.getDataManager().getDataValue(SwordSoaringDatakeys.FLYING.get())) {
-                Input input = event.getMovementInput();
-                input.forwardImpulse = 0.0F;
-                input.leftImpulse = 0.0F;
-                input.down = false;
-                input.up = false;
-                input.left = false;
-                input.right = false;
-                input.jumping = false;
-                input.shiftKeyDown = false;
-                LocalPlayer clientPlayer = event.getPlayerPatch().getOriginal();
-                clientPlayer.setSprinting(false);
-                clientPlayer.sprintTriggerTime = -1;
-                Minecraft mc = Minecraft.getInstance();
-                ControlEngine.setKeyBind(mc.options.keySprint, false);
-            }
-        });
-        container.getExecutor().getEventListener().addEventListener(PlayerEventListener.EventType.TAKE_DAMAGE_EVENT_ATTACK, EVENT_UUID, hurtEvent -> {
-            if (container.getDataManager().getDataValue(SwordSoaringDatakeys.FLYING.get())) {
-                stopFlying(container, hurtEvent.getPlayerPatch().getOriginal());
-            }
-        });
-        container.getExecutor().getEventListener().addEventListener(PlayerEventListener.EventType.FALL_EVENT, EVENT_UUID, fallEvent -> {
-            if (container.getDataManager().getDataValue(SwordSoaringDatakeys.FLYING.get())) {
-                if (!fallEvent.getPlayerPatch().isLogicalClient()) {
-                    stopFlying(container, ((ServerPlayer) fallEvent.getPlayerPatch().getOriginal()));
-                }
-                fallEvent.getForgeEvent().setDamageMultiplier(0);
-                fallEvent.getForgeEvent().setCanceled(true);
-                fallEvent.getPlayerPatch().updateMotion(false);
-            }
-        });
-        container.getExecutor().getEventListener().addEventListener(PlayerEventListener.EventType.BASIC_ATTACK_EVENT, EVENT_UUID, basicAttackEvent -> {
-            if (container.getDataManager().getDataValue(SwordSoaringDatakeys.FLYING.get())) {
-                basicAttackEvent.setCanceled(true);
-            }
-        });
-
-        container.getExecutor().getEventListener().addEventListener(PlayerEventListener.EventType.SKILL_CAST_EVENT, EVENT_UUID, skillExecuteEvent -> {
-            if (container.getDataManager().getDataValue(SwordSoaringDatakeys.FLYING.get()) && !skillExecuteEvent.getPlayerPatch().isLogicalClient()) {
-                stopFlying(container, ((ServerPlayer) skillExecuteEvent.getPlayerPatch().getOriginal()));
-            }
-        });
-
         //成为大师后，初级和高级飞行将不消耗耐力
-        Collection<?> capabilitySkill = container.getExecutor().getSkillCapability().listAcquiredSkills().filter(skill ->
+        Collection<?> capabilitySkill = container.getExecutor().getPlayerSkills().listAcquiredSkills().filter(skill ->
                 skill.getCategory() == SwordSoaringSkillCategories.SWORD_SOARING).toList();
-        if(capabilitySkill.contains(FlyingSkills.SWORD_SOARING_MASTER) || capabilitySkill.contains(FlyingSkills.SWORD_SOARING_ELYTRA_MASTER)){
+        if(capabilitySkill.contains(SwordSoaringSkills.SWORD_SOARING_MASTER) || capabilitySkill.contains(SwordSoaringSkills.SWORD_SOARING_ELYTRA_MASTER)){
             cooldown = 0;
             consumption = 0;
         }
     }
 
-    public static void onLivingEquipmentChange(LivingEquipmentChangeEvent event){
-        if(event.getEntity() instanceof ServerPlayer serverPlayer && serverPlayer.isAlive()){
-            ServerPlayerPatch serverPlayerPatch = EpicFightCapabilities.getEntityPatch(serverPlayer, ServerPlayerPatch.class);
-            SkillContainer container = serverPlayerPatch.getSkill(SwordSoaringSkillSlots.SWORD_SOARING);
-            if(container.getSkill() instanceof SwordSoaringSkill skill && event.getSlot() == EquipmentSlot.MAINHAND){
-                if(container.getDataManager().hasData(SwordSoaringDatakeys.FLYING.get()) && container.getDataManager().getDataValue(SwordSoaringDatakeys.FLYING.get())){
-                    skill.stopFlying(container, serverPlayer);
-                }
-            }
-        }
-    }
-
-    @Override
-    public void onRemoved(SkillContainer container) {
-        super.onRemoved(container);
-        PlayerEventListener listener = container.getExecutor().getEventListener();
-        listener.removeListener(PlayerEventListener.EventType.MOVEMENT_INPUT_EVENT, EVENT_UUID);
-        listener.removeListener(PlayerEventListener.EventType.TAKE_DAMAGE_EVENT_ATTACK, EVENT_UUID);
-        listener.removeListener(PlayerEventListener.EventType.FALL_EVENT, EVENT_UUID);
-        listener.removeListener(PlayerEventListener.EventType.BASIC_ATTACK_EVENT, EVENT_UUID);
-        listener.removeListener(PlayerEventListener.EventType.SKILL_CAST_EVENT, EVENT_UUID);
-    }
-
     @Override
     public void updateContainer(SkillContainer container) {
         super.updateContainer(container);
-        int currentCooldown = container.getDataManager().getDataValue(SwordSoaringDatakeys.COOLDOWN_TIMER.get());
+        int currentCooldown = container.getDataManager().getDataValue(SwordSoaringDatakeys.COOLDOWN_TIMER);
         if (!container.getExecutor().isLogicalClient() && currentCooldown > 0) {
-            container.getDataManager().setDataSync(SwordSoaringDatakeys.COOLDOWN_TIMER.get(), currentCooldown - 1);
+            container.getDataManager().setDataSync(SwordSoaringDatakeys.COOLDOWN_TIMER, currentCooldown - 1);
         }
         flyingTick(container);
     }
 
     public void flyingTick(SkillContainer container){
         if (container.getExecutor().isLogicalClient()) {
-            if (container.getDataManager().getDataValue(SwordSoaringDatakeys.FLYING.get()) && container.getExecutor().hasStamina(consumption + 0.1F) && SwordSoaringMod.isValidSword(container.getExecutor().getOriginal().getMainHandItem())) {
+            if (container.getDataManager().getDataValue(SwordSoaringDatakeys.FLYING) && container.getExecutor().hasStamina(consumption + 0.1F) && SwordSoaringMod.isValidSword(container.getExecutor().getOriginal().getMainHandItem())) {
                 LocalPlayer localPlayer = ((LocalPlayer) container.getExecutor().getOriginal());
                 Vec3 accelerationSpeed = localPlayer.getViewVector(1.0F).normalize().scale(speed);
                 Vec3 normalSpeed = accelerationSpeed.scale(0.33F);
                 boolean accelerating = SwordSoaringKeyMappings.ACCELERATION.isDown();
-                if (accelerating != container.getDataManager().getDataValue(SwordSoaringDatakeys.ACCELERATING.get())) {
+                if (accelerating != container.getDataManager().getDataValue(SwordSoaringDatakeys.ACCELERATING)) {
                     if (accelerating) {
                         container.getExecutor().playAnimationSynchronized(acceleration, 0.0F);
                     } else {
                         container.getExecutor().playAnimationSynchronized(flying, 0.0F);
                     }
-                    container.getDataManager().setDataSync(SwordSoaringDatakeys.ACCELERATING.get(), accelerating);
+                    container.getDataManager().setDataSync(SwordSoaringDatakeys.ACCELERATING, accelerating);
                 }
                 //移速控制
                 Vec3 currentDeltaMovement = localPlayer.getDeltaMovement();
@@ -226,9 +215,9 @@ public class SwordSoaringSkill extends Skill {
                 }
             }
         } else {
-            if (container.getDataManager().getDataValue(SwordSoaringDatakeys.FLYING.get())) {
+            if (container.getDataManager().getDataValue(SwordSoaringDatakeys.FLYING)) {
                 container.getExecutor().resetActionTick();
-                if (container.getDataManager().getDataValue(SwordSoaringDatakeys.ACCELERATING.get())) {
+                if (container.getDataManager().getDataValue(SwordSoaringDatakeys.ACCELERATING)) {
                     container.getExecutor().setStamina(container.getExecutor().getStamina() - consumption);
                 } else if (SwordSoaringMod.isValidSword(container.getExecutor().getOriginal().getMainHandItem())) {
                     container.getExecutor().setStamina(container.getExecutor().getStamina() - consumption * 0.33F);
@@ -241,9 +230,9 @@ public class SwordSoaringSkill extends Skill {
     }
     
     public void stopFlying(SkillContainer container, ServerPlayer serverPlayer){
-        container.getDataManager().setDataSync(SwordSoaringDatakeys.FLYING.get(), false);
-        container.getDataManager().setDataSync(SwordSoaringDatakeys.ACCELERATING.get(), false);
-        container.getDataManager().setDataSync(SwordSoaringDatakeys.COOLDOWN_TIMER.get(), cooldown);
+        container.getDataManager().setDataSync(SwordSoaringDatakeys.FLYING, false);
+        container.getDataManager().setDataSync(SwordSoaringDatakeys.ACCELERATING, false);
+        container.getDataManager().setDataSync(SwordSoaringDatakeys.COOLDOWN_TIMER, cooldown);
         
 
     }
@@ -251,28 +240,25 @@ public class SwordSoaringSkill extends Skill {
     @Override
     @OnlyIn(Dist.CLIENT)
     public boolean shouldDraw(SkillContainer container) {
-        return container.getDataManager().getDataValue(SwordSoaringDatakeys.COOLDOWN_TIMER.get()) > 0;
+        return container.getDataManager().getDataValue(SwordSoaringDatakeys.COOLDOWN_TIMER) > 0;
     }
 
     @Override
     @OnlyIn(Dist.CLIENT)
     public void drawOnGui(BattleModeGui gui, SkillContainer container, GuiGraphics guiGraphics, float x, float y, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-        poseStack.pushPose();
-        poseStack.translate(0.0F, (float)gui.getSlidingProgression(), 0.0F);
         guiGraphics.blit(getSkillTexture(), (int) x, (int) y, 24, 24, 0.0F, 0.0F, 1, 1, 1, 1);
-        guiGraphics.drawString(gui.getFont(), String.format("%.1f", (container.getDataManager().getDataValue(SwordSoaringDatakeys.COOLDOWN_TIMER.get()) / 20.0)), x + 6.0F, y + 8.0F, 16777215, true);
-        poseStack.popPose();
+        guiGraphics.drawString(gui.getFont(), String.format("%.1f", (container.getDataManager().getDataValue(SwordSoaringDatakeys.COOLDOWN_TIMER) / 20.0)), x + 6.0F, y + 8.0F, 16777215, true);
     }
 
-    public static class Builder extends SkillBuilder<SwordSoaringSkill> {
+    public static class Builder extends SkillBuilder<Builder> {
         protected AnimationManager.AnimationAccessor<? extends StaticAnimation> init;
         protected AnimationManager.AnimationAccessor<? extends StaticAnimation> flying;
         protected AnimationManager.AnimationAccessor<? extends StaticAnimation> acceleration;
         @Nullable
         protected Supplier<Skill> priorSkill;
 
-        public Builder() {
+        public Builder(Function<Builder, ? extends SwordSoaringSkill> constructor) {
+            super(constructor);
         }
 
         public Builder setCategory(SkillCategory category) {

@@ -10,17 +10,17 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.network.PacketDistributor;
 import net.p1nero.ss.SwordSoaringConfig;
 import net.p1nero.ss.entity.AbstractArtifactSpiritEntity;
 import net.p1nero.ss.entity.ReplaceableArmature;
 import net.p1nero.ss.entity.SwordSoaringEntities;
 import net.p1nero.ss.entity.sword.AbstractSwordEntity;
 import net.p1nero.ss.gameassets.SwordSoaringArmatures;
-import net.p1nero.ss.network.PacketHandler;
-import net.p1nero.ss.network.PacketRelay;
 import net.p1nero.ss.network.packet.server.RequestBabylonSyncPacket;
-import net.p1nero.ss.util.AnimationUtils;
-import net.p1nero.ss.util.ItemUtils;
+import net.p1nero.ss.network.packet.server.RequestEntityPlayAnimationPacket;
+import net.p1nero.ss.utils.AnimationUtils;
+import net.p1nero.ss.utils.ItemUtils;
 import yesman.epicfight.api.animation.Joint;
 import yesman.epicfight.api.utils.LevelUtil;
 import yesman.epicfight.api.utils.math.OpenMatrix4f;
@@ -103,7 +103,7 @@ public class BabylonEntity extends AbstractSwordEntity {
         super.tick();
         if(getOwner() != null && level().isClientSide && !clientInit){
             if(getOwner().equals(Minecraft.getInstance().player)){
-                PacketRelay.sendToServer(PacketHandler.INSTANCE, new RequestBabylonSyncPacket(getId()));
+                PacketDistributor.sendToServer(new RequestBabylonSyncPacket(getId()));
                 clientInit = true;
             }
         }

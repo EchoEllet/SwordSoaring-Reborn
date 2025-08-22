@@ -3,8 +3,8 @@ package net.p1nero.ss.client.sound;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.sounds.SoundSource;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.p1nero.ss.gameassets.SwordSoaringDatakeys;
 import net.p1nero.ss.gameassets.SwordSoaringSkillSlots;
 import yesman.epicfight.client.world.capabilites.entitypatch.player.LocalPlayerPatch;
@@ -31,10 +31,10 @@ public class WanSoundInstance extends AbstractTickableSoundInstance {
             return;
         }
         SkillDataManager manager = playerPatch.getSkill(SwordSoaringSkillSlots.SWORD_CONTROLLER).getDataManager();
-        if(!manager.hasData(SwordSoaringDatakeys.IS_CHARGING.get())){
+        if(!manager.hasData(SwordSoaringDatakeys.IS_CHARGING)){
             stop();
         }
-        if(manager.getDataValue(SwordSoaringDatakeys.IS_CHARGING.get())){
+        if(manager.getDataValue(SwordSoaringDatakeys.IS_CHARGING)){
             this.time = 120;
         }
         if(this.time > 140 && this.time < 160){
