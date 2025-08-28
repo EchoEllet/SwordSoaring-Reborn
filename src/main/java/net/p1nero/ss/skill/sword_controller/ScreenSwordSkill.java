@@ -81,7 +81,7 @@ public class ScreenSwordSkill extends KillAuraSkill {
                         //难道没有直接获取某个武器的伤害的办法吗。。
                         double total = ItemUtils.getItemAttackDamage(hurtEvent.getPlayerPatch().getOriginal(), screenSwordEntity.getItemStack(null));
                         //反击伤害不超过武器最大伤害
-                        float counterattackDamage = hurtEvent.getBaseDamage() * 0.5F > total ? (float) total : hurtEvent.getBaseDamage() * 0.5F;
+                        float counterattackDamage = hurtEvent.getDamage() * 0.5F > total ? (float) total : hurtEvent.getDamage() * 0.5F;
                         hurtEvent.getDamageSource().getEntity().hurt(hurtEvent.getDamageSource(), counterattackDamage);
                     }
                 }

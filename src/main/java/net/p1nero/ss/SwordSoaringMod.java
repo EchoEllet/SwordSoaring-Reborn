@@ -2,7 +2,6 @@ package net.p1nero.ss;
 
 import com.mojang.logging.LogUtils;
 import com.p1nero.invincible.api.skill.ComboType;
-import com.yesman.epicskills.client.gui.screen.CategorySlotTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
@@ -11,10 +10,8 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.p1nero.ss.block.SwordSoaringBlocks;
-import net.p1nero.ss.client.SwordSoaringCategorySlotTextures;
 import net.p1nero.ss.client.particle.SwordSoaringParticles;
 import net.p1nero.ss.client.sound.SwordSoaringSounds;
 import net.p1nero.ss.compat.EpicSkillsCompat;
@@ -22,7 +19,6 @@ import net.p1nero.ss.entity.SwordSoaringEntities;
 import net.p1nero.ss.gameassets.*;
 import net.p1nero.ss.item.SwordSoaringItems;
 import org.slf4j.Logger;
-import yesman.epicfight.main.EpicFightExtensions;
 import yesman.epicfight.main.EpicFightSharedConstants;
 import yesman.epicfight.skill.SkillCategories;
 import yesman.epicfight.skill.SkillSlot;
@@ -46,8 +42,6 @@ public class SwordSoaringMod {
         if(EpicFightSharedConstants.isPhysicalClient() && ModList.get().isLoaded("epicskills")) {
             EpicSkillsCompat.registerCategorySlotTexture();
         }
-
-        context.registerExtensionPoint(EpicFightExtensions.class, () -> new EpicFightExtensions(SwordSoaringItems.DEFAULT_TAB.get()));
 
         IEventBus bus = context.getModEventBus();
         SwordSoaringDatakeys.DATA_KEYS.register(bus);
