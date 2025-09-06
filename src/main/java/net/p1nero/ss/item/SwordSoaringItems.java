@@ -3,12 +3,10 @@ package net.p1nero.ss.item;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.*;
-import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import net.p1nero.ss.SwordSoaringMod;
-import net.p1nero.ss.entity.SwordSoaringEntities;
 
 public class SwordSoaringItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, SwordSoaringMod.MOD_ID);

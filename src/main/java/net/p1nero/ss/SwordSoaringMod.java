@@ -11,7 +11,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.p1nero.ss.block.SwordSoaringBlocks;
 import net.p1nero.ss.client.particle.SwordSoaringParticles;
 import net.p1nero.ss.client.sound.SwordSoaringSounds;
 import net.p1nero.ss.compat.EpicSkillsCompat;
@@ -49,7 +48,6 @@ public class SwordSoaringMod {
         SwordSoaringItems.SWORD_SOARING_ITEM_TAB.register(bus);
         SwordSoaringEntities.ENTITIES.register(bus);
         SwordSoaringSounds.SOUND_EVENTS.register(bus);
-        SwordSoaringBlocks.BLOCKS.register(bus);
         SwordSoaringParticles.PARTICLES.register(bus);
 
         context.registerConfig(ModConfig.Type.COMMON, SwordSoaringConfig.SPEC);
