@@ -10,7 +10,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.p1nero.ss.SwordSoaringMod;
-//import net.p1nero.ss.compat.ArmourersWorkshopCompat;
+import net.p1nero.ss.compat.ArmourersWorkshopCompat;
 import net.p1nero.ss.entity.AbstractArtifactSpiritEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,7 +31,7 @@ public abstract class AbstractSwordEntity extends AbstractArtifactSpiritEntity i
         this.tame(owner);
         setPos(owner.position());
         //时装工坊联动，拷贝时装栏
-//        SwordSoaringMod.runInArmourersWorkshopLoaded(() -> () -> ArmourersWorkshopCompat.copyArmourers(owner, this));
+        SwordSoaringMod.runInArmourersWorkshopLoaded(() -> () -> ArmourersWorkshopCompat.copyArmourers(owner, this));
     }
 
     /**
