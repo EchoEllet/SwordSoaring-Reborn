@@ -102,7 +102,7 @@ public class ClientInputManager {
             if(localPlayerPatch.getPlayerMode() == PlayerPatch.PlayerMode.EPICFIGHT && localPlayerPatch.getSkill(slot) != null && localPlayerPatch.getSkill(slot).sendCastRequest(localPlayerPatch, ControlEngine.getInstance()).shouldReserveKey()){
                 ControlEngineAccessor controlEngine = (ControlEngineAccessor) ControlEngine.getInstance();
                 controlEngine.setReserveCounter(8);
-                controlEngine.setReservedOrChargingSkillSlot(slot);
+                controlEngine.setReservedOrHoldingSkillSlot(slot);
                 controlEngine.setReservedKey(key);
             }
         }

@@ -18,7 +18,7 @@ public interface ControlEngineAccessor {
     @Accessor("reservedKey")
     void setReservedKey(KeyMapping key);
 
-    @Accessor("reservedOrChargingSkillSlot")
-    void setReservedOrChargingSkillSlot(SkillSlot slot);
+    @Accessor("reservedOrHoldingSkillSlot")
+    void setReservedOrHoldingSkillSlot(SkillSlot slot);
 
 }
