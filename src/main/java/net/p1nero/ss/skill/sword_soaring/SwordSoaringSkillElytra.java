@@ -1,6 +1,5 @@
 package net.p1nero.ss.skill.sword_soaring;
 
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.Vec3;

@@ -2,6 +2,7 @@ package net.p1nero.ss.client;
 
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
@@ -34,7 +35,6 @@ public class ClientInputManager {
 
     @SubscribeEvent
     public static void onMouseInput(InputEvent.MouseButton event) {
-
         if(Minecraft.getInstance().player != null && Minecraft.getInstance().screen == null){
             if(event.getButton() == SwordSoaringKeyMappings.SWITCH_MODE.getKey().getValue()){
                 switchModeKeyPressed(event.getAction());
@@ -48,9 +48,10 @@ public class ClientInputManager {
     @SubscribeEvent
     public static void onKeyInput(TickEvent.ClientTickEvent event){
         if(event.phase.equals(TickEvent.Phase.END)){
+            LocalPlayer localPlayer = Minecraft.getInstance().player;
             while (SwordSoaringKeyMappings.TAKE_OFF.consumeClick()){
                 long currentTime = System.currentTimeMillis();
-                if(currentTime - lastPressTime < SwordSoaringConfig.FLY_DELAY.get()) {
+                if(localPlayer != null && !localPlayer.onGround && currentTime - lastPressTime < SwordSoaringConfig.FLY_DELAY.get()) {
                     sendSkillPacket(SwordSoaringSkillSlots.SWORD_SOARING, SwordSoaringKeyMappings.TAKE_OFF);
                 }
                 lastPressTime = System.currentTimeMillis();
