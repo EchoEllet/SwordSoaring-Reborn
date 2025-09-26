@@ -1,6 +1,7 @@
 package net.p1nero.ss.skill.sword_soaring;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.Input;
@@ -35,6 +36,7 @@ import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 import yesman.epicfight.world.entity.eventlistener.PlayerEventListener;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
 
@@ -244,8 +246,6 @@ public class SwordSoaringSkill extends Skill {
         container.getDataManager().setDataSync(SwordSoaringDatakeys.FLYING.get(), false);
         container.getDataManager().setDataSync(SwordSoaringDatakeys.ACCELERATING.get(), false);
         container.getDataManager().setDataSync(SwordSoaringDatakeys.COOLDOWN_TIMER.get(), cooldown);
-        
-
     }
 
     @Override
@@ -263,6 +263,14 @@ public class SwordSoaringSkill extends Skill {
         guiGraphics.blit(getSkillTexture(), (int) x, (int) y, 24, 24, 0.0F, 0.0F, 1, 1, 1, 1);
         guiGraphics.drawString(gui.getFont(), String.format("%.1f", (container.getDataManager().getDataValue(SwordSoaringDatakeys.COOLDOWN_TIMER.get()) / 20.0)), x + 6.0F, y + 8.0F, 16777215, true);
         poseStack.popPose();
+    }
+
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public List<Object> getTooltipArgsOfScreen(List<Object> list) {
+        list.add(SwordSoaringKeyMappings.TAKE_OFF.getTranslatedKeyMessage().copy().withStyle(ChatFormatting.BOLD));
+        list.add(SwordSoaringKeyMappings.ACCELERATION.getTranslatedKeyMessage().copy().withStyle(ChatFormatting.BOLD));
+        return list;
     }
 
     public static class Builder extends SkillBuilder<SwordSoaringSkill> {
