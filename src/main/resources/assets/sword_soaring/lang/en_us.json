@@ -1,7 +1,6 @@
 {
   "itemGroup.sword_soaring.items": "Sword Soaring Items",
   "item.sword_soaring.vatansever": "Vatansever",
-  "item.sword_soaring.wraithon_spawn_egg": "Wraithon Spawn Egg",
   "item.sword_soaring.vatansever.description1": " —— §b§lIts frost's chill guards realms serene;§r§c§lThrough slaughter's maze, purges taint unclean§r",
   "item.sword_soaring.vatansever.description2": "Forged post-Celestial War by Kunwu's master smith, this blade consumed century-cured Netheriron and divine bones within Guixu's crucible. At its birth, heaven wept stardust tears. Its edge bears Celestial Array sigils, while draconic essence coils along its spine - not mere steel, but destiny's answer when cataclysm demands blood to preserve mortal hearths. Now awakened, its glacial arrays shatter mountains yet shelter cooking-smoke villages.",
   "skill.sword_soaring.vatansever.tooltip1": "§3§lXuanming: Soulfrost Circle§r —— ",
@@ -18,17 +17,17 @@
   "epicfight.skill_slot.sword_soaring": "Sword Soaring",
   "skill.epicfight.sword_soaring.category": "Sword Soaring",
   "skill.sword_soaring.sword_soaring_apprentice": "Sword Soaring: Lv1",
-  "skill.sword_soaring.sword_soaring_apprentice.tooltip": "Apprentice",
+  "skill.sword_soaring.sword_soaring_apprentice.tooltip": "Apprentice\n\nDouble click [%s] to take off. Holding [%s] to speed up.",
   "skill.sword_soaring.sword_soaring_expert": "Sword Soaring: Lv2",
-  "skill.sword_soaring.sword_soaring_expert.tooltip": "Expert",
+  "skill.sword_soaring.sword_soaring_expert.tooltip": "Expert\n\nDouble click [%s] to take off. Holding [%s] to speed up.",
   "skill.sword_soaring.sword_soaring_master": "Soaring: Master",
-  "skill.sword_soaring.sword_soaring_master.tooltip": "If you have learnt this skill, when flying in lv1 and lv2 style, flying will not consume stamina and enter cooldown.",
+  "skill.sword_soaring.sword_soaring_master.tooltip": "If you have learnt this skill, when flying in lv1 and lv2 style, flying will not consume stamina and enter cooldown.\n\nDouble click [%s] to take off. Holding [%s] to speed up.",
   "skill.sword_soaring.sword_soaring_elytra_apprentice": "Soaring-Elytra1",
-  "skill.sword_soaring.sword_soaring_elytra_apprentice.tooltip": "Apprentice-Elytra",
+  "skill.sword_soaring.sword_soaring_elytra_apprentice.tooltip": "Apprentice-Elytra\n\nDouble click [%s] to take off. Holding [%s] to speed up.",
   "skill.sword_soaring.sword_soaring_elytra_expert": "Soaring-Elytra2",
-  "skill.sword_soaring.sword_soaring_elytra_expert.tooltip": "Expert-Elytra",
+  "skill.sword_soaring.sword_soaring_elytra_expert.tooltip": "Expert-Elytra\n\nDouble click [%s] to take off. Holding [%s] to speed up.",
   "skill.sword_soaring.sword_soaring_elytra_master": "Elytra-Master",
-  "skill.sword_soaring.sword_soaring_elytra_master.tooltip": "If you have learnt this skill, when flying in lv1 and lv2 style, flying will not consume stamina and enter cooldown.",
+  "skill.sword_soaring.sword_soaring_elytra_master.tooltip": "If you have learnt this skill, when flying in lv1 and lv2 style, flying will not consume stamina and enter cooldown.\n\nDouble click [%s] to take off. Holding [%s] to speed up.",
 
   "skill.sword_soaring.vatansever_dodge": "Vatansever Dodge",
   "skill.sword_soaring.vatansever_dodge.tooltip": "Dodge Skill for Vatansever. This skill will be learned automatically when you equip Vatansever. And the skill is invalid when holding other weapon.",
@@ -61,7 +60,6 @@
   "key.sword_soaring.acceleration": "Boost",
   "key.sword_soaring.switch_mode": "Toggle Mode",
   "tips.sword_soaring.style_change": "Current Flight Mode:",
-  "biome.sword_soaring.the_wraithium_battlegrounds": "The Wraithium Battlegrounds",
 
   "skill_tree.sword_soaring.sword_soaring_skills": "Sword Skills"
 }

@@ -2,6 +2,7 @@ package net.p1nero.ss.client;
 
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -47,8 +48,9 @@ public class ClientInputManager {
     @SubscribeEvent
     public static void onKeyInput(ClientTickEvent.Post event){
         while (SwordSoaringKeyMappings.TAKE_OFF.consumeClick()){
+            LocalPlayer localPlayer = Minecraft.getInstance().player;
             long currentTime = System.currentTimeMillis();
-            if(currentTime - lastPressTime < SwordSoaringConfig.FLY_DELAY.get()) {
+            if(localPlayer != null && !localPlayer.onGround() && currentTime - lastPressTime < SwordSoaringConfig.FLY_DELAY.get()) {
                 sendSkillPacket(SwordSoaringSkillSlots.SWORD_SOARING, SwordSoaringKeyMappings.TAKE_OFF);
             }
             lastPressTime = System.currentTimeMillis();
