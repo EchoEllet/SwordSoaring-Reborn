@@ -8,7 +8,6 @@ import net.p1nero.ss.skill.sword_controller.*;
 import net.p1nero.ss.skill.sword_soaring.SwordSoaringSkill;
 import net.p1nero.ss.skill.sword_soaring.SwordSoaringSkillElytra;
 import net.p1nero.ss.skill.weapon_passive.ArtifactSpiritPassiveSkill;
-import net.p1nero.ss.skill.weapon_passive.VatanseverPassive;
 import yesman.epicfight.api.utils.PacketBufferCodec;
 import yesman.epicfight.main.EpicFightMod;
 import yesman.epicfight.skill.SkillDataKey;
@@ -29,7 +28,7 @@ public class SwordSoaringDatakeys {
     public static final RegistryObject<SkillDataKey<Boolean>> FLYING = DATA_KEYS.register("flying", () ->
             SkillDataKey.createSkillDataKey(PacketBufferCodec.BOOLEAN, false, false, SwordSoaringSkill.class));
     //是否加速中
-    public static final RegistryObject<SkillDataKey<Boolean>> ACCELERATING = DATA_KEYS.register("accelerating", () ->
+    public static final RegistryObject<SkillDataKey<Boolean>> SPEED_UP = DATA_KEYS.register("accelerating", () ->
             SkillDataKey.createSkillDataKey(PacketBufferCodec.BOOLEAN, false, false, SwordSoaringSkill.class));
     //冷却计时器
     public static final RegistryObject<SkillDataKey<Integer>> COOLDOWN_TIMER = DATA_KEYS.register("cooldown_timer", () ->

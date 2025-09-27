@@ -89,7 +89,7 @@ public class SwordSoaringSkill extends Skill {
         SkillDataManager dataManager = executor.getSkill(SwordSoaringSkillSlots.SWORD_SOARING).getDataManager();
         Vec3 view = executor.getOriginal().getViewVector(1.0F);
         executor.getOriginal().push(view.x, 2, view.z);
-        executor.playAnimationSynchronized(init, 0.15F);
+//        executor.playAnimationSynchronized(init, 0.15F);
         dataManager.setDataSync(SwordSoaringDatakeys.FLYING.get(), true);
     }
 
@@ -197,13 +197,8 @@ public class SwordSoaringSkill extends Skill {
                 Vec3 accelerationSpeed = localPlayer.getViewVector(1.0F).normalize().scale(speed);
                 Vec3 normalSpeed = accelerationSpeed.scale(0.33F);
                 boolean accelerating = SwordSoaringKeyMappings.ACCELERATION.isDown();
-                if (accelerating != container.getDataManager().getDataValue(SwordSoaringDatakeys.ACCELERATING.get())) {
-                    if (accelerating) {
-                        container.getExecutor().playAnimationSynchronized(acceleration, 0.0F);
-                    } else {
-                        container.getExecutor().playAnimationSynchronized(flying, 0.0F);
-                    }
-                    container.getDataManager().setDataSync(SwordSoaringDatakeys.ACCELERATING.get(), accelerating);
+                if (accelerating != container.getDataManager().getDataValue(SwordSoaringDatakeys.SPEED_UP.get())) {
+                    container.getDataManager().setDataSync(SwordSoaringDatakeys.SPEED_UP.get(), accelerating);
                 }
                 //移速控制
                 Vec3 currentDeltaMovement = localPlayer.getDeltaMovement();
@@ -230,7 +225,7 @@ public class SwordSoaringSkill extends Skill {
         } else {
             if (container.getDataManager().getDataValue(SwordSoaringDatakeys.FLYING.get())) {
                 container.getExecutor().resetActionTick();
-                if (container.getDataManager().getDataValue(SwordSoaringDatakeys.ACCELERATING.get())) {
+                if (container.getDataManager().getDataValue(SwordSoaringDatakeys.SPEED_UP.get())) {
                     container.getExecutor().setStamina(container.getExecutor().getStamina() - consumption);
                 } else if (SwordSoaringMod.isValidSword(container.getExecutor().getOriginal().getMainHandItem())) {
                     container.getExecutor().setStamina(container.getExecutor().getStamina() - consumption * 0.33F);
@@ -244,7 +239,7 @@ public class SwordSoaringSkill extends Skill {
     
     public void stopFlying(SkillContainer container, ServerPlayer serverPlayer){
         container.getDataManager().setDataSync(SwordSoaringDatakeys.FLYING.get(), false);
-        container.getDataManager().setDataSync(SwordSoaringDatakeys.ACCELERATING.get(), false);
+        container.getDataManager().setDataSync(SwordSoaringDatakeys.SPEED_UP.get(), false);
         container.getDataManager().setDataSync(SwordSoaringDatakeys.COOLDOWN_TIMER.get(), cooldown);
     }
 
