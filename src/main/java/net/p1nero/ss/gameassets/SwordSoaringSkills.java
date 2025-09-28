@@ -37,36 +37,36 @@ public class SwordSoaringSkills {
 
     public static DeferredHolder<Skill, SwordSoaringSkill> SWORD_SOARING_APPRENTICE = SwordSoaringSkills.REGISTRY.register("sword_soaring_apprentice", (key) ->
             SwordSoaringSkill.createSwordSoaringSkill(SwordSoaringSkill::new)
-                    .setFlyingAnimations(FlyAnimations.APPRENTICE_INIT, FlyAnimations.APPRENTICE_FLYING, FlyAnimations.APPRENTICE_ACCELERATION).build(key, SwordSoaringSkill.class));
+                    .setFlyingAnimations(FlyAnimations.APPRENTICE_INIT, FlyAnimations.APPRENTICE_FLYING, FlyAnimations.APPRENTICE_SPEED_UP).build(key, SwordSoaringSkill.class));
 
     public static DeferredHolder<Skill, SwordSoaringSkill> SWORD_SOARING_EXPERT = SwordSoaringSkills.REGISTRY.register("sword_soaring_expert", (key) ->
             SwordSoaringSkill.createSwordSoaringSkill(SwordSoaringSkill::new)
                     .setPriorSkill(() -> SWORD_SOARING_APPRENTICE.get())
-                    .setFlyingAnimations(FlyAnimations.EXPERT_INIT, FlyAnimations.EXPERT_FLYING, FlyAnimations.EXPERT_ACCELERATION)
+                    .setFlyingAnimations(FlyAnimations.EXPERT_INIT, FlyAnimations.EXPERT_FLYING, FlyAnimations.EXPERT_SPEED_UP)
                     .build(key, SwordSoaringSkill.class));
 
     public static DeferredHolder<Skill, SwordSoaringSkill> SWORD_SOARING_MASTER = SwordSoaringSkills.REGISTRY.register("sword_soaring_master", (key) ->
             SwordSoaringSkill.createSwordSoaringSkill(SwordSoaringSkill::new)
                     .setPriorSkill(() -> SWORD_SOARING_EXPERT.get())
-                    .setFlyingAnimations(FlyAnimations.MASTER_INIT, FlyAnimations.MASTER_FLYING, FlyAnimations.MASTER_ACCELERATION)
+                    .setFlyingAnimations(FlyAnimations.MASTER_INIT, FlyAnimations.MASTER_FLYING, FlyAnimations.MASTER_SPEED_UP)
                     .build(key, SwordSoaringSkill.class));
 
     public static DeferredHolder<Skill, SwordSoaringSkillElytra> SWORD_SOARING_ELYTRA_APPRENTICE = SwordSoaringSkills.REGISTRY.register("sword_soaring_elytra_apprentice", (key) ->
             SwordSoaringSkill.createSwordSoaringSkill(SwordSoaringSkillElytra::new)
                     .setPriorSkill(() -> SWORD_SOARING_APPRENTICE.get())
-                    .setFlyingAnimations(FlyAnimations.APPRENTICE_INIT, FlyAnimations.APPRENTICE_FLYING, FlyAnimations.APPRENTICE_ACCELERATION)
+                    .setFlyingAnimations(FlyAnimations.APPRENTICE_INIT, FlyAnimations.APPRENTICE_FLYING, FlyAnimations.APPRENTICE_SPEED_UP)
                     .build(key, SwordSoaringSkillElytra.class));
 
     public static DeferredHolder<Skill, SwordSoaringSkillElytra> SWORD_SOARING_ELYTRA_EXPERT = SwordSoaringSkills.REGISTRY.register("sword_soaring_elytra_expert", (key) ->
             SwordSoaringSkill.createSwordSoaringSkill(SwordSoaringSkillElytra::new)
                     .setPriorSkill(() -> SWORD_SOARING_ELYTRA_APPRENTICE.get())
-                    .setFlyingAnimations(FlyAnimations.EXPERT_INIT, FlyAnimations.EXPERT_FLYING, FlyAnimations.EXPERT_ACCELERATION)
+                    .setFlyingAnimations(FlyAnimations.EXPERT_INIT, FlyAnimations.EXPERT_FLYING, FlyAnimations.EXPERT_SPEED_UP)
                     .build(key, SwordSoaringSkillElytra.class));
 
     public static DeferredHolder<Skill, SwordSoaringSkillElytra> SWORD_SOARING_ELYTRA_MASTER = SwordSoaringSkills.REGISTRY.register("sword_soaring_elytra_master", (key) ->
             SwordSoaringSkill.createSwordSoaringSkill(SwordSoaringSkillElytra::new)
                     .setPriorSkill(() -> SWORD_SOARING_ELYTRA_EXPERT.get())
-                    .setFlyingAnimations(FlyAnimations.MASTER_INIT, FlyAnimations.MASTER_FLYING, FlyAnimations.MASTER_ACCELERATION)
+                    .setFlyingAnimations(FlyAnimations.MASTER_INIT, FlyAnimations.MASTER_FLYING, FlyAnimations.MASTER_SPEED_UP)
                     .build(key, SwordSoaringSkillElytra.class));
 
     public static DeferredHolder<Skill, KillAuraSkill> KILL_AURA_1 = REGISTRY.register("kill_aura_1", (key) ->

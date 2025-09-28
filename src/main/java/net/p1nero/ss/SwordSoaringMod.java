@@ -23,7 +23,7 @@ import net.p1nero.ss.network.packet.server.RequestBabylonSyncPacket;
 import net.p1nero.ss.network.packet.server.RequestEntityPlayAnimationPacket;
 import net.p1nero.ss.network.packet.server.RequestVatanseverSwordBackPacket;
 import org.slf4j.Logger;
-import yesman.epicfight.main.EpicFightExtensions;
+import yesman.epicfight.api.animation.LivingMotion;
 import yesman.epicfight.main.EpicFightSharedConstants;
 import yesman.epicfight.skill.SkillCategories;
 import yesman.epicfight.skill.SkillSlot;
@@ -41,6 +41,7 @@ public class SwordSoaringMod {
     public SwordSoaringMod(net.neoforged.bus.api.IEventBus bus, ModContainer modContainer) {
         SkillCategories.ENUM_MANAGER.registerEnumCls(SwordSoaringMod.MOD_ID, SwordSoaringSkillCategories.class);
         SkillSlot.ENUM_MANAGER.registerEnumCls(SwordSoaringMod.MOD_ID, SwordSoaringSkillSlots.class);
+        LivingMotion.ENUM_MANAGER.registerEnumCls(SwordSoaringMod.MOD_ID, SwordSoaringLivingMotions.class);
         CapabilityItem.WeaponCategories.ENUM_MANAGER.registerEnumCls(SwordSoaringMod.MOD_ID, SwordSoaringCategories.class);
         ComboType.ENUM_MANAGER.registerEnumCls(SwordSoaringMod.MOD_ID, SwordSoaringComboTypes.class);
 

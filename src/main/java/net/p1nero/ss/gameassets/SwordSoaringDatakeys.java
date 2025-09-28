@@ -27,7 +27,7 @@ public class SwordSoaringDatakeys {
     public static final DeferredHolder<SkillDataKey<?>, SkillDataKey<Boolean>> FLYING = DATA_KEYS.register("flying", () ->
             SkillDataKey.createSkillDataKey(ByteBufCodecs.BOOL, false, false, SwordSoaringSkill.class));
     //是否加速中
-    public static final DeferredHolder<SkillDataKey<?>, SkillDataKey<Boolean>> ACCELERATING = DATA_KEYS.register("accelerating", () ->
+    public static final DeferredHolder<SkillDataKey<?>, SkillDataKey<Boolean>> SPEED_UP = DATA_KEYS.register("accelerating", () ->
             SkillDataKey.createSkillDataKey(ByteBufCodecs.BOOL, false, false, SwordSoaringSkill.class));
     //冷却计时器
     public static final DeferredHolder<SkillDataKey<?>, SkillDataKey<Integer>> COOLDOWN_TIMER = DATA_KEYS.register("cooldown_timer", () ->

@@ -10,7 +10,7 @@ import yesman.epicfight.world.item.TieredWeaponItem;
 
 public class SwordSoaringItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(Registries.ITEM, SwordSoaringMod.MOD_ID);
-    public static final DeferredHolder<Item, VatanseverItem> VATANSEVER = ITEMS.register("vatansever", () -> new VatanseverItem(new Item.Properties().attributes(TieredWeaponItem.createAttributes(10.0F, 0))));
+    public static final DeferredHolder<Item, VatanseverItem> VATANSEVER = ITEMS.register("vatansever", () -> new VatanseverItem(new Item.Properties().rarity(Rarity.EPIC).stacksTo(1).attributes(TieredWeaponItem.createAttributes(10.0F, 0))));
 
     public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, SwordSoaringMod.MOD_ID);
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> DEFAULT_TAB = CREATIVE_TABS.register("sword_soaring_items",

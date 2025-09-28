@@ -93,9 +93,9 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 
 dependencies {
-    implementation "curse.maven:epic-fight-mod-405076:6968128"
+    implementation "curse.maven:epic-fight-mod-405076:7037349"
     implementation "curse.maven:epic-fight-invincible-1184379:6906796"
-    implementation "curse.maven:epic-fight-skill-tree-1295882:6903542"
+    implementation "curse.maven:epic-fight-skill-tree-1295882:7037357"
     implementation "curse.maven:armourers-workshop-229523:6965584"
 }
 

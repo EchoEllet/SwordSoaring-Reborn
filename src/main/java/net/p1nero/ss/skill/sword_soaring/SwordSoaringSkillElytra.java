@@ -39,21 +39,16 @@ public class SwordSoaringSkillElytra extends SwordSoaringSkill {
     public void flyingTick(SkillContainer container) {
         if (container.getExecutor().isLogicalClient()) {
             if (container.getDataManager().getDataValue(SwordSoaringDatakeys.FLYING) && container.getExecutor().hasStamina(consumption + 0.1F) && SwordSoaringMod.isValidSword(container.getExecutor().getOriginal().getMainHandItem())) {
-                boolean accelerating = SwordSoaringKeyMappings.ACCELERATION.isDown();
+                boolean speedUp = SwordSoaringKeyMappings.ACCELERATION.isDown();
                 
-                if (accelerating != container.getDataManager().getDataValue(SwordSoaringDatakeys.ACCELERATING)) {
-                    if (accelerating) {
-                        container.getExecutor().playAnimationSynchronized(acceleration, 0.0F);
-                    } else {
-                        container.getExecutor().playAnimationSynchronized(flying, 0.0F);
-                    }
-                    container.getDataManager().setDataSync(SwordSoaringDatakeys.ACCELERATING, accelerating);
+                if (speedUp != container.getDataManager().getDataValue(SwordSoaringDatakeys.SPEED_UP)) {
+                    container.getDataManager().setDataSync(SwordSoaringDatakeys.SPEED_UP, speedUp);
                 }
             }
         } else {
             if (container.getDataManager().getDataValue(SwordSoaringDatakeys.FLYING)) {
                 container.getExecutor().resetActionTick();
-                if (container.getDataManager().getDataValue(SwordSoaringDatakeys.ACCELERATING)) {
+                if (container.getDataManager().getDataValue(SwordSoaringDatakeys.SPEED_UP)) {
                     container.getExecutor().setStamina(container.getExecutor().getStamina() - consumption);
                 }
                 if(container.getExecutor().getOriginal().isUnderWater()){
@@ -61,7 +56,7 @@ public class SwordSoaringSkillElytra extends SwordSoaringSkill {
                 }
             }
         }
-        if(container.getDataManager().getDataValue(SwordSoaringDatakeys.ACCELERATING)){
+        if(container.getDataManager().getDataValue(SwordSoaringDatakeys.SPEED_UP)){
             //移速控制，只加速不匀速
             Vec3 accelerationSpeed = container.getExecutor().getOriginal().getViewVector(1.0F).normalize().scale(speed);
             Vec3 currentDeltaMovement = container.getExecutor().getOriginal().getDeltaMovement();
@@ -75,7 +70,7 @@ public class SwordSoaringSkillElytra extends SwordSoaringSkill {
     
     public void stopFlying(SkillContainer container, ServerPlayer serverPlayer){
         container.getDataManager().setDataSync(SwordSoaringDatakeys.FLYING, false);
-        container.getDataManager().setDataSync(SwordSoaringDatakeys.ACCELERATING, false);
+        container.getDataManager().setDataSync(SwordSoaringDatakeys.SPEED_UP, false);
         container.getDataManager().setDataSync(SwordSoaringDatakeys.COOLDOWN_TIMER, cooldown);
         serverPlayer.stopFallFlying();
     }
