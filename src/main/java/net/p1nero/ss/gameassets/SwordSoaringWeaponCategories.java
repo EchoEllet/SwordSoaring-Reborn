@@ -2,9 +2,9 @@ package net.p1nero.ss.gameassets;
 
 import yesman.epicfight.world.capabilities.item.WeaponCategory;
 
-public enum SwordSoaringCategories implements WeaponCategory {
+public enum SwordSoaringWeaponCategories implements WeaponCategory {
     ARTIFACT_SPIRIT;
-    SwordSoaringCategories(){
+    SwordSoaringWeaponCategories(){
         this.id = WeaponCategory.ENUM_MANAGER.assign(this);
     }
     final int id;

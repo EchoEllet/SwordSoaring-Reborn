@@ -1,22 +1,29 @@
 package net.p1nero.ss.gameassets;
 
+import net.minecraft.resources.ResourceLocation;
+import net.p1nero.ss.SwordSoaringMod;
 import yesman.epicfight.skill.SkillCategory;
 
-public enum SwordSoaringSkillCategories implements SkillCategory
-{
-    SWORD_CONTROLLER(true, true, true),
-    SWORD_SOARING(true, true, true);
+public enum SwordSoaringSkillCategories implements SkillCategory {
+    SWORD_CONTROLLER(true, true, true, ResourceLocation.fromNamespaceAndPath(SwordSoaringMod.MOD_ID, "skillbook_sword_controller")),
+    SWORD_SOARING(true, true, true, ResourceLocation.fromNamespaceAndPath(SwordSoaringMod.MOD_ID, "skillbook_fly_skill"));
 
     final boolean save;
     final boolean sync;
     final boolean modifiable;
+    final ResourceLocation bookIcon;
     final int id;
 
-    SwordSoaringSkillCategories(boolean ShouldSave, boolean ShouldSync, boolean Modifiable){
-        this.modifiable = Modifiable;
-        this.save = ShouldSave;
-        this.sync = ShouldSync;
+    SwordSoaringSkillCategories(boolean shouldSave, boolean shouldSync, boolean modifiable){
+        this(shouldSave, shouldSync, modifiable, null);
+    }
+
+    SwordSoaringSkillCategories(boolean shouldSave, boolean shouldSync, boolean modifiable, ResourceLocation bookIcon){
+        this.modifiable = modifiable;
+        this.save = shouldSave;
+        this.sync = shouldSync;
         this.id = SkillCategory.ENUM_MANAGER.assign(this);
+        this.bookIcon = bookIcon;
     }
 
     @Override
@@ -40,5 +47,10 @@ public enum SwordSoaringSkillCategories implements SkillCategory
     public int universalOrdinal()
     {
         return this.id;
+    }
+
+    @Override
+    public ResourceLocation bookIcon() {
+        return bookIcon == null ? SkillCategory.DEFAULT_BOOK_ICON : bookIcon;
     }
 }

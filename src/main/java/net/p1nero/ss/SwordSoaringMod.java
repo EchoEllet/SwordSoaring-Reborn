@@ -42,7 +42,7 @@ public class SwordSoaringMod {
         SkillCategories.ENUM_MANAGER.registerEnumCls(SwordSoaringMod.MOD_ID, SwordSoaringSkillCategories.class);
         SkillSlot.ENUM_MANAGER.registerEnumCls(SwordSoaringMod.MOD_ID, SwordSoaringSkillSlots.class);
         LivingMotion.ENUM_MANAGER.registerEnumCls(SwordSoaringMod.MOD_ID, SwordSoaringLivingMotions.class);
-        CapabilityItem.WeaponCategories.ENUM_MANAGER.registerEnumCls(SwordSoaringMod.MOD_ID, SwordSoaringCategories.class);
+        CapabilityItem.WeaponCategories.ENUM_MANAGER.registerEnumCls(SwordSoaringMod.MOD_ID, SwordSoaringWeaponCategories.class);
         ComboType.ENUM_MANAGER.registerEnumCls(SwordSoaringMod.MOD_ID, SwordSoaringComboTypes.class);
 
         if(EpicFightSharedConstants.isPhysicalClient() && ModList.get().isLoaded("epicskills")) {

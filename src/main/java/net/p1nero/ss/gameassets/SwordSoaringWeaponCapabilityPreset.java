@@ -21,7 +21,7 @@ import java.util.function.Function;
 public class
 SwordSoaringWeaponCapabilityPreset {
     public static final Function<Item, CapabilityItem.Builder<?>> VATANSEVER = (item) ->
-             WeaponCapability.builder().category(SwordSoaringCategories.ARTIFACT_SPIRIT)
+             WeaponCapability.builder().category(SwordSoaringWeaponCategories.ARTIFACT_SPIRIT)
                     .styleProvider((livingEntityPatch) -> CapabilityItem.Styles.TWO_HAND)
                     .collider(SwordSoaringColliders.VATANSEVER)
                     .hitSound(EpicFightSounds.BLADE_HIT.get())
