@@ -24,7 +24,9 @@ public class ClientForgeEvents {
     public static void swordsoaring$onCustomLayer(UpdatePlayerMotionEvent event) {
         AbstractClientPlayerPatch<?> clientPlayerPatch = event.getPlayerPatch();
         SkillContainer container = clientPlayerPatch.getSkill(SwordSoaringSkillSlots.SWORD_SOARING);
-
+        if(!container.hasSkill()) {
+            return;
+        }
         if(container.getDataManager().getDataValue(SwordSoaringDatakeys.FLYING.get())) {
             if(container.hasSkill(FlyingSkills.SWORD_SOARING_APPRENTICE) || container.hasSkill(FlyingSkills.SWORD_SOARING_ELYTRA_APPRENTICE)) {
                 event.setMotion(SwordSoaringLivingMotions.SWORD_SOARING_BASIC);
