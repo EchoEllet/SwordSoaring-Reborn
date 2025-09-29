@@ -66,14 +66,13 @@ public class VatanseverPassive extends ArtifactSpiritPassiveSkill{
                 indicatorCheckEvent.setCanceled(true);
             }
         });
-        container.getExecutor().getEventListener().addEventListener(PlayerEventListener.EventType.TAKE_DAMAGE_EVENT_HURT, EVENT_UUID, hurtEvent -> {
+        container.getExecutor().getEventListener().addEventListener(PlayerEventListener.EventType.TAKE_DAMAGE_EVENT_ATTACK, EVENT_UUID, hurtEvent -> {
             Player player = hurtEvent.getPlayerPatch().getOriginal();
             if(player.isFallFlying()){
                 double power = player.getDeltaMovement().length();
                 if(power > 1){
                     LevelUtil.circleSlamFracture(player, player.level(), player.position().add(0, -1, 0), power * 2);
                 }
-                hurtEvent.attachValueModifier(ValueModifier.multiplier(0));
                 hurtEvent.setCanceled(true);
             }
         });
@@ -117,7 +116,7 @@ public class VatanseverPassive extends ArtifactSpiritPassiveSkill{
         container.getExecutor().getEventListener().removeListener(PlayerEventListener.EventType.SKILL_CAST_EVENT, EVENT_UUID);
         container.getExecutor().getEventListener().removeListener(PlayerEventListener.EventType.TARGET_INDICATOR_ALERT_CHECK_EVENT, EVENT_UUID);
         container.getExecutor().getEventListener().removeListener(PlayerEventListener.EventType.SET_TARGET_EVENT, EVENT_UUID);
-        container.getExecutor().getEventListener().removeListener(PlayerEventListener.EventType.TAKE_DAMAGE_EVENT_HURT, EVENT_UUID);
+        container.getExecutor().getEventListener().removeListener(PlayerEventListener.EventType.TAKE_DAMAGE_EVENT_ATTACK, EVENT_UUID);
         container.getExecutor().getEventListener().removeListener(PlayerEventListener.EventType.FALL_EVENT, EVENT_UUID);
     }
 
