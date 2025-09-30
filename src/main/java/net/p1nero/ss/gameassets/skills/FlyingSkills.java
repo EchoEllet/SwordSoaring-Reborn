@@ -17,15 +17,15 @@ public class FlyingSkills {
     public static void buildSwordSoaringSkills(SkillBuildEvent.ModRegistryWorker registryWorker) {
         SWORD_SOARING_APPRENTICE = registryWorker.build("sword_soaring_apprentice", SwordSoaringSkill::new, SwordSoaringSkill.createSwordSoaringSkill()
                 .setFlyingAnimations(FlyAnimations.APPRENTICE_INIT, FlyAnimations.APPRENTICE_FLYING, FlyAnimations.APPRENTICE_SPEED_UP));
-        SWORD_SOARING_EXPERT = registryWorker.build("sword_soaring_expert", SwordSoaringSkill::new, SwordSoaringSkill.createSwordSoaringSkill().setPriorSkill(() -> SWORD_SOARING_APPRENTICE)
+        SWORD_SOARING_EXPERT = registryWorker.build("sword_soaring_expert", SwordSoaringSkill::new, SwordSoaringSkill.createSwordSoaringSkill()
                 .setFlyingAnimations(FlyAnimations.EXPERT_INIT, FlyAnimations.EXPERT_FLYING, FlyAnimations.EXPERT_SPEED_UP));
-        SWORD_SOARING_MASTER = registryWorker.build("sword_soaring_master", SwordSoaringSkill::new, SwordSoaringSkill.createSwordSoaringSkill().setPriorSkill(() -> SWORD_SOARING_EXPERT)
+        SWORD_SOARING_MASTER = registryWorker.build("sword_soaring_master", SwordSoaringSkill::new, SwordSoaringSkill.createSwordSoaringSkill()
                 .setFlyingAnimations(FlyAnimations.MASTER_INIT, FlyAnimations.MASTER_FLYING, FlyAnimations.MASTER_SPEED_UP));
-        SWORD_SOARING_ELYTRA_APPRENTICE = registryWorker.build("sword_soaring_elytra_apprentice", SwordSoaringSkillElytra::new, SwordSoaringSkill.createSwordSoaringSkill().setPriorSkill(() -> SWORD_SOARING_APPRENTICE)
+        SWORD_SOARING_ELYTRA_APPRENTICE = registryWorker.build("sword_soaring_elytra_apprentice", SwordSoaringSkillElytra::new, SwordSoaringSkill.createSwordSoaringSkill()
                 .setFlyingAnimations(FlyAnimations.APPRENTICE_INIT, FlyAnimations.APPRENTICE_FLYING, FlyAnimations.APPRENTICE_SPEED_UP));
-        SWORD_SOARING_ELYTRA_EXPERT = registryWorker.build("sword_soaring_elytra_expert", SwordSoaringSkillElytra::new, SwordSoaringSkill.createSwordSoaringSkill().setPriorSkill(() -> SWORD_SOARING_ELYTRA_APPRENTICE)
+        SWORD_SOARING_ELYTRA_EXPERT = registryWorker.build("sword_soaring_elytra_expert", SwordSoaringSkillElytra::new, SwordSoaringSkill.createSwordSoaringSkill()
                 .setFlyingAnimations(FlyAnimations.EXPERT_INIT, FlyAnimations.EXPERT_FLYING, FlyAnimations.EXPERT_SPEED_UP));
-        SWORD_SOARING_ELYTRA_MASTER = registryWorker.build("sword_soaring_elytra_master", SwordSoaringSkillElytra::new, SwordSoaringSkill.createSwordSoaringSkill().setPriorSkill(() -> SWORD_SOARING_ELYTRA_EXPERT)
+        SWORD_SOARING_ELYTRA_MASTER = registryWorker.build("sword_soaring_elytra_master", SwordSoaringSkillElytra::new, SwordSoaringSkill.createSwordSoaringSkill()
                 .setFlyingAnimations(FlyAnimations.MASTER_INIT, FlyAnimations.MASTER_FLYING, FlyAnimations.MASTER_SPEED_UP));
 
     }
