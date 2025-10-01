@@ -26,10 +26,10 @@ public class SwordSoaringDatakeys {
     //Fly Skill
     //是否处于飞行状态
     public static final RegistryObject<SkillDataKey<Boolean>> FLYING = DATA_KEYS.register("flying", () ->
-            SkillDataKey.createSkillDataKey(PacketBufferCodec.BOOLEAN, false, false, SwordSoaringSkill.class));
+            SkillDataKey.createSkillDataKey(PacketBufferCodec.BOOLEAN, false, true, SwordSoaringSkill.class));
     //是否加速中
     public static final RegistryObject<SkillDataKey<Boolean>> SPEED_UP = DATA_KEYS.register("accelerating", () ->
-            SkillDataKey.createSkillDataKey(PacketBufferCodec.BOOLEAN, false, false, SwordSoaringSkill.class));
+            SkillDataKey.createSkillDataKey(PacketBufferCodec.BOOLEAN, false, true, SwordSoaringSkill.class));
     //冷却计时器
     public static final RegistryObject<SkillDataKey<Integer>> COOLDOWN_TIMER = DATA_KEYS.register("cooldown_timer", () ->
             SkillDataKey.createSkillDataKey(PacketBufferCodec.INTEGER, 0, true, SwordSoaringSkill.class, SwordSoaringSkillElytra.class, WanJianGuiZongSkill.class, KillAuraSkill.class, ScreenSwordSkill.class, RainSwordSkill.class, GateOfBabylonSkill.class));
