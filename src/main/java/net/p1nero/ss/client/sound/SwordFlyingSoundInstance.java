@@ -13,6 +13,7 @@ import net.p1nero.ss.gameassets.SwordSoaringSkillSlots;
 import net.p1nero.ss.skill.sword_soaring.SwordSoaringSkill;
 import net.p1nero.ss.skill.sword_soaring.SwordSoaringSkillElytra;
 import yesman.epicfight.client.world.capabilites.entitypatch.player.LocalPlayerPatch;
+import yesman.epicfight.skill.SkillContainer;
 
 @OnlyIn(Dist.CLIENT)
 public class SwordFlyingSoundInstance extends AbstractTickableSoundInstance {
@@ -32,11 +33,12 @@ public class SwordFlyingSoundInstance extends AbstractTickableSoundInstance {
     @Override
     public void tick() {
         ++this.time;
-        if(playerPatch.getSkill(SwordSoaringSkillSlots.SWORD_SOARING).getSkill() instanceof SwordSoaringSkillElytra){
+        SkillContainer container = playerPatch.getSkill(SwordSoaringSkillSlots.SWORD_SOARING);
+        if(!container.hasSkill() || container.getSkill() instanceof SwordSoaringSkillElytra){
             this.stop();
             return;
         }
-        if (!this.player.isRemoved() && (this.time <= 20 || playerPatch.getSkill(SwordSoaringSkillSlots.SWORD_SOARING).getDataManager().getDataValue(SwordSoaringDatakeys.FLYING.get()))) {
+        if (!this.player.isRemoved() && (this.time <= 20 || container.getDataManager().getDataValue(SwordSoaringDatakeys.FLYING.get()))) {
             this.x = (float)this.player.getX();
             this.y = (float)this.player.getY();
             this.z = (float)this.player.getZ();

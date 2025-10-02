@@ -58,7 +58,7 @@ public class WanAnimations {
 
     public static AnimationEvent.InTimeEvent summonAndPlay(float time, AnimationManager.AnimationAccessor<? extends StaticAnimation> animationToPlay) {
         return AnimationEvent.InTimeEvent.create(time, (livingEntityPatch, staticAnimation, objects) -> {
-            if (livingEntityPatch.getOriginal() instanceof WanEntity wanEntity) {
+            if (livingEntityPatch.getOriginal() instanceof WanEntity wanEntity && wanEntity.getOwner() != null) {
                 WanEntity newSwords = new WanEntity(wanEntity.getOwner());
                 newSwords.setAnimationToPlay(animationToPlay);
                 newSwords.initBabylonItems(wanEntity.getValidBabylonItems(), false);
