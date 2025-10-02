@@ -13,6 +13,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.p1nero.ss.SwordSoaringMod;
+import net.p1nero.ss.client.keymapping.SwordSoaringKeyMappings;
 import net.p1nero.ss.entity.sword.fly_sword.FlySwordEntity;
 import net.p1nero.ss.gameassets.SwordSoaringDatakeys;
 import net.p1nero.ss.gameassets.animations.ScreenSwordAnimations;
@@ -144,11 +145,13 @@ public class RainSwordSkill extends Skill {
     }
 
     @Override
+    @OnlyIn(Dist.CLIENT)
     public List<Object> getTooltipArgsOfScreen(List<Object> list) {
         list.add(minCount);
         list.add(maxCount);
         list.add(lifeTime / 20.0);
         list.add(cooldown / 20.0);
+        list.add(SwordSoaringKeyMappings.SWORD_SKILL.getTranslatedKeyMessage());
         return list;
     }
 

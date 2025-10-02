@@ -7,10 +7,10 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.p1nero.ss.client.keymapping.SwordSoaringKeyMappings;
 import net.p1nero.ss.entity.sword.screen_sword.ScreenSwordEntity;
 import net.p1nero.ss.gameassets.SwordSoaringDatakeys;
 import net.p1nero.ss.util.ItemUtils;
-import org.checkerframework.checker.units.qual.C;
 import yesman.epicfight.api.utils.AttackResult;
 import yesman.epicfight.client.gui.BattleModeGui;
 import yesman.epicfight.gameasset.EpicFightSounds;
@@ -109,6 +109,7 @@ public class ScreenSwordSkill extends KillAuraSkill {
     }
 
     @Override
+    @OnlyIn(Dist.CLIENT)
     public List<Object> getTooltipArgsOfScreen(List<Object> list) {
         list.add(this.maxProtectCount);
         list.add(this.healCount);

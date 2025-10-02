@@ -161,8 +161,10 @@ public class WanJianGuiZongSkill extends Skill {
     }
 
     @Override
+    @OnlyIn(Dist.CLIENT)
     public List<Object> getTooltipArgsOfScreen(List<Object> list) {
         list.add(cooldown / 20.0);
+        list.add(SwordSoaringKeyMappings.SWORD_SKILL.getTranslatedKeyMessage());
         return list;
     }
 
