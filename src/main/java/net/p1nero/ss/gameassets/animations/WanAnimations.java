@@ -28,6 +28,7 @@ import yesman.epicfight.api.animation.types.EntityState;
 import yesman.epicfight.api.animation.types.StaticAnimation;
 import yesman.epicfight.api.client.animation.property.ClientAnimationProperties;
 import yesman.epicfight.api.client.animation.property.TrailInfo;
+import yesman.epicfight.api.utils.AttackResult;
 import yesman.epicfight.api.utils.math.Vec3f;
 import yesman.epicfight.gameasset.Armatures;
 import yesman.epicfight.model.armature.HumanoidArmature;
@@ -117,6 +118,7 @@ public class WanAnimations {
                 )
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, nextPlay(WAN2_PLAYER))
                 .newTimePair(0.0F, Float.MAX_VALUE)
+                .addStateRemoveOld(EntityState.ATTACK_RESULT, (damageSource -> AttackResult.ResultType.BLOCKED))
                 .addStateRemoveOld(EntityState.TURNING_LOCKED, false)
                 .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1, v2) -> 0.5F)));
         WAN2_PLAYER = builder.nextAccessor("wan/wan_owner_2", accessor -> new ActionAnimation(0.0001F, accessor, biped)
@@ -136,6 +138,7 @@ public class WanAnimations {
                     }
                 }, AnimationEvent.Side.SERVER))
                 .newTimePair(0.0F, Float.MAX_VALUE)
+                .addStateRemoveOld(EntityState.ATTACK_RESULT, (damageSource -> AttackResult.ResultType.BLOCKED))
                 .addStateRemoveOld(EntityState.TURNING_LOCKED, false));
         WAN3_PLAYER = builder.nextAccessor("wan/wan_owner_3", accessor ->  new ActionAnimation(0.0001F, accessor, biped)
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_BEGIN_EVENTS,
@@ -150,6 +153,8 @@ public class WanAnimations {
                             }
                         }, AnimationEvent.Side.SERVER)
                 )
+                .newTimePair(0.0F, Float.MAX_VALUE)
+                .addStateRemoveOld(EntityState.ATTACK_RESULT, (damageSource -> AttackResult.ResultType.BLOCKED))
                 .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1, v2) -> 1.5F)));
 
         Armatures.ArmatureAccessor<WanArmature> wanArmature = SwordSoaringArmatures.WAN_ARMATURE;
