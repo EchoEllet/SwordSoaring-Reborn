@@ -1,5 +1,7 @@
 package net.p1nero.ss;
 
+import com.merlin204.avalon.item.IChangeArmatureItem;
+import com.merlin204.avalon.item.animationitem.IAvalonAnimationItem;
 import com.mojang.logging.LogUtils;
 import com.p1nero.invincible.api.skill.ComboType;
 import net.minecraft.resources.ResourceLocation;
@@ -69,6 +71,15 @@ public class SwordSoaringMod {
             SwordSoaringConfig.notSwordItems = SwordSoaringConfig.ITEMS_CAN_NOT_FLY.get().stream()
                     .map(itemName -> ForgeRegistries.ITEMS.getValue(ResourceLocation.parse(itemName)))
                     .collect(Collectors.toSet());
+
+            if(ModList.get().isLoaded("epic_fight_avalon")) {
+                ForgeRegistries.ITEMS.getValues().stream()
+                        .filter(item -> item instanceof IAvalonAnimationItem || item instanceof IChangeArmatureItem)
+                        .forEach(item -> {
+                    SwordSoaringConfig.notSwordItems.add(item);
+                });
+            }
+
         }
         if (SwordSoaringConfig.notSwordItems.contains(sword.getItem())) {
             return false;
