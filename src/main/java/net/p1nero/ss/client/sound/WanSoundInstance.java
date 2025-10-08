@@ -33,6 +33,7 @@ public class WanSoundInstance extends AbstractTickableSoundInstance {
         SkillDataManager manager = playerPatch.getSkill(SwordSoaringSkillSlots.SWORD_CONTROLLER).getDataManager();
         if(!manager.hasData(SwordSoaringDatakeys.IS_CHARGING)){
             stop();
+            return;
         }
         if(manager.getDataValue(SwordSoaringDatakeys.IS_CHARGING)){
             this.time = 120;

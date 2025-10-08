@@ -25,10 +25,10 @@ public class SwordSoaringDatakeys {
     //Fly Skill
     //是否处于飞行状态
     public static final DeferredHolder<SkillDataKey<?>, SkillDataKey<Boolean>> FLYING = DATA_KEYS.register("flying", () ->
-            SkillDataKey.createSkillDataKey(ByteBufCodecs.BOOL, false, false, SwordSoaringSkill.class));
+            SkillDataKey.createSkillDataKey(ByteBufCodecs.BOOL, false, true, SwordSoaringSkill.class));
     //是否加速中
     public static final DeferredHolder<SkillDataKey<?>, SkillDataKey<Boolean>> SPEED_UP = DATA_KEYS.register("accelerating", () ->
-            SkillDataKey.createSkillDataKey(ByteBufCodecs.BOOL, false, false, SwordSoaringSkill.class));
+            SkillDataKey.createSkillDataKey(ByteBufCodecs.BOOL, false, true, SwordSoaringSkill.class));
     //冷却计时器
     public static final DeferredHolder<SkillDataKey<?>, SkillDataKey<Integer>> COOLDOWN_TIMER = DATA_KEYS.register("cooldown_timer", () ->
             SkillDataKey.createSkillDataKey(ByteBufCodecs.INT, 0, true, SwordSoaringSkill.class, SwordSoaringSkillElytra.class, WanJianGuiZongSkill.class, KillAuraSkill.class, ScreenSwordSkill.class, RainSwordSkill.class, GateOfBabylonSkill.class));

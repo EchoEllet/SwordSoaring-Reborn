@@ -1,5 +1,6 @@
 package net.p1nero.ss.skill.sword_soaring;
 
+import com.github.exopandora.shouldersurfing.api.client.ShoulderSurfing;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -12,6 +13,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.client.event.MovementInputUpdateEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.neoforged.neoforge.event.entity.living.LivingFallEvent;
@@ -28,6 +30,7 @@ import yesman.epicfight.api.animation.AnimationManager;
 import yesman.epicfight.api.animation.types.StaticAnimation;
 import yesman.epicfight.api.neoevent.playerpatch.SkillCastEvent;
 import yesman.epicfight.api.neoevent.playerpatch.TakeDamageEvent;
+import yesman.epicfight.api.utils.math.MathUtils;
 import yesman.epicfight.client.events.engine.ControlEngine;
 import yesman.epicfight.client.gui.BattleModeGui;
 import yesman.epicfight.client.world.capabilites.entitypatch.player.LocalPlayerPatch;
@@ -183,7 +186,15 @@ public class SwordSoaringSkill extends Skill {
         if (container.getExecutor().isLogicalClient()) {
             if (container.getDataManager().getDataValue(SwordSoaringDatakeys.FLYING) && container.getExecutor().hasStamina(consumption + 0.1F) && SwordSoaringMod.isValidSword(container.getExecutor().getOriginal().getMainHandItem())) {
                 LocalPlayer localPlayer = ((LocalPlayer) container.getExecutor().getOriginal());
-                Vec3 accelerationSpeed = localPlayer.getViewVector(1.0F).normalize().scale(speed);
+                Vec3 view = localPlayer.getViewVector(1.0F).normalize();
+                if(ModList.get().isLoaded("shouldersurfing")) {
+                    view = MathUtils.getVectorForRotation(ShoulderSurfing.getInstance().getCamera().getXRot(), ShoulderSurfing.getInstance().getCamera().getYRot());
+                    container.getExecutor().getOriginal().setYRot((float) MathUtils.getYRotOfVector(view));
+                    container.getExecutor().getOriginal().setYHeadRot((float) MathUtils.getYRotOfVector(view));
+                    container.getExecutor().getOriginal().setXRot((float) MathUtils.getXRotOfVector(view));
+                }
+                Vec3 accelerationSpeed = view.scale(speed);
+
                 Vec3 normalSpeed = accelerationSpeed.scale(0.33F);
                 boolean accelerating = SwordSoaringKeyMappings.ACCELERATION.isDown();
                 if (accelerating != container.getDataManager().getDataValue(SwordSoaringDatakeys.SPEED_UP)) {

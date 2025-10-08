@@ -14,6 +14,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 import net.p1nero.ss.capability.SwordSoaringAttachments;
 import net.p1nero.ss.capability.SSPlayer;
 import net.p1nero.ss.client.CameraAnim;
+import net.p1nero.ss.client.keymapping.SwordSoaringKeyMappings;
 import net.p1nero.ss.entity.sword.gate_of_babylon.BabylonEntity;
 import net.p1nero.ss.gameassets.SwordSoaringArmatures;
 import net.p1nero.ss.gameassets.SwordSoaringDatakeys;
@@ -121,8 +122,10 @@ public class GateOfBabylonSkill extends Skill {
     }
 
     @Override
+    @OnlyIn(Dist.CLIENT)
     public List<Object> getTooltipArgsOfScreen(List<Object> list) {
         list.add(cooldown / 20.0);
+        list.add(SwordSoaringKeyMappings.SWORD_SKILL.getTranslatedKeyMessage());
         return list;
     }
 

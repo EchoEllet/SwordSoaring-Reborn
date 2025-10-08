@@ -8,6 +8,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.p1nero.ss.SwordSoaringMod;
+import net.p1nero.ss.client.keymapping.SwordSoaringKeyMappings;
 import net.p1nero.ss.entity.sword.screen_sword.ScreenSwordEntity;
 import net.p1nero.ss.entity.sword.screen_sword.ScreenSwordPatch;
 import net.p1nero.ss.gameassets.SwordSoaringDatakeys;
@@ -104,9 +105,11 @@ public class KillAuraSkill extends Skill {
     }
 
     @Override
+    @OnlyIn(Dist.CLIENT)
     public List<Object> getTooltipArgsOfScreen(List<Object> list) {
         list.add(this.lifeTime / 20.0);
         list.add(this.cooldown / 20.0);
+        list.add(SwordSoaringKeyMappings.SWORD_SKILL.getTranslatedKeyMessage());
         return list;
     }
 

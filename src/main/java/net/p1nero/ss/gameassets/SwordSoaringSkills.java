@@ -1,5 +1,6 @@
 package net.p1nero.ss.gameassets;
 
+import com.p1nero.invincible.api.EventPresets;
 import com.p1nero.invincible.api.combo.ComboNode;
 import com.p1nero.invincible.api.events.TimeStampedEvent;
 import com.p1nero.invincible.conditions.CooldownCondition;
@@ -41,31 +42,26 @@ public class SwordSoaringSkills {
 
     public static DeferredHolder<Skill, SwordSoaringSkill> SWORD_SOARING_EXPERT = SwordSoaringSkills.REGISTRY.register("sword_soaring_expert", (key) ->
             SwordSoaringSkill.createSwordSoaringSkill(SwordSoaringSkill::new)
-                    .setPriorSkill(() -> SWORD_SOARING_APPRENTICE.get())
                     .setFlyingAnimations(FlyAnimations.EXPERT_INIT, FlyAnimations.EXPERT_FLYING, FlyAnimations.EXPERT_SPEED_UP)
                     .build(key, SwordSoaringSkill.class));
 
     public static DeferredHolder<Skill, SwordSoaringSkill> SWORD_SOARING_MASTER = SwordSoaringSkills.REGISTRY.register("sword_soaring_master", (key) ->
             SwordSoaringSkill.createSwordSoaringSkill(SwordSoaringSkill::new)
-                    .setPriorSkill(() -> SWORD_SOARING_EXPERT.get())
                     .setFlyingAnimations(FlyAnimations.MASTER_INIT, FlyAnimations.MASTER_FLYING, FlyAnimations.MASTER_SPEED_UP)
                     .build(key, SwordSoaringSkill.class));
 
     public static DeferredHolder<Skill, SwordSoaringSkillElytra> SWORD_SOARING_ELYTRA_APPRENTICE = SwordSoaringSkills.REGISTRY.register("sword_soaring_elytra_apprentice", (key) ->
             SwordSoaringSkill.createSwordSoaringSkill(SwordSoaringSkillElytra::new)
-                    .setPriorSkill(() -> SWORD_SOARING_APPRENTICE.get())
                     .setFlyingAnimations(FlyAnimations.APPRENTICE_INIT, FlyAnimations.APPRENTICE_FLYING, FlyAnimations.APPRENTICE_SPEED_UP)
                     .build(key, SwordSoaringSkillElytra.class));
 
     public static DeferredHolder<Skill, SwordSoaringSkillElytra> SWORD_SOARING_ELYTRA_EXPERT = SwordSoaringSkills.REGISTRY.register("sword_soaring_elytra_expert", (key) ->
             SwordSoaringSkill.createSwordSoaringSkill(SwordSoaringSkillElytra::new)
-                    .setPriorSkill(() -> SWORD_SOARING_ELYTRA_APPRENTICE.get())
                     .setFlyingAnimations(FlyAnimations.EXPERT_INIT, FlyAnimations.EXPERT_FLYING, FlyAnimations.EXPERT_SPEED_UP)
                     .build(key, SwordSoaringSkillElytra.class));
 
     public static DeferredHolder<Skill, SwordSoaringSkillElytra> SWORD_SOARING_ELYTRA_MASTER = SwordSoaringSkills.REGISTRY.register("sword_soaring_elytra_master", (key) ->
             SwordSoaringSkill.createSwordSoaringSkill(SwordSoaringSkillElytra::new)
-                    .setPriorSkill(() -> SWORD_SOARING_ELYTRA_EXPERT.get())
                     .setFlyingAnimations(FlyAnimations.MASTER_INIT, FlyAnimations.MASTER_FLYING, FlyAnimations.MASTER_SPEED_UP)
                     .build(key, SwordSoaringSkillElytra.class));
 
@@ -144,7 +140,11 @@ public class SwordSoaringSkills {
         ComboNode aaab = ComboNode.createNode(VatanseverAnimations.PLAYER_AUTO4_B).addCondition(checkSwordCount(6)).setCanBeInterrupt(false);
         ComboNode storm = ComboNode.createNode(VatanseverAnimations.PLAYER_STORM_START).addCondition(checkSwordCount(6))
                 .setCooldown(1200)
-                .addCondition(new CooldownCondition(false)).setCanBeInterrupt(false);
+                .addCondition(new StackCondition(1, 7))
+                .addTimeEvent(EventPresets.consumeStack(1))
+                .addCondition(new CooldownCondition(false))
+                .setPriority(10)
+                .setCanBeInterrupt(false);
         ComboNode execute = ComboNode.createNode(VatanseverAnimations.PLAYER_EXECUTE)
                 .setConvertTime(0.15F)
                 .addCondition(new StackCondition(7, 7))
@@ -155,8 +155,8 @@ public class SwordSoaringSkills {
                     }
                 })
                 .addCondition(new TargetInDistance(0, 5))
-                .addTimeEvent(new TimeStampedEvent(0.0F, entityPatch -> {
-                    if(entityPatch instanceof ServerPlayerPatch serverPlayerPatch){
+                .addTimeEvent(new TimeStampedEvent(0.01F, (entityPatch, target, invinciblePlayer) -> {
+                    if (entityPatch instanceof ServerPlayerPatch serverPlayerPatch) {
                         SkillContainer container = serverPlayerPatch.getSkill(SkillSlots.WEAPON_INNATE);
                         container.getSkill().setStackSynchronize(container, 0);
                         container.getSkill().setConsumptionSynchronize(container, 0);
@@ -165,7 +165,7 @@ public class SwordSoaringSkills {
                         serverPlayerPatch.getTarget().setYBodyRot(serverPlayerPatch.getYRot());
                         serverPlayerPatch.getTarget().setYHeadRot(serverPlayerPatch.getYRot());
                         LivingEntityPatch<?> livingEntityPatch = EpicFightCapabilities.getEntityPatch(serverPlayerPatch.getTarget(), LivingEntityPatch.class);
-                        if(livingEntityPatch.getArmature() instanceof HumanoidArmature){
+                        if (livingEntityPatch.getArmature() instanceof HumanoidArmature) {
                             livingEntityPatch.playAnimationSynchronized(VatanseverAnimations.PLAYER_BE_EXECUTED, 0.10F);
                         }
                     }
@@ -176,12 +176,14 @@ public class SwordSoaringSkills {
         ComboNode shootR2 = ComboNode.createNode(VatanseverAnimations.PLAYER_SHOOT_R2).addCondition(checkSwordCount(3)).addCondition(checkIsNotInaction()).setPriority(3).setCanBeInterrupt(false);
         ComboNode shootL1 = ComboNode.createNode(VatanseverAnimations.PLAYER_SHOOT_L1).addCondition(checkSwordCount(2)).addCondition(checkIsNotInaction()).setPriority(2).setCanBeInterrupt(false);
         ComboNode shootR1 = ComboNode.createNode(VatanseverAnimations.PLAYER_SHOOT_R1).addCondition(checkSwordCount(1)).addCondition(checkIsNotInaction()).setPriority(1).setCanBeInterrupt(false);
-        ComboNode shoot = ComboNode.create().addConditionNode(shootL1)
+        ComboNode shoot = ComboNode.create()
+                .addConditionNode(shootL1)
                 .addConditionNode(shootL2)
                 .addConditionNode(shootL3)
                 .addConditionNode(shootR1)
                 .addConditionNode(shootR2)
-                .addConditionNode(shootR3);
+                .addConditionNode(shootR3)
+                .addConditionNode(storm);
         root.key1(a);
         a.key1(aa_1);
         aa_1.key1(aa_2);
@@ -197,7 +199,7 @@ public class SwordSoaringSkills {
         aaaa.key3(shoot);
         shoot.key1(a);
         shoot.key3(shoot);
-        root.key3(storm);
+        root.key3(shoot);
         root.key1_4(execute);
         return root;
     }

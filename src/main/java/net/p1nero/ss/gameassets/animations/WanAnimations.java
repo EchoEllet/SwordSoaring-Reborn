@@ -28,6 +28,7 @@ import yesman.epicfight.api.animation.types.EntityState;
 import yesman.epicfight.api.animation.types.StaticAnimation;
 import yesman.epicfight.api.client.animation.property.ClientAnimationProperties;
 import yesman.epicfight.api.client.animation.property.TrailInfo;
+import yesman.epicfight.api.utils.AttackResult;
 import yesman.epicfight.api.utils.math.Vec3f;
 import yesman.epicfight.gameasset.Armatures;
 import yesman.epicfight.model.armature.HumanoidArmature;
@@ -58,7 +59,7 @@ public class WanAnimations {
 
     public static AnimationEvent.InTimeEvent summonAndPlay(float time, AnimationManager.AnimationAccessor<? extends StaticAnimation> animationToPlay) {
         return AnimationEvent.InTimeEvent.create(time, (livingEntityPatch, staticAnimation, objects) -> {
-            if (livingEntityPatch.getOriginal() instanceof WanEntity wanEntity) {
+            if (livingEntityPatch.getOriginal() instanceof WanEntity wanEntity && wanEntity.getOwner() != null) {
                 WanEntity newSwords = new WanEntity(wanEntity.getOwner());
                 newSwords.setAnimationToPlay(animationToPlay);
                 newSwords.initBabylonItems(wanEntity.getValidBabylonItems(), false);
@@ -117,6 +118,7 @@ public class WanAnimations {
                 )
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, nextPlay(WAN2_PLAYER))
                 .newTimePair(0.0F, Float.MAX_VALUE)
+                .addStateRemoveOld(EntityState.ATTACK_RESULT, (damageSource -> AttackResult.ResultType.BLOCKED))
                 .addStateRemoveOld(EntityState.TURNING_LOCKED, false)
                 .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, ((dynamicAnimation, livingEntityPatch, v, v1, v2) -> 0.5F)));
         WAN2_PLAYER = builder.nextAccessor("wan/wan_owner_2", accessor -> new ActionAnimation(0.0001F, accessor, biped)
@@ -125,6 +127,8 @@ public class WanAnimations {
                         CameraAnim.zoomIn(new Vec3f(0, -3, -6), 450);
                     }
                 }, AnimationEvent.Side.CLIENT))
+                .newTimePair(0.0F, Float.MAX_VALUE)
+                .addStateRemoveOld(EntityState.ATTACK_RESULT, (damageSource -> AttackResult.ResultType.BLOCKED))
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.SimpleEvent.create((livingEntityPatch, staticAnimation, objects) -> {
                     if (livingEntityPatch instanceof ServerPlayerPatch serverPlayerPatch) {
                         SkillDataManager manager = serverPlayerPatch.getSkill(SwordSoaringSkillSlots.SWORD_CONTROLLER).getDataManager();
@@ -136,6 +140,7 @@ public class WanAnimations {
                     }
                 }, AnimationEvent.Side.SERVER))
                 .newTimePair(0.0F, Float.MAX_VALUE)
+                .addStateRemoveOld(EntityState.ATTACK_RESULT, (damageSource -> AttackResult.ResultType.BLOCKED))
                 .addStateRemoveOld(EntityState.TURNING_LOCKED, false));
         WAN3_PLAYER = builder.nextAccessor("wan/wan_owner_3", accessor ->  new ActionAnimation(0.0001F, accessor, biped)
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_BEGIN_EVENTS,

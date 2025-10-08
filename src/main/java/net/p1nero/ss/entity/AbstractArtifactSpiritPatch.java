@@ -4,6 +4,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.p1nero.ss.mixin.DodgeLocationIndicatorAccessor;
 import org.jetbrains.annotations.Nullable;
 import yesman.epicfight.api.animation.AnimationManager;
 import yesman.epicfight.api.animation.LivingMotions;
@@ -15,6 +16,7 @@ import yesman.epicfight.world.capabilities.entitypatch.MobPatch;
 import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 import yesman.epicfight.world.damagesource.EpicFightDamageSource;
 import yesman.epicfight.world.damagesource.StunType;
+import yesman.epicfight.world.entity.DodgeLocationIndicator;
 
 public abstract class AbstractArtifactSpiritPatch<T extends AbstractArtifactSpiritEntity> extends MobPatch<T> {
 
@@ -73,6 +75,10 @@ public abstract class AbstractArtifactSpiritPatch<T extends AbstractArtifactSpir
      */
     @Override
     public AttackResult attack(EpicFightDamageSource damageSource, Entity target, InteractionHand hand) {
+        //防止无限刷闪避
+        if(target instanceof DodgeLocationIndicator dodgeLocationIndicator && ((DodgeLocationIndicatorAccessor)dodgeLocationIndicator).getLivingEntityPatch() == this.ownerPatch) {
+            return AttackResult.missed(0);
+        }
         if (getOwnerPatch() != null && shouldUseOwnerAttack()) {
             return getOwnerPatch().attack(damageSource, target, hand);
         }

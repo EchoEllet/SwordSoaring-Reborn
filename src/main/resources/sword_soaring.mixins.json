@@ -14,6 +14,7 @@
   ],
   "mixins": [
     "ColliderInvoker",
+    "DodgeLocationIndicatorAccessor",
     "EntityMixin",
     "LivingEntityMixin",
     "MultiColliderAccessor",

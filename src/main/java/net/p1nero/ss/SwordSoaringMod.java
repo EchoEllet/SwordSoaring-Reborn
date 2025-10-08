@@ -90,6 +90,13 @@ public class SwordSoaringMod {
                     .map(itemName -> BuiltInRegistries.ITEM.get(ResourceLocation.parse(itemName)))
                     .collect(Collectors.toSet());
         }
+//        if(ModList.get().isLoaded("epic_fight_avalon")) {
+//            ForgeRegistries.ITEMS.getValues().stream()
+//                    .filter(item -> item instanceof IAvalonAnimationItem || item instanceof IChangeArmatureItem)
+//                    .forEach(item -> {
+//                        SwordSoaringConfig.notSwordItems.add(item);
+//                    });
+//        }
         if (SwordSoaringConfig.notSwordItems.contains(sword.getItem())) {
             return false;
         }
