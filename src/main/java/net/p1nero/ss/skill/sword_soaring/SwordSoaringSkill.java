@@ -1,5 +1,6 @@
 package net.p1nero.ss.skill.sword_soaring;
 
+import com.github.exopandora.shouldersurfing.api.client.ShoulderSurfing;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -15,6 +16,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
+import net.minecraftforge.fml.ModList;
 import net.p1nero.ss.SwordSoaringMod;
 import net.p1nero.ss.client.keymapping.SwordSoaringKeyMappings;
 import net.p1nero.ss.client.sound.SwordFlyingSoundInstance;
@@ -26,6 +28,7 @@ import net.p1nero.ss.item.SwordSoaringItems;
 import org.jetbrains.annotations.Nullable;
 import yesman.epicfight.api.animation.AnimationManager;
 import yesman.epicfight.api.animation.types.StaticAnimation;
+import yesman.epicfight.api.utils.math.MathUtils;
 import yesman.epicfight.client.events.engine.ControlEngine;
 import yesman.epicfight.client.gui.BattleModeGui;
 import yesman.epicfight.client.world.capabilites.entitypatch.player.LocalPlayerPatch;
@@ -194,7 +197,14 @@ public class SwordSoaringSkill extends Skill {
         if (container.getExecutor().isLogicalClient()) {
             if (container.getDataManager().getDataValue(SwordSoaringDatakeys.FLYING.get()) && container.getExecutor().hasStamina(consumption + 0.1F) && SwordSoaringMod.isValidSword(container.getExecutor().getOriginal().getMainHandItem())) {
                 LocalPlayer localPlayer = ((LocalPlayer) container.getExecutor().getOriginal());
-                Vec3 accelerationSpeed = localPlayer.getViewVector(1.0F).normalize().scale(speed);
+                Vec3 view = localPlayer.getViewVector(1.0F).normalize();
+                if(ModList.get().isLoaded("shouldersurfing")) {
+                    view = MathUtils.getVectorForRotation(ShoulderSurfing.getInstance().getCamera().getXRot(), ShoulderSurfing.getInstance().getCamera().getYRot());
+                    container.getExecutor().getOriginal().setYRot((float) MathUtils.getYRotOfVector(view));
+                    container.getExecutor().getOriginal().setYHeadRot((float) MathUtils.getYRotOfVector(view));
+                    container.getExecutor().getOriginal().setXRot((float) MathUtils.getXRotOfVector(view));
+                }
+                Vec3 accelerationSpeed = view.scale(speed);
                 Vec3 normalSpeed = accelerationSpeed.scale(0.33F);
                 boolean accelerating = SwordSoaringKeyMappings.ACCELERATION.isDown();
                 if (accelerating != container.getDataManager().getDataValue(SwordSoaringDatakeys.SPEED_UP.get())) {
