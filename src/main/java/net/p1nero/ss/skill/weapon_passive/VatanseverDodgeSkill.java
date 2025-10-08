@@ -1,5 +1,6 @@
 package net.p1nero.ss.skill.weapon_passive;
 
+import com.p1nero.invincible.client.particles.InvincibleParticles;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.Input;
 import net.minecraft.network.FriendlyByteBuf;
@@ -34,8 +35,8 @@ public class VatanseverDodgeSkill extends DodgeSkill {
             weaponInnate.getSkill().setStackSynchronize(weaponInnate, weaponInnate.getStack() + 1);
             ServerPlayer serverPlayer = event.getPlayerPatch().getOriginal();
             int vatanseverId = event.getPlayerPatch().getSkill(SkillSlots.WEAPON_PASSIVE).getDataManager().getDataValue(SwordSoaringDatakeys.ARTIFACT_SPIRIT_ENTITY_ID.get());
-            serverPlayer.serverLevel().sendParticles(EpicFightParticles.WHITE_AFTERIMAGE.get(), serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 1, serverPlayer.getId(), 1, 1, serverPlayer.getId());
-            serverPlayer.serverLevel().sendParticles(EpicFightParticles.WHITE_AFTERIMAGE.get(), serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 1, vatanseverId, 1, 1, vatanseverId);
+            serverPlayer.serverLevel().sendParticles(InvincibleParticles.TRANSPARENT_AFTER_IMAGE.get(), serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 1, serverPlayer.getId(), 1, 1, serverPlayer.getId());
+            serverPlayer.serverLevel().sendParticles(InvincibleParticles.TRANSPARENT_AFTER_IMAGE.get(), serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 1, vatanseverId, 1, 1, vatanseverId);
         });
     }
 

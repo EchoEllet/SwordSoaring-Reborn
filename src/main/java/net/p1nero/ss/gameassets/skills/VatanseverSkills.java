@@ -1,5 +1,6 @@
 package net.p1nero.ss.gameassets.skills;
 
+import com.p1nero.invincible.api.EventPresets;
 import com.p1nero.invincible.api.events.TimeStampedEvent;
 import com.p1nero.invincible.api.skill.ComboNode;
 import com.p1nero.invincible.conditions.CooldownCondition;
@@ -44,7 +45,11 @@ public class VatanseverSkills {
         ComboNode aaab = ComboNode.createNode(VatanseverAnimations.PLAYER_AUTO4_B).addCondition(checkSwordCount(6)).setCanBeInterrupt(false);
         ComboNode storm = ComboNode.createNode(VatanseverAnimations.PLAYER_STORM_START).addCondition(checkSwordCount(6))
                 .setCooldown(1200)
-                .addCondition(new CooldownCondition(false)).setCanBeInterrupt(false);
+                .addCondition(new StackCondition(1, 7))
+                .addTimeEvent(EventPresets.consumeStack(1))
+                .addCondition(new CooldownCondition(false))
+                .setPriority(10)
+                .setCanBeInterrupt(false);
         ComboNode execute = ComboNode.createNode(VatanseverAnimations.PLAYER_EXECUTE)
                 .setConvertTime(0.15F)
                 .addCondition(new StackCondition(7, 7))
@@ -56,32 +61,34 @@ public class VatanseverSkills {
                 })
                 .addCondition(new TargetInDistance(0, 5))
                 .addTimeEvent(new TimeStampedEvent(0.0F, entityPatch -> {
-            if(entityPatch instanceof ServerPlayerPatch serverPlayerPatch){
-                SkillContainer container = serverPlayerPatch.getSkill(SkillSlots.WEAPON_INNATE);
-                container.getSkill().setStackSynchronize(container, 0);
-                container.getSkill().setConsumptionSynchronize(container, 0);
-                serverPlayerPatch.getTarget().moveTo(serverPlayerPatch.getOriginal().position());
-                serverPlayerPatch.getTarget().setYRot(serverPlayerPatch.getYRot());
-                serverPlayerPatch.getTarget().setYBodyRot(serverPlayerPatch.getYRot());
-                serverPlayerPatch.getTarget().setYHeadRot(serverPlayerPatch.getYRot());
-                LivingEntityPatch<?> livingEntityPatch = EpicFightCapabilities.getEntityPatch(serverPlayerPatch.getTarget(), LivingEntityPatch.class);
-                if(livingEntityPatch.getArmature() instanceof HumanoidArmature){
-                    livingEntityPatch.playAnimationSynchronized(VatanseverAnimations.PLAYER_BE_EXECUTED, 0.10F);
-                }
-            }
-        }));
+                    if (entityPatch instanceof ServerPlayerPatch serverPlayerPatch) {
+                        SkillContainer container = serverPlayerPatch.getSkill(SkillSlots.WEAPON_INNATE);
+                        container.getSkill().setStackSynchronize(container, 0);
+                        container.getSkill().setConsumptionSynchronize(container, 0);
+                        serverPlayerPatch.getTarget().moveTo(serverPlayerPatch.getOriginal().position());
+                        serverPlayerPatch.getTarget().setYRot(serverPlayerPatch.getYRot());
+                        serverPlayerPatch.getTarget().setYBodyRot(serverPlayerPatch.getYRot());
+                        serverPlayerPatch.getTarget().setYHeadRot(serverPlayerPatch.getYRot());
+                        LivingEntityPatch<?> livingEntityPatch = EpicFightCapabilities.getEntityPatch(serverPlayerPatch.getTarget(), LivingEntityPatch.class);
+                        if (livingEntityPatch.getArmature() instanceof HumanoidArmature) {
+                            livingEntityPatch.playAnimationSynchronized(VatanseverAnimations.PLAYER_BE_EXECUTED, 0.10F);
+                        }
+                    }
+                }));
         ComboNode shootL3 = ComboNode.createNode(VatanseverAnimations.PLAYER_SHOOT_L3).addCondition(checkSwordCount(6)).addCondition(checkIsNotInaction()).setPriority(6).setCanBeInterrupt(false);
         ComboNode shootR3 = ComboNode.createNode(VatanseverAnimations.PLAYER_SHOOT_R3).addCondition(checkSwordCount(5)).addCondition(checkIsNotInaction()).setPriority(5).setCanBeInterrupt(false);
         ComboNode shootL2 = ComboNode.createNode(VatanseverAnimations.PLAYER_SHOOT_L2).addCondition(checkSwordCount(4)).addCondition(checkIsNotInaction()).setPriority(4).setCanBeInterrupt(false);
         ComboNode shootR2 = ComboNode.createNode(VatanseverAnimations.PLAYER_SHOOT_R2).addCondition(checkSwordCount(3)).addCondition(checkIsNotInaction()).setPriority(3).setCanBeInterrupt(false);
         ComboNode shootL1 = ComboNode.createNode(VatanseverAnimations.PLAYER_SHOOT_L1).addCondition(checkSwordCount(2)).addCondition(checkIsNotInaction()).setPriority(2).setCanBeInterrupt(false);
         ComboNode shootR1 = ComboNode.createNode(VatanseverAnimations.PLAYER_SHOOT_R1).addCondition(checkSwordCount(1)).addCondition(checkIsNotInaction()).setPriority(1).setCanBeInterrupt(false);
-        ComboNode shoot = ComboNode.create().addConditionNode(shootL1)
+        ComboNode shoot = ComboNode.create()
+                .addConditionNode(shootL1)
                 .addConditionNode(shootL2)
                 .addConditionNode(shootL3)
                 .addConditionNode(shootR1)
                 .addConditionNode(shootR2)
-                .addConditionNode(shootR3);
+                .addConditionNode(shootR3)
+                .addConditionNode(storm);
         root.key1(a);
         a.key1(aa_1);
         aa_1.key1(aa_2);
@@ -97,9 +104,12 @@ public class VatanseverSkills {
         aaaa.key3(shoot);
         shoot.key1(a);
         shoot.key3(shoot);
-        root.key3(storm);
+        root.key3(shoot);
         root.key1_4(execute);
-        VATANSEVER_INNATE = registryWorker.build("vatansever_innate", VatanseverWeaponInnateSkill::new, ComboBasicAttack.createComboBasicAttack().setCombo(root).setShouldDrawGui(true));
+        VATANSEVER_INNATE = registryWorker.build("vatansever_innate", VatanseverWeaponInnateSkill::new, ComboBasicAttack.createComboBasicAttack()
+                .setCombo(root)
+                .setReserveTime(16)
+                .setShouldDrawGui(true));
         VATANSEVER_PASSIVE = registryWorker.build("vatansever_passive", VatanseverPassive::new, Skill.createBuilder().setCategory(SkillCategories.WEAPON_PASSIVE).setResource(Skill.Resource.NONE));
 
         VATANSEVER_DODGE = registryWorker.build("vatansever_dodge", VatanseverDodgeSkill::new, VatanseverDodgeSkill.createDodgeBuilder()
@@ -108,7 +118,8 @@ public class VatanseverSkills {
                         VatanseverAnimations.PLAYER_DODGE_B,
                         VatanseverAnimations.PLAYER_DODGE_L,
                         VatanseverAnimations.PLAYER_DODGE_R
-                ).setCreativeTab(SwordSoaringItems.DEFAULT_TAB.get()));
+                )
+                .setCreativeTab(SwordSoaringItems.DEFAULT_TAB.get()));
     }
 
     public static CustomCondition checkSwordCount(int swordCount) {
