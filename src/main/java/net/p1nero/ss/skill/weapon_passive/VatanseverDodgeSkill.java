@@ -13,8 +13,8 @@ import net.p1nero.ss.gameassets.SwordSoaringDatakeys;
 import yesman.epicfight.client.world.capabilites.entitypatch.player.LocalPlayerPatch;
 import yesman.epicfight.gameasset.EpicFightSounds;
 import yesman.epicfight.network.client.CPSkillRequest;
-import yesman.epicfight.particle.EpicFightParticles;
 import yesman.epicfight.skill.SkillContainer;
+import yesman.epicfight.skill.SkillDataManager;
 import yesman.epicfight.skill.SkillSlots;
 import yesman.epicfight.skill.dodge.DodgeSkill;
 import yesman.epicfight.world.entity.eventlistener.PlayerEventListener;
@@ -34,9 +34,14 @@ public class VatanseverDodgeSkill extends DodgeSkill {
             SkillContainer weaponInnate = event.getPlayerPatch().getSkill(SkillSlots.WEAPON_INNATE);
             weaponInnate.getSkill().setStackSynchronize(weaponInnate, weaponInnate.getStack() + 1);
             ServerPlayer serverPlayer = event.getPlayerPatch().getOriginal();
-            int vatanseverId = event.getPlayerPatch().getSkill(SkillSlots.WEAPON_PASSIVE).getDataManager().getDataValue(SwordSoaringDatakeys.ARTIFACT_SPIRIT_ENTITY_ID.get());
-            serverPlayer.serverLevel().sendParticles(InvincibleParticles.TRANSPARENT_AFTER_IMAGE.get(), serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 1, serverPlayer.getId(), 1, 1, serverPlayer.getId());
-            serverPlayer.serverLevel().sendParticles(InvincibleParticles.TRANSPARENT_AFTER_IMAGE.get(), serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 1, vatanseverId, 1, 1, vatanseverId);
+            SkillDataManager manager = event.getPlayerPatch().getSkill(SkillSlots.WEAPON_PASSIVE).getDataManager();
+            if(manager.hasData(SwordSoaringDatakeys.ARTIFACT_SPIRIT_ENTITY_ID.get())) {
+                int vatanseverId = manager.getDataValue(SwordSoaringDatakeys.ARTIFACT_SPIRIT_ENTITY_ID.get());
+                serverPlayer.serverLevel().sendParticles(InvincibleParticles.TRANSPARENT_AFTER_IMAGE.get(), serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 1, serverPlayer.getId(), 1, 1, serverPlayer.getId());
+                serverPlayer.serverLevel().sendParticles(InvincibleParticles.TRANSPARENT_AFTER_IMAGE.get(), serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 1, vatanseverId, 1, 1, vatanseverId);
+            } else {
+                onRemoved(container);
+            }
         });
     }
 
