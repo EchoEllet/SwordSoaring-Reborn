@@ -94,7 +94,7 @@ public class ClientInputManager {
                 int next = (index + 1) % learnedSkills.size();
                 Skill nextSkill = learnedSkills.get(next);
                 skillContainer.setSkill(nextSkill);
-                EpicFightNetworkManager.sendToServer(new CPChangeSkill(SwordSoaringSkillSlots.SWORD_SOARING, -1, false, nextSkill));
+                EpicFightNetworkManager.sendToServer(new CPChangeSkill(SwordSoaringSkillSlots.SWORD_SOARING, -1, nextSkill));
                 localPlayerPatch.getOriginal().displayClientMessage(Component.translatable("tips.sword_soaring.style_change").append(nextSkill.getDisplayName()), true);
             }
         }
