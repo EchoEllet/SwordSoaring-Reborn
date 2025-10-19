@@ -1,6 +1,5 @@
 package net.p1nero.ss.skill.sword_soaring;
 
-import com.github.exopandora.shouldersurfing.api.client.ShoulderSurfing;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -50,7 +49,7 @@ public class SwordSoaringSkill extends Skill {
     protected double speed;
     protected final AnimationManager.AnimationAccessor<? extends StaticAnimation> init, flying, acceleration;
     protected final Supplier<Skill> priorSkill;
-    
+
     public static Builder createSwordSoaringSkill() {
         return new Builder().setCreativeTab(SwordSoaringItems.DEFAULT_TAB.get()).setCategory(SwordSoaringSkillCategories.SWORD_SOARING).setResource(Resource.NONE);
     }
@@ -198,12 +197,7 @@ public class SwordSoaringSkill extends Skill {
             if (container.getDataManager().getDataValue(SwordSoaringDatakeys.FLYING.get()) && container.getExecutor().hasStamina(consumption + 0.1F) && SwordSoaringMod.isValidSword(container.getExecutor().getOriginal().getMainHandItem())) {
                 LocalPlayer localPlayer = ((LocalPlayer) container.getExecutor().getOriginal());
                 Vec3 view = localPlayer.getViewVector(1.0F).normalize();
-                if(ModList.get().isLoaded("shouldersurfing")) {
-                    view = MathUtils.getVectorForRotation(ShoulderSurfing.getInstance().getCamera().getXRot(), ShoulderSurfing.getInstance().getCamera().getYRot());
-                    container.getExecutor().getOriginal().setYRot((float) MathUtils.getYRotOfVector(view));
-                    container.getExecutor().getOriginal().setYHeadRot((float) MathUtils.getYRotOfVector(view));
-                    container.getExecutor().getOriginal().setXRot((float) MathUtils.getXRotOfVector(view));
-                }
+
                 Vec3 accelerationSpeed = view.scale(speed);
                 Vec3 normalSpeed = accelerationSpeed.scale(0.33F);
                 boolean accelerating = SwordSoaringKeyMappings.ACCELERATION.isDown();
@@ -246,7 +240,7 @@ public class SwordSoaringSkill extends Skill {
             }
         }
     }
-    
+
     public void stopFlying(SkillContainer container, ServerPlayer serverPlayer){
         container.getDataManager().setDataSync(SwordSoaringDatakeys.FLYING.get(), false);
         container.getDataManager().setDataSync(SwordSoaringDatakeys.SPEED_UP.get(), false);
