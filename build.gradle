@@ -94,7 +94,11 @@ dependencies {
     implementation "maven.modrinth:epic-fight-skill-tree:21.2.2.1"
     implementation "curse.maven:armourers-workshop-229523:6965584"
     implementation "curse.maven:shoulder-surfing-reloaded-243190:6993795"
-    implementation "dev.echoellet:controlify:2.4.2-1.21.1-neoforge"
+    // Change "compileOnly" to "implementation" for testing in-game.
+    compileOnly("dev.isxander:controlify:${project.controlify_version}") {
+        // Only need Controlify API, ignore the transitive dependencies (e.g, QuiltMC parsers)
+        transitive = false
+    }
 }
 
 repositories {
@@ -104,11 +108,9 @@ repositories {
         forRepository { maven { name = "Modrinth"; url = "https://api.modrinth.com/maven" } }
         filter { includeGroup "maven.modrinth" }
     }
-    // TODO: Use Controlify from Modrinth maven once this PR is published: https://github.com/isXander/Controlify/pull/689
-    //  and then remove this temporary Maven.
     exclusiveContent {
-        forRepository { maven { url "https://echoellet.github.io/Controlify/" } }
-        filter { includeGroup "dev.echoellet" }
+        forRepository { maven { url "https://maven.isxander.dev/releases" } }
+        filter { includeGroup "dev.isxander" }
     }
 }
 

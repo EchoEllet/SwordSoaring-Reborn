@@ -74,14 +74,14 @@ side = "BOTH"
 
 [[dependencies.${mod_id}]]
 modId="invincible"
-mandatory=true
-versionRange="[20.12,)"
+type = "required"
+versionRange="[21.12.3.2,)"
 ordering="NONE"
 side="BOTH"
 
 [[dependencies.${mod_id}]]
 modId="epicfight"
-mandatory=true
-versionRange="[20.12,)"
+type = "required"
+versionRange="[21.13.3.2,)"
 ordering="AFTER"
 side="BOTH"
