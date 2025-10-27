@@ -22,6 +22,7 @@ import net.p1nero.ss.network.packet.client.SyncBabylonPacket;
 import net.p1nero.ss.network.packet.server.RequestBabylonSyncPacket;
 import net.p1nero.ss.network.packet.server.RequestEntityPlayAnimationPacket;
 import net.p1nero.ss.network.packet.server.RequestVatanseverSwordBackPacket;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import yesman.epicfight.api.animation.LivingMotion;
 import yesman.epicfight.main.EpicFightSharedConstants;
@@ -109,4 +110,7 @@ public class SwordSoaringMod {
         }
     }
 
+    public static @NotNull ResourceLocation rl(@NotNull String path) {
+        return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
+    }
 }

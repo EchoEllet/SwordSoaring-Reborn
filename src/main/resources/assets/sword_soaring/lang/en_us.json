@@ -58,7 +58,14 @@
   "key.sword_soaring.sword_back": "Sword Back (Vatansever)",
   "key.sword_soaring.take_off": "Initiate Flight",
   "key.sword_soaring.acceleration": "Boost",
-  "key.sword_soaring.switch_mode": "Toggle Mode",
+  "key.sword_soaring.switch_mode": "Toggle Soaring Mode",
+
+  "key.sword_soaring.sword_skill.description": "Performs your weapon’s special sword skill when available.",
+  "key.sword_soaring.sword_back.description": "Returns your Vatansever sword to your back position.",
+  "key.sword_soaring.take_off.description": "Initiates Sword Soaring Flight if you have the required Epic Fight skill.",
+  "key.sword_soaring.acceleration.description": "Temporarily boosts your flight speed while soaring.",
+  "key.sword_soaring.switch_mode.description": "Toggles between different Sword Soaring flight modes.",
+
   "tips.sword_soaring.style_change": "Current Flight Mode:",
   "biome.sword_soaring.the_wraithium_battlegrounds": "The Wraithium Battlegrounds",
 

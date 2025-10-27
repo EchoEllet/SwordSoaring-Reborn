@@ -113,8 +113,7 @@ public class SwordSoaringSkill extends Skill {
             LocalPlayer clientPlayer = container.getClientExecutor().getOriginal();
             clientPlayer.setSprinting(false);
             clientPlayer.sprintTriggerTime = -1;
-            Minecraft mc = Minecraft.getInstance();
-            ControlEngine.setKeyBind(mc.options.keySprint, false);
+            ControlEngine.setSprintingKeyStateNotDown();
         }
     }
 

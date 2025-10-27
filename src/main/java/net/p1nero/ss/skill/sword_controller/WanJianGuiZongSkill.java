@@ -69,7 +69,7 @@ public class WanJianGuiZongSkill extends Skill {
             clientPlayer.setSprinting(false);
             clientPlayer.sprintTriggerTime = -1;
             Minecraft mc = Minecraft.getInstance();
-            ControlEngine.setKeyBind(mc.options.keySprint, false);
+            ControlEngine.setSprintingKeyStateNotDown();
         }
     }
 
