@@ -19,6 +19,7 @@ import net.p1nero.ss.compat.EpicSkillsCompat;
 import net.p1nero.ss.entity.SwordSoaringEntities;
 import net.p1nero.ss.gameassets.*;
 import net.p1nero.ss.item.SwordSoaringItems;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import yesman.epicfight.main.EpicFightSharedConstants;
 import yesman.epicfight.skill.SkillCategories;
@@ -76,8 +77,8 @@ public class SwordSoaringMod {
                 ForgeRegistries.ITEMS.getValues().stream()
                         .filter(item -> item instanceof IAvalonAnimationItem || item instanceof IChangeArmatureItem)
                         .forEach(item -> {
-                    SwordSoaringConfig.notSwordItems.add(item);
-                });
+                            SwordSoaringConfig.notSwordItems.add(item);
+                        });
             }
 
         }
@@ -93,4 +94,7 @@ public class SwordSoaringMod {
         }
     }
 
+    public static @NotNull ResourceLocation rl(@NotNull String path) {
+        return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
+    }
 }
