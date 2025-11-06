@@ -1,0 +1,10 @@
+{
+  "defaults": {
+    "sword_soaring:take_off": {
+      "button": "controlify:button/south"
+    },
+    "sword_soaring:acceleration": {
+      "button": "controlify:button/south"
+    }
+  }
+}

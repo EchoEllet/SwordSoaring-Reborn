@@ -8,10 +8,6 @@ plugins {
 version = mod_version
 group = mod_group_id
 
-repositories {
-    mavenLocal()
-}
-
 base {
     archivesName = mod_id + "-neoforge1.21.1"
 }
@@ -93,16 +89,29 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 
 dependencies {
-    implementation "curse.maven:epic-fight-mod-405076:7046108"
+    implementation "maven.modrinth:epic-fight:21.13.3.2"
     implementation "curse.maven:epic-fight-invincible-1184379:7081231"
-    implementation "curse.maven:epic-fight-skill-tree-1295882:7037357"
+    implementation "maven.modrinth:epic-fight-skill-tree:21.2.2.1"
     implementation "curse.maven:armourers-workshop-229523:6965584"
     implementation "curse.maven:shoulder-surfing-reloaded-243190:6993795"
+    // Change "compileOnly" to "implementation" for testing in-game.
+    compileOnly("dev.isxander:controlify:${project.controlify_version}") {
+        // Only need Controlify API, ignore the transitive dependencies (e.g, QuiltMC parsers)
+        transitive = false
+    }
 }
 
 repositories {
     maven { url = "https://cursemaven.com" }
     mavenLocal()
+    exclusiveContent {
+        forRepository { maven { name = "Modrinth"; url = "https://api.modrinth.com/maven" } }
+        filter { includeGroup "maven.modrinth" }
+    }
+    exclusiveContent {
+        forRepository { maven { url "https://maven.isxander.dev/releases" } }
+        filter { includeGroup "dev.isxander" }
+    }
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
