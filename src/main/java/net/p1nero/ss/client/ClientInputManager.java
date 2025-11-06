@@ -1,5 +1,6 @@
 package net.p1nero.ss.client;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -46,30 +47,24 @@ public class ClientInputManager {
     }
 
     @SubscribeEvent
-    public static void onKeyInput(TickEvent.ClientTickEvent event){
-        if(event.phase.equals(TickEvent.Phase.END)){
-            LocalPlayer localPlayer = Minecraft.getInstance().player;
-            while (SwordSoaringKeyMappings.TAKE_OFF.consumeClick()){
-                long currentTime = System.currentTimeMillis();
-                if(localPlayer != null && !localPlayer.onGround && currentTime - lastPressTime < SwordSoaringConfig.FLY_DELAY.get()) {
-                    sendSkillPacket(SwordSoaringSkillSlots.SWORD_SOARING, SwordSoaringKeyMappings.TAKE_OFF);
-                }
-                lastPressTime = System.currentTimeMillis();
-            }
-            while (SwordSoaringKeyMappings.SWORD_SKILL.consumeClick()){
-                sendSkillPacket(SwordSoaringSkillSlots.SWORD_CONTROLLER, SwordSoaringKeyMappings.SWORD_SKILL);
-            }
-        }
-    }
-
-    @SubscribeEvent
     public static void onKeyInput(InputEvent.Key event){
-        if(Minecraft.getInstance().player != null && Minecraft.getInstance().screen == null){
+        if(Minecraft.getInstance().player != null && Minecraft.getInstance().screen == null && event.getAction() == InputConstants.PRESS){
+            LocalPlayer localPlayer = Minecraft.getInstance().player;
             if(event.getKey() == SwordSoaringKeyMappings.SWITCH_MODE.getKey().getValue()){
                 switchModeKeyPressed(event.getAction());
             }
             if(event.getKey() == SwordSoaringKeyMappings.SWORD_BACK.getKey().getValue()){
                 swordBackKeyPressed(event.getAction());
+            }
+            if(event.getKey() == SwordSoaringKeyMappings.TAKE_OFF.getKey().getValue()){
+                long currentTime = System.currentTimeMillis();
+                if(!localPlayer.onGround && currentTime - lastPressTime < SwordSoaringConfig.FLY_DELAY.get()) {
+                    sendSkillPacket(SwordSoaringSkillSlots.SWORD_SOARING, SwordSoaringKeyMappings.TAKE_OFF);
+                }
+                lastPressTime = System.currentTimeMillis();
+            }
+            if (event.getKey() == SwordSoaringKeyMappings.SWORD_SKILL.getKey().getValue()){
+                sendSkillPacket(SwordSoaringSkillSlots.SWORD_CONTROLLER, SwordSoaringKeyMappings.SWORD_SKILL);
             }
         }
     }
