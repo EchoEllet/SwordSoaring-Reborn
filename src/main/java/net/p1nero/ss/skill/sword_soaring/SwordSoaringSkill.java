@@ -122,8 +122,7 @@ public class SwordSoaringSkill extends Skill {
                 LocalPlayer clientPlayer = event.getPlayerPatch().getOriginal();
                 clientPlayer.setSprinting(false);
                 clientPlayer.sprintTriggerTime = -1;
-                Minecraft mc = Minecraft.getInstance();
-                ControlEngine.setKeyBind(mc.options.keySprint, false);
+                ControlEngine.setSprintingKeyStateNotDown();
             }
         });
         container.getExecutor().getEventListener().addEventListener(PlayerEventListener.EventType.TAKE_DAMAGE_EVENT_ATTACK, EVENT_UUID, hurtEvent -> {
