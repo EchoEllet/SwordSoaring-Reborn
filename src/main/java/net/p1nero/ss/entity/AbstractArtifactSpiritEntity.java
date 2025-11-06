@@ -33,6 +33,8 @@ public abstract class AbstractArtifactSpiritEntity extends PathfinderMob impleme
 
     public AbstractArtifactSpiritEntity(EntityType<? extends AbstractArtifactSpiritEntity> entityType, Level level) {
         super(entityType, level);
+        this.setInvulnerable(true);
+        this.noCulling = true;
     }
 
     @Override

@@ -16,6 +16,7 @@ import yesman.epicfight.client.world.capabilites.entitypatch.player.LocalPlayerP
 import yesman.epicfight.registry.entries.EpicFightParticles;
 import yesman.epicfight.registry.entries.EpicFightSounds;
 import yesman.epicfight.skill.SkillContainer;
+import yesman.epicfight.skill.SkillDataManager;
 import yesman.epicfight.skill.SkillEvent;
 import yesman.epicfight.skill.SkillSlots;
 import yesman.epicfight.skill.dodge.DodgeSkill;
@@ -31,9 +32,14 @@ public class VatanseverDodgeSkill extends DodgeSkill {
         SkillContainer weaponInnate = event.getPlayerPatch().getSkill(SkillSlots.WEAPON_INNATE);
         weaponInnate.getSkill().setStackSynchronize(weaponInnate, weaponInnate.getStack() + 1);
         ServerPlayer serverPlayer = event.getPlayerPatch().getOriginal();
-        int vatanseverId = event.getPlayerPatch().getSkill(SkillSlots.WEAPON_PASSIVE).getDataManager().getDataValue(SwordSoaringDatakeys.ARTIFACT_SPIRIT_ENTITY_ID);
-        serverPlayer.serverLevel().sendParticles(EpicFightParticles.WHITE_AFTERIMAGE.get(), serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 1, serverPlayer.getId(), 1, 1, serverPlayer.getId());
-        serverPlayer.serverLevel().sendParticles(EpicFightParticles.WHITE_AFTERIMAGE.get(), serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 1, vatanseverId, 1, 1, vatanseverId);
+        SkillDataManager manager = event.getPlayerPatch().getSkill(SkillSlots.WEAPON_PASSIVE).getDataManager();
+        if(manager.hasData(SwordSoaringDatakeys.ARTIFACT_SPIRIT_ENTITY_ID)) {
+            int vatanseverId = manager.getDataValue(SwordSoaringDatakeys.ARTIFACT_SPIRIT_ENTITY_ID);
+            serverPlayer.serverLevel().sendParticles(EpicFightParticles.ENTITY_AFTER_IMAGE.get(), serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 1, serverPlayer.getId(), 1, 1, serverPlayer.getId());
+            serverPlayer.serverLevel().sendParticles(EpicFightParticles.ENTITY_AFTER_IMAGE.get(), serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 1, vatanseverId, 1, 1, vatanseverId);
+        } else {
+            onRemoved(container);
+        }
     }
 
     @Override

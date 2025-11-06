@@ -71,6 +71,11 @@ public class SwordSoaringSkill extends Skill {
     }
 
     @Override
+    public boolean isExecutableState(PlayerPatch<?> executor) {
+        return !executor.getOriginal().isSpectator() && !executor.getOriginal().onGround();
+    }
+
+    @Override
     public boolean canExecute(SkillContainer container) {
         PlayerPatch<?> executer = container.getExecutor();
         if(executer.getOriginal().getMainHandItem().is(SwordSoaringItems.VATANSEVER.get()) || executer.getOriginal().isUnderWater()){
